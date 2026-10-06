@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined).
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -163,6 +163,14 @@ FAB menu, split button, button groups.
   `page.emulateMedia({ reducedMotion: 'no-preference' })` first.
 - Focused variants that show a focus indicator outside the frame don't clip, so their shadows
   have no spread (`levelNNoSpread`) — cards, FABs. Check every Focused variant's shadow.
+  Generally: Figma applies drop-shadow **spread only to frames with clip content on** — read
+  `clipsContent` of the shadowed frame per variant before picking `levelN` vs `levelNNoSpread`.
+- Kit design-time placeholders (Slot-component, placeholder art) aren't library parts: fixtures
+  show the kit's own 2x raster (`exportAsync` read-only) or blend (`mix-blend-mode: luminosity`).
+- Chrome's ellipsis (`line-clamp` and `text-overflow` alike) can drop a glyph that fits by
+  <0.3px where Figma keeps it — record it as a measured exception, don't chase it.
+- Lifted / overlapping parts (dragged list items) need a z-index: later siblings otherwise paint
+  their content over the earlier item's shadow.
 
 ## 8. Per-component procedure (Figma → code → proof)
 1. **Survey** the page read-only (`use_figma`): sections, component sets, variant properties.

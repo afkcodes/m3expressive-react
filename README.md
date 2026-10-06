@@ -105,6 +105,14 @@ line to flip if you'd rather follow the M3 guidelines:
 | Text field, Error frames | Error + input text drawn focused (3px, caret); Error + label / placeholder resting (1px) | both are valid states — fixtures reproduce each |
 | Text field, Placeholder frames | label floated with the placeholder visible while unfocused | Compose `alwaysMinimize`: `alwaysFloatLabel` |
 | Outlined text field, hovered placeholder (no icons) | placeholder On Surface | On Surface Variant like every other variant — we follow this |
+| List item, Dragged | text column centred (every other state stacks it from the top) | — we follow the kit |
+| List item, Top-aligned · Dragged · Unselected | frame clips its content, so Figma draws the shadow with its 6px spread (its three Dragged siblings don't) | no spread like the siblings — we follow this |
+| Accordion button | pill filled only at rest; hover / focus / press drop it for the 32×32 layer, which squares to 8px corners when pressed | — we follow the kit |
+| Swipe reveal, 2 actions · revealed | primary drawn 40×48 at x=54 | 48px buttons 2px apart like 1 / 3 actions — we follow this |
+| Standard list (one line), row 02 | "Label text" at 96,20 (rows 01, 03–06: 48,10) | — we follow the other rows |
+| Baseline list, 3-line · Video · no trailing | content centred (every other 3-line variant top-aligns) | top-aligned — we follow this |
+| Baseline list, trailing checkbox | the 48px target drops its left inset (44px wide); 1-line rows stay 56px with the target spilling into the padding | — we follow the kit |
+| List reorder | dragged state only (no drag-and-drop flow in the kit) | `dragged` renders the lifted item for your drag-and-drop layer |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

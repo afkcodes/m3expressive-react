@@ -1,0 +1,2725 @@
+{
+  "component": "list",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "list-item": {
+      "node": "59106:13183",
+      "file": "_frames/list-item.png"
+    },
+    "accordion": {
+      "node": "59106:13316",
+      "file": "_frames/accordion.png"
+    },
+    "swipe": {
+      "node": "59106:13321",
+      "file": "_frames/swipe.png"
+    },
+    "leading": {
+      "node": "59106:13333",
+      "file": "_frames/leading.png"
+    },
+    "trailing": {
+      "node": "59106:13356",
+      "file": "_frames/trailing.png"
+    },
+    "reveal": {
+      "node": "59106:13386",
+      "file": "_frames/reveal.png"
+    },
+    "accordion-button": {
+      "node": "59106:13414",
+      "file": "_frames/accordion-button.png"
+    },
+    "lists": {
+      "node": "59106:13028",
+      "file": "_frames/lists.png"
+    },
+    "baseline": {
+      "node": "51964:63037",
+      "file": "_frames/baseline-item.png"
+    }
+  },
+  "variants": {
+    "item-mid-enabled-unsel": {
+      "node": "59106:13184",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-mid-disabled-unsel": {
+      "node": "59106:13189",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 384
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-enabled-unsel": {
+      "node": "59106:13194",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 620
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-top-disabled-unsel": {
+      "node": "59106:13199",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-enabled-sel": {
+      "node": "59106:13204",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-mid-disabled-sel": {
+      "node": "59106:13209",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 384
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-enabled-sel": {
+      "node": "59106:13214",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 620
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-top-disabled-sel": {
+      "node": "59106:13219",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-hovered-unsel": {
+      "node": "59106:13224",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-hovered-unsel": {
+      "node": "59106:13229",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 732
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-hovered-sel": {
+      "node": "59106:13234",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-hovered-sel": {
+      "node": "59106:13239",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 732
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-focused-unsel": {
+      "node": "59106:13244",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 200
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-focused-unsel": {
+      "node": "59106:13250",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 844
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-focused-sel": {
+      "node": "59106:13256",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 200
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-focused-sel": {
+      "node": "59106:13262",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 844
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-pressed-unsel": {
+      "node": "59106:13268",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 292
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One glyph-edge pixel on the crossbar of the 't' in \"Label text\" (css 118,35.5) under the ripple gradient; Figma vs Chrome text raster."
+    },
+    "item-top-pressed-unsel": {
+      "node": "59106:13274",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-pressed-sel": {
+      "node": "59106:13280",
+      "size": [
+        280,
+        80
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 292
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        82
+      ]
+    },
+    "item-top-pressed-sel": {
+      "node": "59106:13286",
+      "size": [
+        280,
+        100
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        102
+      ]
+    },
+    "item-mid-dragged-unsel": {
+      "node": "59106:13292",
+      "size": [
+        280,
+        76
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 476
+      },
+      "renderBounds": [
+        -3,
+        -1,
+        314,
+        124
+      ],
+      "refNote": "right trimmed (neighbour item-mid-dragged-sel)",
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One pixel on the dragged item's top-left shadow corner (css 16,25); Figma vs Chrome blur raster."
+    },
+    "item-top-dragged-unsel": {
+      "node": "59106:13298",
+      "size": [
+        280,
+        96
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 34.5,
+        "y": 1180
+      },
+      "renderBounds": [
+        -3,
+        -1,
+        314,
+        144
+      ],
+      "refNote": "right trimmed (neighbour item-top-dragged-sel)"
+    },
+    "item-mid-dragged-sel": {
+      "node": "59106:13304",
+      "size": [
+        280,
+        76
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 476
+      },
+      "renderBounds": [
+        1,
+        -1,
+        311,
+        124
+      ],
+      "refNote": "left trimmed (neighbour item-mid-dragged-unsel)"
+    },
+    "item-top-dragged-sel": {
+      "node": "59106:13310",
+      "size": [
+        280,
+        96
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "list-item",
+        "x": 347.5,
+        "y": 1180
+      },
+      "renderBounds": [
+        1,
+        -1,
+        311,
+        144
+      ],
+      "refNote": "left trimmed (neighbour item-top-dragged-unsel)"
+    },
+    "accordion-collapsed": {
+      "node": "59106:13317",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion",
+        "x": 10,
+        "y": 10
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "accordion-expanded": {
+      "node": "59106:13319",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion",
+        "x": 10,
+        "y": 74
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "swipe-default": {
+      "node": "59106:13322",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "swipe",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "swipe-initiate-reveal": {
+      "node": "59106:13324",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "swipe",
+        "x": 20,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "swipe-revealed": {
+      "node": "59106:13327",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "swipe",
+        "x": 20,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "swipe-swipe-action": {
+      "node": "59106:13330",
+      "size": [
+        280,
+        52
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "swipe",
+        "x": 20,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        54
+      ]
+    },
+    "leading-icon": {
+      "node": "59106:13334",
+      "size": [
+        20,
+        28
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 16,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        22,
+        30
+      ]
+    },
+    "leading-indent": {
+      "node": "59106:13336",
+      "size": [
+        20,
+        32
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 48,
+        "y": 30
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        22,
+        34
+      ]
+    },
+    "leading-image": {
+      "node": "59106:13337",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 80,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        58,
+        58
+      ]
+    },
+    "leading-video": {
+      "node": "59106:13342",
+      "size": [
+        114,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 148,
+        "y": 14
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        116,
+        66
+      ]
+    },
+    "leading-avatar": {
+      "node": "59106:13344",
+      "size": [
+        40,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 274,
+        "y": 26
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        42,
+        42
+      ]
+    },
+    "leading-icon-button": {
+      "node": "59106:13346",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 326,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "leading-checkbox": {
+      "node": "59106:13348",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 386,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "leading-radio": {
+      "node": "59106:13350",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 446,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "leading-switch": {
+      "node": "59106:13352",
+      "size": [
+        52,
+        32
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 506,
+        "y": 30
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        34
+      ]
+    },
+    "leading-slot": {
+      "node": "59106:13354",
+      "size": [
+        53,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "leading",
+        "x": 570,
+        "y": 26
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        55,
+        42
+      ]
+    },
+    "trailing-icon": {
+      "node": "59106:13357",
+      "size": [
+        49,
+        28
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 20,
+        "y": 30
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        51,
+        30
+      ]
+    },
+    "trailing-trailing-text-only": {
+      "node": "59106:13360",
+      "size": [
+        21,
+        28
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 91,
+        "y": 30
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        23,
+        30
+      ]
+    },
+    "trailing-checkbox": {
+      "node": "59106:13362",
+      "size": [
+        77,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 134,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        79,
+        50
+      ]
+    },
+    "trailing-radio": {
+      "node": "59106:13365",
+      "size": [
+        77,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 233,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        79,
+        50
+      ]
+    },
+    "trailing-switch": {
+      "node": "59106:13368",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 332,
+        "y": 28
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        91,
+        50
+      ]
+    },
+    "trailing-icon-button": {
+      "node": "59106:13371",
+      "size": [
+        77,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 435,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        79,
+        42
+      ]
+    },
+    "trailing-accordion-button": {
+      "node": "59106:13374",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 534,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "trailing-slot": {
+      "node": "59106:13376",
+      "size": [
+        53,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "trailing",
+        "x": 588,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        55,
+        42
+      ]
+    },
+    "reveal-1-initiate-reveal": {
+      "node": "59106:13387",
+      "size": [
+        8,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        10,
+        50
+      ]
+    },
+    "reveal-1-revealed": {
+      "node": "59106:13389",
+      "size": [
+        52,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 16,
+        "y": 81
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        50
+      ]
+    },
+    "reveal-1-swipe-action": {
+      "node": "59106:13391",
+      "size": [
+        120,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 16,
+        "y": 146
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        50
+      ]
+    },
+    "reveal-2-revealed": {
+      "node": "59106:13393",
+      "size": [
+        98,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 162,
+        "y": 81
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        100,
+        50
+      ],
+      "allowedDiffPixels": 680,
+      "allowedDiffReason": "Kit slip: Actions=2 \u00b7 Revealed draws its primary action 40\u00d748 at x=54, while Actions=3 \u00b7 Revealed has three 48px buttons 2px apart (0 / 50 / 100) and Actions=1 a 52px one. We render the consistent 48px buttons (primary at x=50)."
+    },
+    "reveal-2-swipe-action": {
+      "node": "59106:13396",
+      "size": [
+        130,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 162,
+        "y": 146
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        132,
+        50
+      ]
+    },
+    "reveal-3-revealed": {
+      "node": "59106:13399",
+      "size": [
+        148,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 314,
+        "y": 81
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        150,
+        50
+      ]
+    },
+    "reveal-3-swipe-action": {
+      "node": "59106:13403",
+      "size": [
+        140,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 314,
+        "y": 146
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        142,
+        50
+      ]
+    },
+    "reveal-2-initiate-reveal": {
+      "node": "59106:13407",
+      "size": [
+        18,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 162,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        20,
+        50
+      ]
+    },
+    "reveal-3-initiate-reveal": {
+      "node": "59106:13410",
+      "size": [
+        28,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "reveal",
+        "x": 314,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        30,
+        50
+      ]
+    },
+    "accbtn-expand-enabled": {
+      "node": "59106:13415",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-expand-hovered": {
+      "node": "59106:13419",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 58,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-expand-focused": {
+      "node": "59106:13423",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 98,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-expand-pressed": {
+      "node": "59106:13427",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 137,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-collapse-enabled": {
+      "node": "59106:13432",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 16,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-collapse-hovered": {
+      "node": "59106:13436",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 58,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-collapse-focused": {
+      "node": "59106:13440",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 98,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "accbtn-collapse-pressed": {
+      "node": "59106:13444",
+      "size": [
+        32,
+        40
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "accordion-button",
+        "x": 137,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        34,
+        42
+      ]
+    },
+    "list-standard-single": {
+      "node": "59106:13029",
+      "size": [
+        280,
+        312
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 16,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        314
+      ],
+      "allowedDiffPixels": 1234,
+      "allowedDiffReason": "Kit slip: row 02 of the standard one-line list has its \"Label text\" at 96,20 instead of 48,10 like rows 01 and 03\u201306 (same component, same Content alignment). We render the label where every other row has it."
+    },
+    "list-standard-multi": {
+      "node": "59106:13049",
+      "size": [
+        280,
+        384
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 16,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        386
+      ]
+    },
+    "list-segmented-filled-multi": {
+      "node": "59106:13069",
+      "size": [
+        280,
+        394
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 328,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        396
+      ]
+    },
+    "list-expandable-single": {
+      "node": "59106:13080",
+      "size": [
+        280,
+        322
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 630,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        324
+      ]
+    },
+    "list-expandable-multi": {
+      "node": "59106:13091",
+      "size": [
+        280,
+        394
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 630,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        396
+      ]
+    },
+    "list-draggable-single": {
+      "node": "59106:13102",
+      "size": [
+        280,
+        312
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 922,
+        "y": 22
+      },
+      "renderBounds": [
+        -3,
+        -1,
+        318,
+        314
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "The lifted item's shadow over the next row: two shadow-corner pixels (css 16 / 295.5, 157.5) and six icon-edge pixels of row 04's star under the blur; Figma vs Chrome raster."
+    },
+    "list-draggable-multi": {
+      "node": "59106:13114",
+      "size": [
+        280,
+        396
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 932,
+        "y": 396
+      },
+      "renderBounds": [
+        -3,
+        -1,
+        318,
+        398
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One glyph-edge pixel of the 't' in row 05's \"Label text\" (css 118,223.5) under the lifted item's shadow; Figma vs Chrome raster."
+    },
+    "list-swipable-standard-single": {
+      "node": "59106:13126",
+      "size": [
+        280,
+        312
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 1249,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        314
+      ]
+    },
+    "list-swipable-standard-multi": {
+      "node": "59106:13138",
+      "size": [
+        280,
+        384
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 1249,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        386
+      ]
+    },
+    "list-swipable-segmented-single": {
+      "node": "59106:13150",
+      "size": [
+        280,
+        322
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 1551,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        324
+      ]
+    },
+    "list-swipable-segmented-multi": {
+      "node": "59106:13157",
+      "size": [
+        280,
+        394
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 1551,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        396
+      ]
+    },
+    "list-segmented-filled-single": {
+      "node": "59106:13164",
+      "size": [
+        280,
+        322
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "lists",
+        "x": 328,
+        "y": 22
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        282,
+        324
+      ]
+    },
+    "b1-switch-icon-xx": {
+      "node": "51964:63724",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2812
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-switch-none-xx": {
+      "node": "51964:63546",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2812
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-switch-icon-xs": {
+      "node": "51964:64003",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2720
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-switch-none-xs": {
+      "node": "51964:63849",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2720
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-radiobutton-icon-xx": {
+      "node": "51964:63698",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2456
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-radiobutton-none-xx": {
+      "node": "51964:63524",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2456
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-radiobutton-icon-xs": {
+      "node": "51964:63977",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-radiobutton-none-xs": {
+      "node": "51964:63827",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-checkbox-icon-xx": {
+      "node": "51964:63672",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-checkbox-none-xx": {
+      "node": "51964:63502",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-checkbox-icon-xs": {
+      "node": "51964:63938",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-checkbox-none-xs": {
+      "node": "51964:63794",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-video-icon-xx": {
+      "node": "51964:65599",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1712
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b1-video-checkbox-xx": {
+      "node": "51964:63925",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1712
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b1-video-none-xx": {
+      "node": "51964:64175",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1712
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b2-video-icon-xs": {
+      "node": "51964:65586",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1604
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b2-video-checkbox-xs": {
+      "node": "51964:63912",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1604
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b2-video-none-xs": {
+      "node": "51964:64164",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1604
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b1-image-icon-xx": {
+      "node": "51964:65274",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1304
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-image-checkbox-xx": {
+      "node": "51964:63860",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1304
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-image-none-xx": {
+      "node": "51964:64131",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1304
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-image-icon-xs": {
+      "node": "51964:65300",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-image-checkbox-xs": {
+      "node": "51964:63886",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-image-none-xs": {
+      "node": "51964:64153",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ],
+      "allowedDiffPixels": 45,
+      "allowedDiffReason": "Ellipsis placement: \"Supporting line text lorem ipsum dolor\u2026\" measures 255.73px in the 256px column, so Figma keeps the 'r' while Chrome's line-clamp ellipsis drops it (\"dolo\u2026\"); text box and every other glyph are identical. A nowrap/text-overflow ellipsis cuts at the same glyph."
+    },
+    "b1-icon-icon-xx": {
+      "node": "51964:65820",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 928
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-icon-checkbox-xx": {
+      "node": "51964:63594",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 928
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-icon-none-xx": {
+      "node": "51964:63480",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 928
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-icon-icon-xs": {
+      "node": "51964:65846",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 836
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-icon-checkbox-xs": {
+      "node": "51964:64042",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 836
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-icon-none-xs": {
+      "node": "51964:63772",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 836
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-monogram-icon-xx": {
+      "node": "51964:64962",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 572
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-monogram-checkbox-xx": {
+      "node": "51964:63568",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 572
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-monogram-none-xx": {
+      "node": "51964:63458",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 572
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-monogram-icon-xs": {
+      "node": "51964:65040",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 480
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-monogram-checkbox-xs": {
+      "node": "51964:64016",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 480
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-monogram-none-xs": {
+      "node": "51964:63750",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 480
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b1-none-icon-xx": {
+      "node": "51964:63374",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 216
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-none-checkbox-xx": {
+      "node": "51964:63098",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 216
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b1-none-none-xx": {
+      "node": "51964:63038",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 216
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "b2-none-icon-xs": {
+      "node": "51964:63404",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 124
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-none-checkbox-xs": {
+      "node": "51964:63191",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 124
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b2-none-none-xs": {
+      "node": "51964:63129",
+      "size": [
+        360,
+        72
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 124
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        74
+      ]
+    },
+    "b3-switch-icon-xs": {
+      "node": "51964:64910",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-switch-none-xs": {
+      "node": "51964:64450",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-radiobutton-icon-xs": {
+      "node": "51964:64858",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 2256
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-radiobutton-none-xs": {
+      "node": "51964:64406",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 2256
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-checkbox-icon-xs": {
+      "node": "51964:64819",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-checkbox-none-xs": {
+      "node": "51964:64373",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-video-icon-xs": {
+      "node": "51964:65664",
+      "size": [
+        360,
+        108
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        110
+      ]
+    },
+    "b3-video-checkbox-xs": {
+      "node": "51964:64754",
+      "size": [
+        360,
+        108
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        110
+      ]
+    },
+    "b3-video-none-xs": {
+      "node": "51964:64186",
+      "size": [
+        360,
+        108
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        110
+      ],
+      "allowedDiffPixels": 12397,
+      "allowedDiffReason": "Kit slip: 3-line \u00b7 Leading=Video \u00b7 Trailing=None (with supporting text) is the only 3-line baseline variant whose row centres its content (counter-axis CENTER, video at y=22); the other 3-line variants, video ones included, top-align at 12px. We top-align consistently."
+    },
+    "b3-image-icon-xs": {
+      "node": "51964:65404",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 1084
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-image-checkbox-xs": {
+      "node": "51964:64507",
+      "size": [
+        360,
+        108
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 1084
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        110
+      ]
+    },
+    "b3-image-none-xs": {
+      "node": "51964:64241",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 1084
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-icon-icon-xs": {
+      "node": "51964:65911",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 728
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-icon-checkbox-xs": {
+      "node": "51964:64637",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 728
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-icon-none-xs": {
+      "node": "51964:64351",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 728
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-monogram-icon-xs": {
+      "node": "51964:65131",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 372
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-monogram-checkbox-xs": {
+      "node": "51964:64559",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 372
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-monogram-none-xs": {
+      "node": "51964:64285",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 372
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-none-icon-xs": {
+      "node": "51964:63447",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 776,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-none-checkbox-xs": {
+      "node": "51964:63275",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 396,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    },
+    "b3-none-none-xs": {
+      "node": "51964:63232",
+      "size": [
+        360,
+        88
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        90
+      ]
+    }
+  }
+}

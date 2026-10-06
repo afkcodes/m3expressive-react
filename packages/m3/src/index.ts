@@ -50,6 +50,8 @@ export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipAvatarPlaceholde
 export { LinearProgress, CircularProgress, LoadingIndicator } from './components/Progress/index.ts';
 export { Slider, RangeSlider } from './components/Slider/index.ts';
 export { TextField } from './components/TextField/index.ts';
+export { List, ListItem, ListItemImage, ListItemVideo, ListItemMonogram, ExpandableListItem, AccordionButton, SwipeableListItem, SwipeActions, swipeLayout, swipeOffset } from './components/List/index.ts';
+export type { ListProps, ListItemProps, ListItemVariant, ExpandableListItemProps, AccordionButtonProps, SwipeableListItemProps, SwipeActionsProps, SwipeAction, SwipeRevealState } from './components/List/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

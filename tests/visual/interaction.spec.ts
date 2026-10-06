@@ -763,3 +763,90 @@ test('text field (live): hover, focus floats the label, typing, blur', async ({ 
   // Supporting text is the field's accessible description.
   await expect(input).toHaveAccessibleDescription('Supporting text');
 });
+
+// ── List: real hover / select / keyboard focus, accordion toggle, swipe to reveal ────────────
+test.describe('list (live)', () => {
+  const ls = JSON.parse(readFileSync(join(REFS_DIR, 'list/manifest.json'), 'utf8')) as Manifest;
+  const setup = async (page: Page, variant: string) => {
+    await page.goto(`/fixture/list/${variant}`);
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    const node = page.locator('[data-fixture-node]');
+    const check = async (name: string) => {
+      const v = ls.variants[name]!;
+      const ref: Buffer = readFileSync(join(REFS_DIR, 'list', `${name}.png`));
+      const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+      test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+      expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+    };
+    return { node, check, box: (await node.boundingBox())! };
+  };
+
+  test('item: hover, click selects, keyboard focus and toggle', async ({ page }) => {
+    const { check, box } = await setup(page, 'live');
+    const item = page.getByRole('button', { name: /Label text/ });
+    await check('item-mid-enabled-unsel');
+    await page.mouse.move(box.x + 140, box.y + 40);
+    await page.waitForTimeout(SETTLE);
+    await check('item-mid-hovered-unsel');
+    await page.mouse.click(box.x + 140, box.y + 40);
+    await expect(item).toHaveAttribute('aria-pressed', 'true');
+    await page.waitForTimeout(SETTLE);
+    await check('item-mid-hovered-sel');
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(SETTLE);
+    await check('item-mid-enabled-sel');
+    // Keyboard: Tab in from the document shows the focus layer; Space toggles.
+    await page.mouse.click(1, 1);
+    await page.keyboard.press('Tab');
+    await expect(item).toBeFocused();
+    await page.waitForTimeout(SETTLE);
+    await check('item-mid-focused-sel');
+    await page.keyboard.press('Space');
+    await expect(item).not.toHaveAttribute('aria-pressed');
+    await page.waitForTimeout(SETTLE);
+    await check('item-mid-focused-unsel');
+  });
+
+  test('accordion: click and keyboard toggle the nested items', async ({ page }) => {
+    const { check, box } = await setup(page, 'live-accordion');
+    const toggle = page.getByRole('button', { name: 'Expand' });
+    const nested = page.getByText('Nested item 1');
+    await check('accordion-collapsed');
+    await expect(nested).toBeHidden();
+    await page.mouse.click(box.x + 260, box.y + 26);
+    const collapse = page.getByRole('button', { name: 'Collapse' });
+    await expect(collapse).toHaveAttribute('aria-expanded', 'true');
+    await expect(nested).toBeVisible();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(SETTLE);
+    await check('accordion-expanded');
+    await collapse.press('Enter');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(nested).toBeHidden();
+  });
+
+  test('swipe: drag reveals the actions, an action closes the item', async ({ page }) => {
+    const { check, box } = await setup(page, 'live-swipe');
+    const state = page.locator('[data-state]');
+    await check('swipe-default');
+    // Closed: the actions are out of the tab order and the accessibility tree.
+    await expect(page.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+    await expect(page.locator('button[aria-label="Edit"]')).toHaveAttribute('tabindex', '-1');
+    // Past half of the revealed width (150px for three actions): settles revealed on release.
+    await page.mouse.move(box.x + 220, box.y + 26);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 110, box.y + 26, { steps: 8 });
+    await page.mouse.up();
+    await expect(state).toHaveText('revealed');
+    await page.waitForTimeout(1500);
+    await check('swipe-revealed');
+    const edit = page.getByRole('button', { name: 'Edit' });
+    await expect(edit).toHaveAttribute('tabindex', '0');
+    await edit.click();
+    await expect(state).toHaveText('closed');
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(1500);
+    await check('swipe-default');
+  });
+});

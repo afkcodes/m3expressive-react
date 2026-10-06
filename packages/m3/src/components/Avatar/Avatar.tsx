@@ -37,15 +37,17 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'clas
   alt?: string;
   size?: number;
   sx?: StyleXStyles;
+  /** Styles for the `src` image (e.g. a blend mode). */
+  imageSx?: StyleXStyles;
 }
 
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
-  { children, src, alt = '', size = 40, sx, ...rest },
+  { children, src, alt = '', size = 40, sx, imageSx, ...rest },
   ref,
 ) {
   return (
     <span ref={ref} {...rest} {...stylex.props(styles.root, sizes.size(size), sx)}>
-      {src ? <img src={src} alt={alt} {...stylex.props(styles.image)} /> : children}
+      {src ? <img src={src} alt={alt} {...stylex.props(styles.image, imageSx)} /> : children}
     </span>
   );
 });

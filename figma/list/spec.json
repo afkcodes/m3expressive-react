@@ -1,0 +1,125 @@
+{
+ "component": "list",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F3EDF7",
+ "frames": {
+  "list-item": {
+   "node": "59106:13183",
+   "file": "_frames/list-item.png",
+   "size": [
+    662,
+    1328
+   ],
+   "rows": "item-mid-enabled-unsel 59106:13184 34.5,16 280x80;item-mid-disabled-unsel 59106:13189 34.5,384 280x80;item-top-enabled-unsel 59106:13194 34.5,620 280x100;item-top-disabled-unsel 59106:13199 34.5,1068 280x100;item-mid-enabled-sel 59106:13204 347.5,16 280x80;item-mid-disabled-sel 59106:13209 347.5,384 280x80;item-top-enabled-sel 59106:13214 347.5,620 280x100;item-top-disabled-sel 59106:13219 347.5,1068 280x100;item-mid-hovered-unsel 59106:13224 34.5,108 280x80;item-top-hovered-unsel 59106:13229 34.5,732 280x100;item-mid-hovered-sel 59106:13234 347.5,108 280x80;item-top-hovered-sel 59106:13239 347.5,732 280x100;item-mid-focused-unsel 59106:13244 34.5,200 280x80;item-top-focused-unsel 59106:13250 34.5,844 280x100;item-mid-focused-sel 59106:13256 347.5,200 280x80;item-top-focused-sel 59106:13262 347.5,844 280x100;item-mid-pressed-unsel 59106:13268 34.5,292 280x80;item-top-pressed-unsel 59106:13274 34.5,956 280x100;item-mid-pressed-sel 59106:13280 347.5,292 280x80;item-top-pressed-sel 59106:13286 347.5,956 280x100;item-mid-dragged-unsel 59106:13292 34.5,476 280x76 rb-2,0,316,122;item-top-dragged-unsel 59106:13298 34.5,1180 280x96 rb-2,0,316,142;item-mid-dragged-sel 59106:13304 347.5,476 280x76 rb-2,0,313,122;item-top-dragged-sel 59106:13310 347.5,1180 280x96 rb-2,0,313,142"
+  },
+  "accordion": {
+   "node": "59106:13316",
+   "file": "_frames/accordion.png",
+   "size": [
+    300,
+    136
+   ],
+   "rows": "accordion-collapsed 59106:13317 10,10 280x52;accordion-expanded 59106:13319 10,74 280x52"
+  },
+  "swipe": {
+   "node": "59106:13321",
+   "file": "_frames/swipe.png",
+   "size": [
+    320,
+    284
+   ],
+   "rows": "swipe-default 59106:13322 20,20 280x52;swipe-initiate-reveal 59106:13324 20,84 280x52;swipe-revealed 59106:13327 20,148 280x52;swipe-swipe-action 59106:13330 20,212 280x52"
+  },
+  "leading": {
+   "node": "59106:13333",
+   "file": "_frames/leading.png",
+   "size": [
+    639,
+    92
+   ],
+   "rows": "leading-icon 59106:13334 16,32 20x28;leading-indent 59106:13336 48,30 20x32;leading-image 59106:13337 80,18 56x56;leading-video 59106:13342 148,14 114x64;leading-avatar 59106:13344 274,26 40x40;leading-icon-button 59106:13346 326,22 48x48;leading-checkbox 59106:13348 386,22 48x48;leading-radio 59106:13350 446,22 48x48;leading-switch 59106:13352 506,30 52x32;leading-slot 59106:13354 570,26 53x40"
+  },
+  "trailing": {
+   "node": "59106:13356",
+   "file": "_frames/trailing.png",
+   "size": [
+    667,
+    88
+   ],
+   "rows": "trailing-icon 59106:13357 20,30 49x28;trailing-trailing-text-only 59106:13360 91,30 21x28;trailing-checkbox 59106:13362 134,20 77x48;trailing-radio 59106:13365 233,20 77x48;trailing-switch 59106:13368 332,28 81x32 rb0,-8,89,48;trailing-icon-button 59106:13371 435,24 77x40;trailing-accordion-button 59106:13374 534,24 32x40;trailing-slot 59106:13376 588,24 53x40"
+  },
+  "reveal": {
+   "node": "59106:13386",
+   "file": "_frames/reveal.png",
+   "size": [
+    478,
+    210
+   ],
+   "rows": "reveal-1-initiate-reveal 59106:13387 16,16 8x48;reveal-1-revealed 59106:13389 16,81 52x48;reveal-1-swipe-action 59106:13391 16,146 120x48;reveal-2-revealed 59106:13393 162,81 98x48;reveal-2-swipe-action 59106:13396 162,146 130x48;reveal-3-revealed 59106:13399 314,81 148x48;reveal-3-swipe-action 59106:13403 314,146 140x48;reveal-2-initiate-reveal 59106:13407 162,16 18x48;reveal-3-initiate-reveal 59106:13410 314,16 28x48"
+  },
+  "accordion-button": {
+   "node": "59106:13414",
+   "file": "_frames/accordion-button.png",
+   "size": [
+    185,
+    153
+   ],
+   "rows": "accbtn-expand-enabled 59106:13415 16,16 32x40;accbtn-expand-hovered 59106:13419 58,16 32x40;accbtn-expand-focused 59106:13423 98,16 32x40;accbtn-expand-pressed 59106:13427 137,16 32x40;accbtn-collapse-enabled 59106:13432 16,97 32x40;accbtn-collapse-hovered 59106:13436 58,97 32x40;accbtn-collapse-focused 59106:13440 98,97 32x40;accbtn-collapse-pressed 59106:13444 137,97 32x40"
+  },
+  "lists": {
+   "node": "59106:13028",
+   "file": "_frames/lists.png",
+   "size": [
+    1847,
+    836
+   ],
+   "rows": "list-standard-single 59106:13029 16,22 280x312;list-standard-multi 59106:13049 16,396 280x384;list-segmented-filled-multi 59106:13069 328,396 280x394;list-expandable-single 59106:13080 630,22 280x322;list-expandable-multi 59106:13091 630,396 280x394;list-draggable-single 59106:13102 922,22 280x312 rb-2,0,316,312;list-draggable-multi 59106:13114 932,396 280x396 rb-2,0,316,396;list-swipable-standard-single 59106:13126 1249,22 280x312;list-swipable-standard-multi 59106:13138 1249,396 280x384;list-swipable-segmented-single 59106:13150 1551,22 280x322;list-swipable-segmented-multi 59106:13157 1551,396 280x394;list-segmented-filled-single 59106:13164 328,22 280x322",
+   "background": "#F5F5F5"
+  },
+  "baseline": {
+   "node": "51964:63037",
+   "file": "_frames/baseline-item.png",
+   "size": [
+    1152,
+    2906
+   ],
+   "background": "#F5F5F5",
+   "rows": "b1-switch-icon-xx 51964:63724 396,2812 360x56;b1-switch-none-xx 51964:63546 16,2812 360x56;b2-switch-icon-xs 51964:64003 396,2720 360x72;b2-switch-none-xs 51964:63849 16,2720 360x72;b1-radiobutton-icon-xx 51964:63698 396,2456 360x56;b1-radiobutton-none-xx 51964:63524 16,2456 360x56;b2-radiobutton-icon-xs 51964:63977 396,2364 360x72;b2-radiobutton-none-xs 51964:63827 16,2364 360x72;b1-checkbox-icon-xx 51964:63672 396,2100 360x56;b1-checkbox-none-xx 51964:63502 16,2100 360x56;b2-checkbox-icon-xs 51964:63938 396,2008 360x72;b2-checkbox-none-xs 51964:63794 16,2008 360x72;b1-video-icon-xx 51964:65599 776,1712 360x88;b1-video-checkbox-xx 51964:63925 396,1712 360x88;b1-video-none-xx 51964:64175 16,1712 360x88;b2-video-icon-xs 51964:65586 776,1604 360x88;b2-video-checkbox-xs 51964:63912 396,1604 360x88;b2-video-none-xs 51964:64164 16,1604 360x88;b1-image-icon-xx 51964:65274 776,1304 360x72;b1-image-checkbox-xx 51964:63860 396,1304 360x72;b1-image-none-xx 51964:64131 16,1304 360x72;b2-image-icon-xs 51964:65300 776,1212 360x72;b2-image-checkbox-xs 51964:63886 396,1212 360x72;b2-image-none-xs 51964:64153 16,1212 360x72;b1-icon-icon-xx 51964:65820 776,928 360x56;b1-icon-checkbox-xx 51964:63594 396,928 360x56;b1-icon-none-xx 51964:63480 16,928 360x56;b2-icon-icon-xs 51964:65846 776,836 360x72;b2-icon-checkbox-xs 51964:64042 396,836 360x72;b2-icon-none-xs 51964:63772 16,836 360x72;b1-monogram-icon-xx 51964:64962 776,572 360x56;b1-monogram-checkbox-xx 51964:63568 396,572 360x56;b1-monogram-none-xx 51964:63458 16,572 360x56;b2-monogram-icon-xs 51964:65040 776,480 360x72;b2-monogram-checkbox-xs 51964:64016 396,480 360x72;b2-monogram-none-xs 51964:63750 16,480 360x72;b1-none-icon-xx 51964:63374 776,216 360x56;b1-none-checkbox-xx 51964:63098 396,216 360x56;b1-none-none-xx 51964:63038 16,216 360x56;b2-none-icon-xs 51964:63404 776,124 360x72;b2-none-checkbox-xs 51964:63191 396,124 360x72;b2-none-none-xs 51964:63129 16,124 360x72;b3-switch-icon-xs 51964:64910 396,2612 360x88;b3-switch-none-xs 51964:64450 16,2612 360x88;b3-radiobutton-icon-xs 51964:64858 396,2256 360x88;b3-radiobutton-none-xs 51964:64406 16,2256 360x88;b3-checkbox-icon-xs 51964:64819 396,1900 360x88;b3-checkbox-none-xs 51964:64373 16,1900 360x88;b3-video-icon-xs 51964:65664 776,1476 360x108;b3-video-checkbox-xs 51964:64754 396,1476 360x108;b3-video-none-xs 51964:64186 16,1476 360x108;b3-image-icon-xs 51964:65404 776,1084 360x88;b3-image-checkbox-xs 51964:64507 396,1084 360x108;b3-image-none-xs 51964:64241 16,1084 360x88;b3-icon-icon-xs 51964:65911 776,728 360x88;b3-icon-checkbox-xs 51964:64637 396,728 360x88;b3-icon-none-xs 51964:64351 16,728 360x88;b3-monogram-icon-xs 51964:65131 776,372 360x88;b3-monogram-checkbox-xs 51964:64559 396,372 360x88;b3-monogram-none-xs 51964:64285 16,372 360x88;b3-none-icon-xs 51964:63447 776,16 360x88;b3-none-checkbox-xs 51964:63275 396,16 360x88;b3-none-none-xs 51964:63232 16,16 360x88"
+  }
+ },
+ "note": "Baseline: only the 72 variants inside the set's 1152\u00d72906 frame are exported (the rest sit outside it). Dragged item frames show the slot (Surface Container) with the lifted item offset 16,16, as the kit draws a drag in progress. The two selected Dragged frames' render bounds reach the set's dashed border, so their crops stop 3px short (313 instead of 316).",
+ "exceptions": {
+  "item-mid-pressed-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One glyph-edge pixel on the crossbar of the 't' in \"Label text\" (css 118,35.5) under the ripple gradient; Figma vs Chrome text raster."
+  },
+  "item-mid-dragged-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One pixel on the dragged item's top-left shadow corner (css 16,25); Figma vs Chrome blur raster."
+  },
+  "list-draggable-single": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "The lifted item's shadow over the next row: two shadow-corner pixels (css 16 / 295.5, 157.5) and six icon-edge pixels of row 04's star under the blur; Figma vs Chrome raster."
+  },
+  "list-draggable-multi": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One glyph-edge pixel of the 't' in row 05's \"Label text\" (css 118,223.5) under the lifted item's shadow; Figma vs Chrome raster."
+  },
+  "b2-image-none-xs": {
+   "allowedDiffPixels": 45,
+   "allowedDiffReason": "Ellipsis placement: \"Supporting line text lorem ipsum dolor\u2026\" measures 255.73px in the 256px column, so Figma keeps the 'r' while Chrome's line-clamp ellipsis drops it (\"dolo\u2026\"); text box and every other glyph are identical. A nowrap/text-overflow ellipsis cuts at the same glyph."
+  },
+  "reveal-2-revealed": {
+   "allowedDiffPixels": 680,
+   "allowedDiffReason": "Kit slip: Actions=2 \u00b7 Revealed draws its primary action 40\u00d748 at x=54, while Actions=3 \u00b7 Revealed has three 48px buttons 2px apart (0 / 50 / 100) and Actions=1 a 52px one. We render the consistent 48px buttons (primary at x=50)."
+  },
+  "list-standard-single": {
+   "allowedDiffPixels": 1234,
+   "allowedDiffReason": "Kit slip: row 02 of the standard one-line list has its \"Label text\" at 96,20 instead of 48,10 like rows 01 and 03\u201306 (same component, same Content alignment). We render the label where every other row has it."
+  },
+  "b3-video-none-xs": {
+   "allowedDiffPixels": 12397,
+   "allowedDiffReason": "Kit slip: 3-line \u00b7 Leading=Video \u00b7 Trailing=None (with supporting text) is the only 3-line baseline variant whose row centres its content (counter-axis CENTER, video at y=22); the other 3-line variants, video ones included, top-align at 12px. We top-align consistently."
+  }
+ }
+}
