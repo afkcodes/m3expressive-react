@@ -1,0 +1,5940 @@
+{
+  "component": "slider",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "standard": {
+      "node": "58008:10356",
+      "file": "_frames/standard.png"
+    },
+    "centered": {
+      "node": "58008:10979",
+      "file": "_frames/centered.png"
+    },
+    "range": {
+      "node": "58008:11810",
+      "file": "_frames/range.png"
+    }
+  },
+  "variants": {
+    "std-h-xs-enabled-50": {
+      "node": "58008:10357",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 111
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-xs-enabled-100": {
+      "node": "58008:10362",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-xs-enabled-0": {
+      "node": "58008:10366",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 263
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 488,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-xs-hovered-50": {
+      "node": "58008:10370",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 111
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-xs-hovered-100": {
+      "node": "58008:10375",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-xs-hovered-0": {
+      "node": "58008:10379",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 263
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 490,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-xs-pressed-50": {
+      "node": "58008:10383",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 111
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        77
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-xs-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-xs-pressed-100": {
+      "node": "58008:10389",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        374,
+        60
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-xs-pressed-0); top trimmed (neighbour std-h-xs-pressed-50)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-xs-pressed-0": {
+      "node": "58008:10394",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 263
+      },
+      "renderBounds": [
+        -19,
+        -32,
+        374,
+        77
+      ],
+      "refNote": "top trimmed (neighbour std-h-xs-pressed-100)"
+    },
+    "std-h-xs-disabled-50": {
+      "node": "58008:10399",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 111
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+    },
+    "std-h-xs-disabled-100": {
+      "node": "58008:10404",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+    },
+    "std-h-xs-disabled-0": {
+      "node": "58008:10408",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 263
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-enabled-50": {
+      "node": "58008:10412",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-enabled-100": {
+      "node": "58008:10417",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 681
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-enabled-0": {
+      "node": "58008:10421",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 488,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-s-hovered-50": {
+      "node": "58008:10425",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-hovered-100": {
+      "node": "58008:10430",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 681
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-hovered-0": {
+      "node": "58008:10434",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 490,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-s-pressed-50": {
+      "node": "58008:10438",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        77
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-s-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-s-pressed-100": {
+      "node": "58008:10444",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 681
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        374,
+        60
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-s-pressed-0); top trimmed (neighbour std-h-s-pressed-50)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-s-pressed-0": {
+      "node": "58008:10449",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 757
+      },
+      "renderBounds": [
+        -19,
+        -32,
+        374,
+        77
+      ],
+      "refNote": "top trimmed (neighbour std-h-s-pressed-100)"
+    },
+    "std-h-s-disabled-50": {
+      "node": "58008:10454",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-disabled-100": {
+      "node": "58008:10459",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 681
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-s-disabled-0": {
+      "node": "58008:10463",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "std-h-m-enabled-50": {
+      "node": "58008:10467",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1087
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-enabled-100": {
+      "node": "58008:10473",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-enabled-0": {
+      "node": "58008:10478",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1255
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ],
+      "allowedDiffPixels": 584,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-m-hovered-50": {
+      "node": "58008:10483",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1087
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-hovered-100": {
+      "node": "58008:10489",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-hovered-0": {
+      "node": "58008:10494",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1255
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ],
+      "allowedDiffPixels": 586,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-m-pressed-50": {
+      "node": "58008:10499",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1087
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        85
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-m-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-m-pressed-100": {
+      "node": "58008:10506",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1171
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        374,
+        68
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-m-pressed-0); top trimmed (neighbour std-h-m-pressed-50)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-m-pressed-0": {
+      "node": "58008:10512",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1255
+      },
+      "renderBounds": [
+        -19,
+        -32,
+        374,
+        85
+      ],
+      "refNote": "top trimmed (neighbour std-h-m-pressed-100)"
+    },
+    "std-h-m-disabled-50": {
+      "node": "58008:10518",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1087
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-disabled-100": {
+      "node": "58008:10524",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-m-disabled-0": {
+      "node": "58008:10529",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1255
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "std-h-l-enabled-50": {
+      "node": "58008:10534",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1557
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-enabled-100": {
+      "node": "58008:10540",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1657
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-enabled-0": {
+      "node": "58008:10545",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 1757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ],
+      "allowedDiffPixels": 776,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-l-hovered-50": {
+      "node": "58008:10550",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1557
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-hovered-100": {
+      "node": "58008:10556",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1657
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-hovered-0": {
+      "node": "58008:10561",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 442,
+        "y": 1757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ],
+      "allowedDiffPixels": 778,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-h-l-pressed-50": {
+      "node": "58008:10566",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1557
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        101
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-l-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-l-pressed-100": {
+      "node": "58008:10573",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1657
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        374,
+        84
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-l-pressed-0); top trimmed (neighbour std-h-l-pressed-50)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-l-pressed-0": {
+      "node": "58008:10579",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 868,
+        "y": 1757
+      },
+      "renderBounds": [
+        -19,
+        -32,
+        374,
+        101
+      ],
+      "refNote": "top trimmed (neighbour std-h-l-pressed-100)"
+    },
+    "std-h-l-disabled-50": {
+      "node": "58008:10585",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1557
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-disabled-100": {
+      "node": "58008:10591",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1657
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-l-disabled-0": {
+      "node": "58008:10596",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1294,
+        "y": 1757
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "std-h-xl-enabled-50": {
+      "node": "58008:10601",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 19,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-enabled-100": {
+      "node": "58008:10607",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 19,
+        "y": 2148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-enabled-0": {
+      "node": "58008:10612",
+      "size": [
+        360,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 16,
+        "y": 2288
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        110
+      ]
+    },
+    "std-h-xl-hovered-50": {
+      "node": "58008:10617",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 448,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-hovered-100": {
+      "node": "58008:10623",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 448,
+        "y": 2148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-hovered-0": {
+      "node": "58008:10628",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 448,
+        "y": 2288
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-pressed-50": {
+      "node": "58008:10633",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 874,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        141
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-xl-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-xl-pressed-100": {
+      "node": "58008:10640",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 874,
+        "y": 2148
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        374,
+        124
+      ],
+      "refNote": "bottom trimmed (neighbour std-h-xl-pressed-0); top trimmed (neighbour std-h-xl-pressed-50)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-h-xl-pressed-0": {
+      "node": "58008:10646",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 874,
+        "y": 2288
+      },
+      "renderBounds": [
+        -19,
+        -32,
+        374,
+        141
+      ],
+      "refNote": "top trimmed (neighbour std-h-xl-pressed-100)"
+    },
+    "std-h-xl-disabled-50": {
+      "node": "58008:10652",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1300,
+        "y": 2008
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-disabled-100": {
+      "node": "58008:10658",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1300,
+        "y": 2148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-h-xl-disabled-0": {
+      "node": "58008:10663",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1300,
+        "y": 2288
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "std-v-xs-enabled-50": {
+      "node": "58008:10668",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1761,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-xs-enabled-100": {
+      "node": "58008:10673",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1884,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-xs-enabled-0": {
+      "node": "58008:10677",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2009,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 488,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-xs-hovered-50": {
+      "node": "58008:10681",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2217,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-xs-hovered-100": {
+      "node": "58008:10686",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2357,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-xs-hovered-0": {
+      "node": "58008:10690",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2497,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 490,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-xs-pressed-50": {
+      "node": "58008:10694",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2705,
+        "y": 32
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-xs-pressed-100": {
+      "node": "58008:10700",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2845,
+        "y": 32
+      },
+      "renderBounds": [
+        -53,
+        -17,
+        98,
+        372
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-xs-pressed-0": {
+      "node": "58008:10705",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2985,
+        "y": 32
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        372
+      ]
+    },
+    "std-v-xs-disabled-50": {
+      "node": "58008:10710",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3193,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+    },
+    "std-v-xs-disabled-100": {
+      "node": "58008:10715",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3333,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+    },
+    "std-v-xs-disabled-0": {
+      "node": "58008:10719",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3473,
+        "y": 32
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-enabled-50": {
+      "node": "58008:10723",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1761,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-enabled-100": {
+      "node": "58008:10728",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1884,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-enabled-0": {
+      "node": "58008:10732",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2009,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 488,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-s-hovered-50": {
+      "node": "58008:10736",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2217,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-hovered-100": {
+      "node": "58008:10741",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2357,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-hovered-0": {
+      "node": "58008:10745",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2497,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ],
+      "allowedDiffPixels": 490,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-s-pressed-50": {
+      "node": "58008:10749",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2705,
+        "y": 526
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-s-pressed-100": {
+      "node": "58008:10755",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2845,
+        "y": 526
+      },
+      "renderBounds": [
+        -53,
+        -17,
+        98,
+        372
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-s-pressed-0": {
+      "node": "58008:10760",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2985,
+        "y": 526
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        372
+      ]
+    },
+    "std-v-s-disabled-50": {
+      "node": "58008:10765",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3193,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-disabled-100": {
+      "node": "58008:10770",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3333,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-s-disabled-0": {
+      "node": "58008:10774",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3473,
+        "y": 526
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "std-v-m-enabled-50": {
+      "node": "58008:10778",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1757,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-enabled-100": {
+      "node": "58008:10784",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1880,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-enabled-0": {
+      "node": "58008:10789",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2005,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ],
+      "allowedDiffPixels": 584,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-m-hovered-50": {
+      "node": "58008:10794",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2213,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-hovered-100": {
+      "node": "58008:10800",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2353,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-hovered-0": {
+      "node": "58008:10805",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2493,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ],
+      "allowedDiffPixels": 586,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-m-pressed-50": {
+      "node": "58008:10810",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2701,
+        "y": 1020
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        106,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-m-pressed-100": {
+      "node": "58008:10817",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2841,
+        "y": 1020
+      },
+      "renderBounds": [
+        -53,
+        -17,
+        106,
+        372
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-m-pressed-0": {
+      "node": "58008:10823",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2981,
+        "y": 1020
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        106,
+        372
+      ]
+    },
+    "std-v-m-disabled-50": {
+      "node": "58008:10829",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3189,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-disabled-100": {
+      "node": "58008:10835",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3329,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-m-disabled-0": {
+      "node": "58008:10840",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3469,
+        "y": 1020
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "std-v-l-enabled-50": {
+      "node": "58008:10845",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1749,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-enabled-100": {
+      "node": "58008:10851",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1872,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-enabled-0": {
+      "node": "58008:10856",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1997,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ],
+      "allowedDiffPixels": 776,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-l-hovered-50": {
+      "node": "58008:10861",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2205,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-hovered-100": {
+      "node": "58008:10867",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2345,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-hovered-0": {
+      "node": "58008:10872",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2485,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ],
+      "allowedDiffPixels": 778,
+      "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+    },
+    "std-v-l-pressed-50": {
+      "node": "58008:10877",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2693,
+        "y": 1514
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        122,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-l-pressed-100": {
+      "node": "58008:10884",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2833,
+        "y": 1514
+      },
+      "renderBounds": [
+        -53,
+        -17,
+        122,
+        372
+      ],
+      "allowedDiffPixels": 263,
+      "allowedDiffReason": "Kit slip: the pressed handle carries the 8% (hover) layer instead of the 10% pressed layer used by every other Pressed variant."
+    },
+    "std-v-l-pressed-0": {
+      "node": "58008:10890",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2973,
+        "y": 1514
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        122,
+        372
+      ]
+    },
+    "std-v-l-disabled-50": {
+      "node": "58008:10896",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3181,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-disabled-100": {
+      "node": "58008:10902",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3321,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-l-disabled-0": {
+      "node": "58008:10907",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3461,
+        "y": 1514
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "std-v-xl-enabled-50": {
+      "node": "58008:10912",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1729,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-enabled-100": {
+      "node": "58008:10918",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1852,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-enabled-0": {
+      "node": "58008:10923",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 1977,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-hovered-50": {
+      "node": "58008:10928",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2185,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-hovered-100": {
+      "node": "58008:10934",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2325,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-hovered-0": {
+      "node": "58008:10939",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2465,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-pressed-50": {
+      "node": "58008:10944",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2673,
+        "y": 2025
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        141,
+        356
+      ],
+      "refNote": "right trimmed (neighbour std-v-xl-pressed-100)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-xl-pressed-100": {
+      "node": "58008:10951",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2813,
+        "y": 2025
+      },
+      "renderBounds": [
+        -32,
+        -17,
+        120,
+        372
+      ],
+      "refNote": "left trimmed (neighbour std-v-xl-pressed-50); right trimmed (neighbour std-v-xl-pressed-0)",
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "std-v-xl-pressed-0": {
+      "node": "58008:10957",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 2953,
+        "y": 2025
+      },
+      "renderBounds": [
+        -32,
+        -1,
+        141,
+        372
+      ],
+      "refNote": "left trimmed (neighbour std-v-xl-pressed-100)"
+    },
+    "std-v-xl-disabled-50": {
+      "node": "58008:10963",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3161,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-disabled-100": {
+      "node": "58008:10969",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3301,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "std-v-xl-disabled-0": {
+      "node": "58008:10974",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "standard",
+        "x": 3441,
+        "y": 2025
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-h-xs-enabled-0": {
+      "node": "58008:10980",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 95
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-enabled-m50": {
+      "node": "58008:10986",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-enabled-p50": {
+      "node": "58008:10993",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 247
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-hovered-0": {
+      "node": "58008:11000",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 95
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-hovered-m50": {
+      "node": "58008:11006",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-hovered-p50": {
+      "node": "58008:11013",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 247
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-pressed-0": {
+      "node": "58008:11020",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 95
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        77
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-xs-pressed-m50)"
+    },
+    "cen-h-xs-pressed-m50": {
+      "node": "58008:11027",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 171
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        60
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-xs-pressed-p50); top trimmed (neighbour cen-h-xs-pressed-0)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "cen-h-xs-pressed-p50": {
+      "node": "58008:11035",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 247
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        77
+      ],
+      "refNote": "top trimmed (neighbour cen-h-xs-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "cen-h-xs-disabled-0": {
+      "node": "58008:11043",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 95
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-disabled-m50": {
+      "node": "58008:11049",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 171
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-xs-disabled-p50": {
+      "node": "58008:11056",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 247
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-enabled-0": {
+      "node": "58008:11063",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 589
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-enabled-m50": {
+      "node": "58008:11069",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 665
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-enabled-p50": {
+      "node": "58008:11076",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46.5
+      ],
+      "allowedDiffPixels": 2254,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-s-hovered-0": {
+      "node": "58008:11083",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 589
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-hovered-m50": {
+      "node": "58008:11089",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 665
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-hovered-p50": {
+      "node": "58008:11096",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-pressed-0": {
+      "node": "58008:11103",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 589
+      },
+      "renderBounds": [
+        -1,
+        -48,
+        356,
+        71.5
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-s-pressed-m50)",
+      "allowedDiffPixels": 703,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-s-pressed-m50": {
+      "node": "58008:11110",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 665
+      },
+      "renderBounds": [
+        -1,
+        -31,
+        356,
+        55
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-s-pressed-p50); top trimmed (neighbour cen-h-s-pressed-0)",
+      "allowedDiffPixels": 767,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-s-pressed-p50": {
+      "node": "58008:11118",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 741
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        77
+      ],
+      "refNote": "top trimmed (neighbour cen-h-s-pressed-m50)",
+      "allowedDiffPixels": 722,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-s-disabled-0": {
+      "node": "58008:11126",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 589
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-disabled-m50": {
+      "node": "58008:11132",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 665
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-s-disabled-p50": {
+      "node": "58008:11139",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "cen-h-m-hovered-0": {
+      "node": "58008:11146",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1071
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ],
+      "allowedDiffPixels": 626,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-hovered-m50": {
+      "node": "58008:11152",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1155
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-m-hovered-p50": {
+      "node": "58008:11159",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1239
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-m-enabled-0": {
+      "node": "58008:11166",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1071
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-m-enabled-m50": {
+      "node": "58008:11172",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1155
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-m-enabled-p50": {
+      "node": "58008:11179",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1239
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54.5
+      ],
+      "allowedDiffPixels": 1952,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-pressed-0": {
+      "node": "58008:11186",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1071
+      },
+      "renderBounds": [
+        -1,
+        -48,
+        356,
+        83.5
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-m-pressed-m50)",
+      "allowedDiffPixels": 377,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-pressed-m50": {
+      "node": "58008:11193",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1155
+      },
+      "renderBounds": [
+        -1,
+        -31,
+        356,
+        67
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-m-pressed-p50); top trimmed (neighbour cen-h-m-pressed-0)",
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-pressed-p50": {
+      "node": "58008:11201",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1239
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        85
+      ],
+      "refNote": "top trimmed (neighbour cen-h-m-pressed-m50)",
+      "allowedDiffPixels": 9,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-disabled-0": {
+      "node": "58008:11209",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1071
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ],
+      "allowedDiffPixels": 633,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-m-disabled-m50": {
+      "node": "58008:11215",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1155
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-m-disabled-p50": {
+      "node": "58008:11222",
+      "size": [
+        354,
+        52
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1239
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        54
+      ]
+    },
+    "cen-h-l-enabled-0": {
+      "node": "58008:11229",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1541
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-enabled-m50": {
+      "node": "58008:11235",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1641
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-enabled-p50": {
+      "node": "58008:11242",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-hovered-0": {
+      "node": "58008:11249",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1541
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ],
+      "allowedDiffPixels": 778,
+      "allowedDiffReason": "Kit slip: no hover layer on the handle (every other Hovered variant has the 8% on-primary layer)."
+    },
+    "cen-h-l-hovered-m50": {
+      "node": "58008:11255",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1641
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-hovered-p50": {
+      "node": "58008:11262",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-pressed-0": {
+      "node": "58008:11269",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1541
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        101
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-l-pressed-m50)"
+    },
+    "cen-h-l-pressed-m50": {
+      "node": "58008:11276",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1641
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        84
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-l-pressed-p50); top trimmed (neighbour cen-h-l-pressed-0)",
+      "allowedDiffPixels": 181,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-h-l-pressed-p50": {
+      "node": "58008:11284",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1741
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        101
+      ],
+      "refNote": "top trimmed (neighbour cen-h-l-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "cen-h-l-disabled-0": {
+      "node": "58008:11292",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1541
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-l-disabled-m50": {
+      "node": "58008:11298",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1641
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-l-disabled-p50": {
+      "node": "58008:11305",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1741
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "cen-h-xl-enabled-0": {
+      "node": "58008:11312",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 1989
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-enabled-m50": {
+      "node": "58008:11318",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 2129
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-enabled-p50": {
+      "node": "58008:11325",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 16,
+        "y": 2269
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-hovered-0": {
+      "node": "58008:11332",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 1989
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-hovered-m50": {
+      "node": "58008:11338",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 2129
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-hovered-p50": {
+      "node": "58008:11345",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 442,
+        "y": 2269
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-pressed-0": {
+      "node": "58008:11352",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 1989
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        141
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-xl-pressed-m50)"
+    },
+    "cen-h-xl-pressed-m50": {
+      "node": "58008:11359",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 2129
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        124
+      ],
+      "refNote": "bottom trimmed (neighbour cen-h-xl-pressed-p50); top trimmed (neighbour cen-h-xl-pressed-0)",
+      "allowedDiffPixels": 341,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-h-xl-pressed-p50": {
+      "node": "58008:11367",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 868,
+        "y": 2269
+      },
+      "renderBounds": [
+        -1,
+        -32,
+        356,
+        141
+      ],
+      "refNote": "top trimmed (neighbour cen-h-xl-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "cen-h-xl-disabled-0": {
+      "node": "58008:11375",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 1989
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-h-xl-disabled-m50": {
+      "node": "58008:11381",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 2129
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-h-xl-disabled-p50": {
+      "node": "58008:11388",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1294,
+        "y": 2269
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "cen-v-xs-enabled-0": {
+      "node": "58008:11395",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1760,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-enabled-m50": {
+      "node": "58008:11401",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1883,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-enabled-p50": {
+      "node": "58008:11408",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2006,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-hovered-0": {
+      "node": "58008:11415",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2230,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-hovered-m50": {
+      "node": "58008:11421",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2353,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-hovered-p50": {
+      "node": "58008:11428",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2476,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-pressed-0": {
+      "node": "58008:11435",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2720,
+        "y": 16
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ]
+    },
+    "cen-v-xs-pressed-m50": {
+      "node": "58008:11442",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2843,
+        "y": 16
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-xs-pressed-p50": {
+      "node": "58008:11450",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2966,
+        "y": 16
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 56,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-xs-disabled-0": {
+      "node": "58008:11458",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3210,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-disabled-m50": {
+      "node": "58008:11464",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3333,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-xs-disabled-p50": {
+      "node": "58008:11471",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3456,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-enabled-0": {
+      "node": "58008:11478",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1760,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-enabled-m50": {
+      "node": "58008:11484",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1883,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-enabled-p50": {
+      "node": "58008:11491",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2006,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-hovered-0": {
+      "node": "58008:11498",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2230,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-hovered-m50": {
+      "node": "58008:11504",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2353,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-hovered-p50": {
+      "node": "58008:11511",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2476,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-pressed-0": {
+      "node": "58008:11518",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2720,
+        "y": 510
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ]
+    },
+    "cen-v-s-pressed-m50": {
+      "node": "58008:11525",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2843,
+        "y": 510
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-s-pressed-p50": {
+      "node": "58008:11533",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2966,
+        "y": 510
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        98,
+        356
+      ],
+      "allowedDiffPixels": 88,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-s-disabled-0": {
+      "node": "58008:11541",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3210,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-disabled-m50": {
+      "node": "58008:11547",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3333,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-s-disabled-p50": {
+      "node": "58008:11554",
+      "size": [
+        44,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3456,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        356
+      ]
+    },
+    "cen-v-m-enabled-0": {
+      "node": "58008:11561",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1756,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-enabled-m50": {
+      "node": "58008:11567",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1879,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-enabled-p50": {
+      "node": "58008:11574",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2002,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-hovered-0": {
+      "node": "58008:11581",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2226,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ],
+      "allowedDiffPixels": 640,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-v-m-hovered-m50": {
+      "node": "58008:11587",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2349,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-hovered-p50": {
+      "node": "58008:11594",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2472,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-pressed-0": {
+      "node": "58008:11601",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2716,
+        "y": 1004
+      },
+      "renderBounds": [
+        -52,
+        -1,
+        105.5,
+        356
+      ],
+      "allowedDiffPixels": 664,
+      "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+    },
+    "cen-v-m-pressed-m50": {
+      "node": "58008:11608",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2839,
+        "y": 1004
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        106,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-m-pressed-p50": {
+      "node": "58008:11616",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2962,
+        "y": 1004
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        106,
+        356
+      ],
+      "allowedDiffPixels": 152,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-m-disabled-0": {
+      "node": "58008:11624",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3206,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-disabled-m50": {
+      "node": "58008:11630",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3329,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-m-disabled-p50": {
+      "node": "58008:11637",
+      "size": [
+        52,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3452,
+        "y": 1004
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        54,
+        356
+      ]
+    },
+    "cen-v-l-enabled-0": {
+      "node": "58008:11644",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1748,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-enabled-m50": {
+      "node": "58008:11650",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1871,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-enabled-p50": {
+      "node": "58008:11657",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1994,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-hovered-0": {
+      "node": "58008:11664",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2218,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ],
+      "allowedDiffPixels": 778,
+      "allowedDiffReason": "Kit slip: no hover layer on the handle (every other Hovered variant has the 8% on-primary layer)."
+    },
+    "cen-v-l-hovered-m50": {
+      "node": "58008:11670",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2341,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-hovered-p50": {
+      "node": "58008:11677",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2464,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-pressed-0": {
+      "node": "58008:11684",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2708,
+        "y": 1498
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        122,
+        356
+      ]
+    },
+    "cen-v-l-pressed-m50": {
+      "node": "58008:11691",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2831,
+        "y": 1498
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        122,
+        356
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-l-pressed-p50": {
+      "node": "58008:11699",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2954,
+        "y": 1498
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        122,
+        356
+      ],
+      "allowedDiffPixels": 216,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-l-disabled-0": {
+      "node": "58008:11707",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3198,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-disabled-m50": {
+      "node": "58008:11713",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3321,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-l-disabled-p50": {
+      "node": "58008:11720",
+      "size": [
+        68,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3444,
+        "y": 1498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        70,
+        356
+      ]
+    },
+    "cen-v-xl-enabled-0": {
+      "node": "58008:11727",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1728,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-enabled-m50": {
+      "node": "58008:11733",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1851,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-enabled-p50": {
+      "node": "58008:11740",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 1974,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-hovered-0": {
+      "node": "58008:11747",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2198,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-hovered-m50": {
+      "node": "58008:11753",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2321,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-hovered-p50": {
+      "node": "58008:11760",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2444,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-pressed-0": {
+      "node": "58008:11767",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2688,
+        "y": 2006
+      },
+      "renderBounds": [
+        -53,
+        -1,
+        124,
+        356
+      ],
+      "refNote": "right trimmed (neighbour cen-v-xl-pressed-m50)"
+    },
+    "cen-v-xl-pressed-m50": {
+      "node": "58008:11774",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2811,
+        "y": 2006
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        86,
+        356
+      ],
+      "refNote": "left trimmed (neighbour cen-v-xl-pressed-0); right trimmed (neighbour cen-v-xl-pressed-p50)"
+    },
+    "cen-v-xl-pressed-p50": {
+      "node": "58008:11782",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 2934,
+        "y": 2006
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        124,
+        356
+      ],
+      "refNote": "left trimmed (neighbour cen-v-xl-pressed-m50)",
+      "allowedDiffPixels": 374,
+      "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+    },
+    "cen-v-xl-disabled-0": {
+      "node": "58008:11790",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3178,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-disabled-m50": {
+      "node": "58008:11796",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3301,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "cen-v-xl-disabled-p50": {
+      "node": "58008:11803",
+      "size": [
+        108,
+        354
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "centered",
+        "x": 3424,
+        "y": 2006
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        356
+      ]
+    },
+    "rng-h-xs-enabled-0": {
+      "node": "58008:11811",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 64
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-hovered-0": {
+      "node": "58008:11820",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 64
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-pressed-0": {
+      "node": "58008:11828",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 64
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        85
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-xs-pressed-m50)",
+      "allowedDiffPixels": 330,
+      "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+    },
+    "rng-h-xs-disabled-0": {
+      "node": "58008:11837",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 64
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-enabled-m50": {
+      "node": "58008:11846",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-hovered-m50": {
+      "node": "58008:11855",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-pressed-m50": {
+      "node": "58008:11864",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        76
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-xs-pressed-p50); top trimmed (neighbour rng-h-xs-pressed-0)"
+    },
+    "rng-h-xs-disabled-m50": {
+      "node": "58008:11874",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-enabled-p50": {
+      "node": "58008:11883",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 232
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-hovered-p50": {
+      "node": "58008:11892",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 232
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-xs-pressed-p50": {
+      "node": "58008:11901",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 232
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        85
+      ],
+      "refNote": "top trimmed (neighbour rng-h-xs-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "rng-h-xs-disabled-p50": {
+      "node": "58008:11911",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 232
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-enabled-0": {
+      "node": "58008:11920",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-hovered-0": {
+      "node": "58008:11929",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-pressed-0": {
+      "node": "58008:11937",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        85
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-s-pressed-m50)",
+      "allowedDiffPixels": 362,
+      "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+    },
+    "rng-h-s-disabled-0": {
+      "node": "58008:11946",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-enabled-m50": {
+      "node": "58008:11955",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 560
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ],
+      "allowedDiffPixels": 180,
+      "allowedDiffReason": "Kit slip: the end-side inactive track starts at 187 (185 in every other size: handle centre + 2 + 6)."
+    },
+    "rng-h-s-hovered-m50": {
+      "node": "58008:11964",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 560
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-pressed-m50": {
+      "node": "58008:11973",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 560
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        76
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-s-pressed-p50); top trimmed (neighbour rng-h-s-pressed-0)"
+    },
+    "rng-h-s-disabled-m50": {
+      "node": "58008:11983",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 560
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-enabled-p50": {
+      "node": "58008:11992",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 644
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-hovered-p50": {
+      "node": "58008:12001",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 644
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-s-pressed-p50": {
+      "node": "58008:12010",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 644
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        85
+      ],
+      "refNote": "top trimmed (neighbour rng-h-s-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "rng-h-s-disabled-p50": {
+      "node": "58008:12020",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 644
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        46
+      ]
+    },
+    "rng-h-m-enabled-0": {
+      "node": "58008:12029",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 888
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-hovered-0": {
+      "node": "58008:12038",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 888
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-pressed-0": {
+      "node": "58008:12046",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 888
+      },
+      "renderBounds": [
+        -1,
+        -57,
+        356,
+        85
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-m-pressed-m50)",
+      "allowedDiffPixels": 1705,
+      "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+    },
+    "rng-h-m-disabled-0": {
+      "node": "58008:12055",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 888
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-enabled-m50": {
+      "node": "58008:12064",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 972
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-hovered-m50": {
+      "node": "58008:12073",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 972
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-pressed-m50": {
+      "node": "58008:12082",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 972
+      },
+      "renderBounds": [
+        -1,
+        -36,
+        356,
+        64
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-m-pressed-p50); top trimmed (neighbour rng-h-m-pressed-0)",
+      "allowedDiffPixels": 789,
+      "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+    },
+    "rng-h-m-disabled-m50": {
+      "node": "58008:12092",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 972
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-enabled-p50": {
+      "node": "58008:12101",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1056
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-hovered-p50": {
+      "node": "58008:12110",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1056
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-m-pressed-p50": {
+      "node": "58008:12119",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1056
+      },
+      "renderBounds": [
+        -1,
+        -36,
+        356,
+        85
+      ],
+      "refNote": "top trimmed (neighbour rng-h-m-pressed-m50)",
+      "allowedDiffPixels": 779,
+      "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+    },
+    "rng-h-m-disabled-p50": {
+      "node": "58008:12129",
+      "size": [
+        354,
+        44
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1056
+      },
+      "renderBounds": [
+        -1,
+        -5,
+        356,
+        54
+      ]
+    },
+    "rng-h-l-enabled-0": {
+      "node": "58008:12138",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1300
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-hovered-0": {
+      "node": "58008:12147",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1300
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-pressed-0": {
+      "node": "58008:12155",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1300
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        109
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-l-pressed-m50)",
+      "allowedDiffPixels": 679,
+      "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+    },
+    "rng-h-l-disabled-0": {
+      "node": "58008:12164",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1300
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ],
+      "allowedDiffPixels": 36,
+      "allowedDiffReason": "Kit slip: the end stop dot has no fill in this variant (all other Range variants show it)."
+    },
+    "rng-h-l-enabled-m50": {
+      "node": "58008:12173",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1408
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-hovered-m50": {
+      "node": "58008:12182",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1408
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-pressed-m50": {
+      "node": "58008:12191",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1408
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        100
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-l-pressed-p50); top trimmed (neighbour rng-h-l-pressed-0)"
+    },
+    "rng-h-l-disabled-m50": {
+      "node": "58008:12201",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1408
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-enabled-p50": {
+      "node": "58008:12210",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1516
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-hovered-p50": {
+      "node": "58008:12219",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1516
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-l-pressed-p50": {
+      "node": "58008:12228",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1516
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        109
+      ],
+      "refNote": "top trimmed (neighbour rng-h-l-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "rng-h-l-disabled-p50": {
+      "node": "58008:12238",
+      "size": [
+        354,
+        68
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1516
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        70
+      ]
+    },
+    "rng-h-xl-enabled-0": {
+      "node": "58008:12247",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1784
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-hovered-0": {
+      "node": "58008:12256",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1784
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-pressed-0": {
+      "node": "58008:12264",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1784
+      },
+      "renderBounds": [
+        -1,
+        -49,
+        356,
+        149
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-xl-pressed-m50)",
+      "allowedDiffPixels": 1159,
+      "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+    },
+    "rng-h-xl-disabled-0": {
+      "node": "58008:12273",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1784
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-enabled-m50": {
+      "node": "58008:12282",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 1932
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-hovered-m50": {
+      "node": "58008:12291",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 1932
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-pressed-m50": {
+      "node": "58008:12300",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 1932
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        140
+      ],
+      "refNote": "bottom trimmed (neighbour rng-h-xl-pressed-p50); top trimmed (neighbour rng-h-xl-pressed-0)"
+    },
+    "rng-h-xl-disabled-m50": {
+      "node": "58008:12310",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 1932
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-enabled-p50": {
+      "node": "58008:12319",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 16,
+        "y": 2080
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-hovered-p50": {
+      "node": "58008:12328",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 442,
+        "y": 2080
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    },
+    "rng-h-xl-pressed-p50": {
+      "node": "58008:12337",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 868,
+        "y": 2080
+      },
+      "renderBounds": [
+        -1,
+        -40,
+        356,
+        149
+      ],
+      "refNote": "top trimmed (neighbour rng-h-xl-pressed-m50)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+    },
+    "rng-h-xl-disabled-p50": {
+      "node": "58008:12347",
+      "size": [
+        354,
+        108
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "range",
+        "x": 1294,
+        "y": 2080
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        356,
+        110
+      ]
+    }
+  }
+}

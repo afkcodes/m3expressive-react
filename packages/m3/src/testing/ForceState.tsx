@@ -13,6 +13,8 @@ export interface ForceStateValue {
   focusRing?: boolean;
   /** Frozen ripple blob from the Figma Pressed variant, in container-local px. */
   ripplePath?: string;
+  /** Which part the forced state applies to, for multi-part components (range slider thumb). */
+  thumb?: number;
   /** Frozen progress-indicator frame (the kit's still frames of animated indicators). */
   progress?: ForcedProgressFrame;
 }

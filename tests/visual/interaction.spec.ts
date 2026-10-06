@@ -684,3 +684,50 @@ test.describe('progress (live)', () => {
     }
   });
 });
+
+// ── Slider: real pointer / keyboard against the kit's Medium 50% frames ──────────────────────
+test('slider (live): rest, hover, press, drag, keyboard', async ({ page }) => {
+  const sl = JSON.parse(readFileSync(join(REFS_DIR, 'slider/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/slider/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const check = async (name: string) => {
+    const v = sl.variants[name]!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'slider', `${name}.png`));
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  };
+  const volume = page.getByRole('slider', { name: 'Volume' });
+  const values = page.locator('[data-values]');
+  await check('std-h-m-enabled-50');
+  const box = (await node.boundingBox())!;
+  const handleX = box.x + 177;
+  await page.mouse.move(handleX, box.y + 26);
+  await page.waitForTimeout(SETTLE);
+  await check('std-h-m-hovered-50');
+  await page.mouse.down();
+  await page.waitForTimeout(SETTLE);
+  await check('std-h-m-pressed-50');
+  await page.mouse.move(handleX + 34.2, box.y + 26, { steps: 4 });
+  await page.mouse.up();
+  await expect(volume).toHaveAttribute('aria-valuenow', '60');
+  // Reset the sequential-focus starting point to the document, then Tab in.
+  await page.mouse.click(1, 1);
+  // Keyboard: focus halves the handle (Compose) and shows the value indicator; arrows step.
+  await page.keyboard.press('Tab');
+  await expect(volume).toBeFocused();
+  const handle = volume.locator('xpath=..');
+  await expect.poll(async () => (await handle.boundingBox())!.width).toBe(2);
+  await page.keyboard.press('ArrowRight');
+  await expect(volume).toHaveAttribute('aria-valuenow', '61');
+  await expect(values).toHaveText(/^61\|/);
+  // Range: the closest thumb follows the pointer.
+  const price = page.getByRole('slider', { name: 'Price' });
+  await expect(price).toHaveCount(2);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('ArrowRight');
+  await expect(values).toHaveText(/\|21,60$/);
+});

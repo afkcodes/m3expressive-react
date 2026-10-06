@@ -8,6 +8,12 @@ export interface FixtureVariant {
   width?: number;
   height?: number;
   /**
+   * Page padding around the node (default FIXTURE_PADDING = 32). Raise it for render bounds that
+   * extend further (slider value indicators: ~52px). Chrome's raster depends on page position
+   * (tile alignment), so a variant must be verified at the padding it declares.
+   */
+  padding?: number;
+  /**
    * Figma layer name → CSS selector inside the fixture, for box-level checks
    * against manifest.json `layers`.
    */

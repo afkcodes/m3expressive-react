@@ -1,0 +1,373 @@
+{
+ "component": "slider",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "standard": {
+   "node": "58008:10356",
+   "file": "_frames/standard.png",
+   "size": [
+    3565,
+    2412
+   ],
+   "rows": "std-h-xs-enabled-50 58008:10357 16,111 354x44;std-h-xs-enabled-100 58008:10362 16,187 354x44;std-h-xs-enabled-0 58008:10366 16,263 354x44;std-h-xs-hovered-50 58008:10370 442,111 354x44;std-h-xs-hovered-100 58008:10375 442,187 354x44;std-h-xs-hovered-0 58008:10379 442,263 354x44;std-h-xs-pressed-50 58008:10383 868,111 354x44 rb0,-48,354,92;std-h-xs-pressed-100 58008:10389 868,187 354x44 rb0,-48,372,92;std-h-xs-pressed-0 58008:10394 868,263 354x44 rb-18,-48,372,92;std-h-xs-disabled-50 58008:10399 1294,111 354x44;std-h-xs-disabled-100 58008:10404 1294,187 354x44;std-h-xs-disabled-0 58008:10408 1294,263 354x44;std-h-s-enabled-50 58008:10412 16,605 354x44;std-h-s-enabled-100 58008:10417 16,681 354x44;std-h-s-enabled-0 58008:10421 16,757 354x44;std-h-s-hovered-50 58008:10425 442,605 354x44;std-h-s-hovered-100 58008:10430 442,681 354x44;std-h-s-hovered-0 58008:10434 442,757 354x44;std-h-s-pressed-50 58008:10438 868,605 354x44 rb0,-48,354,92;std-h-s-pressed-100 58008:10444 868,681 354x44 rb0,-48,372,92;std-h-s-pressed-0 58008:10449 868,757 354x44 rb-18,-48,372,92;std-h-s-disabled-50 58008:10454 1294,605 354x44;std-h-s-disabled-100 58008:10459 1294,681 354x44;std-h-s-disabled-0 58008:10463 1294,757 354x44;std-h-m-enabled-50 58008:10467 16,1087 354x52;std-h-m-enabled-100 58008:10473 16,1171 354x52;std-h-m-enabled-0 58008:10478 16,1255 354x52;std-h-m-hovered-50 58008:10483 442,1087 354x52;std-h-m-hovered-100 58008:10489 442,1171 354x52;std-h-m-hovered-0 58008:10494 442,1255 354x52;std-h-m-pressed-50 58008:10499 868,1087 354x52 rb0,-48,354,100;std-h-m-pressed-100 58008:10506 868,1171 354x52 rb0,-48,372,100;std-h-m-pressed-0 58008:10512 868,1255 354x52 rb-18,-48,372,100;std-h-m-disabled-50 58008:10518 1294,1087 354x52;std-h-m-disabled-100 58008:10524 1294,1171 354x52;std-h-m-disabled-0 58008:10529 1294,1255 354x52;std-h-l-enabled-50 58008:10534 16,1557 354x68;std-h-l-enabled-100 58008:10540 16,1657 354x68;std-h-l-enabled-0 58008:10545 16,1757 354x68;std-h-l-hovered-50 58008:10550 442,1557 354x68;std-h-l-hovered-100 58008:10556 442,1657 354x68;std-h-l-hovered-0 58008:10561 442,1757 354x68;std-h-l-pressed-50 58008:10566 868,1557 354x68 rb0,-48,354,116;std-h-l-pressed-100 58008:10573 868,1657 354x68 rb0,-48,372,116;std-h-l-pressed-0 58008:10579 868,1757 354x68 rb-18,-48,372,116;std-h-l-disabled-50 58008:10585 1294,1557 354x68;std-h-l-disabled-100 58008:10591 1294,1657 354x68;std-h-l-disabled-0 58008:10596 1294,1757 354x68;std-h-xl-enabled-50 58008:10601 19,2008 354x108;std-h-xl-enabled-100 58008:10607 19,2148 354x108;std-h-xl-enabled-0 58008:10612 16,2288 360x108;std-h-xl-hovered-50 58008:10617 448,2008 354x108;std-h-xl-hovered-100 58008:10623 448,2148 354x108;std-h-xl-hovered-0 58008:10628 448,2288 354x108;std-h-xl-pressed-50 58008:10633 874,2008 354x108 rb0,-48,354,156;std-h-xl-pressed-100 58008:10640 874,2148 354x108 rb0,-48,372,156;std-h-xl-pressed-0 58008:10646 874,2288 354x108 rb-18,-48,372,156;std-h-xl-disabled-50 58008:10652 1300,2008 354x108;std-h-xl-disabled-100 58008:10658 1300,2148 354x108;std-h-xl-disabled-0 58008:10663 1300,2288 354x108;std-v-xs-enabled-50 58008:10668 1761,32 44x354;std-v-xs-enabled-100 58008:10673 1884,32 44x354;std-v-xs-enabled-0 58008:10677 2009,32 44x354;std-v-xs-hovered-50 58008:10681 2217,32 44x354;std-v-xs-hovered-100 58008:10686 2357,32 44x354;std-v-xs-hovered-0 58008:10690 2497,32 44x354;std-v-xs-pressed-50 58008:10694 2705,32 44x354 rb-52,0,96,354;std-v-xs-pressed-100 58008:10700 2845,32 44x354 rb-52,-16,96,370;std-v-xs-pressed-0 58008:10705 2985,32 44x354 rb-52,0,96,370;std-v-xs-disabled-50 58008:10710 3193,32 44x354;std-v-xs-disabled-100 58008:10715 3333,32 44x354;std-v-xs-disabled-0 58008:10719 3473,32 44x354;std-v-s-enabled-50 58008:10723 1761,526 44x354;std-v-s-enabled-100 58008:10728 1884,526 44x354;std-v-s-enabled-0 58008:10732 2009,526 44x354;std-v-s-hovered-50 58008:10736 2217,526 44x354;std-v-s-hovered-100 58008:10741 2357,526 44x354;std-v-s-hovered-0 58008:10745 2497,526 44x354;std-v-s-pressed-50 58008:10749 2705,526 44x354 rb-52,0,96,354;std-v-s-pressed-100 58008:10755 2845,526 44x354 rb-52,-16,96,370;std-v-s-pressed-0 58008:10760 2985,526 44x354 rb-52,0,96,370;std-v-s-disabled-50 58008:10765 3193,526 44x354;std-v-s-disabled-100 58008:10770 3333,526 44x354;std-v-s-disabled-0 58008:10774 3473,526 44x354;std-v-m-enabled-50 58008:10778 1757,1020 52x354;std-v-m-enabled-100 58008:10784 1880,1020 52x354;std-v-m-enabled-0 58008:10789 2005,1020 52x354;std-v-m-hovered-50 58008:10794 2213,1020 52x354;std-v-m-hovered-100 58008:10800 2353,1020 52x354;std-v-m-hovered-0 58008:10805 2493,1020 52x354;std-v-m-pressed-50 58008:10810 2701,1020 52x354 rb-52,0,104,354;std-v-m-pressed-100 58008:10817 2841,1020 52x354 rb-52,-16,104,370;std-v-m-pressed-0 58008:10823 2981,1020 52x354 rb-52,0,104,370;std-v-m-disabled-50 58008:10829 3189,1020 52x354;std-v-m-disabled-100 58008:10835 3329,1020 52x354;std-v-m-disabled-0 58008:10840 3469,1020 52x354;std-v-l-enabled-50 58008:10845 1749,1514 68x354;std-v-l-enabled-100 58008:10851 1872,1514 68x354;std-v-l-enabled-0 58008:10856 1997,1514 68x354;std-v-l-hovered-50 58008:10861 2205,1514 68x354;std-v-l-hovered-100 58008:10867 2345,1514 68x354;std-v-l-hovered-0 58008:10872 2485,1514 68x354;std-v-l-pressed-50 58008:10877 2693,1514 68x354 rb-52,0,120,354;std-v-l-pressed-100 58008:10884 2833,1514 68x354 rb-52,-16,120,370;std-v-l-pressed-0 58008:10890 2973,1514 68x354 rb-52,0,120,370;std-v-l-disabled-50 58008:10896 3181,1514 68x354;std-v-l-disabled-100 58008:10902 3321,1514 68x354;std-v-l-disabled-0 58008:10907 3461,1514 68x354;std-v-xl-enabled-50 58008:10912 1729,2025 108x354;std-v-xl-enabled-100 58008:10918 1852,2025 108x354;std-v-xl-enabled-0 58008:10923 1977,2025 108x354;std-v-xl-hovered-50 58008:10928 2185,2025 108x354;std-v-xl-hovered-100 58008:10934 2325,2025 108x354;std-v-xl-hovered-0 58008:10939 2465,2025 108x354;std-v-xl-pressed-50 58008:10944 2673,2025 108x354 rb-52,0,160,354;std-v-xl-pressed-100 58008:10951 2813,2025 108x354 rb-52,-16,160,370;std-v-xl-pressed-0 58008:10957 2953,2025 108x354 rb-52,0,160,370;std-v-xl-disabled-50 58008:10963 3161,2025 108x354;std-v-xl-disabled-100 58008:10969 3301,2025 108x354;std-v-xl-disabled-0 58008:10974 3441,2025 108x354"
+  },
+  "centered": {
+   "node": "58008:10979",
+   "file": "_frames/centered.png",
+   "size": [
+    3565,
+    2393
+   ],
+   "rows": "cen-h-xs-enabled-0 58008:10980 16,95 354x44;cen-h-xs-enabled-m50 58008:10986 16,171 354x44;cen-h-xs-enabled-p50 58008:10993 16,247 354x44;cen-h-xs-hovered-0 58008:11000 442,95 354x44;cen-h-xs-hovered-m50 58008:11006 442,171 354x44;cen-h-xs-hovered-p50 58008:11013 442,247 354x44;cen-h-xs-pressed-0 58008:11020 868,95 354x44 rb0,-48,354,92;cen-h-xs-pressed-m50 58008:11027 868,171 354x44 rb0,-48,354,92;cen-h-xs-pressed-p50 58008:11035 868,247 354x44 rb0,-48,354,92;cen-h-xs-disabled-0 58008:11043 1294,95 354x44;cen-h-xs-disabled-m50 58008:11049 1294,171 354x44;cen-h-xs-disabled-p50 58008:11056 1294,247 354x44;cen-h-s-enabled-0 58008:11063 16,589 354x44;cen-h-s-enabled-m50 58008:11069 16,665 354x44 rb0,0,354,44.273;cen-h-s-enabled-p50 58008:11076 16,741 354x44 rb0,0,354,44.545;cen-h-s-hovered-0 58008:11083 442,589 354x44 rb0,-0.182,354,44.182;cen-h-s-hovered-m50 58008:11089 442,665 354x44 rb0,0,354,44.09;cen-h-s-hovered-p50 58008:11096 442,741 354x44 rb0,0,354,44.363;cen-h-s-pressed-0 58008:11103 868,589 354x44 rb0,-47.363,354,92;cen-h-s-pressed-m50 58008:11110 868,665 354x44 rb0,-52.09,354,96.09;cen-h-s-pressed-p50 58008:11118 868,741 354x44 rb0,-51.818,354,96;cen-h-s-disabled-0 58008:11126 1294,589 354x44 rb0,0,354,44.455;cen-h-s-disabled-m50 58008:11132 1294,665 354x44 rb0,-0.273,354,44.273;cen-h-s-disabled-p50 58008:11139 1294,741 354x44;cen-h-m-hovered-0 58008:11146 16,1071 354x52 rb0,-0.182,354,52.182;cen-h-m-hovered-m50 58008:11152 16,1155 354x52 rb0,0,354,52.09;cen-h-m-hovered-p50 58008:11159 16,1239 354x52 rb0,0,354,52.363;cen-h-m-enabled-0 58008:11166 442,1071 354x52;cen-h-m-enabled-m50 58008:11172 442,1155 354x52 rb0,0,354,52.273;cen-h-m-enabled-p50 58008:11179 442,1239 354x52 rb0,0,354,52.545;cen-h-m-pressed-0 58008:11186 868,1071 354x52 rb0,-47.363,354,100;cen-h-m-pressed-m50 58008:11193 868,1155 354x52 rb0,-48.09,354,100.09;cen-h-m-pressed-p50 58008:11201 868,1239 354x52 rb0,-47.818,354,100;cen-h-m-disabled-0 58008:11209 1294,1071 354x52 rb0,0,354,52.455;cen-h-m-disabled-m50 58008:11215 1294,1155 354x52 rb0,-0.273,354,52.273;cen-h-m-disabled-p50 58008:11222 1294,1239 354x52;cen-h-l-enabled-0 58008:11229 16,1541 354x68;cen-h-l-enabled-m50 58008:11235 16,1641 354x68;cen-h-l-enabled-p50 58008:11242 16,1741 354x68;cen-h-l-hovered-0 58008:11249 442,1541 354x68;cen-h-l-hovered-m50 58008:11255 442,1641 354x68 rb0,-0.182,354,68.182;cen-h-l-hovered-p50 58008:11262 442,1741 354x68;cen-h-l-pressed-0 58008:11269 868,1541 354x68 rb0,-48,354,116;cen-h-l-pressed-m50 58008:11276 868,1641 354x68 rb0,-48,354,116;cen-h-l-pressed-p50 58008:11284 868,1741 354x68 rb0,-48,354,116;cen-h-l-disabled-0 58008:11292 1294,1541 354x68 rb0,0,354,68.455;cen-h-l-disabled-m50 58008:11298 1294,1641 354x68 rb0,-0.273,354,68.273;cen-h-l-disabled-p50 58008:11305 1294,1741 354x68;cen-h-xl-enabled-0 58008:11312 16,1989 354x108;cen-h-xl-enabled-m50 58008:11318 16,2129 354x108;cen-h-xl-enabled-p50 58008:11325 16,2269 354x108;cen-h-xl-hovered-0 58008:11332 442,1989 354x108 rb0,-0.182,354,108.182;cen-h-xl-hovered-m50 58008:11338 442,2129 354x108;cen-h-xl-hovered-p50 58008:11345 442,2269 354x108;cen-h-xl-pressed-0 58008:11352 868,1989 354x108 rb0,-48,354,156;cen-h-xl-pressed-m50 58008:11359 868,2129 354x108 rb0,-48,354,156;cen-h-xl-pressed-p50 58008:11367 868,2269 354x108 rb0,-48,354,156;cen-h-xl-disabled-0 58008:11375 1294,1989 354x108 rb0,0,354,108.455;cen-h-xl-disabled-m50 58008:11381 1294,2129 354x108 rb0,-0.273,354,108.273;cen-h-xl-disabled-p50 58008:11388 1294,2269 354x108;cen-v-xs-enabled-0 58008:11395 1760,16 44x354;cen-v-xs-enabled-m50 58008:11401 1883,16 44x354;cen-v-xs-enabled-p50 58008:11408 2006,16 44x354;cen-v-xs-hovered-0 58008:11415 2230,16 44x354;cen-v-xs-hovered-m50 58008:11421 2353,16 44x354;cen-v-xs-hovered-p50 58008:11428 2476,16 44x354;cen-v-xs-pressed-0 58008:11435 2720,16 44x354 rb-52,0,96,354;cen-v-xs-pressed-m50 58008:11442 2843,16 44x354 rb-52,0,96,354;cen-v-xs-pressed-p50 58008:11450 2966,16 44x354 rb-52,0,96,354;cen-v-xs-disabled-0 58008:11458 3210,16 44x354;cen-v-xs-disabled-m50 58008:11464 3333,16 44x354;cen-v-xs-disabled-p50 58008:11471 3456,16 44x354;cen-v-s-enabled-0 58008:11478 1760,510 44x354;cen-v-s-enabled-m50 58008:11484 1883,510 44x354;cen-v-s-enabled-p50 58008:11491 2006,510 44x354;cen-v-s-hovered-0 58008:11498 2230,510 44x354;cen-v-s-hovered-m50 58008:11504 2353,510 44x354;cen-v-s-hovered-p50 58008:11511 2476,510 44x354;cen-v-s-pressed-0 58008:11518 2720,510 44x354 rb-52,0,96,354;cen-v-s-pressed-m50 58008:11525 2843,510 44x354 rb-52,0,96,354;cen-v-s-pressed-p50 58008:11533 2966,510 44x354 rb-52,0,96,354;cen-v-s-disabled-0 58008:11541 3210,510 44x354;cen-v-s-disabled-m50 58008:11547 3333,510 44x354;cen-v-s-disabled-p50 58008:11554 3456,510 44x354;cen-v-m-enabled-0 58008:11561 1756,1004 52x354;cen-v-m-enabled-m50 58008:11567 1879,1004 52x354 rb0,0,52.092,354;cen-v-m-enabled-p50 58008:11574 2002,1004 52x354 rb0,0,52.182,354;cen-v-m-hovered-0 58008:11581 2226,1004 52x354;cen-v-m-hovered-m50 58008:11587 2349,1004 52x354 rb0,0,52.363,354;cen-v-m-hovered-p50 58008:11594 2472,1004 52x354 rb0,0,52.453,354;cen-v-m-pressed-0 58008:11601 2716,1004 52x354 rb-51.453,0,104,354;cen-v-m-pressed-m50 58008:11608 2839,1004 52x354 rb-52,0,104,354;cen-v-m-pressed-p50 58008:11616 2962,1004 52x354 rb-52,0,104,354;cen-v-m-disabled-0 58008:11624 3206,1004 52x354;cen-v-m-disabled-m50 58008:11630 3329,1004 52x354;cen-v-m-disabled-p50 58008:11637 3452,1004 52x354;cen-v-l-enabled-0 58008:11644 1748,1498 68x354;cen-v-l-enabled-m50 58008:11650 1871,1498 68x354;cen-v-l-enabled-p50 58008:11657 1994,1498 68x354;cen-v-l-hovered-0 58008:11664 2218,1498 68x354;cen-v-l-hovered-m50 58008:11670 2341,1498 68x354;cen-v-l-hovered-p50 58008:11677 2464,1498 68x354;cen-v-l-pressed-0 58008:11684 2708,1498 68x354 rb-52,0,120,354;cen-v-l-pressed-m50 58008:11691 2831,1498 68x354 rb-52,0,120,354;cen-v-l-pressed-p50 58008:11699 2954,1498 68x354 rb-52,0,120,354;cen-v-l-disabled-0 58008:11707 3198,1498 68x354;cen-v-l-disabled-m50 58008:11713 3321,1498 68x354;cen-v-l-disabled-p50 58008:11720 3444,1498 68x354;cen-v-xl-enabled-0 58008:11727 1728,2006 108x354;cen-v-xl-enabled-m50 58008:11733 1851,2006 108x354;cen-v-xl-enabled-p50 58008:11740 1974,2006 108x354;cen-v-xl-hovered-0 58008:11747 2198,2006 108x354;cen-v-xl-hovered-m50 58008:11753 2321,2006 108x354;cen-v-xl-hovered-p50 58008:11760 2444,2006 108x354;cen-v-xl-pressed-0 58008:11767 2688,2006 108x354 rb-52,0,160,354;cen-v-xl-pressed-m50 58008:11774 2811,2006 108x354 rb-52,0,160,354;cen-v-xl-pressed-p50 58008:11782 2934,2006 108x354 rb-52,0,160,354;cen-v-xl-disabled-0 58008:11790 3178,2006 108x354 rb0,0,108.455,354;cen-v-xl-disabled-m50 58008:11796 3301,2006 108x354;cen-v-xl-disabled-p50 58008:11803 3424,2006 108x354"
+  },
+  "range": {
+   "node": "58008:11810",
+   "file": "_frames/range.png",
+   "size": [
+    1691,
+    2204
+   ],
+   "rows": "rng-h-xs-enabled-0 58008:11811 16,64 354x44;rng-h-xs-hovered-0 58008:11820 442,64 354x44;rng-h-xs-pressed-0 58008:11828 868,64 354x44 rb0,-48,354,92;rng-h-xs-disabled-0 58008:11837 1294,64 354x44;rng-h-xs-enabled-m50 58008:11846 16,148 354x44;rng-h-xs-hovered-m50 58008:11855 442,148 354x44;rng-h-xs-pressed-m50 58008:11864 868,148 354x44 rb0,-48,354,92;rng-h-xs-disabled-m50 58008:11874 1294,148 354x44;rng-h-xs-enabled-p50 58008:11883 16,232 354x44;rng-h-xs-hovered-p50 58008:11892 442,232 354x44;rng-h-xs-pressed-p50 58008:11901 868,232 354x44 rb0,-48,354,92;rng-h-xs-disabled-p50 58008:11911 1294,232 354x44;rng-h-s-enabled-0 58008:11920 16,476 354x44;rng-h-s-hovered-0 58008:11929 442,476 354x44;rng-h-s-pressed-0 58008:11937 868,476 354x44 rb0,-48,354,92;rng-h-s-disabled-0 58008:11946 1294,476 354x44;rng-h-s-enabled-m50 58008:11955 16,560 354x44;rng-h-s-hovered-m50 58008:11964 442,560 354x44;rng-h-s-pressed-m50 58008:11973 868,560 354x44 rb0,-48,354,92;rng-h-s-disabled-m50 58008:11983 1294,560 354x44;rng-h-s-enabled-p50 58008:11992 16,644 354x44;rng-h-s-hovered-p50 58008:12001 442,644 354x44;rng-h-s-pressed-p50 58008:12010 868,644 354x44 rb0,-48,354,92;rng-h-s-disabled-p50 58008:12020 1294,644 354x44;rng-h-m-enabled-0 58008:12029 16,888 354x44 rb0,-4,354,52;rng-h-m-hovered-0 58008:12038 442,888 354x44 rb0,-4,354,52;rng-h-m-pressed-0 58008:12046 868,888 354x44 rb0,-56,354,104;rng-h-m-disabled-0 58008:12055 1294,888 354x44 rb0,-4,354,52;rng-h-m-enabled-m50 58008:12064 16,972 354x44 rb0,-4,354,52;rng-h-m-hovered-m50 58008:12073 442,972 354x44 rb0,-4,354,52;rng-h-m-pressed-m50 58008:12082 868,972 354x44 rb0,-56,354,104;rng-h-m-disabled-m50 58008:12092 1294,972 354x44 rb0,-4,354,52;rng-h-m-enabled-p50 58008:12101 16,1056 354x44 rb0,-4,354,52;rng-h-m-hovered-p50 58008:12110 442,1056 354x44 rb0,-4,354,52;rng-h-m-pressed-p50 58008:12119 868,1056 354x44 rb0,-56,354,104;rng-h-m-disabled-p50 58008:12129 1294,1056 354x44 rb0,-4,354,52;rng-h-l-enabled-0 58008:12138 16,1300 354x68;rng-h-l-hovered-0 58008:12147 442,1300 354x68;rng-h-l-pressed-0 58008:12155 868,1300 354x68 rb0,-48,354,116;rng-h-l-disabled-0 58008:12164 1294,1300 354x68;rng-h-l-enabled-m50 58008:12173 16,1408 354x68;rng-h-l-hovered-m50 58008:12182 442,1408 354x68;rng-h-l-pressed-m50 58008:12191 868,1408 354x68 rb0,-48,354,116;rng-h-l-disabled-m50 58008:12201 1294,1408 354x68;rng-h-l-enabled-p50 58008:12210 16,1516 354x68;rng-h-l-hovered-p50 58008:12219 442,1516 354x68;rng-h-l-pressed-p50 58008:12228 868,1516 354x68 rb0,-48,354,116;rng-h-l-disabled-p50 58008:12238 1294,1516 354x68;rng-h-xl-enabled-0 58008:12247 16,1784 354x108;rng-h-xl-hovered-0 58008:12256 442,1784 354x108;rng-h-xl-pressed-0 58008:12264 868,1784 354x108 rb0,-48,354,156;rng-h-xl-disabled-0 58008:12273 1294,1784 354x108;rng-h-xl-enabled-m50 58008:12282 16,1932 354x108;rng-h-xl-hovered-m50 58008:12291 442,1932 354x108;rng-h-xl-pressed-m50 58008:12300 868,1932 354x108 rb0,-48,354,156;rng-h-xl-disabled-m50 58008:12310 1294,1932 354x108;rng-h-xl-enabled-p50 58008:12319 16,2080 354x108;rng-h-xl-hovered-p50 58008:12328 442,2080 354x108;rng-h-xl-pressed-p50 58008:12337 868,2080 354x108 rb0,-48,354,156;rng-h-xl-disabled-p50 58008:12347 1294,2080 354x108"
+  }
+ },
+ "exceptions": {
+  "cen-h-l-disabled-0": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-l-hovered-0": {
+   "allowedDiffPixels": 778,
+   "allowedDiffReason": "Kit slip: no hover layer on the handle (every other Hovered variant has the 8% on-primary layer)."
+  },
+  "cen-h-l-pressed-m50": {
+   "allowedDiffPixels": 181,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-h-l-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "cen-h-m-disabled-0": {
+   "allowedDiffPixels": 633,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-m-enabled-p50": {
+   "allowedDiffPixels": 1952,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-m-hovered-0": {
+   "allowedDiffPixels": 626,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-m-pressed-0": {
+   "allowedDiffPixels": 377,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-m-pressed-m50": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-m-pressed-p50": {
+   "allowedDiffPixels": 9,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-s-enabled-p50": {
+   "allowedDiffPixels": 2254,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-s-pressed-0": {
+   "allowedDiffPixels": 703,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-s-pressed-m50": {
+   "allowedDiffPixels": 767,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-s-pressed-p50": {
+   "allowedDiffPixels": 722,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-xl-disabled-0": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-h-xl-pressed-m50": {
+   "allowedDiffPixels": 341,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-h-xl-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "cen-h-xs-pressed-m50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "cen-h-xs-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "cen-v-l-hovered-0": {
+   "allowedDiffPixels": 778,
+   "allowedDiffReason": "Kit slip: no hover layer on the handle (every other Hovered variant has the 8% on-primary layer)."
+  },
+  "cen-v-l-pressed-m50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-l-pressed-p50": {
+   "allowedDiffPixels": 216,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-m-hovered-0": {
+   "allowedDiffPixels": 640,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-v-m-pressed-0": {
+   "allowedDiffPixels": 664,
+   "allowedDiffReason": "Kit slip: this Centered variant isn't auto-layout and its tracks / value indicator sit at fractional offsets (e.g. y 6.27, 6.54, 7, \u221247.36 instead of 6 / \u221248), so edges land up to a pixel off."
+  },
+  "cen-v-m-pressed-m50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-m-pressed-p50": {
+   "allowedDiffPixels": 152,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-s-pressed-m50": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-s-pressed-p50": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-xl-pressed-p50": {
+   "allowedDiffPixels": 374,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-xs-pressed-m50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "cen-v-xs-pressed-p50": {
+   "allowedDiffPixels": 56,
+   "allowedDiffReason": "Kit slip: the active track doesn't grow when the handle shrinks to 2px on press in this size / orientation (it does in the others); our track edge is 1px closer to the handle."
+  },
+  "rng-h-l-disabled-0": {
+   "allowedDiffPixels": 36,
+   "allowedDiffReason": "Kit slip: the end stop dot has no fill in this variant (all other Range variants show it)."
+  },
+  "rng-h-l-pressed-0": {
+   "allowedDiffPixels": 679,
+   "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+  },
+  "rng-h-l-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "rng-h-m-pressed-0": {
+   "allowedDiffPixels": 1705,
+   "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+  },
+  "rng-h-m-pressed-m50": {
+   "allowedDiffPixels": 789,
+   "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+  },
+  "rng-h-m-pressed-p50": {
+   "allowedDiffPixels": 779,
+   "allowedDiffReason": "Kit slip: the Range \u00b7 Medium frames are 44px tall (the 52px handles overflow by 4px) and the value indicator was placed 8px above the handle instead of the 4px every other slider uses."
+  },
+  "rng-h-s-enabled-m50": {
+   "allowedDiffPixels": 180,
+   "allowedDiffReason": "Kit slip: the end-side inactive track starts at 187 (185 in every other size: handle centre + 2 + 6)."
+  },
+  "rng-h-s-pressed-0": {
+   "allowedDiffPixels": 362,
+   "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+  },
+  "rng-h-s-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "rng-h-xl-pressed-0": {
+   "allowedDiffPixels": 1159,
+   "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+  },
+  "rng-h-xl-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "rng-h-xs-pressed-0": {
+   "allowedDiffPixels": 330,
+   "allowedDiffReason": "Kit slip: pressing the end handle nudges the start handle 1px right (171 vs 170) and grows its track to 165; we keep the start handle where the unpressed frames put it."
+  },
+  "rng-h-xs-pressed-p50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-l-enabled-0": {
+   "allowedDiffPixels": 776,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-l-hovered-0": {
+   "allowedDiffPixels": 778,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-l-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-l-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-m-enabled-0": {
+   "allowedDiffPixels": 584,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-m-hovered-0": {
+   "allowedDiffPixels": 586,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-m-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-m-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-s-enabled-0": {
+   "allowedDiffPixels": 488,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-s-hovered-0": {
+   "allowedDiffPixels": 490,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-s-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-s-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-xl-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-xl-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-xs-disabled-100": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+  },
+  "std-h-xs-disabled-50": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+  },
+  "std-h-xs-enabled-0": {
+   "allowedDiffPixels": 488,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-xs-hovered-0": {
+   "allowedDiffPixels": 490,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-h-xs-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-h-xs-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-l-enabled-0": {
+   "allowedDiffPixels": 776,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-l-hovered-0": {
+   "allowedDiffPixels": 778,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-l-pressed-100": {
+   "allowedDiffPixels": 263,
+   "allowedDiffReason": "Kit slip: the pressed handle carries the 8% (hover) layer instead of the 10% pressed layer used by every other Pressed variant."
+  },
+  "std-v-l-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-m-enabled-0": {
+   "allowedDiffPixels": 584,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-m-hovered-0": {
+   "allowedDiffPixels": 586,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-m-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-m-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-s-enabled-0": {
+   "allowedDiffPixels": 488,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-s-hovered-0": {
+   "allowedDiffPixels": 490,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-s-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-s-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-xl-pressed-100": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-xl-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-xs-disabled-100": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+  },
+  "std-v-xs-disabled-50": {
+   "allowedDiffPixels": 88,
+   "allowedDiffReason": "Kit slip: the XS Disabled active track has square corners (every other size and state keeps the 8px outer corner)."
+  },
+  "std-v-xs-enabled-0": {
+   "allowedDiffPixels": 488,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-xs-hovered-0": {
+   "allowedDiffPixels": 490,
+   "allowedDiffReason": "Kit slip: the XS\u2013L 0% Enabled variants carry the 8% hover layer on the handle and the 0% Hovered variants don't (swapped; XL and every other value are right). We draw Enabled without the layer and Hovered with it."
+  },
+  "std-v-xs-pressed-100": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  },
+  "std-v-xs-pressed-50": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Value-indicator label: Figma vs Chrome glyph raster on light-on-dark Label Large text (same positions; a stroke-end pixel or two differs)."
+  }
+ },
+ "note": "The Centered / Range \u00b150 frames place handles by eye; fixtures pass the values that reproduce them (handle centre 6 + p\u00b7342) and the kit's label text via valueLabel."
+}

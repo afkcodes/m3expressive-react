@@ -12,7 +12,7 @@ export function Fixture({ component, variant }: { component: string; variant: st
   if (!v) return <p>Unknown fixture {component}/{variant}</p>;
   return (
     <M3Provider colorScheme={v.colorScheme ?? 'light'}>
-      <div style={{ padding: FIXTURE_PADDING, display: 'inline-block' }}>
+      <div style={{ padding: v.padding ?? FIXTURE_PADDING, display: 'inline-block' }}>
         <div
           data-fixture-node
           data-layer-map={v.layers ? JSON.stringify(v.layers) : undefined}

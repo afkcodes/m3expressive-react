@@ -93,6 +93,13 @@ line to flip if you'd rather follow the M3 guidelines:
 | Linear wavy progress, 100% (4 dp) | active runs 2px past the frame (to x=404) | ends at width − 2 like Flat and 8 dp — we follow this |
 | Linear wavy indeterminate, Step 2 | 40px wavelength (Step 1: 20px) | 20px (Compose `LinearIndeterminateWavelength`) — default; `wavelength` prop reproduces Step 2 |
 | Circular wavy progress, 10% | wavy (linear 10% is flat) | Compose flattens ≤10% — we follow the kit for each shape |
+| Slider, 0% Enabled / Hovered (XS–L) | hover layer swapped between the two variants | Enabled without, Hovered with — we follow this |
+| Slider XS, disabled | active track square-cornered | 8px outer corner like every other size — we follow this |
+| Centered / Range slider, ±50 frames | handles placed by eye (e.g. 88 / 266px, not ±50% of travel); centered labels show "50" for −50 | any value works; fixtures reproduce the kit's positions and label text via `valueLabel` |
+| Centered slider S / M | tracks at fractional offsets (y 6.27, 6.54, 7…) | whole-pixel layout — we follow this |
+| Range slider Medium | 44px frame (52px handles overflow), value indicator 8px above the handle | 52px like Standard Medium, indicator 4px above — we follow this |
+| Slider, keyboard focus | — (no Focused variant) | handle halves to 2px and the value indicator shows, as Compose does on focus |
+| Slider inset icon | layer present but hidden in every variant | not implemented yet |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
