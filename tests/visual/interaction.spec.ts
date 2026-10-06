@@ -647,7 +647,13 @@ test.describe('progress (live)', () => {
       const mid = await captureRegion(page, node, prog.variants[`${kind}-flat-4-${to}`]!.renderBounds!);
       const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${to}.png`));
       expect.soft(compareImages(ref, mid, { background: [247, 242, 250] }).diffPixels, 'mid-spring frame differs from the target').toBeGreaterThan(0);
+      // The spring is frame-driven: under parallel load it can take longer than SPRING_SETTLE, so
+      // poll until it lands, then run the regular parity check.
+      const target = prog.variants[`${kind}-flat-4-${to}`]!;
+      const settled = async () =>
+        compareImages(ref, await captureRegion(page, node, target.renderBounds!), { background: hexToRgb(target.background ?? '#FFFFFF') }).diffPixels;
       await page.waitForTimeout(SPRING_SETTLE);
+      await expect.poll(settled, { timeout: 8000 }).toBeLessThanOrEqual(target.allowedDiffPixels ?? 0);
       await check(page, node, `${kind}-flat-4-${to}`);
     });
   }
