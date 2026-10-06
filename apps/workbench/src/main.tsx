@@ -20,6 +20,7 @@ import { NavigationPlayground } from './pages/NavigationPlayground';
 import { AppBarPlayground } from './pages/AppBarPlayground';
 import { SearchPlayground } from './pages/SearchPlayground';
 import { ToolbarPlayground } from './pages/ToolbarPlayground';
+import { SheetsPlayground } from './pages/SheetsPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /compare/:component        — Figma vs live, side by side + difference overlay
@@ -46,6 +47,7 @@ function App() {
   if (page === 'demo' && (component === 'app-bar' || component === 'appbar')) return <AppBarPlayground />;
   if (page === 'demo' && component === 'search') return <SearchPlayground />;
   if (page === 'demo' && (component === 'toolbar' || component === 'toolbars')) return <ToolbarPlayground />;
+  if (page === 'demo' && (component === 'sheets' || component === 'sheet')) return <SheetsPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

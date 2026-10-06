@@ -45,7 +45,19 @@ for (const manifest of loadManifests()) {
         await page.evaluate(() => document.fonts.ready);
         const node = page.locator('[data-fixture-node]');
         await expect(node).toBeVisible();
-        const box = (await node.boundingBox())!;
+        let box = (await node.boundingBox())!;
+        // Fixtures with a large page padding (render bounds far outside the node) may still end
+        // past the viewport: grow it to the node's actual capture area.
+        {
+          const [rx0 = 0, ry0 = 0] = v.renderBounds ?? [];
+          const cur = page.viewportSize()!;
+          const w = Math.ceil(box.x + rx0 + rbw + 8);
+          const h = Math.ceil(box.y + ry0 + rbh + 8);
+          if (w > cur.width || h > cur.height) {
+            await page.setViewportSize({ width: Math.max(cur.width, w), height: Math.max(cur.height, h) });
+            box = (await node.boundingBox())!;
+          }
+        }
 
         // 1. Node geometry must match exactly.
         expect.soft([box.width, box.height], 'node size (px)').toEqual(v.size);

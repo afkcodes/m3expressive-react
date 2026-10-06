@@ -1,0 +1,137 @@
+{
+  "component": "sheets",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "side": {
+      "node": "53198:27851",
+      "file": "_frames/side.png"
+    },
+    "bottom": {
+      "node": "51827:5859",
+      "file": "_frames/bottom.png"
+    }
+  },
+  "variants": {
+    "side-modal-noback": {
+      "node": "53198:27852",
+      "size": [
+        320,
+        700
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "side",
+        "x": 20,
+        "y": 812
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        700
+      ],
+      "refNote": "bottom row under set border excluded"
+    },
+    "side-modal-back": {
+      "node": "53198:27862",
+      "size": [
+        320,
+        700
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "side",
+        "x": 404,
+        "y": 812
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        700
+      ],
+      "refNote": "bottom row under set border excluded"
+    },
+    "side-standard-noback": {
+      "node": "53198:27873",
+      "size": [
+        320,
+        700
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "side",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        703
+      ]
+    },
+    "side-standard-back": {
+      "node": "53198:27884",
+      "size": [
+        320,
+        700
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "side",
+        "x": 404,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        703
+      ]
+    },
+    "bottom-standard": {
+      "node": "51827:5860",
+      "size": [
+        412,
+        480
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "bottom",
+        "x": 34,
+        "y": 314
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        436,
+        488
+      ],
+      "refNote": "bottom trimmed (neighbour bottom-modal)"
+    },
+    "bottom-modal": {
+      "node": "51827:5863",
+      "size": [
+        412,
+        480
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "bottom",
+        "x": 34,
+        "y": 1108
+      },
+      "renderBounds": [
+        -34,
+        -299,
+        480,
+        778
+      ],
+      "refNote": "bottom row under set border excluded; top trimmed (neighbour bottom-standard)",
+      "allowedDiffPixels": 154,
+      "allowedDiffReason": "Export artefact: the component set clips the variant's scrim with a rounded corner (~12px) at the set's bottom-left, inside the capture area (css -34..-25, 468..479). The scrim itself is a plain 32% rectangle; the sheet and the rest of the scrim match exactly."
+    }
+  }
+}

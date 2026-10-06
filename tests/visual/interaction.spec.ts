@@ -1148,3 +1148,55 @@ test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses i
   await expect.poll(async () => (await rect(shell))[0]).toBe(168);
   await expect.poll(async () => (await rect(fab)).slice(0, 2)).toEqual([56, 56]);
 });
+
+test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle / drag; side sheet traps focus', async ({ page }) => {
+  await page.goto('/fixture/sheets/live');
+  await page.evaluate(() => document.fonts.ready);
+  const openBottom = page.getByRole('button', { name: 'Open bottom sheet' });
+  const sheet = page.getByRole('dialog', { name: 'Share' });
+  const ty = () => sheet.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform === 'none' ? undefined : getComputedStyle(el).transform).m42 + parseFloat(getComputedStyle(el).translate.split(' ')[1] ?? '0'));
+
+  // Opens from below on the default spatial spring and settles at rest; the scrim is 32% Scrim.
+  await openBottom.click();
+  await expect(sheet).toBeVisible();
+  await expect.poll(ty).toBe(0);
+  const scrimBg = await page.locator('[data-m3-portal] [role="presentation"][data-open]').evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(scrimBg).toMatch(/rgba?\(0, 0, 0, 0\.32\)|color\(srgb 0 0 0 \/ 0\.32\)/);
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await expect(openBottom).toBeFocused();
+
+  // The handle is a button: activating it dismisses.
+  await openBottom.click();
+  await page.getByRole('button', { name: 'Close sheet' }).click();
+  await expect(sheet).toHaveCount(0);
+
+  // A short drag settles back; past 56px it dismisses.
+  await openBottom.click();
+  await expect.poll(ty).toBe(0);
+  const handle = page.getByRole('button', { name: 'Close sheet' });
+  const hb = (await handle.boundingBox())!;
+  await page.mouse.move(hb.x + hb.width / 2, hb.y + 2);
+  await page.mouse.down();
+  await page.mouse.move(hb.x + hb.width / 2, hb.y + 30, { steps: 8 });
+  await page.waitForTimeout(150);
+  await page.mouse.up();
+  await expect.poll(ty).toBe(0);
+  await expect(sheet).toBeVisible();
+  await page.mouse.move(hb.x + hb.width / 2, hb.y + 2);
+  await page.mouse.down();
+  await page.mouse.move(hb.x + hb.width / 2, hb.y + 120, { steps: 12 });
+  await page.waitForTimeout(150);
+  await page.mouse.up();
+  await expect(sheet).toHaveCount(0);
+
+  // Side sheet: labelled by its headline, focus moves inside, Escape restores it to the trigger.
+  const openSide = page.getByRole('button', { name: 'Open side sheet' });
+  await openSide.click();
+  const side = page.getByRole('dialog', { name: 'Filters' });
+  await expect(side).toBeVisible();
+  await expect.poll(() => side.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+  await page.keyboard.press('Escape');
+  await expect(side).toHaveCount(0);
+  await expect(openSide).toBeFocused();
+});

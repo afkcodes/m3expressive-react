@@ -1,0 +1,32 @@
+{
+ "component": "sheets",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Sheets page (55141:14170): Side Sheet set (standard / modal x back) and Bottom sheet set (standard / modal over its scrim). The content building blocks are an empty frame and the kit's dashed 'replace this slot' placeholder, so they are not fixtures.",
+ "frames": {
+  "side": {
+   "node": "53198:27851",
+   "file": "_frames/side.png",
+   "size": [
+    744,
+    1512
+   ],
+   "rows": "side-modal-noback 53198:27852 20,812 320x700;side-modal-back 53198:27862 404,812 320x700;side-standard-noback 53198:27873 20,20 320x700 rb0,0,320,701;side-standard-back 53198:27884 404,20 320x700 rb0,0,320,701"
+  },
+  "bottom": {
+   "node": "51827:5859",
+   "file": "_frames/bottom.png",
+   "size": [
+    480,
+    1588
+   ],
+   "rows": "bottom-standard 51827:5860 34,314 412x480 rb-11,-7,434,502;bottom-modal 51827:5863 34,1108 412x480 rb-34,-314,480,794"
+  }
+ },
+ "exceptions": {
+  "bottom-modal": {
+   "allowedDiffPixels": 154,
+   "allowedDiffReason": "Export artefact: the component set clips the variant's scrim with a rounded corner (~12px) at the set's bottom-left, inside the capture area (css -34..-25, 468..479). The scrim itself is a plain 32% rectangle; the sheet and the rest of the scrim match exactly."
+  }
+ }
+}

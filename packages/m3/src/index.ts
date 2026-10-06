@@ -64,6 +64,8 @@ export { SearchBar, SearchView } from './components/Search/index.ts';
 export type { SearchBarProps, SearchViewProps } from './components/Search/index.ts';
 export { Toolbar, ToolbarScope } from './components/Toolbar/index.ts';
 export type { ToolbarColor, ToolbarProps } from './components/Toolbar/index.ts';
+export { BottomSheet, ModalBottomSheet, ModalSideSheet, SideSheet } from './components/Sheet/index.ts';
+export type { BottomSheetProps, ModalBottomSheetProps, ModalSideSheetProps, SideSheetProps } from './components/Sheet/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';
