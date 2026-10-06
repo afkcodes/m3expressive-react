@@ -1,0 +1,641 @@
+{
+  "$source": {
+    "file": "https://www.figma.com/design/uqYw0ZfySs2OjkqqjYwPPP/Material-3-Design-Kit--Community-",
+    "pulled": "2026-10-06",
+    "via": "Figma Plugin API (use_figma): local variable collections M3, Font theme, Typescale, Shape; local effect styles",
+    "notes": [
+      "Float32 artefacts rounded (0.15000000596 -> 0.15).",
+      "Body Medium/Small font alias assumed Plain (both resolve to Roboto).",
+      "Font theme weight 'Bold' resolves to the SemiBold face (600).",
+      "Kit also has Monochrome + 12 hue modes (Pink..Purple, LT/DT) in the M3 collection - not yet generated.",
+      "Font theme 'Wireframe' mode (Flow Circular) not generated.",
+      "Effect styles: showShadowBehindNode=true (CSS box-shadow never draws under the element)."
+    ]
+  },
+  "schemes": {
+    "Primary": {
+      "Light": "#6750A4",
+      "Light High Contrast": "#27174E",
+      "Light Medium Contrast": "#493971",
+      "Dark": "#D0BCFF",
+      "Dark High Contrast": "#FFF9FF",
+      "Dark Medium Contrast": "#D3C1FF"
+    },
+    "On Primary": {
+      "Light": "#FFFFFF",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#381E72",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#1B0942"
+    },
+    "Primary Container": {
+      "Light": "#EADDFF",
+      "Light High Contrast": "#493971",
+      "Light Medium Contrast": "#7B6BA7",
+      "Dark": "#4F378B",
+      "Dark High Contrast": "#D3C1FF",
+      "Dark Medium Contrast": "#9887C5"
+    },
+    "On Primary Container": {
+      "Light": "#4F378A",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#EADDFF",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Secondary": {
+      "Light": "#625B71",
+      "Light High Contrast": "#27174E",
+      "Light Medium Contrast": "#493971",
+      "Dark": "#CCC2DC",
+      "Dark High Contrast": "#FFF9FF",
+      "Dark Medium Contrast": "#D3C1FF"
+    },
+    "On Secondary": {
+      "Light": "#FFFFFF",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#332D41",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#1B0942"
+    },
+    "Secondary Container": {
+      "Light": "#E8DEF8",
+      "Light High Contrast": "#493971",
+      "Light Medium Contrast": "#7C6BA7",
+      "Dark": "#4A4458",
+      "Dark High Contrast": "#D3C1FF",
+      "Dark Medium Contrast": "#9887C5"
+    },
+    "On Secondary Container": {
+      "Light": "#4A4459",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#E8DEF8",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Tertiary": {
+      "Light": "#7D5260",
+      "Light High Contrast": "#420E24",
+      "Light Medium Contrast": "#6B2F45",
+      "Dark": "#EFB8C8",
+      "Dark High Contrast": "#FFF9F9",
+      "Dark Medium Contrast": "#FFB7CD"
+    },
+    "On Tertiary": {
+      "Light": "#FFFFFF",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#492532",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#330218"
+    },
+    "Tertiary Container": {
+      "Light": "#FFD8E4",
+      "Light High Contrast": "#6B2F45",
+      "Light Medium Contrast": "#A55F77",
+      "Dark": "#633B48",
+      "Dark High Contrast": "#FFB7CD",
+      "Dark Medium Contrast": "#C57B93"
+    },
+    "On Tertiary Container": {
+      "Light": "#633B48",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#FFD8E4",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Error": {
+      "Light": "#B3261E",
+      "Light High Contrast": "#440F0E",
+      "Light Medium Contrast": "#6E2F2C",
+      "Dark": "#F2B8B5",
+      "Dark High Contrast": "#FFF9F9",
+      "Dark Medium Contrast": "#FFB9B3"
+    },
+    "On Error": {
+      "Light": "#FFFFFF",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#601410",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#330405"
+    },
+    "Error Container": {
+      "Light": "#F9DEDC",
+      "Light High Contrast": "#6E2F2C",
+      "Light Medium Contrast": "#AA5F5A",
+      "Dark": "#8C1D18",
+      "Dark High Contrast": "#FFB9B3",
+      "Dark Medium Contrast": "#CC7B74"
+    },
+    "On Error Container": {
+      "Light": "#852221",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#F9DEDC",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Background": {
+      "Light": "#FEF7FF",
+      "Light High Contrast": "#FDF7FF",
+      "Light Medium Contrast": "#FDF7FF",
+      "Dark": "#141218",
+      "Dark High Contrast": "#141218",
+      "Dark Medium Contrast": "#141218"
+    },
+    "On Background": {
+      "Light": "#1D1B20",
+      "Light High Contrast": "#1D1B20",
+      "Light Medium Contrast": "#1D1B20",
+      "Dark": "#E6E0E9",
+      "Dark High Contrast": "#E6E0E9",
+      "Dark Medium Contrast": "#E6E0E9"
+    },
+    "Surface": {
+      "Light": "#FEF7FF",
+      "Light High Contrast": "#FDF7FF",
+      "Light Medium Contrast": "#FDF7FF",
+      "Dark": "#141218",
+      "Dark High Contrast": "#141218",
+      "Dark Medium Contrast": "#141218"
+    },
+    "On Surface": {
+      "Light": "#1D1B20",
+      "Light High Contrast": "#000000",
+      "Light Medium Contrast": "#1D1B20",
+      "Dark": "#E6E0E9",
+      "Dark High Contrast": "#FFFFFF",
+      "Dark Medium Contrast": "#FFF9FF"
+    },
+    "Surface Variant": {
+      "Light": "#E7E0EC",
+      "Light High Contrast": "#E7E0EB",
+      "Light Medium Contrast": "#E7E0EB",
+      "Dark": "#49454F",
+      "Dark High Contrast": "#49454E",
+      "Dark Medium Contrast": "#49454E"
+    },
+    "On Surface Variant": {
+      "Light": "#49454F",
+      "Light High Contrast": "#25232B",
+      "Light Medium Contrast": "#45414A",
+      "Dark": "#CAC4D0",
+      "Dark High Contrast": "#FFF9FF",
+      "Dark Medium Contrast": "#CEC8D4"
+    },
+    "Outline": {
+      "Light": "#79747E",
+      "Light High Contrast": "#45414A",
+      "Light Medium Contrast": "#615D67",
+      "Dark": "#938F99",
+      "Dark High Contrast": "#CEC8D4",
+      "Dark Medium Contrast": "#A6A1AB"
+    },
+    "Outline Variant": {
+      "Light": "#CAC4D0",
+      "Light High Contrast": "#45414A",
+      "Light Medium Contrast": "#7D7983",
+      "Dark": "#49454F",
+      "Dark High Contrast": "#CEC8D4",
+      "Dark Medium Contrast": "#86818B"
+    },
+    "Surface Tint": {
+      "Light": "#6750A4",
+      "Light High Contrast": "#65558F",
+      "Light Medium Contrast": "#65558F",
+      "Dark": "#D0BCFF",
+      "Dark High Contrast": "#CFBDFE",
+      "Dark Medium Contrast": "#CFBDFE"
+    },
+    "Shadow": {
+      "Light": "#000000",
+      "Light High Contrast": "#000000",
+      "Light Medium Contrast": "#000000",
+      "Dark": "#000000",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Scrim": {
+      "Light": "#000000",
+      "Light High Contrast": "#000000",
+      "Light Medium Contrast": "#000000",
+      "Dark": "#000000",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#000000"
+    },
+    "Inverse Surface": {
+      "Light": "#322F35",
+      "Light High Contrast": "#322F35",
+      "Light Medium Contrast": "#322F35",
+      "Dark": "#E6E0E9",
+      "Dark High Contrast": "#E6E0E9",
+      "Dark Medium Contrast": "#E6E0E9"
+    },
+    "Inverse On Surface": {
+      "Light": "#F5EFF7",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#F5EFF7",
+      "Dark": "#322F35",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#2B292F"
+    },
+    "Inverse Primary": {
+      "Light": "#D0BCFF",
+      "Light High Contrast": "#F1E8FF",
+      "Light Medium Contrast": "#CFBDFE",
+      "Dark": "#6750A4",
+      "Dark High Contrast": "#2F2056",
+      "Dark Medium Contrast": "#4E3F77"
+    },
+    "Primary Fixed": {
+      "Light": "#EADDFF",
+      "Light High Contrast": "#493971",
+      "Light Medium Contrast": "#7B6BA7",
+      "Dark": "#EADDFF",
+      "Dark High Contrast": "#EDE2FF",
+      "Dark Medium Contrast": "#E9DDFF"
+    },
+    "On Primary Fixed": {
+      "Light": "#21005D",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#21005D",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#16033D"
+    },
+    "Primary Fixed Dim": {
+      "Light": "#D0BCFF",
+      "Light High Contrast": "#322359",
+      "Light Medium Contrast": "#62538C",
+      "Dark": "#D0BCFF",
+      "Dark High Contrast": "#D3C1FF",
+      "Dark Medium Contrast": "#CFBDFE"
+    },
+    "On Primary Fixed Variant": {
+      "Light": "#4F378B",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#4F378B",
+      "Dark High Contrast": "#1B0942",
+      "Dark Medium Contrast": "#3C2D63"
+    },
+    "Secondary Fixed": {
+      "Light": "#E8DEF8",
+      "Light High Contrast": "#493971",
+      "Light Medium Contrast": "#7C6BA7",
+      "Dark": "#E8DEF8",
+      "Dark High Contrast": "#EDE2FF",
+      "Dark Medium Contrast": "#E9DDFF"
+    },
+    "On Secondary Fixed": {
+      "Light": "#1D192B",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#1D192B",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#16033D"
+    },
+    "Secondary Fixed Dim": {
+      "Light": "#CCC2DC",
+      "Light High Contrast": "#322359",
+      "Light Medium Contrast": "#62538C",
+      "Dark": "#CCC2DC",
+      "Dark High Contrast": "#D3C1FF",
+      "Dark Medium Contrast": "#CFBDFE"
+    },
+    "On Secondary Fixed Variant": {
+      "Light": "#4A4458",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#4A4458",
+      "Dark High Contrast": "#1B0942",
+      "Dark Medium Contrast": "#3C2D63"
+    },
+    "Tertiary Fixed": {
+      "Light": "#FFD8E4",
+      "Light High Contrast": "#6B2F45",
+      "Light Medium Contrast": "#A55F77",
+      "Dark": "#FFD8E4",
+      "Dark High Contrast": "#FFDFE7",
+      "Dark Medium Contrast": "#FFD9E3"
+    },
+    "On Tertiary Fixed": {
+      "Light": "#31111D",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#31111D",
+      "Dark High Contrast": "#000000",
+      "Dark Medium Contrast": "#2B0013"
+    },
+    "Tertiary Fixed Dim": {
+      "Light": "#EFB8C8",
+      "Light High Contrast": "#50192F",
+      "Light Medium Contrast": "#89475E",
+      "Dark": "#EFB8C8",
+      "Dark High Contrast": "#FFB7CD",
+      "Dark Medium Contrast": "#FFB0C9"
+    },
+    "On Tertiary Fixed Variant": {
+      "Light": "#633B48",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#633B48",
+      "Dark High Contrast": "#330218",
+      "Dark Medium Contrast": "#5B2238"
+    },
+    "Surface Dim": {
+      "Light": "#DED8E1",
+      "Light High Contrast": "#DED8E0",
+      "Light Medium Contrast": "#DED8E0",
+      "Dark": "#141218",
+      "Dark High Contrast": "#141218",
+      "Dark Medium Contrast": "#141218"
+    },
+    "Surface Bright": {
+      "Light": "#FEF7FF",
+      "Light High Contrast": "#FDF7FF",
+      "Light Medium Contrast": "#FDF7FF",
+      "Dark": "#3B383E",
+      "Dark High Contrast": "#3B383E",
+      "Dark Medium Contrast": "#3B383E"
+    },
+    "Surface Container Lowest": {
+      "Light": "#FFFFFF",
+      "Light High Contrast": "#FFFFFF",
+      "Light Medium Contrast": "#FFFFFF",
+      "Dark": "#0F0D13",
+      "Dark High Contrast": "#0F0D13",
+      "Dark Medium Contrast": "#0F0D13"
+    },
+    "Surface Container Low": {
+      "Light": "#F7F2FA",
+      "Light High Contrast": "#F8F2FA",
+      "Light Medium Contrast": "#F8F2FA",
+      "Dark": "#1D1B20",
+      "Dark High Contrast": "#1D1B20",
+      "Dark Medium Contrast": "#1D1B20"
+    },
+    "Surface Container": {
+      "Light": "#F3EDF7",
+      "Light High Contrast": "#F2ECF4",
+      "Light Medium Contrast": "#F2ECF4",
+      "Dark": "#211F26",
+      "Dark High Contrast": "#211F24",
+      "Dark Medium Contrast": "#211F24"
+    },
+    "Surface Container High": {
+      "Light": "#ECE6F0",
+      "Light High Contrast": "#ECE6EE",
+      "Light Medium Contrast": "#ECE6EE",
+      "Dark": "#2B2930",
+      "Dark High Contrast": "#2B292F",
+      "Dark Medium Contrast": "#2B292F"
+    },
+    "Surface Container Highest": {
+      "Light": "#E6E0E9",
+      "Light High Contrast": "#E6E0E9",
+      "Light Medium Contrast": "#E6E0E9",
+      "Dark": "#36343B",
+      "Dark High Contrast": "#36343A",
+      "Dark Medium Contrast": "#36343A"
+    }
+  },
+  "fontTheme": {
+    "font": {
+      "Brand": "Roboto",
+      "Plain": "Roboto"
+    },
+    "weight": {
+      "Regular": "Regular",
+      "Medium": "Medium",
+      "Bold": "SemiBold"
+    }
+  },
+  "typescale": {
+    "Display Large": {
+      "font": "Brand",
+      "size": 57,
+      "lineHeight": 64,
+      "tracking": -0.25,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Display Medium": {
+      "font": "Brand",
+      "size": 45,
+      "lineHeight": 52,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Display Small": {
+      "font": "Brand",
+      "size": 36,
+      "lineHeight": 44,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Headline Large": {
+      "font": "Brand",
+      "size": 32,
+      "lineHeight": 40,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Headline Medium": {
+      "font": "Brand",
+      "size": 28,
+      "lineHeight": 36,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Headline Small": {
+      "font": "Brand",
+      "size": 24,
+      "lineHeight": 32,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Title Large": {
+      "font": "Brand",
+      "size": 22,
+      "lineHeight": 28,
+      "tracking": 0,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Title Medium": {
+      "font": "Plain",
+      "size": 16,
+      "lineHeight": 24,
+      "tracking": 0.15,
+      "weight": "Medium",
+      "weightEmphasized": "Bold"
+    },
+    "Title Small": {
+      "font": "Plain",
+      "size": 14,
+      "lineHeight": 20,
+      "tracking": 0.1,
+      "weight": "Medium",
+      "weightEmphasized": "Bold"
+    },
+    "Label Large": {
+      "font": "Plain",
+      "size": 14,
+      "lineHeight": 20,
+      "tracking": 0.1,
+      "weight": "Medium",
+      "weightEmphasized": "Bold"
+    },
+    "Label Medium": {
+      "font": "Plain",
+      "size": 12,
+      "lineHeight": 16,
+      "tracking": 0.5,
+      "weight": "Medium",
+      "weightEmphasized": "Bold"
+    },
+    "Label Small": {
+      "font": "Plain",
+      "size": 11,
+      "lineHeight": 16,
+      "tracking": 0.5,
+      "weight": "Medium",
+      "weightEmphasized": "Bold"
+    },
+    "Body Large": {
+      "font": "Plain",
+      "size": 16,
+      "lineHeight": 24,
+      "tracking": 0.5,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Body Medium": {
+      "font": "Plain",
+      "size": 14,
+      "lineHeight": 20,
+      "tracking": 0.25,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    },
+    "Body Small": {
+      "font": "Plain",
+      "size": 12,
+      "lineHeight": 16,
+      "tracking": 0.4,
+      "weight": "Regular",
+      "weightEmphasized": "Medium"
+    }
+  },
+  "shape": {
+    "None": 0,
+    "Extra-small": 4,
+    "Small": 8,
+    "Medium": 12,
+    "Large": 16,
+    "Large-increased": 20,
+    "Extra-large": 28,
+    "Extra-large-increased": 32,
+    "Extra-extra-large": 48,
+    "Full": 1000
+  },
+  "elevation": {
+    "1": [
+      {
+        "x": 0,
+        "y": 1,
+        "blur": 2,
+        "spread": 0,
+        "alpha": 0.3
+      },
+      {
+        "x": 0,
+        "y": 1,
+        "blur": 3,
+        "spread": 1,
+        "alpha": 0.15
+      }
+    ],
+    "2": [
+      {
+        "x": 0,
+        "y": 1,
+        "blur": 2,
+        "spread": 0,
+        "alpha": 0.3
+      },
+      {
+        "x": 0,
+        "y": 2,
+        "blur": 6,
+        "spread": 2,
+        "alpha": 0.15
+      }
+    ],
+    "3": [
+      {
+        "x": 0,
+        "y": 1,
+        "blur": 3,
+        "spread": 0,
+        "alpha": 0.3
+      },
+      {
+        "x": 0,
+        "y": 4,
+        "blur": 8,
+        "spread": 3,
+        "alpha": 0.15
+      }
+    ],
+    "4": [
+      {
+        "x": 0,
+        "y": 2,
+        "blur": 3,
+        "spread": 0,
+        "alpha": 0.3
+      },
+      {
+        "x": 0,
+        "y": 6,
+        "blur": 10,
+        "spread": 4,
+        "alpha": 0.15
+      }
+    ],
+    "5": [
+      {
+        "x": 0,
+        "y": 4,
+        "blur": 4,
+        "spread": 0,
+        "alpha": 0.3
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "blur": 12,
+        "spread": 6,
+        "alpha": 0.15
+      }
+    ]
+  },
+  "stateLayerOpacity": {
+    "Opacity-08": 0.08,
+    "Opacity-10": 0.1,
+    "Opacity-16": 0.16
+  }
+}
