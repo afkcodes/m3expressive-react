@@ -49,6 +49,8 @@ export type { TooltipProps, RichTooltipProps, PlainTooltipSurfaceProps, RichTool
 export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipAvatarPlaceholder, ChipGroup } from './components/Chip/index.ts';
 export { LinearProgress, CircularProgress, LoadingIndicator } from './components/Progress/index.ts';
 export { Slider, RangeSlider } from './components/Slider/index.ts';
+export { TextField } from './components/TextField/index.ts';
+export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';
 export type { AssistChipProps, FilterChipProps, InputChipProps, SuggestionChipProps, ChipGroupProps } from './components/Chip/index.ts';

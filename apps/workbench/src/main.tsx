@@ -12,6 +12,7 @@ import { OverlaysPlayground } from './pages/OverlaysPlayground';
 import { CheckboxPlayground } from './pages/CheckboxPlayground';
 import { ProgressPlayground } from './pages/ProgressPlayground';
 import { SliderPlayground } from './pages/SliderPlayground';
+import { TextFieldPlayground } from './pages/TextFieldPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /compare/:component        — Figma vs live, side by side + difference overlay
@@ -30,6 +31,7 @@ function App() {
   if (page === 'demo' && (component === 'overlays' || component === 'tooltip')) return <OverlaysPlayground />;
   if (page === 'demo' && (component === 'progress' || component === 'loading')) return <ProgressPlayground />;
   if (page === 'demo' && component === 'slider') return <SliderPlayground />;
+  if (page === 'demo' && (component === 'textfield' || component === 'text-field')) return <TextFieldPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

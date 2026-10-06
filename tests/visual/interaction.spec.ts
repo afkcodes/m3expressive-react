@@ -731,3 +731,35 @@ test('slider (live): rest, hover, press, drag, keyboard', async ({ page }) => {
   await page.keyboard.press('ArrowRight');
   await expect(values).toHaveText(/\|21,60$/);
 });
+
+// ── Text field: real hover, focus (label floats), typing, blur ───────────────────────────────
+test('text field (live): hover, focus floats the label, typing, blur', async ({ page }) => {
+  const tf = JSON.parse(readFileSync(join(REFS_DIR, 'text-field/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/text-field/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const check = async (name: string) => {
+    const v = tf.variants[name]!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'text-field', `${name}.png`));
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  };
+  await check('filled-enabled-label-xx');
+  const box = (await node.boundingBox())!;
+  await page.mouse.move(box.x + 120, box.y + 28);
+  await page.waitForTimeout(SETTLE);
+  await check('filled-hovered-label-xx');
+  const input = page.getByRole('textbox', { name: 'Label' });
+  await page.mouse.click(box.x + 120, box.y + 28);
+  await expect(input).toBeFocused();
+  await page.keyboard.type('Input');
+  await expect(page.locator('[data-value]')).toHaveText('Input');
+  await page.mouse.move(0, 0);
+  await input.blur();
+  await page.waitForTimeout(SETTLE);
+  await check('filled-enabled-input-xx');
+  // Supporting text is the field's accessible description.
+  await expect(input).toHaveAccessibleDescription('Supporting text');
+});

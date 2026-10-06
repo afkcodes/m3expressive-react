@@ -1,0 +1,2295 @@
+{
+  "component": "text-field",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "text-field": {
+      "node": "52798:24373",
+      "file": "_frames/text-field.png"
+    }
+  },
+  "variants": {
+    "outlined-disabled-placeholder-lx": {
+      "node": "52798:24999",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-placeholder-lx": {
+      "node": "52798:25279",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-placeholder-lx": {
+      "node": "52798:25095",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-placeholder-lx": {
+      "node": "52798:25187",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-placeholder-lx": {
+      "node": "52798:24903",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 2364
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-label-lx": {
+      "node": "52798:25443",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 2268
+      },
+      "renderBounds": [
+        -1.5,
+        -1.5,
+        213,
+        78.5
+      ]
+    },
+    "outlined-error-label-lx": {
+      "node": "52798:25691",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 2268
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-hovered-label-lx": {
+      "node": "52798:25523",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 2268
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-focused-label-lx": {
+      "node": "52798:25609",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 2268
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-label-lx": {
+      "node": "52798:25363",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 2268
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-disabled-input-lx": {
+      "node": "52798:24515",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 2172
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-input-lx": {
+      "node": "52798:24807",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 2172
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-input-lx": {
+      "node": "52798:24611",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 2172
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-input-lx": {
+      "node": "52798:24707",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 2172
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-input-lx": {
+      "node": "52798:24419",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 2172
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-placeholder-xx": {
+      "node": "52798:24975",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 2048
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-placeholder-xx": {
+      "node": "52798:25257",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 2048
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-placeholder-xx": {
+      "node": "52798:25073",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 2048
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ],
+      "allowedDiffPixels": 107,
+      "allowedDiffReason": "Kit slip: the placeholder is bound to On Surface in this one variant (Outlined \u00b7 Hovered \u00b7 no icons); every other placeholder (all styles, states and icon combinations) uses On Surface Variant, as M3 specifies."
+    },
+    "outlined-focused-placeholder-xx": {
+      "node": "52798:25165",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 2048
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-placeholder-xx": {
+      "node": "52798:24881",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 2048
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-label-xx": {
+      "node": "52798:25423",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1952
+      },
+      "renderBounds": [
+        -1.5,
+        -1.5,
+        213,
+        78.5
+      ]
+    },
+    "outlined-error-label-xx": {
+      "node": "52798:25673",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1952
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-hovered-label-xx": {
+      "node": "52798:25505",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1952
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-focused-label-xx": {
+      "node": "52798:25585",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1952
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-label-xx": {
+      "node": "52798:25345",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1952
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-disabled-input-xx": {
+      "node": "52798:24491",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1856
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-input-xx": {
+      "node": "52798:24783",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1856
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-input-xx": {
+      "node": "52798:24589",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1856
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-input-xx": {
+      "node": "52798:24683",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1856
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-input-xx": {
+      "node": "52798:24397",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1856
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-placeholder-lt": {
+      "node": "52798:24986",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1732
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-placeholder-lt": {
+      "node": "52798:25267",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1732
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-placeholder-lt": {
+      "node": "52798:25083",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1732
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-placeholder-lt": {
+      "node": "52798:25175",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1732
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-placeholder-lt": {
+      "node": "52798:24891",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1732
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-label-lt": {
+      "node": "52798:25432",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1636
+      },
+      "renderBounds": [
+        -1.5,
+        -1.5,
+        213,
+        78.5
+      ]
+    },
+    "outlined-error-label-lt": {
+      "node": "52798:25681",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1636
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-hovered-label-lt": {
+      "node": "52798:25513",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1636
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-focused-label-lt": {
+      "node": "52798:25596",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1636
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-label-lt": {
+      "node": "52798:25353",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1636
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-disabled-input-lt": {
+      "node": "52798:24502",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1540
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-input-lt": {
+      "node": "52798:24794",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1540
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-input-lt": {
+      "node": "52798:24599",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1540
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-input-lt": {
+      "node": "52798:24694",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1540
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-input-lt": {
+      "node": "52798:24407",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1540
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-placeholder-xt": {
+      "node": "52798:24963",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1412
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-placeholder-xt": {
+      "node": "52798:25246",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1412
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-placeholder-xt": {
+      "node": "52798:25062",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1412
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-placeholder-xt": {
+      "node": "52798:25154",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1412
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-placeholder-xt": {
+      "node": "52798:24870",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1412
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-disabled-label-xt": {
+      "node": "52798:25413",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1316
+      },
+      "renderBounds": [
+        -1.5,
+        -1.5,
+        213,
+        78.5
+      ]
+    },
+    "outlined-error-label-xt": {
+      "node": "52798:25664",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-hovered-label-xt": {
+      "node": "52798:25496",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-focused-label-xt": {
+      "node": "52798:25573",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1316
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-label-xt": {
+      "node": "52798:25336",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "outlined-disabled-input-xt": {
+      "node": "52798:24479",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1220
+      },
+      "renderBounds": [
+        -1.5,
+        -9,
+        213,
+        86
+      ]
+    },
+    "outlined-error-input-xt": {
+      "node": "52798:24771",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1220
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-hovered-input-xt": {
+      "node": "52798:24578",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1220
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-focused-input-xt": {
+      "node": "52798:24671",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1220
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "outlined-enabled-input-xt": {
+      "node": "52798:24386",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1220
+      },
+      "renderBounds": [
+        -1,
+        -9,
+        212,
+        86
+      ]
+    },
+    "filled-disabled-placeholder-lx": {
+      "node": "52798:25037",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-placeholder-lx": {
+      "node": "52798:25314",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-placeholder-lx": {
+      "node": "52798:25130",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-placeholder-lx": {
+      "node": "52798:25222",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-placeholder-lx": {
+      "node": "52798:24938",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 1068
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-label-lx": {
+      "node": "52798:25475",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 988
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-label-lx": {
+      "node": "52798:25720",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 988
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-label-lx": {
+      "node": "52798:25552",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 988
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-label-lx": {
+      "node": "52798:25643",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 988
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-label-lx": {
+      "node": "52798:25392",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 988
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-input-lx": {
+      "node": "52798:24553",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 908
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-input-lx": {
+      "node": "52798:24845",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 908
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-input-lx": {
+      "node": "52798:24646",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 908
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-input-lx": {
+      "node": "52798:24745",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 908
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-input-lx": {
+      "node": "52798:24454",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 908
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-placeholder-xx": {
+      "node": "52798:25011",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 772
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-placeholder-xx": {
+      "node": "52798:25290",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 772
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-placeholder-xx": {
+      "node": "52798:25106",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 772
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-placeholder-xx": {
+      "node": "52798:25198",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 772
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-placeholder-xx": {
+      "node": "52798:24914",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 772
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-label-xx": {
+      "node": "52798:25453",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 692
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-label-xx": {
+      "node": "52798:25700",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 692
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-label-xx": {
+      "node": "52798:25532",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 692
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-label-xx": {
+      "node": "52798:25621",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 692
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-label-xx": {
+      "node": "52798:25372",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 692
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-input-xx": {
+      "node": "52798:24527",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-input-xx": {
+      "node": "52798:24819",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-input-xx": {
+      "node": "52798:24622",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-input-xx": {
+      "node": "52798:24719",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-input-xx": {
+      "node": "52798:24430",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 612
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-placeholder-lt": {
+      "node": "52798:25023",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-placeholder-lt": {
+      "node": "52798:25301",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-placeholder-lt": {
+      "node": "52798:25117",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-placeholder-lt": {
+      "node": "52798:25209",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-placeholder-lt": {
+      "node": "52798:24925",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 476
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-label-lt": {
+      "node": "52798:25463",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-label-lt": {
+      "node": "52798:25709",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-label-lt": {
+      "node": "52798:25541",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-label-lt": {
+      "node": "52798:25631",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-label-lt": {
+      "node": "52798:25381",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 396
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-input-lt": {
+      "node": "52798:24539",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-input-lt": {
+      "node": "52798:24831",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-input-lt": {
+      "node": "52798:24633",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-input-lt": {
+      "node": "52798:24731",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-input-lt": {
+      "node": "52798:24441",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 316
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-placeholder-xt": {
+      "node": "52798:24950",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 180
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-placeholder-xt": {
+      "node": "52798:25234",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 180
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-placeholder-xt": {
+      "node": "52798:25050",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 180
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-placeholder-xt": {
+      "node": "52798:25142",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 180
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-placeholder-xt": {
+      "node": "52798:24858",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 180
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-label-xt": {
+      "node": "52798:25402",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-label-xt": {
+      "node": "52798:25654",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-label-xt": {
+      "node": "52798:25486",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-label-xt": {
+      "node": "52798:25562",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-label-xt": {
+      "node": "52798:25326",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 100
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-disabled-input-xt": {
+      "node": "52798:24466",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 956,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-error-input-xt": {
+      "node": "52798:24758",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 722,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-hovered-input-xt": {
+      "node": "52798:24566",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 488,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-focused-input-xt": {
+      "node": "52798:24658",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 254,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    },
+    "filled-enabled-input-xt": {
+      "node": "52798:24374",
+      "size": [
+        210,
+        56
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "text-field",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        212,
+        78
+      ]
+    }
+  }
+}

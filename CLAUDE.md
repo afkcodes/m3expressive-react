@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range).
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -152,6 +152,13 @@ FAB menu, split button, button groups.
   (slider value indicators, ~52px) declares `padding` (a capture outside the page fails with
   "bitblt reading outside image"). Chrome's raster depends on page position (tile alignment):
   changing the padding shifts shadow / AA pixels, so verify a variant at the padding it declares.
+- Chrome snaps *layout* offsets to whole CSS px even at 2x (a 1px caret at x 54.5 paints at 55);
+  half-pixel kit geometry (centred 1px strokes) needs `transform: translate(-0.5px)`.
+- StyleX `defineVars` / `defineMarker` must be imported from their `.stylex.ts` path
+  (`@m3x/react/components/<C>/<file>.stylex`), never via a re-export; after changing package
+  `exports`, restart the dev server (the StyleX resolver caches it) — and a broken fixture import
+  breaks every fixture page (one registry), so never run a regression while editing fixtures.
+- Flex columns inside fixed-size fixture boxes shrink: give fixed-height parts `flexShrink: 0`.
 - The Playwright config emulates `prefers-reduced-motion: reduce`; tests about motion must
   `page.emulateMedia({ reducedMotion: 'no-preference' })` first.
 - Focused variants that show a focus indicator outside the frame don't clip, so their shadows

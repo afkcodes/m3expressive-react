@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./tokens/*.stylex": "./src/tokens/*.stylex.ts",
+    "./components/*.stylex": "./src/components/*.stylex.ts",
     "./tokens/*": "./src/tokens/*.ts",
     "./motion": "./src/motion/index.ts",
     "./fonts.css": "./src/fonts.css",

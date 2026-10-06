@@ -100,6 +100,11 @@ line to flip if you'd rather follow the M3 guidelines:
 | Range slider Medium | 44px frame (52px handles overflow), value indicator 8px above the handle | 52px like Standard Medium, indicator 4px above — we follow this |
 | Slider, keyboard focus | — (no Focused variant) | handle halves to 2px and the value indicator shows, as Compose does on focus |
 | Slider inset icon | layer present but hidden in every variant | not implemented yet |
+| Outlined text field, floating label | notch drawn as a Surface-coloured patch over the stroke (Figma can't cut strokes) | a real gap in the outline (fieldset legend), so it works on any background; `textFieldVars.notchColor` (default transparent) — parity fixtures set it to Surface |
+| Outlined text field, disabled | stroke = 1px On Surface 10% centred + 1px On Surface 4% inside | On Surface 12% — we follow the kit |
+| Text field, Error frames | Error + input text drawn focused (3px, caret); Error + label / placeholder resting (1px) | both are valid states — fixtures reproduce each |
+| Text field, Placeholder frames | label floated with the placeholder visible while unfocused | Compose `alwaysMinimize`: `alwaysFloatLabel` |
+| Outlined text field, hovered placeholder (no icons) | placeholder On Surface | On Surface Variant like every other variant — we follow this |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
