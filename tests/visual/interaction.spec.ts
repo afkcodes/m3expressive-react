@@ -523,3 +523,34 @@ test('radio (live): hover, select, arrows', async ({ page }) => {
   await expect(items.nth(0)).toHaveAttribute('aria-checked', 'true');
   await expect(items.nth(0)).toBeFocused();
 });
+
+// ── Switch: rest/hover = kit, click toggles (handle slides to the on position) ──────────────
+test('switch (live): hover, toggle, keyboard', async ({ page }) => {
+  const sw = JSON.parse(readFileSync(join(REFS_DIR, 'switch/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/switch/live');
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const root = node.getByRole('switch');
+  const check = async (name: string) => {
+    const v = sw.variants[name]!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'switch', `${name}.png`));
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  };
+  await page.waitForTimeout(SETTLE);
+  await check('off-plain-enabled');
+  const b = (await root.boundingBox())!;
+  await page.mouse.move(b.x + 16, b.y + 16);
+  await page.waitForTimeout(SETTLE);
+  await check('off-plain-hovered');
+  await root.click();
+  await expect(root).toHaveAttribute('aria-checked', 'true');
+  await page.mouse.move(0, 0);
+  await root.evaluate((e) => e.blur());
+  await page.waitForTimeout(SETTLE);
+  await check('on-plain-enabled');
+  await root.focus();
+  await page.keyboard.press('Space');
+  await expect(root).toHaveAttribute('aria-checked', 'false');
+});

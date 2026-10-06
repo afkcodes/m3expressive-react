@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (core 5, icon buttons, toggle buttons, toggle icon buttons, split button, FAB + extended FAB, FAB menu, standard + connected button groups, segmented button) — the whole Buttons page., Cards, Checkboxes.
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch.
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -157,6 +157,8 @@ FAB menu, split button, button groups.
    values before changing anything; fix the cause, not the threshold.
 8. **Live** behaviour checks for interactive components; **playground** `/demo/<c>`.
 9. **Report** honestly: counts, exceptions with reasons, kit deviations, browser limits.
+10. **Commit** the finished component as one conventional commit (component + figma refs + fixture +
+    playground + docs), on the working branch; never push unless asked; no AI trailer.
 
 ## 9. Kit deviations policy
 - Default: reproduce Figma exactly, including Figma's own rendering rules (§3).

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Checkbox, M3Provider, Radio, RadioGroup, typescale, type ColorSchemeMode } from '@m3x/react';
+import { Checkbox, M3Provider, Radio, RadioGroup, Switch, typescale, type ColorSchemeMode } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 
 const s = stylex.create({
@@ -56,6 +56,16 @@ export function CheckboxPlayground() {
             </label>
           ))}
         </RadioGroup>
+
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Switches — press and hold to see the handle grow</h2>
+        <div {...stylex.props(s.list)} style={{ gap: 16, padding: 16 }}>
+          {[['Wi-Fi', false, false], ['Bluetooth (icons)', true, true], ['Airplane mode', false, true], ['Locked', true, false, true]].map(([label, on, icons, dis]) => (
+            <label key={String(label)} {...stylex.props(s.row, typescale.bodyLarge)} style={{ gap: 16, justifyContent: 'space-between', minWidth: 280 }}>
+              {label}
+              <Switch aria-label={String(label)} defaultChecked={!!on} icons={!!icons} disabled={!!dis} />
+            </label>
+          ))}
+        </div>
 
         <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Every checkbox type (hover, press, Tab)</h2>
         <section {...stylex.props(s.grid)}>
