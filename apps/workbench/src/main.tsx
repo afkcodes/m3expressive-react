@@ -8,6 +8,7 @@ import { ButtonPlayground } from './pages/ButtonPlayground';
 import { BadgePlayground } from './pages/BadgePlayground';
 import { CardPlayground } from './pages/CardPlayground';
 import { ChipsPlayground } from './pages/ChipsPlayground';
+import { OverlaysPlayground } from './pages/OverlaysPlayground';
 import { CheckboxPlayground } from './pages/CheckboxPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
@@ -24,6 +25,7 @@ function App() {
   if (page === 'demo' && component === 'badge') return <BadgePlayground />;
   if (page === 'demo' && component === 'card') return <CardPlayground />;
   if (page === 'demo' && component === 'chips') return <ChipsPlayground />;
+  if (page === 'demo' && (component === 'overlays' || component === 'tooltip')) return <OverlaysPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

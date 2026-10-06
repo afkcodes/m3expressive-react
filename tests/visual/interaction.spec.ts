@@ -583,3 +583,25 @@ test('chips (live): hover, select, remove', async ({ page }) => {
   await node.getByRole('button', { name: 'Remove' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-removed', '1');
 });
+
+// ── Tooltips: hover shows the plain tooltip (= kit), rich tooltip opens on hover ────────────
+test('tooltip (live): plain on hover, rich on hover', async ({ page }) => {
+  const tips = JSON.parse(readFileSync(join(REFS_DIR, 'tooltip/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/tooltip/live');
+  await page.evaluate(() => document.fonts.ready);
+  const trigger = page.getByRole('button', { name: 'Favourite' });
+  await trigger.hover();
+  const plain = page.getByText('Supporting text', { exact: true });
+  await expect(plain).toBeVisible();
+  await page.waitForTimeout(SETTLE);
+  // The positioner centres the tooltip on the trigger at sub-pixel offsets, so glyph raster can't
+  // be compared here (static parity covers pixels); check the surface's geometry and colours.
+  const surface = plain.locator('xpath=..');
+  const box = (await surface.boundingBox())!;
+  expect.soft([box.width, box.height], 'kit size 104×24').toEqual([tips.variants['plain-single']!.size[0], tips.variants['plain-single']!.size[1]]);
+  const look = await surface.evaluate((e) => { const cs = getComputedStyle(e); return [cs.backgroundColor, cs.color, cs.borderTopLeftRadius]; });
+  expect.soft(look, 'inverse surface / inverse on surface / 4px').toEqual(['rgb(50, 47, 53)', 'rgb(245, 239, 247)', '4px']);
+  await page.mouse.move(0, 0);
+  await page.getByRole('button', { name: 'Details' }).hover();
+  await expect(page.getByText('Supporting line text lorem ipsum dolor sit amet, consectetur')).toBeVisible();
+});

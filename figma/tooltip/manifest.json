@@ -1,0 +1,60 @@
+{
+  "component": "tooltip",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "plain": {
+      "node": "54061:33881",
+      "file": "_frames/plain.png"
+    },
+    "rich": {
+      "node": "54061:33872",
+      "file": "_frames/rich.png",
+      "origin": [
+        -8,
+        -6
+      ]
+    }
+  },
+  "variants": {
+    "plain-single": {
+      "node": "54061:33882",
+      "size": [
+        104,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "plain",
+        "x": 15.5,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        26
+      ]
+    },
+    "rich": {
+      "node": "54061:33872",
+      "size": [
+        312,
+        136
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "rich",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        1,
+        1,
+        319,
+        145
+      ],
+      "refNote": "left column under set border excluded; top row under set border excluded"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+ "component": "tooltip",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "plain": {
+   "node": "54061:33881",
+   "file": "_frames/plain.png",
+   "size": [
+    135,
+    56
+   ],
+   "rows": "plain-single 54061:33882 15.5,16 104x24"
+  },
+  "rich": {
+   "node": "54061:33872",
+   "file": "_frames/rich.png",
+   "size": [
+    328,
+    152
+   ],
+   "origin": [
+    -8,
+    -6
+   ],
+   "rows": "rich 54061:33872 0,0 312x136 rb-8,-6,328,152"
+  }
+ },
+ "note": "The multi-line plain variant is hidden in the kit (empty export)."
+}

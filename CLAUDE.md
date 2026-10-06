@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips.
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips.
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
