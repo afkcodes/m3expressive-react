@@ -1046,3 +1046,50 @@ test('app bar (live): medium bar matches the kit, collapses to 64px with the scr
   await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 0));
   await expect.poll(height).toBe(112);
 });
+
+test('search (live): the bar matches the kit, opens the docked view, filters, closes back to the bar', async ({ page }) => {
+  const sm = JSON.parse(readFileSync(join(REFS_DIR, 'search/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/search/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const v = sm.variants['bar-enabled-plain']!;
+  const ref: Buffer = readFileSync(join(REFS_DIR, 'search', 'bar-enabled-plain.png'));
+  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({ type: 'parity', description: `bar-enabled-plain (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  expect.soft(r.diffPixels, 'bar-enabled-plain').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+
+  // Keyboard: the menu button, then the bar's own trigger (a real button, not a wrapper around the icons).
+  const trigger = page.getByRole('button', { name: 'Hinted search text' });
+  const layer = node.locator('> div > span').first();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Menu' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(trigger).toBeFocused();
+  await expect.poll(() => layer.evaluate((el) => getComputedStyle(el).opacity)).toBe('0.1');
+
+  // Enter expands to the docked view with the input focused; typing filters the results.
+  await page.keyboard.press('Enter');
+  const input = page.getByRole('searchbox', { name: 'Hinted search text' });
+  await expect(input).toBeFocused();
+  await expect(page.getByText('Statements')).toBeVisible();
+  await page.keyboard.type('pay');
+  await expect(page.getByText('Payments')).toBeVisible();
+  await expect(page.getByText('Statements')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect(input).toHaveValue('');
+
+  // Escape collapses back to the bar and returns focus to its trigger.
+  await input.press('Escape');
+  await expect(trigger).toBeFocused();
+
+  // Pointer: a click anywhere on the bar's text area opens it; the menu button doesn't.
+  await page.getByRole('button', { name: 'Menu' }).click();
+  await expect(input).toHaveCount(0);
+  await node.click({ position: { x: 200, y: 28 } });
+  await expect(input).toBeFocused();
+  await page.getByRole('button', { name: 'Back' }).click();
+  await expect(trigger).toBeFocused();
+});

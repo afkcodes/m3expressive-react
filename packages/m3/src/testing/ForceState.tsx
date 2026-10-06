@@ -40,3 +40,10 @@ export function ForceState({ children, ...value }: ForceStateValue & { children:
 }
 
 export const useForcedState = () => useContext(ForceStateContext);
+
+const NONE: ForceStateValue = {};
+
+/** Stops a forced state at a part boundary (a search bar's nested icon buttons, a view's result rows). */
+export function ForceStateBoundary({ children }: { children: ReactNode }) {
+  return <ForceStateContext value={NONE}>{children}</ForceStateContext>;
+}

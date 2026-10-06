@@ -135,6 +135,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Top app bar titles | Figma legacy line height; small title 1px higher and large subtitle 1px lower than it | — we follow the kit (measured per layer) |
 | Top app bar, search / image content | search field = the Search page's bar restyled; image placeholder FIT with LUMINOSITY | `search` / `content` slots; fixtures reproduce the kit's building blocks |
 | Bottom app bar FAB | shadow clipped by its frame | `Fab elevated={false}` |
+| Search, focused input caret | static 1px caret after the hugged text ("Input text" hugs at 73px) | live inputs use the native caret; the test-only static caret follows `textBox.hug` (72px with our Roboto) — 1px, recorded exception |
+| Search bar (collapsed) | one clickable surface around the icon buttons | the hint is a real button stretched over the bar (no nested interactive controls); icon buttons stay separate |
+| Search full-screen layout | no container fill (bar and results over the screen) | — we follow the kit; place the view on Surface |
+| Search, expanded input bar | static layouts only (no state variants) | a text field with no state layer (Compose InputField) |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

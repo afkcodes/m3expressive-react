@@ -6,7 +6,8 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable), Navigation (bar with vertical / horizontal items, rail collapsed / expanded with sections), App bars (top small / centred / medium / large with scroll behaviour, bottom app bar).
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable), Navigation (bar with vertical / horizontal items, rail collapsed / expanded with sections), App bars (top small / centred / medium / large with scroll behaviour, bottom app bar), Search (bar with
+hover / press / avatar, docked and full-screen views).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -107,6 +108,8 @@ FAB menu, split button, button groups.
 - Touch target ≥ 48px (XS/S buttons and icon buttons pad the root to 48).
 - Disabled (kit): container on-surface 10%, content 38% opacity.
 - Static states for tests come from `@m3x/react/testing` `<ForceState>` — never public props.
+- A forced state reaches every descendant: composites wrap nested interactive parts (a search bar's
+  icon buttons, a view's result rows) in `<ForceStateBoundary>` so only the part the kit varies shows it.
 
 ## 7. Implementation rules (StyleX + Base UI)
 - Build on the matching Base UI primitive (`@base-ui/react/button`, toggle, toggle-group, …).
@@ -189,6 +192,10 @@ FAB menu, split button, button groups.
   primary tab indicator) uses offsetLeft / offsetWidth, not fractional rects.
 - Popups must portal into `<M3Provider>` (`usePortalContainer()`): a portal to <body> escapes the
   provider's colour scheme, contrast, motion themes and font smoothing (live text raster differs).
+- Never nest interactive elements: when the kit draws a clickable surface around icon buttons (search
+  bar), make the text a real `<button>` stretched over the surface (`::after`, inset 0), lift the icon
+  slots above it (z-index 1), host the ripple on that button and show its focus on the surface with
+  `:has(...:focus-visible)`.
 
 ## 8. Per-component procedure (Figma → code → proof)
 1. **Survey** the page read-only (`use_figma`): sections, component sets, variant properties.

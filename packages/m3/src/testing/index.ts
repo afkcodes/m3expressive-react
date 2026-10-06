@@ -1,2 +1,2 @@
-export { ForceState, useForcedState } from './ForceState.tsx';
+export { ForceState, ForceStateBoundary, useForcedState } from './ForceState.tsx';
 export type { ForcedState, ForceStateValue, ForcedProgressFrame } from './ForceState.tsx';

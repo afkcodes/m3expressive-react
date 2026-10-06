@@ -60,6 +60,8 @@ export { NavigationBar, NavigationItem, NavigationRail, NavigationRailSection, N
 export type { NavigationBarProps, NavigationItemLayout, NavigationItemProps, NavigationRailProps, NavigationRailSectionProps } from './components/Navigation/index.ts';
 export { AppBarTitle, BottomAppBar, TopAppBar, useAppBarScroll } from './components/AppBar/index.ts';
 export type { AppBarTitleProps, BottomAppBarProps, TopAppBarProps, TopAppBarSize } from './components/AppBar/index.ts';
+export { SearchBar, SearchView } from './components/Search/index.ts';
+export type { SearchBarProps, SearchViewProps } from './components/Search/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

@@ -1,0 +1,215 @@
+{
+  "component": "search",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "search-bar": {
+      "node": "52977:33813",
+      "file": "_frames/search-bar.png"
+    },
+    "full-screen": {
+      "node": "59178:4963",
+      "file": "_frames/full-screen.png"
+    },
+    "docked": {
+      "node": "59178:4992",
+      "file": "_frames/docked.png"
+    }
+  },
+  "variants": {
+    "bar-pressed-avatar": {
+      "node": "52977:33897",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 784,
+        "y": 96
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "bar-hovered-avatar": {
+      "node": "52977:33909",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 400,
+        "y": 96
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "bar-enabled-avatar": {
+      "node": "52977:33920",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 16,
+        "y": 96
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "bar-pressed-plain": {
+      "node": "52977:33931",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 784,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "bar-hovered-plain": {
+      "node": "52977:33940",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 400,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "bar-enabled-plain": {
+      "node": "52977:33948",
+      "size": [
+        360,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "search-bar",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        58
+      ]
+    },
+    "full-input-text": {
+      "node": "59178:4964",
+      "size": [
+        412,
+        250
+      ],
+      "background": "#DFD5EC",
+      "crop": {
+        "frame": "full-screen",
+        "x": 134,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        252
+      ],
+      "allowedDiffPixels": 132,
+      "allowedDiffReason": "Static focus caret (visual tests only; live inputs use the native caret) sits 1px left: the kit hugs \"Input text\" (body large, 0.5 tracking) at 73px, Chrome's advance is 72.094 so ceil(advance - tracking) = 72 (textBox.hug, verified on the kit's 30 type styles; glyphs land on identical pixels). Font-version difference at the rounding edge; the 1x16 caret is the whole drift."
+    },
+    "full-supporting-text": {
+      "node": "59178:4979",
+      "size": [
+        412,
+        250
+      ],
+      "background": "#DFD5EC",
+      "crop": {
+        "frame": "full-screen",
+        "x": 566,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        252
+      ]
+    },
+    "docked-input-text": {
+      "node": "59178:4993",
+      "size": [
+        360,
+        250
+      ],
+      "background": "#DFD5EC",
+      "crop": {
+        "frame": "docked",
+        "x": 168,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        252
+      ],
+      "allowedDiffPixels": 132,
+      "allowedDiffReason": "Static focus caret (visual tests only; live inputs use the native caret) sits 1px left: the kit hugs \"Input text\" (body large, 0.5 tracking) at 73px, Chrome's advance is 72.094 so ceil(advance - tracking) = 72 (textBox.hug, verified on the kit's 30 type styles; glyphs land on identical pixels). Font-version difference at the rounding edge; the 1x16 caret is the whole drift."
+    },
+    "docked-supporting-text": {
+      "node": "59178:5010",
+      "size": [
+        360,
+        250
+      ],
+      "background": "#DFD5EC",
+      "crop": {
+        "frame": "docked",
+        "x": 548,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        252
+      ]
+    }
+  }
+}

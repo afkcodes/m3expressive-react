@@ -1,0 +1,47 @@
+{
+ "component": "search",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "note": "Search page (55141:14254): Search bar (enabled / hovered / pressed x avatar) and the expressive full-screen / docked search layouts. The baseline layouts are older variants of the same layouts.",
+ "frames": {
+  "search-bar": {
+   "node": "52977:33813",
+   "file": "_frames/search-bar.png",
+   "size": [
+    1160,
+    168
+   ],
+   "rows": "bar-pressed-avatar 52977:33897 784,96 360x56;bar-hovered-avatar 52977:33909 400,96 360x56;bar-enabled-avatar 52977:33920 16,96 360x56;bar-pressed-plain 52977:33931 784,16 360x56;bar-hovered-plain 52977:33940 400,16 360x56;bar-enabled-plain 52977:33948 16,16 360x56"
+  },
+  "full-screen": {
+   "node": "59178:4963",
+   "file": "_frames/full-screen.png",
+   "size": [
+    1112,
+    290
+   ],
+   "rows": "full-input-text 59178:4964 134,20 412x250;full-supporting-text 59178:4979 566,20 412x250",
+   "background": "#DFD5EC"
+  },
+  "docked": {
+   "node": "59178:4992",
+   "file": "_frames/docked.png",
+   "size": [
+    1076,
+    290
+   ],
+   "rows": "docked-input-text 59178:4993 168,20 360x250;docked-supporting-text 59178:5010 548,20 360x250",
+   "background": "#DFD5EC"
+  }
+ },
+ "exceptions": {
+  "full-input-text": {
+   "allowedDiffPixels": 132,
+   "allowedDiffReason": "Static focus caret (visual tests only; live inputs use the native caret) sits 1px left: the kit hugs \"Input text\" (body large, 0.5 tracking) at 73px, Chrome's advance is 72.094 so ceil(advance - tracking) = 72 (textBox.hug, verified on the kit's 30 type styles; glyphs land on identical pixels). Font-version difference at the rounding edge; the 1x16 caret is the whole drift."
+  },
+  "docked-input-text": {
+   "allowedDiffPixels": 132,
+   "allowedDiffReason": "Static focus caret (visual tests only; live inputs use the native caret) sits 1px left: the kit hugs \"Input text\" (body large, 0.5 tracking) at 73px, Chrome's advance is 72.094 so ceil(advance - tracking) = 72 (textBox.hug, verified on the kit's 30 type styles; glyphs land on identical pixels). Font-version difference at the rounding edge; the 1x16 caret is the whole drift."
+  }
+ }
+}
