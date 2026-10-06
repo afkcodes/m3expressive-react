@@ -1,0 +1,35 @@
+{
+ "component": "dialogs",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Dialogs page (55141:14176): Basic dialog, List dialog and Scrollable list dialog, each with / without the icon. XR dialogs are out of scope.",
+ "frames": {
+  "basic": {
+   "node": "50723:10929",
+   "file": "_frames/basic.png",
+   "size": [
+    352,
+    580
+   ],
+   "rows": "basic-noicon 50723:10948 20,20 312x240;basic-icon 50723:10930 20,280 312x280"
+  },
+  "list": {
+   "node": "52112:28937",
+   "file": "_frames/list.png",
+   "size": [
+    352,
+    968
+   ],
+   "rows": "list-noicon 50723:10964 20,20 312x434;list-icon 52112:28938 20,474 312x474"
+  },
+  "scroll": {
+   "node": "52112:29186",
+   "file": "_frames/scroll.png",
+   "size": [
+    352,
+    968
+   ],
+   "rows": "scroll-noicon 50723:11110 20,20 312x434;scroll-icon 52112:29187 20,474 312x474"
+  }
+ }
+}

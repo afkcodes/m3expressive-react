@@ -1200,3 +1200,42 @@ test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle 
   await expect(side).toHaveCount(0);
   await expect(openSide).toBeFocused();
 });
+
+test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Escape / scrim close it', async ({ page }) => {
+  const dm = JSON.parse(readFileSync(join(REFS_DIR, 'dialogs/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/dialogs/live');
+  await page.evaluate(() => document.fonts.ready);
+  const open = page.getByRole('button', { name: 'Open dialog' });
+  const dialog = page.getByRole('dialog', { name: 'Basic dialog title' });
+  const result = page.locator('[data-result]');
+
+  // Enters from 80% scale and fades in (MDC m3_motion_fade_enter), settling at 1.
+  await open.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAccessibleDescription(/critical information/);
+  await expect.poll(() => dialog.evaluate((el) => [getComputedStyle(el).scale, getComputedStyle(el).opacity].join(' '))).toBe('1 1');
+  // Same surface as the kit's basic dialog with icon (pixels: the static parity suite).
+  const surface = dialog.locator('> div');
+  const v = dm.variants['basic-icon']!;
+  const bb = (await surface.boundingBox())!;
+  expect([bb.width, bb.height]).toEqual(v.size);
+  expect(await surface.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(236, 230, 240)');
+
+  // Focus is inside; the confirming action closes with its result.
+  await expect.poll(() => dialog.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+  await dialog.getByRole('button', { name: 'Action 1' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(result).toHaveText('confirm');
+  await expect(open).toBeFocused();
+
+  // Escape dismisses; so does a click on the scrim.
+  await open.click();
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(result).toHaveText('dismissed');
+  await open.click();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(5, 5);
+  await expect(dialog).toHaveCount(0);
+});

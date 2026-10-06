@@ -5,7 +5,9 @@ import { color } from '../../tokens/color.stylex';
 import { elevation } from '../../tokens/elevation.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
-import { legacyLeading } from '../../primitives/textBox.ts';
+import { Divider } from '../Divider/Divider.tsx';
+import { InheritSurfaceContext } from './surface.ts';
+import { legacyLeading, textBox, textEnd } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
@@ -63,6 +65,7 @@ const s = stylex.create({
   forceHover: { borderRadius: 12 },
   forceFull: { borderRadius: 16 },
   segmentedFill: { backgroundColor: color.surface },
+  inheritSurface: { backgroundColor: 'transparent' },
   // Video thumbnails (64px) get 12px vertical padding: the kit's 1- and 2-line video rows are 88px.
   baseline: {
     columnGap: 16,
@@ -97,6 +100,9 @@ const s = stylex.create({
   // controls) are centred and spill into the padding, as the kit's fixed-height rows do.
   slotSpill: { marginBlock: -10 },
   slotTrailing: { columnGap: 8 },
+  // Baseline "Trailing element": supporting text 10px before the control (the kit's list dialogs);
+  // a checkbox's 48px target already brings 4px of that.
+  slotTrailingBaseline: { columnGap: { default: 10, ':has(> [role="checkbox"])': 6 } },
   slotOnSelected: { color: color.onSecondaryContainer },
   slotOnDragged: { color: color.onTertiaryContainer },
   dim: { opacity: 0.38 },
@@ -145,6 +151,8 @@ export interface ListItemProps {
   disabled?: boolean;
   /** Lifted while being reordered. */
   dragged?: boolean;
+  /** A middle-inset divider under the item (the baseline kit's list items in dialogs). */
+  divider?: boolean;
   onClick?: MouseEventHandler<HTMLElement>;
   href?: string;
   sx?: StyleXStyles;
@@ -165,6 +173,7 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     selected = false,
     disabled = false,
     dragged = false,
+    divider = false,
     onClick,
     href,
     sx,
@@ -172,6 +181,7 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
   ref,
 ) {
   const list = useContext(ListContext);
+  const inheritSurface = useContext(InheritSurfaceContext);
   const forced = useForcedState();
   const variant = variantProp ?? list.variant;
   const expressive = variant === 'expressive';
@@ -229,6 +239,7 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
           {...stylex.props(
             s.slot,
             s.slotTrailing,
+            !expressive && s.slotTrailingBaseline,
             expressive && s.slotExpressive,
             expressive && alignment === 'middle' && s.slotSpill,
             !expressive && lines === 1 && s.slotControl1,
@@ -239,7 +250,7 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
           )}
         >
           {trailingText != null && (
-            <span {...stylex.props(expressive ? typescale.labelLarge : typescale.labelSmall, s.trailingText)}>{trailingText}</span>
+            <span {...stylex.props(expressive ? typescale.labelLarge : [typescale.labelSmall, textBox.hug, textEnd.trimTracking], s.trailingText)}>{trailingText}</span>
           )}
           {trailing}
         </span>
@@ -249,7 +260,7 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
 
   const styles = stylex.props(
     s.root,
-    expressive ? s.expressive : [s.baseline, lines === 1 ? s.lines1 : lines === 2 ? s.lines2 : s.lines3],
+    expressive ? s.expressive : [s.baseline, lines === 1 ? s.lines1 : lines === 2 ? s.lines2 : s.lines3, inheritSurface && s.inheritSurface],
     expressive && alignment === 'top' && s.top,
     expressive && list.segmented && s.segmentedFill,
     interactive && s.interactive,
@@ -286,5 +297,13 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
       </div>
     );
   }
-  return list.inList ? <li {...stylex.props(s.li)}>{el}</li> : el;
+  const withDivider = divider ? (
+    <>
+      {el}
+      <Divider inset="middle" />
+    </>
+  ) : (
+    el
+  );
+  return list.inList ? <li {...stylex.props(s.li)}>{withDivider}</li> : withDivider;
 });

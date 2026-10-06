@@ -33,6 +33,15 @@ export const textCentred = stylex.create({
 });
 
 /**
+ * Right-aligned hug text: Figma aligns the last glyph's advance to the box edge, without the
+ * trailing letter spacing CSS keeps inside the line — shift by one tracking (a transform: layout
+ * offsets snap to whole px). The baseline list's trailing supporting text ("100+").
+ */
+export const textEnd = stylex.create({
+  trimTracking: { textAlign: 'end', transform: `translateX(${typeMetrics.tracking})` },
+});
+
+/**
  * Figma's legacy line height (older text layers in the kit, e.g. snackbar and list supporting
  * text): the first baseline sits at ascent × size instead of half-leading + ascent, so glyphs
  * render higher than in CSS. Measured from the kit's glyph outlines (14/20 → baseline 13.0 vs

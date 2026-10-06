@@ -1,0 +1,135 @@
+{
+  "component": "dialogs",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "basic": {
+      "node": "50723:10929",
+      "file": "_frames/basic.png"
+    },
+    "list": {
+      "node": "52112:28937",
+      "file": "_frames/list.png"
+    },
+    "scroll": {
+      "node": "52112:29186",
+      "file": "_frames/scroll.png"
+    }
+  },
+  "variants": {
+    "basic-noicon": {
+      "node": "50723:10948",
+      "size": [
+        312,
+        240
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "basic",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        242
+      ]
+    },
+    "basic-icon": {
+      "node": "50723:10930",
+      "size": [
+        312,
+        280
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "basic",
+        "x": 20,
+        "y": 280
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        282
+      ]
+    },
+    "list-noicon": {
+      "node": "50723:10964",
+      "size": [
+        312,
+        434
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "list",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        436
+      ]
+    },
+    "list-icon": {
+      "node": "52112:28938",
+      "size": [
+        312,
+        474
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "list",
+        "x": 20,
+        "y": 474
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        476
+      ]
+    },
+    "scroll-noicon": {
+      "node": "50723:11110",
+      "size": [
+        312,
+        434
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "scroll",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        436
+      ]
+    },
+    "scroll-icon": {
+      "node": "52112:29187",
+      "size": [
+        312,
+        474
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "scroll",
+        "x": 20,
+        "y": 474
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        314,
+        476
+      ]
+    }
+  }
+}

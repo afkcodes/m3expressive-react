@@ -152,6 +152,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Bottom sheet drag handle | 16px padding (36px header) | Compose pads it 22px — we follow the kit; on a modal sheet the handle is a button that dismisses (keyboard / assistive tech), dragging past 56px or 125px/s dismisses |
 | Sheet content building blocks | an empty frame and the kit's dashed "replace this slot" placeholder | not fixtures (sheets take any content) |
 | Modal bottom sheet reference | the component set clips the variant's scrim with a rounded corner | recorded exception (154px, outside the sheet) |
+| Dialogs, elevation | no shadow | — we follow the kit (the scrim separates the dialog) |
+| Dialog motion | — | Compose dialogs use the platform window animation; we use Material Components' M3 dialog: fade + scale 0.8 → 1 over 400ms emphasized decelerate, fade out over 150ms emphasized accelerate |
+| List dialogs | baseline list items without their Surface fill, middle-inset dividers, right-aligned "100+" 10px before the checkbox | items inherit the dialog surface; `ListItem divider`; right-aligned hug text (`textEnd`) |
+| `alertdialog` | — | `Dialog role="alertdialog"` ignores outside clicks (decisions); Escape still dismisses |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
