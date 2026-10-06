@@ -7,7 +7,8 @@ parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by ey
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
 Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable), Navigation (bar with vertical / horizontal items, rail collapsed / expanded with sections), App bars (top small / centred / medium / large with scroll behaviour, bottom app bar), Search (bar with
-hover / press / avatar, docked and full-screen views).
+hover / press / avatar, docked and full-screen views), Toolbars (floating horizontal / vertical and
+docked, standard / vibrant, toolbar-coloured building blocks, FAB collapse).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -192,6 +193,14 @@ FAB menu, split button, button groups.
   primary tab indicator) uses offsetLeft / offsetWidth, not fractional rects.
 - Popups must portal into `<M3Provider>` (`usePortalContainer()`): a portal to <body> escapes the
   provider's colour scheme, contrast, motion themes and font smoothing (live text raster differs).
+- Kit variants placed off the device-pixel grid (x 33.2 at 2x) can't be cropped from a frame export
+  (the crop bakes in a sub-pixel offset): export those nodes individually and give each its own
+  single-row frame. Check every frame's render bounds too — an overflowing child moves the export
+  origin (toolbars: −0.5px → `origin`).
+- A fixed-size fixture box can hide a component's natural size (a 72px bar stretched to the kit's
+  64px passed until it sat in an auto-height parent): probe natural geometry in a live render.
+- Intrinsic-size collapse (toolbar leading / trailing, toolbar into its FAB): a `grid-template-columns`
+  0fr ⇄ 1fr track with a `min-width: 0` child animates on the spring tokens without measuring.
 - Never nest interactive elements: when the kit draws a clickable surface around icon buttons (search
   bar), make the text a real `<button>` stretched over the surface (`::after`, inset 0), lift the icon
   slots above it (z-index 1), host the ripple on that button and show its focus on the surface with

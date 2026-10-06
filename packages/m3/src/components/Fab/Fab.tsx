@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useContext, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -11,6 +11,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { ToolbarFabContext } from '../Toolbar/context.ts';
 
 export type FabColor = 'primary' | 'secondary' | 'tertiary' | 'primary-container' | 'secondary-container' | 'tertiary-container';
 export type FabSize = 'default' | 'medium' | 'large';
@@ -81,6 +82,12 @@ const s = stylex.create({
   ringForced: { outlineStyle: 'solid' },
   // Flat FAB (Compose bottomAppBarFabElevation: 0 in every state) — e.g. in a navigation rail.
   flat: { boxShadow: 'none' },
+  // Next to a floating toolbar: the size follows the toolbar's collapse (FastSpatial).
+  inToolbar: {
+    transitionProperty: 'box-shadow, width, height',
+    transitionDuration: `${motion.fastEffectsDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+    transitionTimingFunction: `${motion.fastEffectsEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+  },
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   label: { position: 'relative', color: 'inherit' },
 });
@@ -135,9 +142,17 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
   { size = 'default', color: fabColor = 'primary-container', elevated = true, children, sx, ...rest },
   ref,
 ) {
-  const { box, r, icon } = FAB[size];
+  const { box: rest56, r, icon } = FAB[size];
+  const toolbar = useContext(ToolbarFabContext);
+  // Compose FabSizeRange: the default FAB grows to the medium FAB's 80px while its toolbar is collapsed.
+  const box = toolbar?.collapsed && size === 'default' ? FAB.medium.box : rest56;
   return (
-    <BaseButton ref={ref} data-ripple-host="" {...rest} {...stylex.props(...useFabRoot(fabColor, elevated, sx), dyn.box(box, box, r))}>
+    <BaseButton
+      ref={ref}
+      data-ripple-host=""
+      {...rest}
+      {...stylex.props(...useFabRoot(fabColor, elevated, sx), toolbar && s.inToolbar, dyn.box(box, box, r))}
+    >
       <StateLayer />
       <span {...stylex.props(s.icon, dyn.icon(icon))}>{children}</span>
       <Ripple above />

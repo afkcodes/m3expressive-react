@@ -1,0 +1,1354 @@
+{
+  "component": "toolbar",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": {
+      "node": "58467:8206",
+      "file": "_frames/set.png"
+    },
+    "standard": {
+      "node": "58027:76095",
+      "file": "_frames/standard.png",
+      "origin": [
+        -0.5,
+        0
+      ]
+    },
+    "vibrant": {
+      "node": "58027:76198",
+      "file": "_frames/vibrant.png"
+    },
+    "examples": {
+      "node": "58027:76453",
+      "file": "_frames/examples.png"
+    },
+    "std-toggle-unsel-enabled": {
+      "node": "58027:76099",
+      "file": "_frames/ind/std-toggle-unsel-enabled.png"
+    },
+    "std-toggle-unsel-hovered": {
+      "node": "58694:33833",
+      "file": "_frames/ind/std-toggle-unsel-hovered.png"
+    },
+    "std-toggle-unsel-focused": {
+      "node": "58694:33853",
+      "file": "_frames/ind/std-toggle-unsel-focused.png"
+    },
+    "std-toggle-unsel-pressed": {
+      "node": "58694:33838",
+      "file": "_frames/ind/std-toggle-unsel-pressed.png"
+    },
+    "std-toggle-unsel-disabled": {
+      "node": "58694:33843",
+      "file": "_frames/ind/std-toggle-unsel-disabled.png"
+    },
+    "std-toggle-sel-enabled": {
+      "node": "58027:76101",
+      "file": "_frames/ind/std-toggle-sel-enabled.png"
+    },
+    "std-toggle-sel-hovered": {
+      "node": "58694:33858",
+      "file": "_frames/ind/std-toggle-sel-hovered.png"
+    },
+    "std-toggle-sel-focused": {
+      "node": "58694:33863",
+      "file": "_frames/ind/std-toggle-sel-focused.png"
+    },
+    "std-toggle-sel-pressed": {
+      "node": "58694:33868",
+      "file": "_frames/ind/std-toggle-sel-pressed.png"
+    },
+    "std-toggle-sel-disabled": {
+      "node": "58694:33873",
+      "file": "_frames/ind/std-toggle-sel-disabled.png"
+    },
+    "std-button-unsel-enabled": {
+      "node": "58027:76104",
+      "file": "_frames/ind/std-button-unsel-enabled.png"
+    },
+    "std-button-unsel-hovered": {
+      "node": "58694:33664",
+      "file": "_frames/ind/std-button-unsel-hovered.png",
+      "origin": [
+        -4.0,
+        0.0
+      ]
+    },
+    "std-button-unsel-pressed": {
+      "node": "58694:33678",
+      "file": "_frames/ind/std-button-unsel-pressed.png"
+    },
+    "std-button-unsel-disabled": {
+      "node": "58694:33684",
+      "file": "_frames/ind/std-button-unsel-disabled.png"
+    },
+    "std-button-sel-enabled": {
+      "node": "58027:76106",
+      "file": "_frames/ind/std-button-sel-enabled.png"
+    },
+    "std-button-sel-pressed": {
+      "node": "58694:33702",
+      "file": "_frames/ind/std-button-sel-pressed.png"
+    },
+    "std-button-sel-disabled": {
+      "node": "58694:33708",
+      "file": "_frames/ind/std-button-sel-disabled.png"
+    },
+    "std-button-sel-hovered": {
+      "node": "58694:33690",
+      "file": "_frames/ind/std-button-sel-hovered.png",
+      "origin": [
+        -4.0,
+        0.0
+      ]
+    },
+    "vib-button-unsel-enabled": {
+      "node": "58027:76207",
+      "file": "_frames/ind/vib-button-unsel-enabled.png"
+    },
+    "vib-button-unsel-hovered": {
+      "node": "58694:34874",
+      "file": "_frames/ind/vib-button-unsel-hovered.png",
+      "origin": [
+        -4.0,
+        0.0
+      ]
+    },
+    "vib-button-unsel-pressed": {
+      "node": "58694:34886",
+      "file": "_frames/ind/vib-button-unsel-pressed.png"
+    },
+    "vib-button-unsel-disabled": {
+      "node": "58694:34892",
+      "file": "_frames/ind/vib-button-unsel-disabled.png"
+    },
+    "vib-button-sel-enabled": {
+      "node": "58027:76209",
+      "file": "_frames/ind/vib-button-sel-enabled.png"
+    },
+    "vib-button-sel-hovered": {
+      "node": "58694:34904",
+      "file": "_frames/ind/vib-button-sel-hovered.png",
+      "origin": [
+        -4.0,
+        0.0
+      ]
+    },
+    "vib-button-sel-pressed": {
+      "node": "58694:34916",
+      "file": "_frames/ind/vib-button-sel-pressed.png"
+    },
+    "vib-button-sel-disabled": {
+      "node": "58694:34922",
+      "file": "_frames/ind/vib-button-sel-disabled.png"
+    }
+  },
+  "variants": {
+    "toolbar-floating-h-standard": {
+      "node": "58467:8210",
+      "size": [
+        168,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 126,
+        "y": 91
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        192,
+        88
+      ]
+    },
+    "toolbar-docked-standard": {
+      "node": "58467:8235",
+      "size": [
+        412,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 244
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        66
+      ],
+      "allowedDiffPixels": 1289,
+      "allowedDiffReason": "Kit slip: the standard docked toolbar's content slot hugs at a fixed 106px gap (items at 28 / 182 / 336), while the vibrant docked toolbar and the root's own SPACE_BETWEEN + 16px padding put them at 16 / 182 / 348 (Compose FlexibleBottomAppBar: Arrangement.SpaceBetween in 16px padding). We render space-between; the outer two icons sit 12px further out."
+    },
+    "toolbar-floating-h-vibrant": {
+      "node": "58467:8260",
+      "size": [
+        168,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 591,
+        "y": 96
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        192,
+        88
+      ]
+    },
+    "toolbar-docked-vibrant": {
+      "node": "58467:8285",
+      "size": [
+        412,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 469,
+        "y": 248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        66
+      ]
+    },
+    "toolbar-floating-v-standard": {
+      "node": "58467:8325",
+      "size": [
+        64,
+        168
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 190,
+        "y": 390
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        88,
+        192
+      ]
+    },
+    "toolbar-floating-v-vibrant": {
+      "node": "58467:8350",
+      "size": [
+        64,
+        168
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "set",
+        "x": 643,
+        "y": 390
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        88,
+        192
+      ]
+    },
+    "std-icon-enabled": {
+      "node": "58027:76096",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 84,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "std-icon-hovered": {
+      "node": "58694:34214",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 164,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "std-icon-focused": {
+      "node": "58694:34219",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 244,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "std-icon-pressed": {
+      "node": "58694:34224",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 324,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "std-icon-disabled": {
+      "node": "58694:34229",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 404,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "std-button-unsel-focused": {
+      "node": "58694:33671",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 220.5,
+        "y": 243
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        97,
+        50
+      ]
+    },
+    "std-button-sel-focused": {
+      "node": "58694:33696",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "standard",
+        "x": 220.5,
+        "y": 313
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        97,
+        50
+      ]
+    },
+    "vib-icon-enabled": {
+      "node": "58027:76199",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 45,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-icon-hovered": {
+      "node": "58694:35500",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 140,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-icon-focused": {
+      "node": "58694:35510",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 244,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-icon-pressed": {
+      "node": "58694:35520",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 348,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-icon-disabled": {
+      "node": "58694:35530",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 452,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-unsel-enabled": {
+      "node": "58027:76202",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 45,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-unsel-hovered": {
+      "node": "58694:35029",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 141,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "allowedDiffPixels": 3331,
+      "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+    },
+    "vib-toggle-unsel-focused": {
+      "node": "58694:35049",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 244,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "allowedDiffPixels": 3327,
+      "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+    },
+    "vib-toggle-unsel-pressed": {
+      "node": "58694:35069",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 347,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "allowedDiffPixels": 4398,
+      "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+    },
+    "vib-toggle-unsel-disabled": {
+      "node": "58694:35089",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 450,
+        "y": 108
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-sel-enabled": {
+      "node": "58027:76204",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 45,
+        "y": 170
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-sel-hovered": {
+      "node": "58694:35031",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 141,
+        "y": 170
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-sel-focused": {
+      "node": "58694:35051",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 244,
+        "y": 170
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-sel-pressed": {
+      "node": "58694:35071",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 347,
+        "y": 170
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-toggle-sel-disabled": {
+      "node": "58694:35091",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 450,
+        "y": 170
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "vib-button-unsel-focused": {
+      "node": "58694:34898",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 220.5,
+        "y": 256
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        97,
+        50
+      ]
+    },
+    "vib-button-sel-focused": {
+      "node": "58694:34910",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vibrant",
+        "x": 220.5,
+        "y": 320
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        97,
+        50
+      ]
+    },
+    "ex-fab-share": {
+      "node": "58027:76454",
+      "size": [
+        232,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 82,
+        "y": 99
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        256,
+        88
+      ]
+    },
+    "ex-fab-archive": {
+      "node": "58027:76461",
+      "size": [
+        232,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 82,
+        "y": 203
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        256,
+        88
+      ]
+    },
+    "ex-fab-call": {
+      "node": "58027:76458",
+      "size": [
+        284,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 108,
+        "y": 307
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        308,
+        88
+      ]
+    },
+    "ex-wide-add": {
+      "node": "58468:12680",
+      "size": [
+        168,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 96,
+        "y": 514
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        192,
+        88
+      ]
+    },
+    "ex-vib-format": {
+      "node": "58468:11681",
+      "size": [
+        168,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 426,
+        "y": 516
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        192,
+        88
+      ]
+    },
+    "ex-vib-call": {
+      "node": "58468:11627",
+      "size": [
+        168,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 758,
+        "y": 516
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        192,
+        88
+      ]
+    },
+    "ex-vertical": {
+      "node": "58027:76469",
+      "size": [
+        64,
+        168
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "examples",
+        "x": 977,
+        "y": 83
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        88,
+        192
+      ]
+    },
+    "std-toggle-unsel-enabled": {
+      "node": "58027:76099",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-unsel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-unsel-hovered": {
+      "node": "58694:33833",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-unsel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-unsel-focused": {
+      "node": "58694:33853",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-unsel-focused",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-unsel-pressed": {
+      "node": "58694:33838",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-unsel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-unsel-disabled": {
+      "node": "58694:33843",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-unsel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-sel-enabled": {
+      "node": "58027:76101",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-sel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-sel-hovered": {
+      "node": "58694:33858",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-sel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-sel-focused": {
+      "node": "58694:33863",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-sel-focused",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-sel-pressed": {
+      "node": "58694:33868",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-sel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-toggle-sel-disabled": {
+      "node": "58694:33873",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-toggle-sel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "std-button-unsel-enabled": {
+      "node": "58027:76104",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-unsel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-unsel-hovered": {
+      "node": "58694:33664",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-unsel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -4,
+        0,
+        103,
+        49
+      ]
+    },
+    "std-button-unsel-pressed": {
+      "node": "58694:33678",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-unsel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-unsel-disabled": {
+      "node": "58694:33684",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-unsel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-sel-enabled": {
+      "node": "58027:76106",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-sel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-sel-pressed": {
+      "node": "58694:33702",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-sel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-sel-disabled": {
+      "node": "58694:33708",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-sel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "std-button-sel-hovered": {
+      "node": "58694:33690",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "std-button-sel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -4,
+        0,
+        103,
+        49
+      ]
+    },
+    "vib-button-unsel-enabled": {
+      "node": "58027:76207",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-unsel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "vib-button-unsel-hovered": {
+      "node": "58694:34874",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-unsel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -4,
+        0,
+        103,
+        49
+      ]
+    },
+    "vib-button-unsel-pressed": {
+      "node": "58694:34886",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-unsel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "vib-button-unsel-disabled": {
+      "node": "58694:34892",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-unsel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "vib-button-sel-enabled": {
+      "node": "58027:76209",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-sel-enabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "vib-button-sel-hovered": {
+      "node": "58694:34904",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-sel-hovered",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -4,
+        0,
+        103,
+        49
+      ]
+    },
+    "vib-button-sel-pressed": {
+      "node": "58694:34916",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-sel-pressed",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    },
+    "vib-button-sel-disabled": {
+      "node": "58694:34922",
+      "size": [
+        95,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "vib-button-sel-disabled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        0,
+        0,
+        95,
+        48
+      ]
+    }
+  }
+}

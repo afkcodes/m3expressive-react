@@ -1,0 +1,373 @@
+{
+ "component": "toolbar",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "note": "Toolbars page (58295:22726): Toolbar set (floating horizontal / vertical, docked; standard / vibrant), the standard and vibrant building blocks (icon button, toggleable icon button, toggleable button) and the clean examples. Examples with hand-placed items (docked rows with an off-grid middle item, the Photos row) and the XR toolbar are not fixtures. Variants the kit places off the device-pixel grid (x 33.2, y 106.25\u2026) use individual node exports (frames named after the variant): a frame crop would bake a sub-pixel offset no page render has.",
+ "frames": {
+  "set": {
+   "node": "58467:8206",
+   "file": "_frames/set.png",
+   "size": [
+    897,
+    601
+   ],
+   "rows": "toolbar-floating-h-standard 58467:8210 126,91 168x64 rb-11,-7,190,86;toolbar-docked-standard 58467:8235 16,244 412x64;toolbar-floating-h-vibrant 58467:8260 591,96 168x64 rb-11,-7,190,86;toolbar-docked-vibrant 58467:8285 469,248 412x64;toolbar-floating-v-standard 58467:8325 190,390 64x168 rb-11,-7,86,190;toolbar-floating-v-vibrant 58467:8350 643,390 64x168 rb-11,-7,86,190"
+  },
+  "standard": {
+   "node": "58027:76095",
+   "file": "_frames/standard.png",
+   "size": [
+    537,
+    386
+   ],
+   "setBorder": false,
+   "rows": "std-icon-enabled 58027:76096 84,20 48x48;std-icon-hovered 58694:34214 164,20 48x48;std-icon-focused 58694:34219 244,20 48x48;std-icon-pressed 58694:34224 324,20 48x48;std-icon-disabled 58694:34229 404,20 48x48;std-button-unsel-focused 58694:33671 220.5,243 95x48;std-button-sel-focused 58694:33696 220.5,313 95x48",
+   "background": "#F3EDF7",
+   "origin": [
+    -0.5,
+    0
+   ]
+  },
+  "vibrant": {
+   "node": "58027:76198",
+   "file": "_frames/vibrant.png",
+   "size": [
+    536,
+    386
+   ],
+   "setBorder": false,
+   "rows": "vib-icon-enabled 58027:76199 45,20 48x48;vib-icon-hovered 58694:35500 140,20 48x48;vib-icon-focused 58694:35510 244,20 48x48;vib-icon-pressed 58694:35520 348,20 48x48;vib-icon-disabled 58694:35530 452,20 48x48;vib-toggle-unsel-enabled 58027:76202 45,108 48x48;vib-toggle-unsel-hovered 58694:35029 141,108 48x48;vib-toggle-unsel-focused 58694:35049 244,108 48x48;vib-toggle-unsel-pressed 58694:35069 347,108 48x48;vib-toggle-unsel-disabled 58694:35089 450,108 48x48;vib-toggle-sel-enabled 58027:76204 45,170 48x48;vib-toggle-sel-hovered 58694:35031 141,170 48x48;vib-toggle-sel-focused 58694:35051 244,170 48x48;vib-toggle-sel-pressed 58694:35071 347,170 48x48;vib-toggle-sel-disabled 58694:35091 450,170 48x48;vib-button-unsel-focused 58694:34898 220.5,256 95x48;vib-button-sel-focused 58694:34910 220.5,320 95x48",
+   "background": "#F3EDF7"
+  },
+  "examples": {
+   "node": "58027:76453",
+   "file": "_frames/examples.png",
+   "size": [
+    1124,
+    600
+   ],
+   "setBorder": false,
+   "rows": "ex-fab-share 58027:76454 82,99 232x64 rb-11,-7,254,86;ex-fab-archive 58027:76461 82,203 232x64 rb-11,-7,254,86;ex-fab-call 58027:76458 108,307 284x64 rb-11,-7,306,86;ex-wide-add 58468:12680 96,514 168x64 rb-11,-7,190,86;ex-vib-format 58468:11681 426,516 168x64 rb-11,-7,190,86;ex-vib-call 58468:11627 758,516 168x64 rb-11,-7,190,86;ex-vertical 58027:76469 977,83 64x168 rb-11,-7,86,190"
+  },
+  "std-toggle-unsel-enabled": {
+   "node": "58027:76099",
+   "file": "_frames/ind/std-toggle-unsel-enabled.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-unsel-enabled 58027:76099 0,0 48x48"
+  },
+  "std-toggle-unsel-hovered": {
+   "node": "58694:33833",
+   "file": "_frames/ind/std-toggle-unsel-hovered.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-unsel-hovered 58694:33833 0,0 48x48"
+  },
+  "std-toggle-unsel-focused": {
+   "node": "58694:33853",
+   "file": "_frames/ind/std-toggle-unsel-focused.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-unsel-focused 58694:33853 0,0 48x48"
+  },
+  "std-toggle-unsel-pressed": {
+   "node": "58694:33838",
+   "file": "_frames/ind/std-toggle-unsel-pressed.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-unsel-pressed 58694:33838 0,0 48x48"
+  },
+  "std-toggle-unsel-disabled": {
+   "node": "58694:33843",
+   "file": "_frames/ind/std-toggle-unsel-disabled.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-unsel-disabled 58694:33843 0,0 48x48"
+  },
+  "std-toggle-sel-enabled": {
+   "node": "58027:76101",
+   "file": "_frames/ind/std-toggle-sel-enabled.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-sel-enabled 58027:76101 0,0 48x48"
+  },
+  "std-toggle-sel-hovered": {
+   "node": "58694:33858",
+   "file": "_frames/ind/std-toggle-sel-hovered.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-sel-hovered 58694:33858 0,0 48x48"
+  },
+  "std-toggle-sel-focused": {
+   "node": "58694:33863",
+   "file": "_frames/ind/std-toggle-sel-focused.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-sel-focused 58694:33863 0,0 48x48"
+  },
+  "std-toggle-sel-pressed": {
+   "node": "58694:33868",
+   "file": "_frames/ind/std-toggle-sel-pressed.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-sel-pressed 58694:33868 0,0 48x48"
+  },
+  "std-toggle-sel-disabled": {
+   "node": "58694:33873",
+   "file": "_frames/ind/std-toggle-sel-disabled.png",
+   "size": [
+    48.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-toggle-sel-disabled 58694:33873 0,0 48x48"
+  },
+  "std-button-unsel-enabled": {
+   "node": "58027:76104",
+   "file": "_frames/ind/std-button-unsel-enabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-unsel-enabled 58027:76104 0,0 95x48"
+  },
+  "std-button-unsel-hovered": {
+   "node": "58694:33664",
+   "file": "_frames/ind/std-button-unsel-hovered.png",
+   "size": [
+    103.0,
+    49.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-unsel-hovered 58694:33664 0,0 95x48 rb-4,0,103,49",
+   "origin": [
+    -4.0,
+    0.0
+   ]
+  },
+  "std-button-unsel-pressed": {
+   "node": "58694:33678",
+   "file": "_frames/ind/std-button-unsel-pressed.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-unsel-pressed 58694:33678 0,0 95x48"
+  },
+  "std-button-unsel-disabled": {
+   "node": "58694:33684",
+   "file": "_frames/ind/std-button-unsel-disabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-unsel-disabled 58694:33684 0,0 95x48"
+  },
+  "std-button-sel-enabled": {
+   "node": "58027:76106",
+   "file": "_frames/ind/std-button-sel-enabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-sel-enabled 58027:76106 0,0 95x48"
+  },
+  "std-button-sel-pressed": {
+   "node": "58694:33702",
+   "file": "_frames/ind/std-button-sel-pressed.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-sel-pressed 58694:33702 0,0 95x48"
+  },
+  "std-button-sel-disabled": {
+   "node": "58694:33708",
+   "file": "_frames/ind/std-button-sel-disabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-sel-disabled 58694:33708 0,0 95x48"
+  },
+  "std-button-sel-hovered": {
+   "node": "58694:33690",
+   "file": "_frames/ind/std-button-sel-hovered.png",
+   "size": [
+    103.0,
+    49.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "std-button-sel-hovered 58694:33690 0,0 95x48 rb-4,0,103,49",
+   "origin": [
+    -4.0,
+    0.0
+   ]
+  },
+  "vib-button-unsel-enabled": {
+   "node": "58027:76207",
+   "file": "_frames/ind/vib-button-unsel-enabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-unsel-enabled 58027:76207 0,0 95x48"
+  },
+  "vib-button-unsel-hovered": {
+   "node": "58694:34874",
+   "file": "_frames/ind/vib-button-unsel-hovered.png",
+   "size": [
+    103.0,
+    49.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-unsel-hovered 58694:34874 0,0 95x48 rb-4,0,103,49",
+   "origin": [
+    -4.0,
+    0.0
+   ]
+  },
+  "vib-button-unsel-pressed": {
+   "node": "58694:34886",
+   "file": "_frames/ind/vib-button-unsel-pressed.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-unsel-pressed 58694:34886 0,0 95x48"
+  },
+  "vib-button-unsel-disabled": {
+   "node": "58694:34892",
+   "file": "_frames/ind/vib-button-unsel-disabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-unsel-disabled 58694:34892 0,0 95x48"
+  },
+  "vib-button-sel-enabled": {
+   "node": "58027:76209",
+   "file": "_frames/ind/vib-button-sel-enabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-sel-enabled 58027:76209 0,0 95x48"
+  },
+  "vib-button-sel-hovered": {
+   "node": "58694:34904",
+   "file": "_frames/ind/vib-button-sel-hovered.png",
+   "size": [
+    103.0,
+    49.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-sel-hovered 58694:34904 0,0 95x48 rb-4,0,103,49",
+   "origin": [
+    -4.0,
+    0.0
+   ]
+  },
+  "vib-button-sel-pressed": {
+   "node": "58694:34916",
+   "file": "_frames/ind/vib-button-sel-pressed.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-sel-pressed 58694:34916 0,0 95x48"
+  },
+  "vib-button-sel-disabled": {
+   "node": "58694:34922",
+   "file": "_frames/ind/vib-button-sel-disabled.png",
+   "size": [
+    95.0,
+    48.0
+   ],
+   "setBorder": false,
+   "background": "#F3EDF7",
+   "rows": "vib-button-sel-disabled 58694:34922 0,0 95x48"
+  }
+ },
+ "exceptions": {
+  "vib-toggle-unsel-hovered": {
+   "allowedDiffPixels": 3331,
+   "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+  },
+  "vib-toggle-unsel-focused": {
+   "allowedDiffPixels": 3327,
+   "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+  },
+  "vib-toggle-unsel-pressed": {
+   "allowedDiffPixels": 4398,
+   "allowedDiffReason": "Kit slip: Vibrant \u00b7 Icon button toggleable \u00b7 unselected binds its hover / focus / pressed state layer to On Secondary Container, while its own ripple, the vibrant icon button and the vibrant toggleable button use On Primary Container (the vibrant toolbar's content colour, Compose vibrantFloatingToolbarColors). We render the consistent On Primary Container layer."
+  },
+  "toolbar-docked-standard": {
+   "allowedDiffPixels": 1289,
+   "allowedDiffReason": "Kit slip: the standard docked toolbar's content slot hugs at a fixed 106px gap (items at 28 / 182 / 336), while the vibrant docked toolbar and the root's own SPACE_BETWEEN + 16px padding put them at 16 / 182 / 348 (Compose FlexibleBottomAppBar: Arrangement.SpaceBetween in 16px padding). We render space-between; the outer two icons sit 12px further out."
+  }
+ }
+}

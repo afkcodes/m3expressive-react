@@ -9,6 +9,7 @@ import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
 import { IconButtonFrame, base, disabled, strokeWidths, type IconButtonWidth } from '../IconButton/IconButtonFrame.tsx';
 import type { IconButtonVariant } from '../IconButton/IconButton.tsx';
+import { ToolbarColorContext } from '../Toolbar/context.ts';
 
 /*
  * Figma kit, Buttons page, sets "Icon button togglable" / "- tonal" / "- outline" / "- standard".
@@ -27,6 +28,21 @@ const unselected = stylex.create({
   tonal: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
   outlined: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
   standard: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
+});
+
+/*
+ * In a toolbar (Toolbars kit, "Building Blocks/{Standard,Vibrant}/Icon button toggleable"), the
+ * standard toggle keeps its round shape when selected and takes the toolbar's colours:
+ *              unselected                       selected
+ *   standard   — / on-surface-variant           secondary-container / on-secondary-container
+ *   vibrant    — / on-primary-container         surface-container / on-surface
+ * Disabled: on-surface 10% container in both states, content 38%.
+ */
+const inToolbar = stylex.create({
+  standard: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
+  standardSelected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
+  vibrant: { backgroundColor: 'transparent', color: color.onPrimaryContainer },
+  vibrantSelected: { backgroundColor: color.surfaceContainer, color: color.onSurface },
 });
 
 const selected = stylex.create({
@@ -73,10 +89,12 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
   const isSelected = pressedProp ?? inner;
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
+  const toolbar = useContext(ToolbarColorContext);
+  const tool = toolbar != null && variant === 'standard' ? toolbar : null;
   const pressed = forced.state === 'pressed';
-  const effectiveShape: ButtonShape = isSelected ? (shape === 'round' ? 'square' : 'round') : shape;
+  const effectiveShape: ButtonShape = isSelected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
   const stroked = variant === 'outlined' && !isSelected;
-  const clear = variant === 'standard' || stroked;
+  const clear = (variant === 'standard' && !tool) || stroked;
 
   return (
     <BaseToggle
@@ -109,7 +127,7 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
         isDisabled={isDisabled}
         focusRing={!!forced.focusRing}
         container={[
-          isSelected ? selected[variant] : unselected[variant],
+          tool ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool] : isSelected ? selected[variant] : unselected[variant],
           stroked && base.stroke,
           stroked && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
           isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),

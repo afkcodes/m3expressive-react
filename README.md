@@ -139,6 +139,14 @@ line to flip if you'd rather follow the M3 guidelines:
 | Search bar (collapsed) | one clickable surface around the icon buttons | the hint is a real button stretched over the bar (no nested interactive controls); icon buttons stay separate |
 | Search full-screen layout | no container fill (bar and results over the screen) | — we follow the kit; place the view on Surface |
 | Search, expanded input bar | static layouts only (no state variants) | a text field with no state layer (Compose InputField) |
+| Toolbar, floating elevation | level 3 (no spread: the frame doesn't clip) | Compose: level 0 (level 1 with a FAB) — we follow the kit |
+| Toolbar, floating padding | 12px across the main axis in a fixed 64px bar (48px items overflow it) | Compose 8px all round, ≥ 64px — identical for the kit's items, and the bar keeps 64px in any parent |
+| Toolbar, standard docked | content slot hugs at a 106px gap (items at 28 / 182 / 336) | space-between in 16px padding (Compose FlexibleBottomAppBar; the vibrant docked variant) — recorded exception |
+| Toolbar, vibrant toggleable icon button · unselected states | state layer On Secondary Container | On Primary Container (its own ripple, its siblings, Compose's content colour) — recorded exception |
+| Toolbar items | toolbar-specific colour sets; selected toggles stay round | the toolbar recolours IconButton / ToggleIconButton / ToggleButton through context (`ToolbarScope` for standalone building blocks) |
+| Toolbar examples | docked rows with off-grid middle items, the Photos row pushed 8px down; XR toolbar | not fixtures (hand-placed) / XR out of scope |
+| Toolbar building blocks | several variants placed off the pixel grid (x 33.2, y 106.25 …) | references are individual node exports (a frame crop bakes in a sub-pixel offset) |
+| Toolbar + FAB collapse | no collapsed state | Compose: the toolbar shrinks into the FAB, which grows 56 → 80px in place (FastSpatial); the shadow lerps to none |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

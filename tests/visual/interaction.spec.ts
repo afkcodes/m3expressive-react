@@ -1093,3 +1093,58 @@ test('search (live): the bar matches the kit, opens the docked view, filters, cl
   await page.getByRole('button', { name: 'Back' }).click();
   await expect(trigger).toBeFocused();
 });
+
+test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses into a growing FAB', async ({ page }) => {
+  const tm = JSON.parse(readFileSync(join(REFS_DIR, 'toolbar/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/toolbar/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const v = tm.variants['ex-fab-share']!;
+  const ref: Buffer = readFileSync(join(REFS_DIR, 'toolbar', 'ex-fab-share.png'));
+  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
+  test.info().annotations.push({ type: 'parity', description: `ex-fab-share (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  expect.soft(r.diffPixels, 'ex-fab-share').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+
+  // One tab stop; arrows move within the toolbar (wrapping), Home / End jump; Tab leaves to the FAB.
+  const toolbar = page.getByRole('toolbar', { name: 'Actions' });
+  const share = toolbar.getByRole('button', { name: 'Share' });
+  const comment = toolbar.getByRole('button', { name: 'Comment' });
+  const download = toolbar.getByRole('button', { name: 'Download' });
+  await page.keyboard.press('Tab');
+  await expect(share).toBeFocused();
+  await expect(comment).toHaveAttribute('tabindex', '-1');
+  await page.keyboard.press('ArrowRight');
+  await expect(comment).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(comment).toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('End');
+  await expect(download).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(share).toBeFocused();
+  await page.keyboard.press('ArrowLeft');
+  await expect(download).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(share).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Add' })).toBeFocused();
+  // Re-entering returns to the last active item.
+  await page.keyboard.press('Shift+Tab');
+  await expect(share).toBeFocused();
+
+  // Collapse (FastSpatial): the toolbar shrinks to nothing towards the FAB, which grows to 80px in
+  // place; the layout keeps its width.
+  const fab = page.getByRole('button', { name: 'Add' });
+  const rect = (l: typeof fab) => l.evaluate((el) => { const b = el.getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height), Math.round(b.right)]; });
+  const shell = toolbar.locator('xpath=..');
+  const start = await rect(fab);
+  expect(start.slice(0, 2)).toEqual([56, 56]);
+  await page.getByLabel('collapse').check();
+  await expect.poll(async () => (await rect(shell))[0]).toBe(0);
+  await expect.poll(async () => (await rect(fab)).slice(0, 2)).toEqual([80, 80]);
+  expect((await rect(fab))[2]).toBe(start[2]);
+  await expect(share).not.toBeFocused();
+  await page.getByLabel('collapse').uncheck();
+  await expect.poll(async () => (await rect(shell))[0]).toBe(168);
+  await expect.poll(async () => (await rect(fab)).slice(0, 2)).toEqual([56, 56]);
+});

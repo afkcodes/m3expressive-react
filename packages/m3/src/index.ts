@@ -62,6 +62,8 @@ export { AppBarTitle, BottomAppBar, TopAppBar, useAppBarScroll } from './compone
 export type { AppBarTitleProps, BottomAppBarProps, TopAppBarProps, TopAppBarSize } from './components/AppBar/index.ts';
 export { SearchBar, SearchView } from './components/Search/index.ts';
 export type { SearchBarProps, SearchViewProps } from './components/Search/index.ts';
+export { Toolbar, ToolbarScope } from './components/Toolbar/index.ts';
+export type { ToolbarColor, ToolbarProps } from './components/Toolbar/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

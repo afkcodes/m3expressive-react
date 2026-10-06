@@ -1,12 +1,14 @@
-import { forwardRef, useState, type ReactNode } from 'react';
+import { forwardRef, useContext, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import { color } from '../../tokens/color.stylex';
+import { elevation } from '../../tokens/elevation.stylex';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from '../Button/ButtonFrame.tsx';
 import { base, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { ToolbarColorContext } from '../Toolbar/context.ts';
 
 export type ToggleButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';
 
@@ -26,6 +28,29 @@ const unselected = stylex.create({
   elevated: { backgroundColor: color.surfaceContainerLow, color: color.primary },
   outlined: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
   tonal: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
+});
+
+/*
+ * In a toolbar (Toolbars kit, "Building Blocks/{Standard,Vibrant}/Button toggleable"), the filled
+ * toggle keeps its round shape when selected and takes the toolbar's colours:
+ *              unselected                                selected
+ *   standard   surface-container / on-surface-variant    secondary-container / on-secondary-container
+ *   vibrant    primary-container / on-primary-container  surface-container / on-surface
+ */
+const inToolbar = stylex.create({
+  standard: { backgroundColor: color.surfaceContainer, color: color.onSurfaceVariant },
+  standardSelected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
+  vibrant: { backgroundColor: color.primaryContainer, color: color.onPrimaryContainer },
+  vibrantSelected: { backgroundColor: color.surfaceContainer, color: color.onSurface },
+  // Hovered lifts to elevation 1 (the kit's Hovered variants; none while pressed).
+  lift: {
+    boxShadow: {
+      default: null,
+      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': elevation.level1 },
+      [stylex.when.ancestor(':active')]: 'none',
+    },
+  },
+  lifted: { boxShadow: elevation.level1 },
 });
 
 const selected = stylex.create({
@@ -68,8 +93,10 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
   const [inner, setInner] = useState(defaultPressed);
   const isSelected = pressedProp ?? inner;
   const forced = useForcedState();
+  const toolbar = useContext(ToolbarColorContext);
+  const tool = toolbar != null && variant === 'filled' ? toolbar : null;
   const pressed = forced.state === 'pressed';
-  const effectiveShape: ButtonShape = isSelected ? (shape === 'round' ? 'square' : 'round') : shape;
+  const effectiveShape: ButtonShape = isSelected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
 
   return (
     <BaseToggle
@@ -102,7 +129,9 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
         focusRing={!!forced.focusRing}
         icon={isSelected ? (selectedIcon ?? icon) : icon}
         container={[
-          isSelected ? selected[variant] : unselected[variant],
+          tool ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool] : isSelected ? selected[variant] : unselected[variant],
+          tool && !isDisabled && inToolbar.lift,
+          tool && !isDisabled && forced.state === 'hovered' && inToolbar.lifted,
           variant === 'elevated' && !isDisabled && elevatedShadow[size],
           variant === 'elevated' && !isDisabled && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,
           variant === 'outlined' && !isSelected && base.stroke,

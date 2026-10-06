@@ -7,6 +7,7 @@ import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import { StandardIconTintContext } from './context.ts';
+import { ToolbarColorContext } from '../Toolbar/context.ts';
 import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
 import { IconButtonFrame, base, disabled, strokeWidths, type IconButtonWidth } from './IconButtonFrame.tsx';
 
@@ -19,6 +20,8 @@ const variants = stylex.create({
   outlined: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
   standard: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
   standardOnSurface: { color: color.onSurface },
+  // Toolbar kit, "Building Blocks/Vibrant/Icon button": On Primary Container content.
+  standardVibrant: { color: color.onPrimaryContainer },
 });
 
 export interface IconButtonProps
@@ -41,6 +44,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
   const tint = useContext(StandardIconTintContext);
+  const toolbar = useContext(ToolbarColorContext);
   const pressed = forced.state === 'pressed';
   const clear = variant === 'standard' || variant === 'outlined';
 
@@ -72,6 +76,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
         container={[
           variants[variant],
           variant === 'standard' && tint === 'on-surface' && variants.standardOnSurface,
+          variant === 'standard' && toolbar === 'vibrant' && variants.standardVibrant,
           variant === 'outlined' && base.stroke,
           variant === 'outlined' && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
           isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),
