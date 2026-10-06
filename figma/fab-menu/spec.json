@@ -1,0 +1,131 @@
+{
+ "component": "fab-menu",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "item-tertiary": {
+   "node": "57998:42889",
+   "file": "_frames/item-tertiary.png",
+   "size": [
+    588,
+    104
+   ],
+   "rows": "item-tertiary.enabled 57998:42890 24,24 120x56;item-tertiary.hovered 57998:42894 164,24 120x56;item-tertiary.focused 57998:42898 304,24 120x56;item-tertiary.pressed 57998:42902 444,24 120x56",
+   "background": "#F3EDF7"
+  },
+  "close-tertiary": {
+   "node": "57998:42907",
+   "file": "_frames/close-tertiary.png",
+   "size": [
+    359,
+    104
+   ],
+   "rows": "close-tertiary.enabled 57998:42908 27,24 56x56 rb-11,-7,78,78;close-tertiary.hovered 57998:42911 110,24 56x56 rb-14,-8,84,84;close-tertiary.focused 57998:42914 193,24 56x56 rb-11,-7,78,78;close-tertiary.pressed 57998:42917 276,24 56x56 rb-11,-7,78,78",
+   "background": "#F3EDF7"
+  },
+  "item-secondary": {
+   "node": "57998:42921",
+   "file": "_frames/item-secondary.png",
+   "size": [
+    588,
+    104
+   ],
+   "rows": "item-secondary.enabled 57998:42922 24,24 120x56;item-secondary.hovered 57998:42926 164,24 120x56;item-secondary.focused 57998:42930 304,24 120x56;item-secondary.pressed 57998:42934 444,24 120x56",
+   "background": "#F3EDF7"
+  },
+  "close-secondary": {
+   "node": "57998:42939",
+   "file": "_frames/close-secondary.png",
+   "size": [
+    359,
+    104
+   ],
+   "rows": "close-secondary.enabled 57998:42940 27,24 56x56 rb-11,-7,78,78;close-secondary.hovered 57998:42943 110,24 56x56 rb-14,-8,84,84;close-secondary.focused 57998:42946 193,24 56x56 rb-11,-7,78,78;close-secondary.pressed 57998:42949 276,24 56x56 rb-11,-7,78,78",
+   "background": "#F3EDF7"
+  },
+  "item-primary": {
+   "node": "57998:42953",
+   "file": "_frames/item-primary.png",
+   "size": [
+    588,
+    104
+   ],
+   "rows": "item-primary.enabled 57998:42954 24,24 120x56;item-primary.hovered 57998:42958 164,24 120x56;item-primary.focused 57998:42962 304,24 120x56;item-primary.pressed 57998:42966 444,24 120x56",
+   "background": "#F3EDF7"
+  },
+  "close-primary": {
+   "node": "57998:42971",
+   "file": "_frames/close-primary.png",
+   "size": [
+    359,
+    104
+   ],
+   "rows": "close-primary.enabled 57998:42972 27,24 56x56 rb-11,-7,78,78;close-primary.hovered 57998:42975 110,24 56x56 rb-14,-8,84,84;close-primary.focused 57998:42978 193,24 56x56 rb-11,-7,78,78;close-primary.pressed 57998:42981 276,24 56x56 rb-11,-7,78,78",
+   "background": "#F3EDF7"
+  },
+  "menu": {
+   "node": "57998:42986",
+   "file": "_frames/menu.png",
+   "size": [
+    1103,
+    455
+   ],
+   "rows": "menu.tertiary 57998:42992 754,150 135x240 rb0,0,146,255;menu.secondary 57998:43027 443,150 135x240 rb0,0,146,255;menu.primary 57998:43062 154,150 135x240 rb0,0,146,255"
+  }
+ },
+ "rename": {
+  "item-tertiary.enabled": "item-tertiary-enabled",
+  "item-tertiary.hovered": "item-tertiary-hovered",
+  "item-tertiary.focused": "item-tertiary-focused",
+  "item-tertiary.pressed": "item-tertiary-pressed",
+  "close-tertiary.enabled": "close-tertiary-enabled",
+  "close-tertiary.hovered": "close-tertiary-hovered",
+  "close-tertiary.focused": "close-tertiary-focused",
+  "close-tertiary.pressed": "close-tertiary-pressed",
+  "item-secondary.enabled": "item-secondary-enabled",
+  "item-secondary.hovered": "item-secondary-hovered",
+  "item-secondary.focused": "item-secondary-focused",
+  "item-secondary.pressed": "item-secondary-pressed",
+  "close-secondary.enabled": "close-secondary-enabled",
+  "close-secondary.hovered": "close-secondary-hovered",
+  "close-secondary.focused": "close-secondary-focused",
+  "close-secondary.pressed": "close-secondary-pressed",
+  "item-primary.enabled": "item-primary-enabled",
+  "item-primary.hovered": "item-primary-hovered",
+  "item-primary.focused": "item-primary-focused",
+  "item-primary.pressed": "item-primary-pressed",
+  "close-primary.enabled": "close-primary-enabled",
+  "close-primary.hovered": "close-primary-hovered",
+  "close-primary.focused": "close-primary-focused",
+  "close-primary.pressed": "close-primary-pressed",
+  "menu.tertiary": "menu-tertiary",
+  "menu.secondary": "menu-secondary",
+  "menu.primary": "menu-primary"
+ },
+ "exceptions": {
+  "menu-primary": {
+   "allowedDiffPixels": 79,
+   "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+  },
+  "menu-secondary": {
+   "allowedDiffPixels": 79,
+   "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+  },
+  "menu-tertiary": {
+   "allowedDiffPixels": 79,
+   "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+  },
+  "item-primary-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+  },
+  "item-secondary-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+  },
+  "item-tertiary-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+  }
+ }
+}

@@ -1,0 +1,296 @@
+{
+ "component": "split-button",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "split": {
+   "node": "57994:15751",
+   "file": "_frames/split.png",
+   "size": [
+    2617,
+    6596
+   ],
+   "rows": "fxs.Ena.Ena 57994:15752 146,1234 131x48;txs.Ena.Ena 57994:15760 146,1458 131x48;oxs.Ena.Ena 57994:15768 146,1905 131x48;exs.Ena.Ena 57994:15776 146,1681 131x48 rb-11,0,153,55;fxs.Ena.Pre 57994:15784 1460,1234 131x48;txs.Ena.Pre 57994:15794 1460,1458 131x48;oxs.Ena.Pre 57994:15804 1460,1905 131x48;exs.Ena.Pre 57994:15814 1460,1681 131x48 rb-11,0,153,55;fxs.Ena.Sel 57994:15824 1898,1234 131x48;txs.Ena.Sel 57994:15833 1898,1458 131x48;oxs.Ena.Sel 57994:15842 1898,1905 131x48;exs.Ena.Sel 57994:15851 1898,1681 131x48 rb-11,0,153,55;fm.Ena.Ena 57994:15860 113,2248 178x56;tm.Ena.Ena 57994:15868 113,2484 178x56;om.Ena.Ena 57994:15876 113,2956 178x56;em.Ena.Ena 57994:15884 113,2720 178x56 rb-11,-7,200,78;fm.Ena.Pre 57994:15892 1427,2248 178x56;tm.Ena.Pre 57994:15902 1427,2484 178x56;om.Ena.Pre 57994:15912 1427,2956 178x56;em.Ena.Pre 57994:15922 1427,2720 178x56 rb-11,-7,200,78;fm.Ena.Sel 57994:15932 1865,2248 178x56;tm.Ena.Sel 57994:15941 1865,2484 178x56;om.Ena.Sel 57994:15950 1865,2956 178x56;em.Ena.Sel 57994:15959 1865,2720 178x56 rb-11,-7,200,78;fl.Ena.Ena 57994:15968 63,3337 297x96;tl.Ena.Ena 57994:15976 63,3678 297x96;ol.Ena.Ena 57994:15984 63,4358 297x96;el.Ena.Ena 57994:15992 63,4018 297x96 rb-11,-7,319,118;fl.Ena.Pre 57994:16000 1377,3337 297x96;tl.Ena.Pre 57994:16010 1377,3678 297x96;ol.Ena.Pre 57994:16020 1377,4358 297x96;el.Ena.Pre 57994:16030 1377,4018 297x96 rb-11,-7,319,118;fl.Ena.Sel 57994:16040 1815,3337 297x96;tl.Ena.Sel 57994:16049 1815,3678 297x96;ol.Ena.Sel 57994:16058 1815,4358 297x96;el.Ena.Sel 57994:16067 1815,4018 297x96 rb-11,-7,319,118;fxl.Ena.Ena 57994:16076 16,4922 400x136;txl.Ena.Ena 57994:16084 16,5324 400x136;oxl.Ena.Ena 57994:16092 16,6127 400x136;exl.Ena.Ena 57994:16100 16,5725 400x136 rb-11,-7,422,158;fxl.Ena.Pre 57994:16108 1327,4922 400x136;txl.Ena.Pre 57994:16118 1327,5324 400x136;oxl.Ena.Pre 57994:16128 1327,6127 400x136;exl.Ena.Pre 57994:16138 1327,5725 400x136 rb-11,-7,422,158;fxl.Ena.Sel 57994:16148 1764,4922 400x136;txl.Ena.Sel 57994:16157 1764,5324 400x136;oxl.Ena.Sel 57994:16166 1764,6127 400x136;exl.Ena.Sel 57994:16175 1764,5725 400x136 rb-11,-7,422,158;fs.Ena.Ena 57994:16184 134,98 141x48;ts.Ena.Ena 57994:16192 134,356 141x48;os.Ena.Ena 57994:16200 134,872 141x48;es.Ena.Ena 57994:16208 134,613 141x48 rb-11,-3,163,62;fs.Ena.Pre 57994:16216 1448,98 141x48;ts.Ena.Pre 57994:16226 1448,356 141x48;os.Ena.Pre 57994:16236 1448,872 141x48;es.Ena.Pre 57994:16246 1448,613 141x48 rb-11,-3,163,62;fs.Ena.Sel 57994:16256 1886,98 141x48;ts.Ena.Sel 57994:16265 1886,356 141x48;os.Ena.Sel 57994:16274 1886,872 141x48;es.Ena.Sel 57994:16283 1886,613 141x48 rb-11,-3,163,62;fxs.Ena.Hov 57994:16292 584,1234 131x48;txs.Ena.Hov 57994:16300 584,1458 131x48;oxs.Ena.Hov 57994:16308 584,1905 131x48;exs.Ena.Hov 57994:16316 584,1681 131x48 rb-11,0,153,55;fm.Ena.Hov 57994:16324 551,2248 178x56;tm.Ena.Hov 57994:16332 551,2484 178x56;om.Ena.Hov 57994:16340 551,2956 178x56;em.Ena.Hov 57994:16348 551,2720 178x56 rb-11,-7,200,78;fl.Ena.Hov 57994:16356 501,3337 297x96;tl.Ena.Hov 57994:16364 501,3678 297x96;ol.Ena.Hov 57994:16372 501,4358 297x96;el.Ena.Hov 57994:16380 501,4018 297x96 rb-11,-7,319,118;fxl.Ena.Hov 57994:16388 453,4922 400x136;txl.Ena.Hov 57994:16396 453,5324 400x136;oxl.Ena.Hov 57994:16404 453,6127 400x136;exl.Ena.Hov 57994:16412 453,5725 400x136 rb-11,-7,422,158;fs.Ena.Hov 57994:16420 572,98 141x48;ts.Ena.Hov 57994:16428 572,356 141x48;os.Ena.Hov 57994:16436 572,872 141x48;es.Ena.Hov 57994:16444 572,613 141x48 rb-11,-3,163,62;fxs.Ena.Foc 57994:16452 1022,1234 131x48;txs.Ena.Foc 57994:16461 1022,1458 131x48;oxs.Ena.Foc 57994:16470 1022,1905 131x48;exs.Ena.Foc 57994:16479 1022,1681 131x48 rb-11,0,153,55;fm.Ena.Foc 57994:16488 989,2248 178x56;tm.Ena.Foc 57994:16497 989,2484 178x56;om.Ena.Foc 57994:16506 989,2956 178x56;em.Ena.Foc 57994:16515 989,2720 178x56 rb-11,-7,200,78;fl.Ena.Foc 57994:16524 939,3337 297x96;tl.Ena.Foc 57994:16533 939,3678 297x96;ol.Ena.Foc 57994:16542 939,4358 297x96;el.Ena.Foc 57994:16551 939,4018 297x96 rb-11,-7,319,118;fxl.Ena.Foc 57994:16560 890,4922 400x136;txl.Ena.Foc 57994:16569 890,5324 400x136;oxl.Ena.Foc 57994:16578 890,6127 400x136;exl.Ena.Foc 57994:16587 890,5725 400x136 rb-11,-7,422,158;fs.Ena.Foc 57994:16596 1010,98 141x48;ts.Ena.Foc 57994:16605 1010,356 141x48;os.Ena.Foc 57994:16614 1010,872 141x48;es.Ena.Foc 57994:16623 1010,613 141x48 rb-11,-3,163,62;fxs.Dis.Dis 57994:16632 2336,1234 131x48;txs.Dis.Dis 57994:16640 2336,1458 131x48;oxs.Dis.Dis 57994:16648 2336,1905 131x48;exs.Dis.Dis 57994:16656 2336,1681 131x48;fm.Dis.Dis 57994:16664 2303,2248 178x56;tm.Dis.Dis 57994:16672 2303,2484 178x56;om.Dis.Dis 57994:16680 2303,2956 178x56;em.Dis.Dis 57994:16688 2303,2720 178x56;fl.Dis.Dis 57994:16696 2253,3337 297x96;tl.Dis.Dis 57994:16704 2253,3678 297x96;ol.Dis.Dis 57994:16712 2253,4358 297x96;el.Dis.Dis 57994:16720 2253,4018 297x96;fxl.Dis.Dis 57994:16728 2201,4922 400x136;txl.Dis.Dis 57994:16736 2201,5324 400x136;oxl.Dis.Dis 57994:16744 2201,6127 400x136;exl.Dis.Dis 57994:16752 2201,5725 400x136;fs.Dis.Dis 57994:16760 2324,98 141x48;ts.Dis.Dis 57994:16768 2324,356 141x48;os.Dis.Dis 57994:16776 2324,872 141x48;es.Dis.Dis 57994:16784 2324,613 141x48;fxs.Hov.Ena 57994:16792 584,1346 131x48;txs.Hov.Ena 57994:16800 584,1570 131x48;oxs.Hov.Ena 57994:16808 584,2016 131x48;exs.Hov.Ena 57994:16816 584,1793 131x48 rb-11,0,153,55;fxs.Foc.Ena 57994:16824 1022,1346 131x48;txs.Foc.Ena 57994:16833 1022,1570 131x48;oxs.Foc.Ena 57994:16842 1022,2016 131x48;exs.Foc.Ena 57994:16851 1022,1793 131x48 rb-11,0,153,55;fxs.Pre.Ena 57994:16860 1460,1346 131x48;txs.Pre.Ena 57994:16870 1460,1570 131x48;oxs.Pre.Ena 57994:16880 1460,2016 131x48;exs.Pre.Ena 57994:16890 1460,1793 131x48 rb-11,0,153,55;fm.Hov.Ena 57994:16900 551,2366 178x56;tm.Hov.Ena 57994:16908 551,2602 178x56;om.Hov.Ena 57994:16916 551,3074 178x56;em.Hov.Ena 57994:16924 551,2838 178x56 rb-11,-7,200,78;fm.Foc.Ena 57994:16932 989,2366 178x56;tm.Foc.Ena 57994:16941 989,2602 178x56;om.Foc.Ena 57994:16950 989,3074 178x56;em.Foc.Ena 57994:16959 989,2838 178x56 rb-11,-7,200,78;fm.Pre.Ena 57994:16968 1427,2366 178x56;tm.Pre.Ena 57994:16978 1427,2602 178x56;om.Pre.Ena 57994:16988 1427,3074 178x56;em.Pre.Ena 57994:16998 1427,2838 178x56 rb-11,-7,200,78;fl.Hov.Ena 57994:17008 501,3508 297x96;tl.Hov.Ena 57994:17016 501,3848 297x96;ol.Hov.Ena 57994:17024 501,4528 297x96;el.Hov.Ena 57994:17032 501,4188 297x96 rb-11,-7,319,118;fl.Foc.Ena 57994:17040 939,3508 297x96;tl.Foc.Ena 57994:17049 939,3848 297x96;ol.Foc.Ena 57994:17058 939,4528 297x96;el.Foc.Ena 57994:17067 939,4188 297x96 rb-11,-7,319,118;fl.Pre.Ena 57994:17076 1377,3508 297x96;tl.Pre.Ena 57994:17086 1377,3848 297x96;ol.Pre.Ena 57994:17096 1377,4528 297x96;el.Pre.Ena 57994:17106 1377,4188 297x96 rb-11,-7,319,118;fxl.Hov.Ena 57994:17116 453,5123 400x136;txl.Hov.Ena 57994:17124 453,5525 400x136;oxl.Hov.Ena 57994:17132 453,6327 400x136;exl.Hov.Ena 57994:17140 453,5926 400x136 rb-11,-7,422,158;fxl.Foc.Ena 57994:17148 890,5123 400x136;txl.Foc.Ena 57994:17157 890,5525 400x136;oxl.Foc.Ena 57994:17166 890,6327 400x136;exl.Foc.Ena 57994:17175 890,5926 400x136 rb-11,-7,422,158;fxl.Pre.Ena 57994:17184 1327,5123 400x136;txl.Pre.Ena 57994:17194 1327,5525 400x136;oxl.Pre.Ena 57994:17204 1327,6327 400x136;exl.Pre.Ena 57994:17214 1327,5926 400x136 rb-11,-7,422,158;fs.Hov.Ena 57994:17224 572,227 141x48;ts.Hov.Ena 57994:17232 572,484 141x48;os.Hov.Ena 57994:17240 572,1001 141x48;es.Hov.Ena 57994:17248 572,743 141x48 rb-11,-3,163,62;fs.Foc.Ena 57994:17256 1010,227 141x48;ts.Foc.Ena 57994:17265 1010,484 141x48;os.Foc.Ena 57994:17274 1010,1001 141x48;es.Foc.Ena 57994:17283 1010,743 141x48 rb-11,-3,163,62;fs.Pre.Ena 57994:17292 1448,227 141x48;ts.Pre.Ena 57994:17302 1448,484 141x48;os.Pre.Ena 57994:17312 1448,1001 141x48;es.Pre.Ena 57994:17322 1448,743 141x48 rb-11,-3,163,62"
+  }
+ },
+ "rename": {
+  "fxs.Ena.Ena": "filled-xsmall-enabled-enabled",
+  "txs.Ena.Ena": "tonal-xsmall-enabled-enabled",
+  "oxs.Ena.Ena": "outlined-xsmall-enabled-enabled",
+  "exs.Ena.Ena": "elevated-xsmall-enabled-enabled",
+  "fxs.Ena.Pre": "filled-xsmall-enabled-pressed",
+  "txs.Ena.Pre": "tonal-xsmall-enabled-pressed",
+  "oxs.Ena.Pre": "outlined-xsmall-enabled-pressed",
+  "exs.Ena.Pre": "elevated-xsmall-enabled-pressed",
+  "fxs.Ena.Sel": "filled-xsmall-enabled-selected",
+  "txs.Ena.Sel": "tonal-xsmall-enabled-selected",
+  "oxs.Ena.Sel": "outlined-xsmall-enabled-selected",
+  "exs.Ena.Sel": "elevated-xsmall-enabled-selected",
+  "fm.Ena.Ena": "filled-medium-enabled-enabled",
+  "tm.Ena.Ena": "tonal-medium-enabled-enabled",
+  "om.Ena.Ena": "outlined-medium-enabled-enabled",
+  "em.Ena.Ena": "elevated-medium-enabled-enabled",
+  "fm.Ena.Pre": "filled-medium-enabled-pressed",
+  "tm.Ena.Pre": "tonal-medium-enabled-pressed",
+  "om.Ena.Pre": "outlined-medium-enabled-pressed",
+  "em.Ena.Pre": "elevated-medium-enabled-pressed",
+  "fm.Ena.Sel": "filled-medium-enabled-selected",
+  "tm.Ena.Sel": "tonal-medium-enabled-selected",
+  "om.Ena.Sel": "outlined-medium-enabled-selected",
+  "em.Ena.Sel": "elevated-medium-enabled-selected",
+  "fl.Ena.Ena": "filled-large-enabled-enabled",
+  "tl.Ena.Ena": "tonal-large-enabled-enabled",
+  "ol.Ena.Ena": "outlined-large-enabled-enabled",
+  "el.Ena.Ena": "elevated-large-enabled-enabled",
+  "fl.Ena.Pre": "filled-large-enabled-pressed",
+  "tl.Ena.Pre": "tonal-large-enabled-pressed",
+  "ol.Ena.Pre": "outlined-large-enabled-pressed",
+  "el.Ena.Pre": "elevated-large-enabled-pressed",
+  "fl.Ena.Sel": "filled-large-enabled-selected",
+  "tl.Ena.Sel": "tonal-large-enabled-selected",
+  "ol.Ena.Sel": "outlined-large-enabled-selected",
+  "el.Ena.Sel": "elevated-large-enabled-selected",
+  "fxl.Ena.Ena": "filled-xlarge-enabled-enabled",
+  "txl.Ena.Ena": "tonal-xlarge-enabled-enabled",
+  "oxl.Ena.Ena": "outlined-xlarge-enabled-enabled",
+  "exl.Ena.Ena": "elevated-xlarge-enabled-enabled",
+  "fxl.Ena.Pre": "filled-xlarge-enabled-pressed",
+  "txl.Ena.Pre": "tonal-xlarge-enabled-pressed",
+  "oxl.Ena.Pre": "outlined-xlarge-enabled-pressed",
+  "exl.Ena.Pre": "elevated-xlarge-enabled-pressed",
+  "fxl.Ena.Sel": "filled-xlarge-enabled-selected",
+  "txl.Ena.Sel": "tonal-xlarge-enabled-selected",
+  "oxl.Ena.Sel": "outlined-xlarge-enabled-selected",
+  "exl.Ena.Sel": "elevated-xlarge-enabled-selected",
+  "fs.Ena.Ena": "filled-small-enabled-enabled",
+  "ts.Ena.Ena": "tonal-small-enabled-enabled",
+  "os.Ena.Ena": "outlined-small-enabled-enabled",
+  "es.Ena.Ena": "elevated-small-enabled-enabled",
+  "fs.Ena.Pre": "filled-small-enabled-pressed",
+  "ts.Ena.Pre": "tonal-small-enabled-pressed",
+  "os.Ena.Pre": "outlined-small-enabled-pressed",
+  "es.Ena.Pre": "elevated-small-enabled-pressed",
+  "fs.Ena.Sel": "filled-small-enabled-selected",
+  "ts.Ena.Sel": "tonal-small-enabled-selected",
+  "os.Ena.Sel": "outlined-small-enabled-selected",
+  "es.Ena.Sel": "elevated-small-enabled-selected",
+  "fxs.Ena.Hov": "filled-xsmall-enabled-hovered",
+  "txs.Ena.Hov": "tonal-xsmall-enabled-hovered",
+  "oxs.Ena.Hov": "outlined-xsmall-enabled-hovered",
+  "exs.Ena.Hov": "elevated-xsmall-enabled-hovered",
+  "fm.Ena.Hov": "filled-medium-enabled-hovered",
+  "tm.Ena.Hov": "tonal-medium-enabled-hovered",
+  "om.Ena.Hov": "outlined-medium-enabled-hovered",
+  "em.Ena.Hov": "elevated-medium-enabled-hovered",
+  "fl.Ena.Hov": "filled-large-enabled-hovered",
+  "tl.Ena.Hov": "tonal-large-enabled-hovered",
+  "ol.Ena.Hov": "outlined-large-enabled-hovered",
+  "el.Ena.Hov": "elevated-large-enabled-hovered",
+  "fxl.Ena.Hov": "filled-xlarge-enabled-hovered",
+  "txl.Ena.Hov": "tonal-xlarge-enabled-hovered",
+  "oxl.Ena.Hov": "outlined-xlarge-enabled-hovered",
+  "exl.Ena.Hov": "elevated-xlarge-enabled-hovered",
+  "fs.Ena.Hov": "filled-small-enabled-hovered",
+  "ts.Ena.Hov": "tonal-small-enabled-hovered",
+  "os.Ena.Hov": "outlined-small-enabled-hovered",
+  "es.Ena.Hov": "elevated-small-enabled-hovered",
+  "fxs.Ena.Foc": "filled-xsmall-enabled-focused",
+  "txs.Ena.Foc": "tonal-xsmall-enabled-focused",
+  "oxs.Ena.Foc": "outlined-xsmall-enabled-focused",
+  "exs.Ena.Foc": "elevated-xsmall-enabled-focused",
+  "fm.Ena.Foc": "filled-medium-enabled-focused",
+  "tm.Ena.Foc": "tonal-medium-enabled-focused",
+  "om.Ena.Foc": "outlined-medium-enabled-focused",
+  "em.Ena.Foc": "elevated-medium-enabled-focused",
+  "fl.Ena.Foc": "filled-large-enabled-focused",
+  "tl.Ena.Foc": "tonal-large-enabled-focused",
+  "ol.Ena.Foc": "outlined-large-enabled-focused",
+  "el.Ena.Foc": "elevated-large-enabled-focused",
+  "fxl.Ena.Foc": "filled-xlarge-enabled-focused",
+  "txl.Ena.Foc": "tonal-xlarge-enabled-focused",
+  "oxl.Ena.Foc": "outlined-xlarge-enabled-focused",
+  "exl.Ena.Foc": "elevated-xlarge-enabled-focused",
+  "fs.Ena.Foc": "filled-small-enabled-focused",
+  "ts.Ena.Foc": "tonal-small-enabled-focused",
+  "os.Ena.Foc": "outlined-small-enabled-focused",
+  "es.Ena.Foc": "elevated-small-enabled-focused",
+  "fxs.Dis.Dis": "filled-xsmall-disabled-disabled",
+  "txs.Dis.Dis": "tonal-xsmall-disabled-disabled",
+  "oxs.Dis.Dis": "outlined-xsmall-disabled-disabled",
+  "exs.Dis.Dis": "elevated-xsmall-disabled-disabled",
+  "fm.Dis.Dis": "filled-medium-disabled-disabled",
+  "tm.Dis.Dis": "tonal-medium-disabled-disabled",
+  "om.Dis.Dis": "outlined-medium-disabled-disabled",
+  "em.Dis.Dis": "elevated-medium-disabled-disabled",
+  "fl.Dis.Dis": "filled-large-disabled-disabled",
+  "tl.Dis.Dis": "tonal-large-disabled-disabled",
+  "ol.Dis.Dis": "outlined-large-disabled-disabled",
+  "el.Dis.Dis": "elevated-large-disabled-disabled",
+  "fxl.Dis.Dis": "filled-xlarge-disabled-disabled",
+  "txl.Dis.Dis": "tonal-xlarge-disabled-disabled",
+  "oxl.Dis.Dis": "outlined-xlarge-disabled-disabled",
+  "exl.Dis.Dis": "elevated-xlarge-disabled-disabled",
+  "fs.Dis.Dis": "filled-small-disabled-disabled",
+  "ts.Dis.Dis": "tonal-small-disabled-disabled",
+  "os.Dis.Dis": "outlined-small-disabled-disabled",
+  "es.Dis.Dis": "elevated-small-disabled-disabled",
+  "fxs.Hov.Ena": "filled-xsmall-hovered-enabled",
+  "txs.Hov.Ena": "tonal-xsmall-hovered-enabled",
+  "oxs.Hov.Ena": "outlined-xsmall-hovered-enabled",
+  "exs.Hov.Ena": "elevated-xsmall-hovered-enabled",
+  "fxs.Foc.Ena": "filled-xsmall-focused-enabled",
+  "txs.Foc.Ena": "tonal-xsmall-focused-enabled",
+  "oxs.Foc.Ena": "outlined-xsmall-focused-enabled",
+  "exs.Foc.Ena": "elevated-xsmall-focused-enabled",
+  "fxs.Pre.Ena": "filled-xsmall-pressed-enabled",
+  "txs.Pre.Ena": "tonal-xsmall-pressed-enabled",
+  "oxs.Pre.Ena": "outlined-xsmall-pressed-enabled",
+  "exs.Pre.Ena": "elevated-xsmall-pressed-enabled",
+  "fm.Hov.Ena": "filled-medium-hovered-enabled",
+  "tm.Hov.Ena": "tonal-medium-hovered-enabled",
+  "om.Hov.Ena": "outlined-medium-hovered-enabled",
+  "em.Hov.Ena": "elevated-medium-hovered-enabled",
+  "fm.Foc.Ena": "filled-medium-focused-enabled",
+  "tm.Foc.Ena": "tonal-medium-focused-enabled",
+  "om.Foc.Ena": "outlined-medium-focused-enabled",
+  "em.Foc.Ena": "elevated-medium-focused-enabled",
+  "fm.Pre.Ena": "filled-medium-pressed-enabled",
+  "tm.Pre.Ena": "tonal-medium-pressed-enabled",
+  "om.Pre.Ena": "outlined-medium-pressed-enabled",
+  "em.Pre.Ena": "elevated-medium-pressed-enabled",
+  "fl.Hov.Ena": "filled-large-hovered-enabled",
+  "tl.Hov.Ena": "tonal-large-hovered-enabled",
+  "ol.Hov.Ena": "outlined-large-hovered-enabled",
+  "el.Hov.Ena": "elevated-large-hovered-enabled",
+  "fl.Foc.Ena": "filled-large-focused-enabled",
+  "tl.Foc.Ena": "tonal-large-focused-enabled",
+  "ol.Foc.Ena": "outlined-large-focused-enabled",
+  "el.Foc.Ena": "elevated-large-focused-enabled",
+  "fl.Pre.Ena": "filled-large-pressed-enabled",
+  "tl.Pre.Ena": "tonal-large-pressed-enabled",
+  "ol.Pre.Ena": "outlined-large-pressed-enabled",
+  "el.Pre.Ena": "elevated-large-pressed-enabled",
+  "fxl.Hov.Ena": "filled-xlarge-hovered-enabled",
+  "txl.Hov.Ena": "tonal-xlarge-hovered-enabled",
+  "oxl.Hov.Ena": "outlined-xlarge-hovered-enabled",
+  "exl.Hov.Ena": "elevated-xlarge-hovered-enabled",
+  "fxl.Foc.Ena": "filled-xlarge-focused-enabled",
+  "txl.Foc.Ena": "tonal-xlarge-focused-enabled",
+  "oxl.Foc.Ena": "outlined-xlarge-focused-enabled",
+  "exl.Foc.Ena": "elevated-xlarge-focused-enabled",
+  "fxl.Pre.Ena": "filled-xlarge-pressed-enabled",
+  "txl.Pre.Ena": "tonal-xlarge-pressed-enabled",
+  "oxl.Pre.Ena": "outlined-xlarge-pressed-enabled",
+  "exl.Pre.Ena": "elevated-xlarge-pressed-enabled",
+  "fs.Hov.Ena": "filled-small-hovered-enabled",
+  "ts.Hov.Ena": "tonal-small-hovered-enabled",
+  "os.Hov.Ena": "outlined-small-hovered-enabled",
+  "es.Hov.Ena": "elevated-small-hovered-enabled",
+  "fs.Foc.Ena": "filled-small-focused-enabled",
+  "ts.Foc.Ena": "tonal-small-focused-enabled",
+  "os.Foc.Ena": "outlined-small-focused-enabled",
+  "es.Foc.Ena": "elevated-small-focused-enabled",
+  "fs.Pre.Ena": "filled-small-pressed-enabled",
+  "ts.Pre.Ena": "tonal-small-pressed-enabled",
+  "os.Pre.Ena": "outlined-small-pressed-enabled",
+  "es.Pre.Ena": "elevated-small-pressed-enabled"
+ },
+ "exceptions": {
+  "elevated-xsmall-enabled-selected": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-medium-enabled-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-medium-enabled-selected": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-large-enabled-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-large-enabled-selected": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-xlarge-enabled-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-xlarge-enabled-selected": {
+   "allowedDiffPixels": 11,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-small-enabled-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-small-enabled-selected": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-large-enabled-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-xlarge-enabled-hovered": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-small-enabled-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "filled-xlarge-enabled-focused": {
+   "allowedDiffPixels": 9,
+   "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+  },
+  "tonal-xlarge-enabled-focused": {
+   "allowedDiffPixels": 14,
+   "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+  },
+  "outlined-xlarge-enabled-focused": {
+   "allowedDiffPixels": 77,
+   "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+  },
+  "elevated-xlarge-enabled-focused": {
+   "allowedDiffPixels": 76,
+   "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+  },
+  "elevated-xsmall-hovered-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "outlined-xsmall-pressed-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Two pixels on the leading button's 8px inner corner where the 1px outline, the ripple edge and the corner curve meet (\u0394 \u2264 20/255): anti-aliasing of three overlapping edges. Geometry identical."
+  },
+  "elevated-xsmall-pressed-enabled": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-medium-hovered-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-large-hovered-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-large-pressed-enabled": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-xlarge-hovered-enabled": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  },
+  "elevated-xlarge-pressed-enabled": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+  }
+ }
+}

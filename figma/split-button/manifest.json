@@ -1,0 +1,3481 @@
+{
+  "component": "split-button",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "split": {
+      "node": "57994:15751",
+      "file": "_frames/split.png"
+    }
+  },
+  "variants": {
+    "filled-xsmall-enabled-enabled": {
+      "node": "57994:15752",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 146,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-enabled-enabled": {
+      "node": "57994:15760",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 146,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-enabled-enabled": {
+      "node": "57994:15768",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 146,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-enabled-enabled": {
+      "node": "57994:15776",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 146,
+        "y": 1681
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ]
+    },
+    "filled-xsmall-enabled-pressed": {
+      "node": "57994:15784",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-enabled-pressed": {
+      "node": "57994:15794",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-enabled-pressed": {
+      "node": "57994:15804",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-enabled-pressed": {
+      "node": "57994:15814",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1681
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ]
+    },
+    "filled-xsmall-enabled-selected": {
+      "node": "57994:15824",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1898,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-enabled-selected": {
+      "node": "57994:15833",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1898,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-enabled-selected": {
+      "node": "57994:15842",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1898,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-enabled-selected": {
+      "node": "57994:15851",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1898,
+        "y": 1681
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-medium-enabled-enabled": {
+      "node": "57994:15860",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 113,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-enabled-enabled": {
+      "node": "57994:15868",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 113,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-enabled-enabled": {
+      "node": "57994:15876",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 113,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-enabled-enabled": {
+      "node": "57994:15884",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 113,
+        "y": 2720
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ]
+    },
+    "filled-medium-enabled-pressed": {
+      "node": "57994:15892",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-enabled-pressed": {
+      "node": "57994:15902",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-enabled-pressed": {
+      "node": "57994:15912",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-enabled-pressed": {
+      "node": "57994:15922",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2720
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-medium-enabled-selected": {
+      "node": "57994:15932",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1865,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-enabled-selected": {
+      "node": "57994:15941",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1865,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-enabled-selected": {
+      "node": "57994:15950",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1865,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-enabled-selected": {
+      "node": "57994:15959",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1865,
+        "y": 2720
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-large-enabled-enabled": {
+      "node": "57994:15968",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 63,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-enabled-enabled": {
+      "node": "57994:15976",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 63,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-enabled-enabled": {
+      "node": "57994:15984",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 63,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-enabled-enabled": {
+      "node": "57994:15992",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 63,
+        "y": 4018
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ]
+    },
+    "filled-large-enabled-pressed": {
+      "node": "57994:16000",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-enabled-pressed": {
+      "node": "57994:16010",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-enabled-pressed": {
+      "node": "57994:16020",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-enabled-pressed": {
+      "node": "57994:16030",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 4018
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-large-enabled-selected": {
+      "node": "57994:16040",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1815,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-enabled-selected": {
+      "node": "57994:16049",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1815,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-enabled-selected": {
+      "node": "57994:16058",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1815,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-enabled-selected": {
+      "node": "57994:16067",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1815,
+        "y": 4018
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xlarge-enabled-enabled": {
+      "node": "57994:16076",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 16,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-enabled-enabled": {
+      "node": "57994:16084",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 16,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-enabled-enabled": {
+      "node": "57994:16092",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 16,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-enabled-enabled": {
+      "node": "57994:16100",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 16,
+        "y": 5725
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ]
+    },
+    "filled-xlarge-enabled-pressed": {
+      "node": "57994:16108",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-enabled-pressed": {
+      "node": "57994:16118",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-enabled-pressed": {
+      "node": "57994:16128",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-enabled-pressed": {
+      "node": "57994:16138",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 5725
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xlarge-enabled-selected": {
+      "node": "57994:16148",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1764,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-enabled-selected": {
+      "node": "57994:16157",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1764,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-enabled-selected": {
+      "node": "57994:16166",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1764,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-enabled-selected": {
+      "node": "57994:16175",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1764,
+        "y": 5725
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 11,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-small-enabled-enabled": {
+      "node": "57994:16184",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 134,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-enabled-enabled": {
+      "node": "57994:16192",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 134,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-enabled-enabled": {
+      "node": "57994:16200",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 134,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-enabled-enabled": {
+      "node": "57994:16208",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 134,
+        "y": 613
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ]
+    },
+    "filled-small-enabled-pressed": {
+      "node": "57994:16216",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-enabled-pressed": {
+      "node": "57994:16226",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-enabled-pressed": {
+      "node": "57994:16236",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-enabled-pressed": {
+      "node": "57994:16246",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 613
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-small-enabled-selected": {
+      "node": "57994:16256",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1886,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-enabled-selected": {
+      "node": "57994:16265",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1886,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-enabled-selected": {
+      "node": "57994:16274",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1886,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-enabled-selected": {
+      "node": "57994:16283",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1886,
+        "y": 613
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xsmall-enabled-hovered": {
+      "node": "57994:16292",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-enabled-hovered": {
+      "node": "57994:16300",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-enabled-hovered": {
+      "node": "57994:16308",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-enabled-hovered": {
+      "node": "57994:16316",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1681
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ]
+    },
+    "filled-medium-enabled-hovered": {
+      "node": "57994:16324",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-enabled-hovered": {
+      "node": "57994:16332",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-enabled-hovered": {
+      "node": "57994:16340",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-enabled-hovered": {
+      "node": "57994:16348",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2720
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ]
+    },
+    "filled-large-enabled-hovered": {
+      "node": "57994:16356",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-enabled-hovered": {
+      "node": "57994:16364",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-enabled-hovered": {
+      "node": "57994:16372",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-enabled-hovered": {
+      "node": "57994:16380",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 4018
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xlarge-enabled-hovered": {
+      "node": "57994:16388",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-enabled-hovered": {
+      "node": "57994:16396",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-enabled-hovered": {
+      "node": "57994:16404",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-enabled-hovered": {
+      "node": "57994:16412",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 5725
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-small-enabled-hovered": {
+      "node": "57994:16420",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-enabled-hovered": {
+      "node": "57994:16428",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-enabled-hovered": {
+      "node": "57994:16436",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-enabled-hovered": {
+      "node": "57994:16444",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 613
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xsmall-enabled-focused": {
+      "node": "57994:16452",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-enabled-focused": {
+      "node": "57994:16461",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-enabled-focused": {
+      "node": "57994:16470",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-enabled-focused": {
+      "node": "57994:16479",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1681
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ]
+    },
+    "filled-medium-enabled-focused": {
+      "node": "57994:16488",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-enabled-focused": {
+      "node": "57994:16497",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-enabled-focused": {
+      "node": "57994:16506",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-enabled-focused": {
+      "node": "57994:16515",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2720
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ]
+    },
+    "filled-large-enabled-focused": {
+      "node": "57994:16524",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-enabled-focused": {
+      "node": "57994:16533",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-enabled-focused": {
+      "node": "57994:16542",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-enabled-focused": {
+      "node": "57994:16551",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 4018
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ]
+    },
+    "filled-xlarge-enabled-focused": {
+      "node": "57994:16560",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ],
+      "allowedDiffPixels": 9,
+      "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+    },
+    "tonal-xlarge-enabled-focused": {
+      "node": "57994:16569",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ],
+      "allowedDiffPixels": 14,
+      "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+    },
+    "outlined-xlarge-enabled-focused": {
+      "node": "57994:16578",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ],
+      "allowedDiffPixels": 77,
+      "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+    },
+    "elevated-xlarge-enabled-focused": {
+      "node": "57994:16587",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 5725
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 76,
+      "allowedDiffReason": "Kit slip: XL trailing Focused has inner corners 14px; every other size keeps its rest inner corner when focused (focus never morphs the shape) and 14 is not one of the split button's corner values. We render the rest corner (12)."
+    },
+    "filled-small-enabled-focused": {
+      "node": "57994:16596",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-enabled-focused": {
+      "node": "57994:16605",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-enabled-focused": {
+      "node": "57994:16614",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-enabled-focused": {
+      "node": "57994:16623",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 613
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ]
+    },
+    "filled-xsmall-disabled-disabled": {
+      "node": "57994:16632",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2336,
+        "y": 1234
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-disabled-disabled": {
+      "node": "57994:16640",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2336,
+        "y": 1458
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-disabled-disabled": {
+      "node": "57994:16648",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2336,
+        "y": 1905
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-disabled-disabled": {
+      "node": "57994:16656",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2336,
+        "y": 1681
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "filled-medium-disabled-disabled": {
+      "node": "57994:16664",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2303,
+        "y": 2248
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-disabled-disabled": {
+      "node": "57994:16672",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2303,
+        "y": 2484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-disabled-disabled": {
+      "node": "57994:16680",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2303,
+        "y": 2956
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-disabled-disabled": {
+      "node": "57994:16688",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2303,
+        "y": 2720
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "filled-large-disabled-disabled": {
+      "node": "57994:16696",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2253,
+        "y": 3337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-disabled-disabled": {
+      "node": "57994:16704",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2253,
+        "y": 3678
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-disabled-disabled": {
+      "node": "57994:16712",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2253,
+        "y": 4358
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-disabled-disabled": {
+      "node": "57994:16720",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2253,
+        "y": 4018
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "filled-xlarge-disabled-disabled": {
+      "node": "57994:16728",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2201,
+        "y": 4922
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-disabled-disabled": {
+      "node": "57994:16736",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2201,
+        "y": 5324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-disabled-disabled": {
+      "node": "57994:16744",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2201,
+        "y": 6127
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-disabled-disabled": {
+      "node": "57994:16752",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2201,
+        "y": 5725
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "filled-small-disabled-disabled": {
+      "node": "57994:16760",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2324,
+        "y": 98
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-disabled-disabled": {
+      "node": "57994:16768",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2324,
+        "y": 356
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-disabled-disabled": {
+      "node": "57994:16776",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2324,
+        "y": 872
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-disabled-disabled": {
+      "node": "57994:16784",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 2324,
+        "y": 613
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "filled-xsmall-hovered-enabled": {
+      "node": "57994:16792",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1346
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-hovered-enabled": {
+      "node": "57994:16800",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1570
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-hovered-enabled": {
+      "node": "57994:16808",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 2016
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-hovered-enabled": {
+      "node": "57994:16816",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 584,
+        "y": 1793
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xsmall-focused-enabled": {
+      "node": "57994:16824",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1346
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-focused-enabled": {
+      "node": "57994:16833",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1570
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-focused-enabled": {
+      "node": "57994:16842",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 2016
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "elevated-xsmall-focused-enabled": {
+      "node": "57994:16851",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1022,
+        "y": 1793
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ]
+    },
+    "filled-xsmall-pressed-enabled": {
+      "node": "57994:16860",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1346
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "tonal-xsmall-pressed-enabled": {
+      "node": "57994:16870",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1570
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ]
+    },
+    "outlined-xsmall-pressed-enabled": {
+      "node": "57994:16880",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 2016
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        133,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Two pixels on the leading button's 8px inner corner where the 1px outline, the ripple edge and the corner curve meet (\u0394 \u2264 20/255): anti-aliasing of three overlapping edges. Geometry identical."
+    },
+    "elevated-xsmall-pressed-enabled": {
+      "node": "57994:16890",
+      "size": [
+        131,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1460,
+        "y": 1793
+      },
+      "renderBounds": [
+        -12,
+        -1,
+        155,
+        57
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-medium-hovered-enabled": {
+      "node": "57994:16900",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2366
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-hovered-enabled": {
+      "node": "57994:16908",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-hovered-enabled": {
+      "node": "57994:16916",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 3074
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-hovered-enabled": {
+      "node": "57994:16924",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 551,
+        "y": 2838
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-medium-focused-enabled": {
+      "node": "57994:16932",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2366
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-focused-enabled": {
+      "node": "57994:16941",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-focused-enabled": {
+      "node": "57994:16950",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 3074
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-focused-enabled": {
+      "node": "57994:16959",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 989,
+        "y": 2838
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ]
+    },
+    "filled-medium-pressed-enabled": {
+      "node": "57994:16968",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2366
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "tonal-medium-pressed-enabled": {
+      "node": "57994:16978",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "outlined-medium-pressed-enabled": {
+      "node": "57994:16988",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 3074
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        180,
+        58
+      ]
+    },
+    "elevated-medium-pressed-enabled": {
+      "node": "57994:16998",
+      "size": [
+        178,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1427,
+        "y": 2838
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        202,
+        80
+      ]
+    },
+    "filled-large-hovered-enabled": {
+      "node": "57994:17008",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 3508
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-hovered-enabled": {
+      "node": "57994:17016",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 3848
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-hovered-enabled": {
+      "node": "57994:17024",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 4528
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-hovered-enabled": {
+      "node": "57994:17032",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 501,
+        "y": 4188
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-large-focused-enabled": {
+      "node": "57994:17040",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 3508
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-focused-enabled": {
+      "node": "57994:17049",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 3848
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-focused-enabled": {
+      "node": "57994:17058",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 4528
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-focused-enabled": {
+      "node": "57994:17067",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 939,
+        "y": 4188
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ]
+    },
+    "filled-large-pressed-enabled": {
+      "node": "57994:17076",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 3508
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "tonal-large-pressed-enabled": {
+      "node": "57994:17086",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 3848
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "outlined-large-pressed-enabled": {
+      "node": "57994:17096",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 4528
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        299,
+        98
+      ]
+    },
+    "elevated-large-pressed-enabled": {
+      "node": "57994:17106",
+      "size": [
+        297,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1377,
+        "y": 4188
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        321,
+        120
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xlarge-hovered-enabled": {
+      "node": "57994:17116",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 5123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-hovered-enabled": {
+      "node": "57994:17124",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 5525
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-hovered-enabled": {
+      "node": "57994:17132",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 6327
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-hovered-enabled": {
+      "node": "57994:17140",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 453,
+        "y": 5926
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-xlarge-focused-enabled": {
+      "node": "57994:17148",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 5123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-focused-enabled": {
+      "node": "57994:17157",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 5525
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-focused-enabled": {
+      "node": "57994:17166",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 6327
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-focused-enabled": {
+      "node": "57994:17175",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 890,
+        "y": 5926
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ]
+    },
+    "filled-xlarge-pressed-enabled": {
+      "node": "57994:17184",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 5123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "tonal-xlarge-pressed-enabled": {
+      "node": "57994:17194",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 5525
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "outlined-xlarge-pressed-enabled": {
+      "node": "57994:17204",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 6327
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        402,
+        138
+      ]
+    },
+    "elevated-xlarge-pressed-enabled": {
+      "node": "57994:17214",
+      "size": [
+        400,
+        136
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1327,
+        "y": 5926
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        424,
+        160
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Shadowed anti-aliased edge pixels (\u0394 \u2264 28/255) on the curved edges of an elevated split button while its state layer is showing: Figma composites the level-3 shadow under partially covered edge pixels slightly more strongly than Chrome's box-shadow. Geometry, fills and shadow elsewhere identical."
+    },
+    "filled-small-hovered-enabled": {
+      "node": "57994:17224",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-hovered-enabled": {
+      "node": "57994:17232",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-hovered-enabled": {
+      "node": "57994:17240",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 1001
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-hovered-enabled": {
+      "node": "57994:17248",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 572,
+        "y": 743
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ]
+    },
+    "filled-small-focused-enabled": {
+      "node": "57994:17256",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-focused-enabled": {
+      "node": "57994:17265",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-focused-enabled": {
+      "node": "57994:17274",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 1001
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-focused-enabled": {
+      "node": "57994:17283",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1010,
+        "y": 743
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ]
+    },
+    "filled-small-pressed-enabled": {
+      "node": "57994:17292",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "tonal-small-pressed-enabled": {
+      "node": "57994:17302",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "outlined-small-pressed-enabled": {
+      "node": "57994:17312",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 1001
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        143,
+        50
+      ]
+    },
+    "elevated-small-pressed-enabled": {
+      "node": "57994:17322",
+      "size": [
+        141,
+        48
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "split",
+        "x": 1448,
+        "y": 743
+      },
+      "renderBounds": [
+        -12,
+        -4,
+        165,
+        64
+      ]
+    }
+  }
+}

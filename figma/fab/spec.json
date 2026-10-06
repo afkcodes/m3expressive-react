@@ -1,0 +1,261 @@
+{
+ "component": "fab",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "fab": {
+   "node": "57998:43426",
+   "file": "_frames/fab.png",
+   "size": [
+    610,
+    2850
+   ],
+   "rows": "fab.t.l.Pre 57998:43427 487,2718 96x96 rb-11,-7,118,118;fab.t.l.Foc 57998:43431 333,2718 96x96 rb-11,-7,118,118;fab.t.l.Hov 57998:43434 181,2718 96x96 rb-14,-8,124,124;fab.t.l.Ena 57998:43437 29,2718 96x96 rb-11,-7,118,118;fab.s.l.Pre 57998:43440 487,2549 96x96 rb-11,-7,118,118;fab.s.l.Foc 57998:43444 333,2549 96x96 rb-11,-7,118,118;fab.s.l.Hov 57998:43447 181,2549 96x96 rb-14,-8,124,124;fab.s.l.Ena 57998:43450 29,2549 96x96 rb-11,-7,118,118;fab.p.l.Pre 57998:43453 485,2380 96x96 rb-11,-7,118,118;fab.p.l.Foc 57998:43457 331,2380 96x96 rb-11,-7,118,118;fab.p.l.Hov 57998:43460 179,2380 96x96 rb-14,-8,124,124;fab.p.l.Ena 57998:43463 27,2380 96x96 rb-11,-7,118,118;fab.tc.l.Pre 57998:43466 487,2206 96x96 rb-11,-7,118,118;fab.tc.l.Foc 57998:43470 333,2206 96x96 rb-11,-7,118,118;fab.tc.l.Hov 57998:43473 181,2206 96x96 rb-14,-8,124,124;fab.tc.l.Ena 57998:43476 29,2206 96x96 rb-11,-7,118,118;fab.sc.l.Pre 57998:43479 485,2042 96x96 rb-11,-7,118,118;fab.sc.l.Foc 57998:43483 333,2042 96x96 rb-11,-7,118,118;fab.sc.l.Hov 57998:43486 181,2042 96x96 rb-14,-8,124,124;fab.sc.l.Ena 57998:43489 29,2042 96x96 rb-11,-7,118,118;fab.pc.l.Pre 57998:43492 485,1878 96x96 rb-11,-7,118,118;fab.pc.l.Foc 57998:43496 333,1878 96x96 rb-11,-7,118,118;fab.pc.l.Hov 57998:43499 181,1878 96x96 rb-14,-8,124,124;fab.pc.l.Ena 57998:43502 29,1878 96x96 rb-11,-7,118,118;fab.t.m.Pre 57998:43505 486,1664 80x80 rb-11,-7,102,102;fab.t.m.Foc 57998:43509 334,1664 80x80 rb-11,-7,102,102;fab.t.m.Hov 57998:43512 182,1664 80x80 rb-14,-8,108,108;fab.t.m.Ena 57998:43515 30,1664 80x80 rb-11,-7,102,102;fab.s.m.Pre 57998:43518 486,1511 80x80 rb-11,-7,102,102;fab.s.m.Foc 57998:43522 334,1511 80x80 rb-11,-7,102,102;fab.s.m.Hov 57998:43525 182,1511 80x80 rb-14,-8,108,108;fab.s.m.Ena 57998:43528 30,1511 80x80 rb-11,-7,102,102;fab.p.m.Pre 57998:43531 486,1358 80x80 rb-11,-7,102,102;fab.p.m.Foc 57998:43535 334,1358 80x80 rb-11,-7,102,102;fab.p.m.Hov 57998:43538 182,1358 80x80 rb-14,-8,108,108;fab.p.m.Ena 57998:43541 30,1358 80x80 rb-11,-7,102,102;fab.tc.m.Pre 57998:43544 486,1205 80x80 rb-11,-7,102,102;fab.tc.m.Foc 57998:43548 334,1205 80x80 rb-11,-7,102,102;fab.tc.m.Hov 57998:43551 182,1205 80x80 rb-14,-8,108,108;fab.tc.m.Ena 57998:43554 30,1205 80x80 rb-11,-7,102,102;fab.sc.m.Pre 57998:43557 486,1041 80x80 rb-11,-7,102,102;fab.sc.m.Foc 57998:43561 334,1041 80x80 rb-11,-7,102,102;fab.sc.m.Hov 57998:43564 182,1041 80x80 rb-14,-8,108,108;fab.sc.m.Ena 57998:43567 30,1041 80x80 rb-11,-7,102,102;fab.pc.m.Pre 57998:43570 486,877 80x80 rb-11,-7,102,102;fab.pc.m.Foc 57998:43574 334,877 80x80 rb-11,-7,102,102;fab.pc.m.Hov 57998:43577 182,877 80x80 rb-14,-8,108,108;fab.pc.m.Ena 57998:43580 30,877 80x80 rb-11,-7,102,102;fab.t.d.Pre 57998:43583 350,702 56x56 rb-11,-7,78,78;fab.t.d.Foc 57998:43587 243,702 56x56 rb-11,-7,78,78;fab.t.d.Hov 57998:43590 136,702 56x56 rb-14,-8,84,84;fab.t.d.Ena 57998:43593 29,702 56x56 rb-11,-7,78,78;fab.s.d.Pre 57998:43596 350,576 56x56 rb-11,-7,78,78;fab.s.d.Foc 57998:43600 243,576 56x56 rb-11,-7,78,78;fab.s.d.Hov 57998:43603 136,576 56x56 rb-14,-8,84,84;fab.s.d.Ena 57998:43606 29,576 56x56 rb-11,-7,78,78;fab.p.d.Pre 57998:43609 350,450 56x56 rb-11,-7,78,78;fab.p.d.Foc 57998:43613 243,450 56x56 rb-11,-7,78,78;fab.p.d.Hov 57998:43616 136,450 56x56 rb-14,-8,84,84;fab.p.d.Ena 57998:43619 29,450 56x56 rb-11,-7,78,78;fab.tc.d.Pre 57998:43622 350,324 56x56 rb-11,-7,78,78;fab.tc.d.Foc 57998:43626 243,324 56x56 rb-11,-7,78,78;fab.tc.d.Hov 57998:43629 136,324 56x56 rb-14,-8,84,84;fab.tc.d.Ena 57998:43632 29,324 56x56 rb-11,-7,78,78;fab.sc.d.Pre 57998:43635 348,195 56x56 rb-11,-7,78,78;fab.sc.d.Foc 57998:43639 242,195 56x56 rb-11,-7,78,78;fab.sc.d.Hov 57998:43642 135,195 56x56 rb-14,-8,84,84;fab.sc.d.Ena 57998:43645 29,195 56x56 rb-11,-7,78,78;fab.pc.d.Pre 57998:43648 348,68 56x56 rb-11,-7,78,78;fab.pc.d.Foc 57998:43652 242,68 56x56 rb-11,-7,78,78;fab.pc.d.Hov 57998:43655 135,68 56x56 rb-14,-8,84,84;fab.pc.d.Ena 57998:43658 29,68 56x56 rb-11,-7,78,78"
+  },
+  "efab": {
+   "node": "57998:43095",
+   "file": "_frames/efab.png",
+   "size": [
+    845,
+    2844
+   ],
+   "rows": "efab.t.l.Pre 57998:43096 648,2712 167x96 rb-11,-7,189,118;efab.t.l.Foc 57998:43101 441,2712 167x96 rb-11,-7,189,118;efab.t.l.Hov 57998:43105 234,2712 167x96 rb-14,-8,195,124;efab.t.l.Ena 57998:43109 27,2712 167x96 rb-11,-7,189,118;efab.s.l.Pre 57998:43113 648,2549 167x96 rb-11,-7,189,118;efab.s.l.Foc 57998:43118 441,2549 167x96 rb-11,-7,189,118;efab.s.l.Hov 57998:43122 234,2549 167x96 rb-14,-8,195,124;efab.s.l.Ena 57998:43126 27,2549 167x96 rb-11,-7,189,118;efab.p.l.Pre 57998:43130 648,2380 167x96 rb-11,-7,189,118;efab.p.l.Foc 57998:43135 441,2380 167x96 rb-11,-7,189,118;efab.p.l.Hov 57998:43139 234,2380 167x96 rb-14,-8,195,124;efab.p.l.Ena 57998:43143 27,2380 167x96 rb-11,-7,189,118;efab.tc.l.Pre 57998:43147 648,2203 167x96 rb-11,-7,189,118;efab.tc.l.Foc 57998:43152 441,2203 167x96 rb-11,-7,189,118;efab.tc.l.Hov 57998:43156 234,2203 167x96 rb-14,-8,195,124;efab.tc.l.Ena 57998:43160 27,2203 167x96 rb-11,-7,189,118;efab.sc.l.Pre 57998:43164 648,2039 167x96 rb-11,-7,189,118;efab.sc.l.Foc 57998:43169 441,2039 167x96 rb-11,-7,189,118;efab.sc.l.Hov 57998:43173 234,2039 167x96 rb-14,-8,195,124;efab.sc.l.Ena 57998:43177 27,2039 167x96 rb-11,-7,189,118;efab.pc.l.Pre 57998:43181 648,1875 167x96 rb-11,-7,189,118;efab.pc.l.Foc 57998:43186 441,1875 167x96 rb-11,-7,189,118;efab.pc.l.Hov 57998:43190 234,1875 167x96 rb-14,-8,195,124;efab.pc.l.Ena 57998:43194 27,1875 167x96 rb-11,-7,189,118;efab.t.m.Pre 57998:43198 534,1671 146x80 rb-11,-7,168,102;efab.t.m.Foc 57998:43203 362,1671 146x80 rb-11,-7,168,102;efab.t.m.Hov 57998:43207 193,1671 146x80 rb-14,-8,174,108;efab.t.m.Ena 57998:43211 27,1671 146x80 rb-11,-7,168,102;efab.s.m.Pre 57998:43215 534,1519 146x80 rb-11,-7,168,102;efab.s.m.Foc 57998:43220 362,1519 146x80 rb-11,-7,168,102;efab.s.m.Hov 57998:43224 193,1519 146x80 rb-14,-8,174,108;efab.s.m.Ena 57998:43228 27,1519 146x80 rb-11,-7,168,102;efab.p.m.Pre 57998:43232 534,1367 146x80 rb-11,-7,168,102;efab.p.m.Foc 57998:43237 362,1367 146x80 rb-11,-7,168,102;efab.p.m.Hov 57998:43241 193,1367 146x80 rb-14,-8,174,108;efab.p.m.Ena 57998:43245 27,1367 146x80 rb-11,-7,168,102;efab.tc.m.Pre 57998:43249 534,1213 146x80 rb-11,-7,168,102;efab.tc.m.Foc 57998:43254 362,1213 146x80 rb-11,-7,168,102;efab.tc.m.Hov 57998:43258 193,1213 146x80 rb-14,-8,174,108;efab.tc.m.Ena 57998:43262 27,1213 146x80 rb-11,-7,168,102;efab.sc.m.Pre 57998:43266 534,1049 146x80 rb-11,-7,168,102;efab.sc.m.Foc 57998:43271 362,1049 146x80 rb-11,-7,168,102;efab.sc.m.Hov 57998:43275 193,1049 146x80 rb-14,-8,174,108;efab.sc.m.Ena 57998:43279 27,1049 146x80 rb-11,-7,168,102;efab.pc.m.Pre 57998:43283 534,885 146x80 rb-11,-7,168,102;efab.pc.m.Foc 57998:43288 362,885 146x80 rb-11,-7,168,102;efab.pc.m.Hov 57998:43292 193,885 146x80 rb-14,-8,174,108;efab.pc.m.Ena 57998:43296 27,885 146x80 rb-11,-7,168,102;efab.t.sm.Pre 57998:43300 473,711 104x56 rb-11,-7,126,78;efab.t.sm.Foc 57998:43305 321,711 104x56 rb-11,-7,126,78;efab.t.sm.Hov 57998:43309 171,711 104x56 rb-14,-8,132,84;efab.t.sm.Ena 57998:43313 27,711 104x56 rb-11,-7,126,78;efab.s.sm.Pre 57998:43317 473,585 104x56 rb-11,-7,126,78;efab.s.sm.Foc 57998:43322 321,585 104x56 rb-11,-7,126,78;efab.s.sm.Hov 57998:43326 171,585 104x56 rb-14,-8,132,84;efab.s.sm.Ena 57998:43330 27,585 104x56 rb-11,-7,126,78;efab.p.sm.Pre 57998:43334 473,459 104x56 rb-11,-7,126,78;efab.p.sm.Foc 57998:43339 321,459 104x56 rb-11,-7,126,78;efab.p.sm.Hov 57998:43343 171,459 104x56 rb-14,-8,132,84;efab.p.sm.Ena 57998:43347 27,459 104x56 rb-11,-7,126,78;efab.tc.sm.Pre 57998:43351 473,333 104x56 rb-11,-7,126,78;efab.tc.sm.Foc 57998:43356 321,333 104x56 rb-11,-7,126,78;efab.tc.sm.Hov 57998:43360 171,333 104x56 rb-14,-8,132,84;efab.tc.sm.Ena 57998:43364 27,333 104x56 rb-11,-7,126,78;efab.sc.sm.Pre 57998:43368 473,204 104x56 rb-11,-7,126,78;efab.sc.sm.Foc 57998:43373 321,204 104x56 rb-11,-7,126,78;efab.sc.sm.Hov 57998:43377 171,204 104x56 rb-14,-8,132,84;efab.sc.sm.Ena 57998:43381 27,204 104x56 rb-11,-7,126,78;efab.pc.sm.Pre 57998:43385 473,77 104x56 rb-11,-7,126,78;efab.pc.sm.Foc 57998:43390 321,77 104x56 rb-11,-7,126,78;efab.pc.sm.Hov 57998:43394 171,77 104x56 rb-14,-8,132,84;efab.pc.sm.Ena 57998:43398 27,77 104x56 rb-11,-7,126,78"
+  }
+ },
+ "rename": {
+  "fab.t.l.Pre": "fab-tertiary-large-pressed",
+  "fab.t.l.Foc": "fab-tertiary-large-focused",
+  "fab.t.l.Hov": "fab-tertiary-large-hovered",
+  "fab.t.l.Ena": "fab-tertiary-large-enabled",
+  "fab.s.l.Pre": "fab-secondary-large-pressed",
+  "fab.s.l.Foc": "fab-secondary-large-focused",
+  "fab.s.l.Hov": "fab-secondary-large-hovered",
+  "fab.s.l.Ena": "fab-secondary-large-enabled",
+  "fab.p.l.Pre": "fab-primary-large-pressed",
+  "fab.p.l.Foc": "fab-primary-large-focused",
+  "fab.p.l.Hov": "fab-primary-large-hovered",
+  "fab.p.l.Ena": "fab-primary-large-enabled",
+  "fab.tc.l.Pre": "fab-tertiaryContainer-large-pressed",
+  "fab.tc.l.Foc": "fab-tertiaryContainer-large-focused",
+  "fab.tc.l.Hov": "fab-tertiaryContainer-large-hovered",
+  "fab.tc.l.Ena": "fab-tertiaryContainer-large-enabled",
+  "fab.sc.l.Pre": "fab-secondaryContainer-large-pressed",
+  "fab.sc.l.Foc": "fab-secondaryContainer-large-focused",
+  "fab.sc.l.Hov": "fab-secondaryContainer-large-hovered",
+  "fab.sc.l.Ena": "fab-secondaryContainer-large-enabled",
+  "fab.pc.l.Pre": "fab-primaryContainer-large-pressed",
+  "fab.pc.l.Foc": "fab-primaryContainer-large-focused",
+  "fab.pc.l.Hov": "fab-primaryContainer-large-hovered",
+  "fab.pc.l.Ena": "fab-primaryContainer-large-enabled",
+  "fab.t.m.Pre": "fab-tertiary-medium-pressed",
+  "fab.t.m.Foc": "fab-tertiary-medium-focused",
+  "fab.t.m.Hov": "fab-tertiary-medium-hovered",
+  "fab.t.m.Ena": "fab-tertiary-medium-enabled",
+  "fab.s.m.Pre": "fab-secondary-medium-pressed",
+  "fab.s.m.Foc": "fab-secondary-medium-focused",
+  "fab.s.m.Hov": "fab-secondary-medium-hovered",
+  "fab.s.m.Ena": "fab-secondary-medium-enabled",
+  "fab.p.m.Pre": "fab-primary-medium-pressed",
+  "fab.p.m.Foc": "fab-primary-medium-focused",
+  "fab.p.m.Hov": "fab-primary-medium-hovered",
+  "fab.p.m.Ena": "fab-primary-medium-enabled",
+  "fab.tc.m.Pre": "fab-tertiaryContainer-medium-pressed",
+  "fab.tc.m.Foc": "fab-tertiaryContainer-medium-focused",
+  "fab.tc.m.Hov": "fab-tertiaryContainer-medium-hovered",
+  "fab.tc.m.Ena": "fab-tertiaryContainer-medium-enabled",
+  "fab.sc.m.Pre": "fab-secondaryContainer-medium-pressed",
+  "fab.sc.m.Foc": "fab-secondaryContainer-medium-focused",
+  "fab.sc.m.Hov": "fab-secondaryContainer-medium-hovered",
+  "fab.sc.m.Ena": "fab-secondaryContainer-medium-enabled",
+  "fab.pc.m.Pre": "fab-primaryContainer-medium-pressed",
+  "fab.pc.m.Foc": "fab-primaryContainer-medium-focused",
+  "fab.pc.m.Hov": "fab-primaryContainer-medium-hovered",
+  "fab.pc.m.Ena": "fab-primaryContainer-medium-enabled",
+  "fab.t.d.Pre": "fab-tertiary-default-pressed",
+  "fab.t.d.Foc": "fab-tertiary-default-focused",
+  "fab.t.d.Hov": "fab-tertiary-default-hovered",
+  "fab.t.d.Ena": "fab-tertiary-default-enabled",
+  "fab.s.d.Pre": "fab-secondary-default-pressed",
+  "fab.s.d.Foc": "fab-secondary-default-focused",
+  "fab.s.d.Hov": "fab-secondary-default-hovered",
+  "fab.s.d.Ena": "fab-secondary-default-enabled",
+  "fab.p.d.Pre": "fab-primary-default-pressed",
+  "fab.p.d.Foc": "fab-primary-default-focused",
+  "fab.p.d.Hov": "fab-primary-default-hovered",
+  "fab.p.d.Ena": "fab-primary-default-enabled",
+  "fab.tc.d.Pre": "fab-tertiaryContainer-default-pressed",
+  "fab.tc.d.Foc": "fab-tertiaryContainer-default-focused",
+  "fab.tc.d.Hov": "fab-tertiaryContainer-default-hovered",
+  "fab.tc.d.Ena": "fab-tertiaryContainer-default-enabled",
+  "fab.sc.d.Pre": "fab-secondaryContainer-default-pressed",
+  "fab.sc.d.Foc": "fab-secondaryContainer-default-focused",
+  "fab.sc.d.Hov": "fab-secondaryContainer-default-hovered",
+  "fab.sc.d.Ena": "fab-secondaryContainer-default-enabled",
+  "fab.pc.d.Pre": "fab-primaryContainer-default-pressed",
+  "fab.pc.d.Foc": "fab-primaryContainer-default-focused",
+  "fab.pc.d.Hov": "fab-primaryContainer-default-hovered",
+  "fab.pc.d.Ena": "fab-primaryContainer-default-enabled",
+  "efab.t.l.Pre": "extended-tertiary-large-pressed",
+  "efab.t.l.Foc": "extended-tertiary-large-focused",
+  "efab.t.l.Hov": "extended-tertiary-large-hovered",
+  "efab.t.l.Ena": "extended-tertiary-large-enabled",
+  "efab.s.l.Pre": "extended-secondary-large-pressed",
+  "efab.s.l.Foc": "extended-secondary-large-focused",
+  "efab.s.l.Hov": "extended-secondary-large-hovered",
+  "efab.s.l.Ena": "extended-secondary-large-enabled",
+  "efab.p.l.Pre": "extended-primary-large-pressed",
+  "efab.p.l.Foc": "extended-primary-large-focused",
+  "efab.p.l.Hov": "extended-primary-large-hovered",
+  "efab.p.l.Ena": "extended-primary-large-enabled",
+  "efab.tc.l.Pre": "extended-tertiaryContainer-large-pressed",
+  "efab.tc.l.Foc": "extended-tertiaryContainer-large-focused",
+  "efab.tc.l.Hov": "extended-tertiaryContainer-large-hovered",
+  "efab.tc.l.Ena": "extended-tertiaryContainer-large-enabled",
+  "efab.sc.l.Pre": "extended-secondaryContainer-large-pressed",
+  "efab.sc.l.Foc": "extended-secondaryContainer-large-focused",
+  "efab.sc.l.Hov": "extended-secondaryContainer-large-hovered",
+  "efab.sc.l.Ena": "extended-secondaryContainer-large-enabled",
+  "efab.pc.l.Pre": "extended-primaryContainer-large-pressed",
+  "efab.pc.l.Foc": "extended-primaryContainer-large-focused",
+  "efab.pc.l.Hov": "extended-primaryContainer-large-hovered",
+  "efab.pc.l.Ena": "extended-primaryContainer-large-enabled",
+  "efab.t.m.Pre": "extended-tertiary-medium-pressed",
+  "efab.t.m.Foc": "extended-tertiary-medium-focused",
+  "efab.t.m.Hov": "extended-tertiary-medium-hovered",
+  "efab.t.m.Ena": "extended-tertiary-medium-enabled",
+  "efab.s.m.Pre": "extended-secondary-medium-pressed",
+  "efab.s.m.Foc": "extended-secondary-medium-focused",
+  "efab.s.m.Hov": "extended-secondary-medium-hovered",
+  "efab.s.m.Ena": "extended-secondary-medium-enabled",
+  "efab.p.m.Pre": "extended-primary-medium-pressed",
+  "efab.p.m.Foc": "extended-primary-medium-focused",
+  "efab.p.m.Hov": "extended-primary-medium-hovered",
+  "efab.p.m.Ena": "extended-primary-medium-enabled",
+  "efab.tc.m.Pre": "extended-tertiaryContainer-medium-pressed",
+  "efab.tc.m.Foc": "extended-tertiaryContainer-medium-focused",
+  "efab.tc.m.Hov": "extended-tertiaryContainer-medium-hovered",
+  "efab.tc.m.Ena": "extended-tertiaryContainer-medium-enabled",
+  "efab.sc.m.Pre": "extended-secondaryContainer-medium-pressed",
+  "efab.sc.m.Foc": "extended-secondaryContainer-medium-focused",
+  "efab.sc.m.Hov": "extended-secondaryContainer-medium-hovered",
+  "efab.sc.m.Ena": "extended-secondaryContainer-medium-enabled",
+  "efab.pc.m.Pre": "extended-primaryContainer-medium-pressed",
+  "efab.pc.m.Foc": "extended-primaryContainer-medium-focused",
+  "efab.pc.m.Hov": "extended-primaryContainer-medium-hovered",
+  "efab.pc.m.Ena": "extended-primaryContainer-medium-enabled",
+  "efab.t.sm.Pre": "extended-tertiary-small-pressed",
+  "efab.t.sm.Foc": "extended-tertiary-small-focused",
+  "efab.t.sm.Hov": "extended-tertiary-small-hovered",
+  "efab.t.sm.Ena": "extended-tertiary-small-enabled",
+  "efab.s.sm.Pre": "extended-secondary-small-pressed",
+  "efab.s.sm.Foc": "extended-secondary-small-focused",
+  "efab.s.sm.Hov": "extended-secondary-small-hovered",
+  "efab.s.sm.Ena": "extended-secondary-small-enabled",
+  "efab.p.sm.Pre": "extended-primary-small-pressed",
+  "efab.p.sm.Foc": "extended-primary-small-focused",
+  "efab.p.sm.Hov": "extended-primary-small-hovered",
+  "efab.p.sm.Ena": "extended-primary-small-enabled",
+  "efab.tc.sm.Pre": "extended-tertiaryContainer-small-pressed",
+  "efab.tc.sm.Foc": "extended-tertiaryContainer-small-focused",
+  "efab.tc.sm.Hov": "extended-tertiaryContainer-small-hovered",
+  "efab.tc.sm.Ena": "extended-tertiaryContainer-small-enabled",
+  "efab.sc.sm.Pre": "extended-secondaryContainer-small-pressed",
+  "efab.sc.sm.Foc": "extended-secondaryContainer-small-focused",
+  "efab.sc.sm.Hov": "extended-secondaryContainer-small-hovered",
+  "efab.sc.sm.Ena": "extended-secondaryContainer-small-enabled",
+  "efab.pc.sm.Pre": "extended-primaryContainer-small-pressed",
+  "efab.pc.sm.Foc": "extended-primaryContainer-small-focused",
+  "efab.pc.sm.Hov": "extended-primaryContainer-small-hovered",
+  "efab.pc.sm.Ena": "extended-primaryContainer-small-enabled"
+ },
+ "exceptions": {
+  "fab-tertiary-large-focused": {
+   "allowedDiffPixels": 30297,
+   "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+  },
+  "fab-secondary-large-focused": {
+   "allowedDiffPixels": 30300,
+   "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+  },
+  "fab-primary-large-focused": {
+   "allowedDiffPixels": 30297,
+   "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+  },
+  "fab-tertiaryContainer-large-focused": {
+   "allowedDiffPixels": 30331,
+   "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+  },
+  "fab-tertiaryContainer-medium-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-tertiaryContainer-medium-focused": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-tertiaryContainer-medium-enabled": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-secondaryContainer-medium-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-primaryContainer-medium-focused": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-primaryContainer-medium-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-tertiaryContainer-default-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-secondaryContainer-default-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "fab-primaryContainer-default-hovered": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-secondaryContainer-large-focused": {
+   "allowedDiffPixels": 40,
+   "allowedDiffReason": "Kit slip: this variant's label sits 0.48px right of every sibling (glyph origin 92.81 vs 92.33); we render the consistent position."
+  },
+  "extended-tertiaryContainer-medium-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-tertiaryContainer-medium-focused": {
+   "allowedDiffPixels": 5,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-tertiaryContainer-medium-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-secondaryContainer-medium-focused": {
+   "allowedDiffPixels": 5,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-primaryContainer-medium-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-primaryContainer-medium-focused": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-tertiaryContainer-small-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  },
+  "extended-primaryContainer-small-hovered": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+  }
+ }
+}

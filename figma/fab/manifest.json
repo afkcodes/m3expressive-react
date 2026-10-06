@@ -1,0 +1,2815 @@
+{
+  "component": "fab",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "fab": {
+      "node": "57998:43426",
+      "file": "_frames/fab.png"
+    },
+    "efab": {
+      "node": "57998:43095",
+      "file": "_frames/efab.png"
+    }
+  },
+  "variants": {
+    "fab-tertiary-large-pressed": {
+      "node": "57998:43427",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 487,
+        "y": 2718
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-tertiary-large-focused": {
+      "node": "57998:43431",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 333,
+        "y": 2718
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ],
+      "allowedDiffPixels": 30297,
+      "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+    },
+    "fab-tertiary-large-hovered": {
+      "node": "57998:43434",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 181,
+        "y": 2718
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-tertiary-large-enabled": {
+      "node": "57998:43437",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 2718
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-secondary-large-pressed": {
+      "node": "57998:43440",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 487,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-secondary-large-focused": {
+      "node": "57998:43444",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 333,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ],
+      "allowedDiffPixels": 30300,
+      "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+    },
+    "fab-secondary-large-hovered": {
+      "node": "57998:43447",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 181,
+        "y": 2549
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-secondary-large-enabled": {
+      "node": "57998:43450",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-primary-large-pressed": {
+      "node": "57998:43453",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 485,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-primary-large-focused": {
+      "node": "57998:43457",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 331,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ],
+      "allowedDiffPixels": 30297,
+      "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+    },
+    "fab-primary-large-hovered": {
+      "node": "57998:43460",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 179,
+        "y": 2380
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-primary-large-enabled": {
+      "node": "57998:43463",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 27,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-tertiaryContainer-large-pressed": {
+      "node": "57998:43466",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 487,
+        "y": 2206
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-tertiaryContainer-large-focused": {
+      "node": "57998:43470",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 333,
+        "y": 2206
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ],
+      "allowedDiffPixels": 30331,
+      "allowedDiffReason": "Kit slip: Large FAB Focused (primary, secondary, tertiary, tertiary container) binds its state layer to Opacity-08; every other focused FAB / extended FAB \u2014 including Large secondary/primary container \u2014 uses Opacity-10. We render the consistent 10% focus layer."
+    },
+    "fab-tertiaryContainer-large-hovered": {
+      "node": "57998:43473",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 181,
+        "y": 2206
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-tertiaryContainer-large-enabled": {
+      "node": "57998:43476",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 2206
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-secondaryContainer-large-pressed": {
+      "node": "57998:43479",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 485,
+        "y": 2042
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-secondaryContainer-large-focused": {
+      "node": "57998:43483",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 333,
+        "y": 2042
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-secondaryContainer-large-hovered": {
+      "node": "57998:43486",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 181,
+        "y": 2042
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-secondaryContainer-large-enabled": {
+      "node": "57998:43489",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 2042
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-primaryContainer-large-pressed": {
+      "node": "57998:43492",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 485,
+        "y": 1878
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-primaryContainer-large-focused": {
+      "node": "57998:43496",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 333,
+        "y": 1878
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-primaryContainer-large-hovered": {
+      "node": "57998:43499",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 181,
+        "y": 1878
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        126,
+        126
+      ]
+    },
+    "fab-primaryContainer-large-enabled": {
+      "node": "57998:43502",
+      "size": [
+        96,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 1878
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        120,
+        120
+      ]
+    },
+    "fab-tertiary-medium-pressed": {
+      "node": "57998:43505",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 1664
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-tertiary-medium-focused": {
+      "node": "57998:43509",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 1664
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-tertiary-medium-hovered": {
+      "node": "57998:43512",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 1664
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-tertiary-medium-enabled": {
+      "node": "57998:43515",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 1664
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-secondary-medium-pressed": {
+      "node": "57998:43518",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 1511
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-secondary-medium-focused": {
+      "node": "57998:43522",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 1511
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-secondary-medium-hovered": {
+      "node": "57998:43525",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 1511
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-secondary-medium-enabled": {
+      "node": "57998:43528",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 1511
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-primary-medium-pressed": {
+      "node": "57998:43531",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 1358
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-primary-medium-focused": {
+      "node": "57998:43535",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 1358
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-primary-medium-hovered": {
+      "node": "57998:43538",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 1358
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-primary-medium-enabled": {
+      "node": "57998:43541",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 1358
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-tertiaryContainer-medium-pressed": {
+      "node": "57998:43544",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 1205
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-tertiaryContainer-medium-focused": {
+      "node": "57998:43548",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 1205
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-tertiaryContainer-medium-hovered": {
+      "node": "57998:43551",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 1205
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-tertiaryContainer-medium-enabled": {
+      "node": "57998:43554",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 1205
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-secondaryContainer-medium-pressed": {
+      "node": "57998:43557",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 1041
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-secondaryContainer-medium-focused": {
+      "node": "57998:43561",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 1041
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-secondaryContainer-medium-hovered": {
+      "node": "57998:43564",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 1041
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-secondaryContainer-medium-enabled": {
+      "node": "57998:43567",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 1041
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-primaryContainer-medium-pressed": {
+      "node": "57998:43570",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 486,
+        "y": 877
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ]
+    },
+    "fab-primaryContainer-medium-focused": {
+      "node": "57998:43574",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 334,
+        "y": 877
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-primaryContainer-medium-hovered": {
+      "node": "57998:43577",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 182,
+        "y": 877
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        110,
+        110
+      ]
+    },
+    "fab-primaryContainer-medium-enabled": {
+      "node": "57998:43580",
+      "size": [
+        80,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 30,
+        "y": 877
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        104,
+        104
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-tertiary-default-pressed": {
+      "node": "57998:43583",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 350,
+        "y": 702
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-tertiary-default-focused": {
+      "node": "57998:43587",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 243,
+        "y": 702
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-tertiary-default-hovered": {
+      "node": "57998:43590",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 136,
+        "y": 702
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "fab-tertiary-default-enabled": {
+      "node": "57998:43593",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 702
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondary-default-pressed": {
+      "node": "57998:43596",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 350,
+        "y": 576
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondary-default-focused": {
+      "node": "57998:43600",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 243,
+        "y": 576
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondary-default-hovered": {
+      "node": "57998:43603",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 136,
+        "y": 576
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "fab-secondary-default-enabled": {
+      "node": "57998:43606",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 576
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primary-default-pressed": {
+      "node": "57998:43609",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 350,
+        "y": 450
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primary-default-focused": {
+      "node": "57998:43613",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 243,
+        "y": 450
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primary-default-hovered": {
+      "node": "57998:43616",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 136,
+        "y": 450
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "fab-primary-default-enabled": {
+      "node": "57998:43619",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 450
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-tertiaryContainer-default-pressed": {
+      "node": "57998:43622",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 350,
+        "y": 324
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-tertiaryContainer-default-focused": {
+      "node": "57998:43626",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 243,
+        "y": 324
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-tertiaryContainer-default-hovered": {
+      "node": "57998:43629",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 136,
+        "y": 324
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-tertiaryContainer-default-enabled": {
+      "node": "57998:43632",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 324
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondaryContainer-default-pressed": {
+      "node": "57998:43635",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 348,
+        "y": 195
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondaryContainer-default-focused": {
+      "node": "57998:43639",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 242,
+        "y": 195
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-secondaryContainer-default-hovered": {
+      "node": "57998:43642",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 135,
+        "y": 195
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-secondaryContainer-default-enabled": {
+      "node": "57998:43645",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 195
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primaryContainer-default-pressed": {
+      "node": "57998:43648",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 348,
+        "y": 68
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primaryContainer-default-focused": {
+      "node": "57998:43652",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 242,
+        "y": 68
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "fab-primaryContainer-default-hovered": {
+      "node": "57998:43655",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 135,
+        "y": 68
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "fab-primaryContainer-default-enabled": {
+      "node": "57998:43658",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "fab",
+        "x": 29,
+        "y": 68
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "extended-tertiary-large-pressed": {
+      "node": "57998:43096",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 2712
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiary-large-focused": {
+      "node": "57998:43101",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 2712
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiary-large-hovered": {
+      "node": "57998:43105",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 2712
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-tertiary-large-enabled": {
+      "node": "57998:43109",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 2712
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-secondary-large-pressed": {
+      "node": "57998:43113",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-secondary-large-focused": {
+      "node": "57998:43118",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-secondary-large-hovered": {
+      "node": "57998:43122",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 2549
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-secondary-large-enabled": {
+      "node": "57998:43126",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 2549
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primary-large-pressed": {
+      "node": "57998:43130",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primary-large-focused": {
+      "node": "57998:43135",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primary-large-hovered": {
+      "node": "57998:43139",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 2380
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-primary-large-enabled": {
+      "node": "57998:43143",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 2380
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiaryContainer-large-pressed": {
+      "node": "57998:43147",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 2203
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiaryContainer-large-focused": {
+      "node": "57998:43152",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 2203
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiaryContainer-large-hovered": {
+      "node": "57998:43156",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 2203
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-tertiaryContainer-large-enabled": {
+      "node": "57998:43160",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 2203
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-secondaryContainer-large-pressed": {
+      "node": "57998:43164",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 2039
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-secondaryContainer-large-focused": {
+      "node": "57998:43169",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 2039
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ],
+      "allowedDiffPixels": 40,
+      "allowedDiffReason": "Kit slip: this variant's label sits 0.48px right of every sibling (glyph origin 92.81 vs 92.33); we render the consistent position."
+    },
+    "extended-secondaryContainer-large-hovered": {
+      "node": "57998:43173",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 2039
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-secondaryContainer-large-enabled": {
+      "node": "57998:43177",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 2039
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primaryContainer-large-pressed": {
+      "node": "57998:43181",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 648,
+        "y": 1875
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primaryContainer-large-focused": {
+      "node": "57998:43186",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 441,
+        "y": 1875
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-primaryContainer-large-hovered": {
+      "node": "57998:43190",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 234,
+        "y": 1875
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        197,
+        126
+      ]
+    },
+    "extended-primaryContainer-large-enabled": {
+      "node": "57998:43194",
+      "size": [
+        167,
+        96
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1875
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        191,
+        120
+      ]
+    },
+    "extended-tertiary-medium-pressed": {
+      "node": "57998:43198",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 1671
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ]
+    },
+    "extended-tertiary-medium-focused": {
+      "node": "57998:43203",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 1671
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-tertiary-medium-hovered)"
+    },
+    "extended-tertiary-medium-hovered": {
+      "node": "57998:43207",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 1671
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-tertiary-medium-enabled); right trimmed (neighbour extended-tertiary-medium-focused)"
+    },
+    "extended-tertiary-medium-enabled": {
+      "node": "57998:43211",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1671
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-tertiary-medium-hovered)"
+    },
+    "extended-secondary-medium-pressed": {
+      "node": "57998:43215",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 1519
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ]
+    },
+    "extended-secondary-medium-focused": {
+      "node": "57998:43220",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 1519
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-secondary-medium-hovered)"
+    },
+    "extended-secondary-medium-hovered": {
+      "node": "57998:43224",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 1519
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-secondary-medium-enabled); right trimmed (neighbour extended-secondary-medium-focused)"
+    },
+    "extended-secondary-medium-enabled": {
+      "node": "57998:43228",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1519
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-secondary-medium-hovered)"
+    },
+    "extended-primary-medium-pressed": {
+      "node": "57998:43232",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 1367
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ]
+    },
+    "extended-primary-medium-focused": {
+      "node": "57998:43237",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 1367
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-primary-medium-hovered)"
+    },
+    "extended-primary-medium-hovered": {
+      "node": "57998:43241",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 1367
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-primary-medium-enabled); right trimmed (neighbour extended-primary-medium-focused)"
+    },
+    "extended-primary-medium-enabled": {
+      "node": "57998:43245",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1367
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-primary-medium-hovered)"
+    },
+    "extended-tertiaryContainer-medium-pressed": {
+      "node": "57998:43249",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 1213
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-tertiaryContainer-medium-focused": {
+      "node": "57998:43254",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 1213
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-tertiaryContainer-medium-hovered)",
+      "allowedDiffPixels": 5,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-tertiaryContainer-medium-hovered": {
+      "node": "57998:43258",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 1213
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-tertiaryContainer-medium-enabled); right trimmed (neighbour extended-tertiaryContainer-medium-focused)"
+    },
+    "extended-tertiaryContainer-medium-enabled": {
+      "node": "57998:43262",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1213
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-tertiaryContainer-medium-hovered)",
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-secondaryContainer-medium-pressed": {
+      "node": "57998:43266",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 1049
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ]
+    },
+    "extended-secondaryContainer-medium-focused": {
+      "node": "57998:43271",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 1049
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-secondaryContainer-medium-hovered)",
+      "allowedDiffPixels": 5,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-secondaryContainer-medium-hovered": {
+      "node": "57998:43275",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 1049
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-secondaryContainer-medium-enabled); right trimmed (neighbour extended-secondaryContainer-medium-focused)"
+    },
+    "extended-secondaryContainer-medium-enabled": {
+      "node": "57998:43279",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 1049
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-secondaryContainer-medium-hovered)"
+    },
+    "extended-primaryContainer-medium-pressed": {
+      "node": "57998:43283",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 534,
+        "y": 885
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        170,
+        104
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-primaryContainer-medium-focused": {
+      "node": "57998:43288",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 362,
+        "y": 885
+      },
+      "renderBounds": [
+        -9,
+        -8,
+        167,
+        104
+      ],
+      "refNote": "left trimmed (neighbour extended-primaryContainer-medium-hovered)",
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-primaryContainer-medium-hovered": {
+      "node": "57998:43292",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 193,
+        "y": 885
+      },
+      "renderBounds": [
+        -9,
+        -9,
+        167,
+        110
+      ],
+      "refNote": "left trimmed (neighbour extended-primaryContainer-medium-enabled); right trimmed (neighbour extended-primaryContainer-medium-focused)"
+    },
+    "extended-primaryContainer-medium-enabled": {
+      "node": "57998:43296",
+      "size": [
+        146,
+        80
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 885
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        164,
+        104
+      ],
+      "refNote": "right trimmed (neighbour extended-primaryContainer-medium-hovered)"
+    },
+    "extended-tertiary-small-pressed": {
+      "node": "57998:43300",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 711
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-tertiary-small-focused": {
+      "node": "57998:43305",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 711
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-tertiary-small-hovered": {
+      "node": "57998:43309",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 711
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ]
+    },
+    "extended-tertiary-small-enabled": {
+      "node": "57998:43313",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 711
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondary-small-pressed": {
+      "node": "57998:43317",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 585
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondary-small-focused": {
+      "node": "57998:43322",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 585
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondary-small-hovered": {
+      "node": "57998:43326",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 585
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ]
+    },
+    "extended-secondary-small-enabled": {
+      "node": "57998:43330",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 585
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primary-small-pressed": {
+      "node": "57998:43334",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 459
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primary-small-focused": {
+      "node": "57998:43339",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 459
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primary-small-hovered": {
+      "node": "57998:43343",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 459
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ]
+    },
+    "extended-primary-small-enabled": {
+      "node": "57998:43347",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 459
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-tertiaryContainer-small-pressed": {
+      "node": "57998:43351",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 333
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-tertiaryContainer-small-focused": {
+      "node": "57998:43356",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 333
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-tertiaryContainer-small-hovered": {
+      "node": "57998:43360",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 333
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-tertiaryContainer-small-enabled": {
+      "node": "57998:43364",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 333
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondaryContainer-small-pressed": {
+      "node": "57998:43368",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 204
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondaryContainer-small-focused": {
+      "node": "57998:43373",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 204
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-secondaryContainer-small-hovered": {
+      "node": "57998:43377",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 204
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ]
+    },
+    "extended-secondaryContainer-small-enabled": {
+      "node": "57998:43381",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 204
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primaryContainer-small-pressed": {
+      "node": "57998:43385",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 473,
+        "y": 77
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primaryContainer-small-focused": {
+      "node": "57998:43390",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 321,
+        "y": 77
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    },
+    "extended-primaryContainer-small-hovered": {
+      "node": "57998:43394",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 171,
+        "y": 77
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        134,
+        86
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Corner anti-aliasing on a light container over the shadow: the edge contrast is under 16/255, so the AA classifier can't recognise it as an edge; \u0394 \u2264 9/255 at symmetric corner pixels. Geometry identical."
+    },
+    "extended-primaryContainer-small-enabled": {
+      "node": "57998:43398",
+      "size": [
+        104,
+        56
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "efab",
+        "x": 27,
+        "y": 77
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        128,
+        80
+      ]
+    }
+  }
+}

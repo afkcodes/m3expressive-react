@@ -1,0 +1,365 @@
+{
+ "component": "segmented-button",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "set": {
+   "node": "53923:36615",
+   "file": "_frames/set.png",
+   "size": [
+    822,
+    320
+   ],
+   "rows": "set.5.0 53923:36670 40,232 516x48;set.4.0 53923:36676 40,168 413x48;set.3.0 53923:36681 40,104 310x48;set.2.0 53923:36685 40,40 207x48"
+  },
+  "start": {
+   "node": "53923:36817",
+   "file": "_frames/start.png",
+   "size": [
+    782,
+    343
+   ],
+   "rows": "start.i.FDis 53923:36818 643,276 108x48;start.l.FDis 53923:36822 519,276 108x48;start.li.FDis 53923:36826 395,276 108x48;start.i.FPre 53923:36831 643,212 108x48;start.l.FPre 53923:36835 519,212 108x48;start.li.FPre 53923:36839 395,212 108x48;start.i.TPre 53923:36844 271,212 108x48;start.li.TPre 53923:36849 147,212 108x48;start.l.TPre 53923:36854 20,212 108x48;start.i.FFoc 53923:36859 643,148 108x48;start.l.FFoc 53923:36863 519,148 108x48;start.li.FFoc 53923:36867 395,148 108x48;start.i.TFoc 53923:36872 271,148 108x48;start.li.TFoc 53923:36877 147,148 108x48;start.l.TFoc 53923:36882 20,148 108x48;start.i.FHov 53923:36887 643,84 108x48;start.l.FHov 53923:36891 519,84 108x48;start.li.FHov 53923:36895 395,84 108x48;start.i.THov 53923:36900 271,84 108x48;start.li.THov 53923:36905 147,84 108x48;start.l.THov 53923:36910 20,84 108x48;start.i.FEna 53923:36915 643,20 108x48;start.l.FEna 53923:36919 519,20 108x48;start.li.FEna 53923:36923 395,20 108x48;start.i.TEna 53923:36928 271,20 108x48;start.li.TEna 53923:36933 147,20 108x48;start.l.TEna 53923:36938 20,20 108x48"
+  },
+  "middle": {
+   "node": "53923:36691",
+   "file": "_frames/middle.png",
+   "size": [
+    782,
+    336
+   ],
+   "rows": "middle.i.FDis 53923:36692 645,276 108x48;middle.li.FDis 53923:36696 521,276 108x48;middle.l.FDis 53923:36701 397,276 108x48;middle.i.FPre 53923:36705 640,212 108x48;middle.li.FPre 53923:36709 516,212 108x48;middle.l.FPre 53923:36714 392,212 108x48;middle.i.TPre 53923:36718 268,212 108x48;middle.l.TPre 53923:36723 144,212 108x48;middle.li.TPre 53923:36728 20,212 108x48;middle.i.FFoc 53923:36733 640,148 108x48;middle.li.FFoc 53923:36737 516,148 108x48;middle.l.FFoc 53923:36742 392,148 108x48;middle.i.TFoc 53923:36746 268,148 108x48;middle.l.TFoc 53923:36751 144,148 108x48;middle.li.TFoc 53923:36756 20,148 108x48;middle.i.FHov 53923:36761 640,84 108x48;middle.li.FHov 53923:36765 516,84 108x48;middle.l.FHov 53923:36770 392,84 108x48;middle.i.THov 53923:36774 268,84 108x48;middle.l.THov 53923:36779 144,84 108x48;middle.li.THov 53923:36784 20,84 108x48;middle.i.FEna 53923:36789 645,20 108x48;middle.li.FEna 53923:36793 521,20 108x48;middle.l.FEna 53923:36798 397,20 108x48;middle.i.TEna 53923:36802 273,20 108x48;middle.l.TEna 53923:36807 149,20 108x48;middle.li.TEna 53923:36812 25,20 108x48"
+  },
+  "end": {
+   "node": "53923:36943",
+   "file": "_frames/end.png",
+   "size": [
+    782,
+    341
+   ],
+   "rows": "end.i.FDis 53923:36944 652,276 108x48;end.l.FDis 53923:36948 528,276 108x48;end.li.FDis 53923:36952 404,276 108x48;end.i.FPre 53923:36957 644,212 108x48;end.l.FPre 53923:36961 520,212 108x48;end.li.FPre 53923:36965 396,212 108x48;end.i.TPre 53923:36970 272,212 108x48;end.li.TPre 53923:36975 148,212 108x48;end.l.TPre 53923:36980 20,212 108x48;end.i.FFoc 53923:36985 644,148 108x48;end.l.FFoc 53923:36989 520,148 108x48;end.li.FFoc 53923:36993 396,148 108x48;end.i.TFoc 53923:36998 272,148 108x48;end.li.TFoc 53923:37003 148,148 108x48;end.l.TFoc 53923:37008 20,148 108x48;end.i.FHov 53923:37013 644,84 108x48;end.l.FHov 53923:37017 520,84 108x48;end.li.FHov 53923:37021 396,84 108x48;end.i.THov 53923:37026 272,84 108x48;end.li.THov 53923:37031 148,84 108x48;end.l.THov 53923:37036 20,84 108x48;end.i.FEna 53923:37041 652,20 108x48;end.l.FEna 53923:37045 528,20 108x48;end.li.FEna 53923:37049 404,20 108x48;end.i.TEna 53923:37054 280,20 108x48;end.li.TEna 53923:37059 156,20 108x48;end.l.TEna 53923:37064 28,20 108x48"
+  }
+ },
+ "rename": {
+  "set.5.0": "set-5-d0",
+  "set.4.0": "set-4-d0",
+  "set.3.0": "set-3-d0",
+  "set.2.0": "set-2-d0",
+  "start.i.FDis": "start-icon-unselected-disabled",
+  "start.l.FDis": "start-label-unselected-disabled",
+  "start.li.FDis": "start-labelicon-unselected-disabled",
+  "start.i.FPre": "start-icon-unselected-pressed",
+  "start.l.FPre": "start-label-unselected-pressed",
+  "start.li.FPre": "start-labelicon-unselected-pressed",
+  "start.i.TPre": "start-icon-selected-pressed",
+  "start.li.TPre": "start-labelicon-selected-pressed",
+  "start.l.TPre": "start-label-selected-pressed",
+  "start.i.FFoc": "start-icon-unselected-focused",
+  "start.l.FFoc": "start-label-unselected-focused",
+  "start.li.FFoc": "start-labelicon-unselected-focused",
+  "start.i.TFoc": "start-icon-selected-focused",
+  "start.li.TFoc": "start-labelicon-selected-focused",
+  "start.l.TFoc": "start-label-selected-focused",
+  "start.i.FHov": "start-icon-unselected-hovered",
+  "start.l.FHov": "start-label-unselected-hovered",
+  "start.li.FHov": "start-labelicon-unselected-hovered",
+  "start.i.THov": "start-icon-selected-hovered",
+  "start.li.THov": "start-labelicon-selected-hovered",
+  "start.l.THov": "start-label-selected-hovered",
+  "start.i.FEna": "start-icon-unselected-enabled",
+  "start.l.FEna": "start-label-unselected-enabled",
+  "start.li.FEna": "start-labelicon-unselected-enabled",
+  "start.i.TEna": "start-icon-selected-enabled",
+  "start.li.TEna": "start-labelicon-selected-enabled",
+  "start.l.TEna": "start-label-selected-enabled",
+  "middle.i.FDis": "middle-icon-unselected-disabled",
+  "middle.li.FDis": "middle-labelicon-unselected-disabled",
+  "middle.l.FDis": "middle-label-unselected-disabled",
+  "middle.i.FPre": "middle-icon-unselected-pressed",
+  "middle.li.FPre": "middle-labelicon-unselected-pressed",
+  "middle.l.FPre": "middle-label-unselected-pressed",
+  "middle.i.TPre": "middle-icon-selected-pressed",
+  "middle.l.TPre": "middle-label-selected-pressed",
+  "middle.li.TPre": "middle-labelicon-selected-pressed",
+  "middle.i.FFoc": "middle-icon-unselected-focused",
+  "middle.li.FFoc": "middle-labelicon-unselected-focused",
+  "middle.l.FFoc": "middle-label-unselected-focused",
+  "middle.i.TFoc": "middle-icon-selected-focused",
+  "middle.l.TFoc": "middle-label-selected-focused",
+  "middle.li.TFoc": "middle-labelicon-selected-focused",
+  "middle.i.FHov": "middle-icon-unselected-hovered",
+  "middle.li.FHov": "middle-labelicon-unselected-hovered",
+  "middle.l.FHov": "middle-label-unselected-hovered",
+  "middle.i.THov": "middle-icon-selected-hovered",
+  "middle.l.THov": "middle-label-selected-hovered",
+  "middle.li.THov": "middle-labelicon-selected-hovered",
+  "middle.i.FEna": "middle-icon-unselected-enabled",
+  "middle.li.FEna": "middle-labelicon-unselected-enabled",
+  "middle.l.FEna": "middle-label-unselected-enabled",
+  "middle.i.TEna": "middle-icon-selected-enabled",
+  "middle.l.TEna": "middle-label-selected-enabled",
+  "middle.li.TEna": "middle-labelicon-selected-enabled",
+  "end.i.FDis": "end-icon-unselected-disabled",
+  "end.l.FDis": "end-label-unselected-disabled",
+  "end.li.FDis": "end-labelicon-unselected-disabled",
+  "end.i.FPre": "end-icon-unselected-pressed",
+  "end.l.FPre": "end-label-unselected-pressed",
+  "end.li.FPre": "end-labelicon-unselected-pressed",
+  "end.i.TPre": "end-icon-selected-pressed",
+  "end.li.TPre": "end-labelicon-selected-pressed",
+  "end.l.TPre": "end-label-selected-pressed",
+  "end.i.FFoc": "end-icon-unselected-focused",
+  "end.l.FFoc": "end-label-unselected-focused",
+  "end.li.FFoc": "end-labelicon-unselected-focused",
+  "end.i.TFoc": "end-icon-selected-focused",
+  "end.li.TFoc": "end-labelicon-selected-focused",
+  "end.l.TFoc": "end-label-selected-focused",
+  "end.i.FHov": "end-icon-unselected-hovered",
+  "end.l.FHov": "end-label-unselected-hovered",
+  "end.li.FHov": "end-labelicon-unselected-hovered",
+  "end.i.THov": "end-icon-selected-hovered",
+  "end.li.THov": "end-labelicon-selected-hovered",
+  "end.l.THov": "end-label-selected-hovered",
+  "end.i.FEna": "end-icon-unselected-enabled",
+  "end.l.FEna": "end-label-unselected-enabled",
+  "end.li.FEna": "end-labelicon-unselected-enabled",
+  "end.i.TEna": "end-icon-selected-enabled",
+  "end.li.TEna": "end-labelicon-selected-enabled",
+  "end.l.TEna": "end-label-selected-enabled"
+ },
+ "note": "Density -1/-2/-3 variants of the set sit outside its bounds and are hidden in the kit (node exports are empty); only density 0 is referenced.",
+ "exceptions": {
+  "set-5-d0": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "set-4-d0": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "set-3-d0": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "set-2-d0": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-unselected-disabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-unselected-disabled": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-unselected-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-unselected-pressed": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-unselected-focused": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-unselected-focused": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-unselected-hovered": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-unselected-hovered": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-unselected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-unselected-enabled": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-labelicon-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "start-label-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-unselected-disabled": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-unselected-disabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-unselected-pressed": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-unselected-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-unselected-focused": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-unselected-focused": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-unselected-hovered": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-unselected-hovered": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-unselected-enabled": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-unselected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-label-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "middle-labelicon-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-unselected-disabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-unselected-disabled": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-unselected-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-unselected-pressed": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-selected-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-unselected-focused": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-unselected-focused": {
+   "allowedDiffPixels": 12,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-selected-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-unselected-hovered": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-unselected-hovered": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-selected-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-unselected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-unselected-enabled": {
+   "allowedDiffPixels": 13,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-labelicon-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  },
+  "end-label-selected-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+  }
+ }
+}

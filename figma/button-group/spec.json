@@ -1,0 +1,219 @@
+{
+ "component": "button-group",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "standard": {
+   "node": "58424:8117",
+   "file": "_frames/standard.png",
+   "size": [
+    2706,
+    3199
+   ],
+   "rows": "std.Rxs.TI 58424:8118 297,588 232x48;std.Sxs.TI 58424:8126 297,2206 232x48;std.Rxs.OI 58424:8134 297,1097 232x48;std.Sxs.OI 58424:8142 297,2715 232x48;std.Sxs.OL 58424:8150 1337,2715 404x48;std.Rxs.OL 58424:8158 1337,1115 404x48;std.Sxs.TL 58424:8166 1337,2205 404x48;std.Rxs.TL 58424:8174 1337,605 404x48;std.Sxs.FL 58424:8182 1337,1700 404x48;std.Rxs.FL 58424:8190 1337,100 404x48;std.Rxs.FI 58424:8198 297,89 232x48;std.Sxs.FI 58424:8206 297,1707 232x48;std.Rs.TI 58424:8214 297,656 256x48;std.Ss.TI 58424:8222 297,2274 256x48;std.Rs.OI 58424:8230 297,1165 256x48;std.Ss.OI 58424:8238 297,2783 256x48;std.Ss.OL 58424:8246 1337,2783 428x48;std.Rs.OL 58424:8254 1337,1183 428x48;std.Ss.TL 58424:8262 1337,2273 428x48;std.Rs.TL 58424:8270 1337,673 428x48;std.Ss.FL 58424:8278 1337,1768 428x48;std.Rs.FL 58424:8286 1337,168 428x48;std.Rs.FI 58424:8294 297,157 256x48;std.Ss.FI 58424:8302 297,1775 256x48;std.Rm.TI 58424:8310 297,724 312x56;std.Sm.TI 58424:8318 297,2342 312x56;std.Rm.OI 58424:8326 297,1233 312x56;std.Sm.OI 58424:8334 297,2851 312x56;std.Sm.OL 58424:8342 1337,2851 504x56;std.Rm.OL 58424:8350 1337,1251 504x56;std.Sm.TL 58424:8358 1337,2341 504x56;std.Rm.TL 58424:8366 1337,741 504x56;std.Sm.FL 58424:8374 1337,1836 504x56;std.Rm.FL 58424:8382 1337,236 504x56;std.Rm.FI 58424:8390 297,225 312x56;std.Sm.FI 58424:8398 297,1843 312x56;std.Rl.TI 58424:8406 297,800 536x96;std.Sl.TI 58424:8414 297,2418 536x96;std.Rl.OI 58424:8422 297,1309 536x96;std.Sl.OI 58424:8430 297,2927 536x96;std.Sl.OL 58424:8438 1337,2927 820x96;std.Rl.OL 58424:8446 1337,1327 820x96;std.Sl.TL 58424:8454 1337,2417 820x96;std.Rl.TL 58424:8462 1337,817 820x96;std.Sl.FL 58424:8470 1337,1912 820x96;std.Rl.FL 58424:8478 1337,312 820x96;std.Rl.FI 58424:8486 297,301 536x96;std.Sl.FI 58424:8494 297,1919 536x96;std.Rxl.TI 58424:8502 297,916 760x136;std.Sxl.TI 58424:8510 297,2534 760x136;std.Rxl.OI 58424:8518 297,1425 760x136;std.Sxl.OI 58424:8526 297,3043 760x136;std.Sxl.OL 58424:8534 1337,3043 1072x136;std.Rxl.OL 58424:8542 1337,1443 1072x136;std.Sxl.TL 58424:8550 1337,2533 1072x136;std.Rxl.TL 58424:8558 1337,933 1072x136;std.Sxl.FL 58424:8566 1337,2028 1072x136;std.Rxl.FL 58424:8574 1337,428 1072x136;std.Rxl.FI 58424:8582 297,417 760x136;std.Sxl.FI 58424:8590 297,2035 760x136"
+  },
+  "connected": {
+   "node": "57998:47111",
+   "file": "_frames/connected.png",
+   "size": [
+    2732,
+    744
+   ],
+   "rows": "grp.Rxl 57998:47134 106,508 790x136;grp.Sxl 57998:47138 1386,508 790x136;grp.Rl 57998:47170 106,372 598x96;grp.Sl 57998:47174 1386,372 598x96;grp.Rm 57998:47206 106,276 370x56;grp.Sm 57998:47210 1386,276 370x56;grp.Rs 57998:47242 106,188 295x48;grp.Ss 57998:47246 1386,188 295x48;grp.Rxs 57998:47278 106,100 259x48;grp.Sxs 57998:47282 1386,100 259x48"
+  },
+  "seg-xs": {
+   "node": "57998:46886",
+   "file": "_frames/seg-xs.png",
+   "size": [
+    214,
+    240
+   ],
+   "rows": "seg.xs.FEna 57998:46887 16,16 83x32;seg.xs.TEna 57998:46891 113,16 83x32;seg.xs.FHov 57998:46895 16,60 83x32;seg.xs.THov 57998:46899 113,60 83x32;seg.xs.FFoc 57998:46903 16,104 83x32;seg.xs.TFoc 57998:46908 113,104 83x32;seg.xs.FPre 57998:46913 16,148 83x32;seg.xs.TPre 57998:46918 113,148 83x32;seg.xs.FDis 57998:46923 16,192 85x32;seg.xs.TDis 57998:46927 113,192 83x32",
+   "background": "#F3EDF7"
+  },
+  "seg-s": {
+   "node": "57998:46931",
+   "file": "_frames/seg-s.png",
+   "size": [
+    238,
+    280
+   ],
+   "rows": "seg.s.FEna 57998:46932 16,16 95x40;seg.s.TEna 57998:46936 125,16 95x40;seg.s.FHov 57998:46940 16,68 95x40;seg.s.THov 57998:46944 125,68 95x40;seg.s.FFoc 57998:46948 16,120 95x40;seg.s.TFoc 57998:46953 125,120 95x40;seg.s.FPre 57998:46958 16,172 95x40;seg.s.TPre 57998:46963 125,172 95x40;seg.s.FDis 57998:46968 16,224 97x40;seg.s.TDis 57998:46972 125,224 95x40",
+   "background": "#F3EDF7"
+  },
+  "seg-m": {
+   "node": "57998:46976",
+   "file": "_frames/seg-m.png",
+   "size": [
+    293,
+    344
+   ],
+   "rows": "seg.m.FEna 57998:46977 16,16 120x56;seg.m.TEna 57998:46981 155,16 120x56;seg.m.FHov 57998:46985 16,80 120x56;seg.m.THov 57998:46989 155,80 120x56;seg.m.FFoc 57998:46993 16,144 120x56;seg.m.TFoc 57998:46998 155,144 120x56;seg.m.FPre 57998:47003 16,208 120x56;seg.m.TPre 57998:47008 155,208 120x56;seg.m.FDis 57998:47013 16,272 122x56;seg.m.TDis 57998:47017 155,272 120x56",
+   "background": "#F3EDF7"
+  },
+  "seg-l": {
+   "node": "57998:47021",
+   "file": "_frames/seg-l.png",
+   "size": [
+    440,
+    560
+   ],
+   "rows": "seg.l.FEna 57998:47022 16,16 199x96;seg.l.TEna 57998:47026 226,16 199x96;seg.l.FHov 57998:47030 16,124 199x96;seg.l.THov 57998:47034 226,124 199x96;seg.l.FFoc 57998:47038 16,232 199x96;seg.l.TFoc 57998:47043 226,232 199x96;seg.l.FPre 57998:47048 16,340 199x96;seg.l.TPre 57998:47053 226,340 199x96;seg.l.FDis 57998:47058 16,448 198x96;seg.l.TDis 57998:47062 226,448 199x96",
+   "background": "#F3EDF7"
+  },
+  "seg-xl": {
+   "node": "57998:47066",
+   "file": "_frames/seg-xl.png",
+   "size": [
+    568,
+    760
+   ],
+   "rows": "seg.xl.FEna 57998:47067 16,16 262x136;seg.xl.TEna 57998:47071 290,16 262x136;seg.xl.FHov 57998:47075 16,164 262x136;seg.xl.THov 57998:47079 290,164 262x136;seg.xl.FFoc 57998:47083 16,312 262x136;seg.xl.TFoc 57998:47088 290,312 262x136;seg.xl.FPre 57998:47093 16,460 262x136;seg.xl.TPre 57998:47098 290,460 262x136;seg.xl.FDis 57998:47103 16,608 262x136;seg.xl.TDis 57998:47107 290,608 262x136",
+   "background": "#F3EDF7"
+  }
+ },
+ "rename": {
+  "std.Rxs.TI": "standard-round-xsmall-tonal-icon",
+  "std.Sxs.TI": "standard-square-xsmall-tonal-icon",
+  "std.Rxs.OI": "standard-round-xsmall-outlined-icon",
+  "std.Sxs.OI": "standard-square-xsmall-outlined-icon",
+  "std.Sxs.OL": "standard-square-xsmall-outlined-label",
+  "std.Rxs.OL": "standard-round-xsmall-outlined-label",
+  "std.Sxs.TL": "standard-square-xsmall-tonal-label",
+  "std.Rxs.TL": "standard-round-xsmall-tonal-label",
+  "std.Sxs.FL": "standard-square-xsmall-filled-label",
+  "std.Rxs.FL": "standard-round-xsmall-filled-label",
+  "std.Rxs.FI": "standard-round-xsmall-filled-icon",
+  "std.Sxs.FI": "standard-square-xsmall-filled-icon",
+  "std.Rs.TI": "standard-round-small-tonal-icon",
+  "std.Ss.TI": "standard-square-small-tonal-icon",
+  "std.Rs.OI": "standard-round-small-outlined-icon",
+  "std.Ss.OI": "standard-square-small-outlined-icon",
+  "std.Ss.OL": "standard-square-small-outlined-label",
+  "std.Rs.OL": "standard-round-small-outlined-label",
+  "std.Ss.TL": "standard-square-small-tonal-label",
+  "std.Rs.TL": "standard-round-small-tonal-label",
+  "std.Ss.FL": "standard-square-small-filled-label",
+  "std.Rs.FL": "standard-round-small-filled-label",
+  "std.Rs.FI": "standard-round-small-filled-icon",
+  "std.Ss.FI": "standard-square-small-filled-icon",
+  "std.Rm.TI": "standard-round-medium-tonal-icon",
+  "std.Sm.TI": "standard-square-medium-tonal-icon",
+  "std.Rm.OI": "standard-round-medium-outlined-icon",
+  "std.Sm.OI": "standard-square-medium-outlined-icon",
+  "std.Sm.OL": "standard-square-medium-outlined-label",
+  "std.Rm.OL": "standard-round-medium-outlined-label",
+  "std.Sm.TL": "standard-square-medium-tonal-label",
+  "std.Rm.TL": "standard-round-medium-tonal-label",
+  "std.Sm.FL": "standard-square-medium-filled-label",
+  "std.Rm.FL": "standard-round-medium-filled-label",
+  "std.Rm.FI": "standard-round-medium-filled-icon",
+  "std.Sm.FI": "standard-square-medium-filled-icon",
+  "std.Rl.TI": "standard-round-large-tonal-icon",
+  "std.Sl.TI": "standard-square-large-tonal-icon",
+  "std.Rl.OI": "standard-round-large-outlined-icon",
+  "std.Sl.OI": "standard-square-large-outlined-icon",
+  "std.Sl.OL": "standard-square-large-outlined-label",
+  "std.Rl.OL": "standard-round-large-outlined-label",
+  "std.Sl.TL": "standard-square-large-tonal-label",
+  "std.Rl.TL": "standard-round-large-tonal-label",
+  "std.Sl.FL": "standard-square-large-filled-label",
+  "std.Rl.FL": "standard-round-large-filled-label",
+  "std.Rl.FI": "standard-round-large-filled-icon",
+  "std.Sl.FI": "standard-square-large-filled-icon",
+  "std.Rxl.TI": "standard-round-xlarge-tonal-icon",
+  "std.Sxl.TI": "standard-square-xlarge-tonal-icon",
+  "std.Rxl.OI": "standard-round-xlarge-outlined-icon",
+  "std.Sxl.OI": "standard-square-xlarge-outlined-icon",
+  "std.Sxl.OL": "standard-square-xlarge-outlined-label",
+  "std.Rxl.OL": "standard-round-xlarge-outlined-label",
+  "std.Sxl.TL": "standard-square-xlarge-tonal-label",
+  "std.Rxl.TL": "standard-round-xlarge-tonal-label",
+  "std.Sxl.FL": "standard-square-xlarge-filled-label",
+  "std.Rxl.FL": "standard-round-xlarge-filled-label",
+  "std.Rxl.FI": "standard-round-xlarge-filled-icon",
+  "std.Sxl.FI": "standard-square-xlarge-filled-icon",
+  "grp.Rxl": "connected-round-xlarge",
+  "grp.Sxl": "connected-square-xlarge",
+  "grp.Rl": "connected-round-large",
+  "grp.Sl": "connected-square-large",
+  "grp.Rm": "connected-round-medium",
+  "grp.Sm": "connected-square-medium",
+  "grp.Rs": "connected-round-small",
+  "grp.Ss": "connected-square-small",
+  "grp.Rxs": "connected-round-xsmall",
+  "grp.Sxs": "connected-square-xsmall",
+  "seg.xs.FEna": "segment-xsmall-unselected-enabled",
+  "seg.xs.TEna": "segment-xsmall-selected-enabled",
+  "seg.xs.FHov": "segment-xsmall-unselected-hovered",
+  "seg.xs.THov": "segment-xsmall-selected-hovered",
+  "seg.xs.FFoc": "segment-xsmall-unselected-focused",
+  "seg.xs.TFoc": "segment-xsmall-selected-focused",
+  "seg.xs.FPre": "segment-xsmall-unselected-pressed",
+  "seg.xs.TPre": "segment-xsmall-selected-pressed",
+  "seg.xs.FDis": "segment-xsmall-unselected-disabled",
+  "seg.xs.TDis": "segment-xsmall-selected-disabled",
+  "seg.s.FEna": "segment-small-unselected-enabled",
+  "seg.s.TEna": "segment-small-selected-enabled",
+  "seg.s.FHov": "segment-small-unselected-hovered",
+  "seg.s.THov": "segment-small-selected-hovered",
+  "seg.s.FFoc": "segment-small-unselected-focused",
+  "seg.s.TFoc": "segment-small-selected-focused",
+  "seg.s.FPre": "segment-small-unselected-pressed",
+  "seg.s.TPre": "segment-small-selected-pressed",
+  "seg.s.FDis": "segment-small-unselected-disabled",
+  "seg.s.TDis": "segment-small-selected-disabled",
+  "seg.m.FEna": "segment-medium-unselected-enabled",
+  "seg.m.TEna": "segment-medium-selected-enabled",
+  "seg.m.FHov": "segment-medium-unselected-hovered",
+  "seg.m.THov": "segment-medium-selected-hovered",
+  "seg.m.FFoc": "segment-medium-unselected-focused",
+  "seg.m.TFoc": "segment-medium-selected-focused",
+  "seg.m.FPre": "segment-medium-unselected-pressed",
+  "seg.m.TPre": "segment-medium-selected-pressed",
+  "seg.m.FDis": "segment-medium-unselected-disabled",
+  "seg.m.TDis": "segment-medium-selected-disabled",
+  "seg.l.FEna": "segment-large-unselected-enabled",
+  "seg.l.TEna": "segment-large-selected-enabled",
+  "seg.l.FHov": "segment-large-unselected-hovered",
+  "seg.l.THov": "segment-large-selected-hovered",
+  "seg.l.FFoc": "segment-large-unselected-focused",
+  "seg.l.TFoc": "segment-large-selected-focused",
+  "seg.l.FPre": "segment-large-unselected-pressed",
+  "seg.l.TPre": "segment-large-selected-pressed",
+  "seg.l.FDis": "segment-large-unselected-disabled",
+  "seg.l.TDis": "segment-large-selected-disabled",
+  "seg.xl.FEna": "segment-xlarge-unselected-enabled",
+  "seg.xl.TEna": "segment-xlarge-selected-enabled",
+  "seg.xl.FHov": "segment-xlarge-unselected-hovered",
+  "seg.xl.THov": "segment-xlarge-selected-hovered",
+  "seg.xl.FFoc": "segment-xlarge-unselected-focused",
+  "seg.xl.TFoc": "segment-xlarge-selected-focused",
+  "seg.xl.FPre": "segment-xlarge-unselected-pressed",
+  "seg.xl.TPre": "segment-xlarge-selected-pressed",
+  "seg.xl.FDis": "segment-xlarge-unselected-disabled",
+  "seg.xl.TDis": "segment-xlarge-selected-disabled"
+ },
+ "exceptions": {
+  "segment-xsmall-selected-disabled": {
+   "allowedDiffPixels": 7155,
+   "allowedDiffReason": "Kit slip: XS selected+disabled omits the 10% selected layer that S\u2013XL keep inside their 38% content group; we render the consistent S\u2013XL treatment."
+  },
+  "segment-xlarge-unselected-disabled": {
+   "allowedDiffPixels": 302,
+   "allowedDiffReason": "Kit slip: XL unselected+disabled uses a 16px corner; every other XL unselected state rests at 20px. We render 20px."
+  },
+  "segment-large-unselected-disabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "The kit sizes this segment 198px wide, 1px under its 199px content, so the content is centred on a half pixel (icon at 47.5); a few glyph-edge pixels (\u0394 \u2264 42/255) rasterise differently. Geometry identical."
+  },
+  "connected-round-large": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "The kit sizes this segment 198px wide, 1px under its 199px content, so the content is centred on a half pixel (icon at 47.5); a few glyph-edge pixels (\u0394 \u2264 42/255) rasterise differently. Geometry identical."
+  },
+  "connected-square-large": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "The kit sizes this segment 198px wide, 1px under its 199px content, so the content is centred on a half pixel (icon at 47.5); a few glyph-edge pixels (\u0394 \u2264 42/255) rasterise differently. Geometry identical."
+  }
+ }
+}

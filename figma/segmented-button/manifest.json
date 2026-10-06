@@ -1,0 +1,1756 @@
+{
+  "component": "segmented-button",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": {
+      "node": "53923:36615",
+      "file": "_frames/set.png"
+    },
+    "start": {
+      "node": "53923:36817",
+      "file": "_frames/start.png"
+    },
+    "middle": {
+      "node": "53923:36691",
+      "file": "_frames/middle.png"
+    },
+    "end": {
+      "node": "53923:36943",
+      "file": "_frames/end.png"
+    }
+  },
+  "variants": {
+    "set-5-d0": {
+      "node": "53923:36670",
+      "size": [
+        516,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 40,
+        "y": 232
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        518,
+        50
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "set-4-d0": {
+      "node": "53923:36676",
+      "size": [
+        413,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 40,
+        "y": 168
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        415,
+        50
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "set-3-d0": {
+      "node": "53923:36681",
+      "size": [
+        310,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 40,
+        "y": 104
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        312,
+        50
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "set-2-d0": {
+      "node": "53923:36685",
+      "size": [
+        207,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 40,
+        "y": 40
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        209,
+        50
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-unselected-disabled": {
+      "node": "53923:36818",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 643,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-label-unselected-disabled": {
+      "node": "53923:36822",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 519,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-labelicon-unselected-disabled": {
+      "node": "53923:36826",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 395,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-unselected-pressed": {
+      "node": "53923:36831",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 643,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-label-unselected-pressed": {
+      "node": "53923:36835",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 519,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-labelicon-unselected-pressed": {
+      "node": "53923:36839",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 395,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-selected-pressed": {
+      "node": "53923:36844",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 271,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-labelicon-selected-pressed": {
+      "node": "53923:36849",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 147,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-label-selected-pressed": {
+      "node": "53923:36854",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 20,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-unselected-focused": {
+      "node": "53923:36859",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 643,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-label-unselected-focused": {
+      "node": "53923:36863",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 519,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-labelicon-unselected-focused": {
+      "node": "53923:36867",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 395,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-selected-focused": {
+      "node": "53923:36872",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 271,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-labelicon-selected-focused": {
+      "node": "53923:36877",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 147,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-label-selected-focused": {
+      "node": "53923:36882",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 20,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-unselected-hovered": {
+      "node": "53923:36887",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 643,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-label-unselected-hovered": {
+      "node": "53923:36891",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 519,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-labelicon-unselected-hovered": {
+      "node": "53923:36895",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 395,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-selected-hovered": {
+      "node": "53923:36900",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 271,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-labelicon-selected-hovered": {
+      "node": "53923:36905",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 147,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-label-selected-hovered": {
+      "node": "53923:36910",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 20,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-unselected-enabled": {
+      "node": "53923:36915",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 643,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-label-unselected-enabled": {
+      "node": "53923:36919",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 519,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-labelicon-unselected-enabled": {
+      "node": "53923:36923",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 395,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-icon-selected-enabled": {
+      "node": "53923:36928",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 271,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "start-labelicon-selected-enabled": {
+      "node": "53923:36933",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 147,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "start-label-selected-enabled": {
+      "node": "53923:36938",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "start",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-unselected-disabled": {
+      "node": "53923:36692",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 645,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-labelicon-unselected-disabled": {
+      "node": "53923:36696",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 521,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-label-unselected-disabled": {
+      "node": "53923:36701",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 397,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-unselected-pressed": {
+      "node": "53923:36705",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 640,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-labelicon-unselected-pressed": {
+      "node": "53923:36709",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 516,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-label-unselected-pressed": {
+      "node": "53923:36714",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 392,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-selected-pressed": {
+      "node": "53923:36718",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 268,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-label-selected-pressed": {
+      "node": "53923:36723",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 144,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-labelicon-selected-pressed": {
+      "node": "53923:36728",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 20,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-unselected-focused": {
+      "node": "53923:36733",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 640,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-labelicon-unselected-focused": {
+      "node": "53923:36737",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 516,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-label-unselected-focused": {
+      "node": "53923:36742",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 392,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-selected-focused": {
+      "node": "53923:36746",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 268,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-label-selected-focused": {
+      "node": "53923:36751",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 144,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-labelicon-selected-focused": {
+      "node": "53923:36756",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 20,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-unselected-hovered": {
+      "node": "53923:36761",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 640,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-labelicon-unselected-hovered": {
+      "node": "53923:36765",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 516,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-label-unselected-hovered": {
+      "node": "53923:36770",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 392,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-selected-hovered": {
+      "node": "53923:36774",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 268,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-label-selected-hovered": {
+      "node": "53923:36779",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 144,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-labelicon-selected-hovered": {
+      "node": "53923:36784",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 20,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-unselected-enabled": {
+      "node": "53923:36789",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 645,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-labelicon-unselected-enabled": {
+      "node": "53923:36793",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 521,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-label-unselected-enabled": {
+      "node": "53923:36798",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 397,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-icon-selected-enabled": {
+      "node": "53923:36802",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 273,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "middle-label-selected-enabled": {
+      "node": "53923:36807",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 149,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "middle-labelicon-selected-enabled": {
+      "node": "53923:36812",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "middle",
+        "x": 25,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-unselected-disabled": {
+      "node": "53923:36944",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 652,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-label-unselected-disabled": {
+      "node": "53923:36948",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 528,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-labelicon-unselected-disabled": {
+      "node": "53923:36952",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 404,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-unselected-pressed": {
+      "node": "53923:36957",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 644,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-label-unselected-pressed": {
+      "node": "53923:36961",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 520,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-labelicon-unselected-pressed": {
+      "node": "53923:36965",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 396,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-selected-pressed": {
+      "node": "53923:36970",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 272,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-labelicon-selected-pressed": {
+      "node": "53923:36975",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 148,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-label-selected-pressed": {
+      "node": "53923:36980",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 20,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-unselected-focused": {
+      "node": "53923:36985",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 644,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-label-unselected-focused": {
+      "node": "53923:36989",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 520,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-labelicon-unselected-focused": {
+      "node": "53923:36993",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 396,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 12,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-selected-focused": {
+      "node": "53923:36998",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 272,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-labelicon-selected-focused": {
+      "node": "53923:37003",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 148,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-label-selected-focused": {
+      "node": "53923:37008",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 20,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-unselected-hovered": {
+      "node": "53923:37013",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 644,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-label-unselected-hovered": {
+      "node": "53923:37017",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 520,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-labelicon-unselected-hovered": {
+      "node": "53923:37021",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 396,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-selected-hovered": {
+      "node": "53923:37026",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 272,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-labelicon-selected-hovered": {
+      "node": "53923:37031",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 148,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-label-selected-hovered": {
+      "node": "53923:37036",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 20,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-unselected-enabled": {
+      "node": "53923:37041",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 652,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-label-unselected-enabled": {
+      "node": "53923:37045",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 528,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-labelicon-unselected-enabled": {
+      "node": "53923:37049",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 404,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 13,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-icon-selected-enabled": {
+      "node": "53923:37054",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 280,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ]
+    },
+    "end-labelicon-selected-enabled": {
+      "node": "53923:37059",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 156,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    },
+    "end-label-selected-enabled": {
+      "node": "53923:37064",
+      "size": [
+        108,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "end",
+        "x": 28,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        110,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph / icon edge rasterisation: the kit centres the content on a half CSS pixel (icon 23.5, label 49.5 in a 108px segment); our layout matches to 0.001px (measured), but Figma and Chrome anti-alias the stroke edges differently at that offset (a \u22120.5px shift makes it 10\u00d7 worse, so it isn't snapping)."
+    }
+  }
+}

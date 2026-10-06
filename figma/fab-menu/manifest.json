@@ -1,0 +1,562 @@
+{
+  "component": "fab-menu",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "item-tertiary": {
+      "node": "57998:42889",
+      "file": "_frames/item-tertiary.png"
+    },
+    "close-tertiary": {
+      "node": "57998:42907",
+      "file": "_frames/close-tertiary.png"
+    },
+    "item-secondary": {
+      "node": "57998:42921",
+      "file": "_frames/item-secondary.png"
+    },
+    "close-secondary": {
+      "node": "57998:42939",
+      "file": "_frames/close-secondary.png"
+    },
+    "item-primary": {
+      "node": "57998:42953",
+      "file": "_frames/item-primary.png"
+    },
+    "close-primary": {
+      "node": "57998:42971",
+      "file": "_frames/close-primary.png"
+    },
+    "menu": {
+      "node": "57998:42986",
+      "file": "_frames/menu.png"
+    }
+  },
+  "variants": {
+    "item-tertiary-enabled": {
+      "node": "57998:42890",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-tertiary",
+        "x": 24,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-tertiary-hovered": {
+      "node": "57998:42894",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-tertiary",
+        "x": 164,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-tertiary-focused": {
+      "node": "57998:42898",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-tertiary",
+        "x": 304,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-tertiary-pressed": {
+      "node": "57998:42902",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-tertiary",
+        "x": 444,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+    },
+    "close-tertiary-enabled": {
+      "node": "57998:42908",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-tertiary",
+        "x": 27,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-tertiary-hovered": {
+      "node": "57998:42911",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-tertiary",
+        "x": 110,
+        "y": 24
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "close-tertiary-focused": {
+      "node": "57998:42914",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-tertiary",
+        "x": 193,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-tertiary-pressed": {
+      "node": "57998:42917",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-tertiary",
+        "x": 276,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "item-secondary-enabled": {
+      "node": "57998:42922",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-secondary",
+        "x": 24,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-secondary-hovered": {
+      "node": "57998:42926",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-secondary",
+        "x": 164,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-secondary-focused": {
+      "node": "57998:42930",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-secondary",
+        "x": 304,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-secondary-pressed": {
+      "node": "57998:42934",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-secondary",
+        "x": 444,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+    },
+    "close-secondary-enabled": {
+      "node": "57998:42940",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-secondary",
+        "x": 27,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-secondary-hovered": {
+      "node": "57998:42943",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-secondary",
+        "x": 110,
+        "y": 24
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "close-secondary-focused": {
+      "node": "57998:42946",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-secondary",
+        "x": 193,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-secondary-pressed": {
+      "node": "57998:42949",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-secondary",
+        "x": 276,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "item-primary-enabled": {
+      "node": "57998:42954",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-primary",
+        "x": 24,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-primary-hovered": {
+      "node": "57998:42958",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-primary",
+        "x": 164,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-primary-focused": {
+      "node": "57998:42962",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-primary",
+        "x": 304,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ]
+    },
+    "item-primary-pressed": {
+      "node": "57998:42966",
+      "size": [
+        120,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-primary",
+        "x": 444,
+        "y": 24
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        122,
+        58
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One pixel where the ripple's edge crosses the label's last glyph (\u0394 49/255): anti-aliasing of two overlapping edges."
+    },
+    "close-primary-enabled": {
+      "node": "57998:42972",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-primary",
+        "x": 27,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-primary-hovered": {
+      "node": "57998:42975",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-primary",
+        "x": 110,
+        "y": 24
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        86,
+        86
+      ]
+    },
+    "close-primary-focused": {
+      "node": "57998:42978",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-primary",
+        "x": 193,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "close-primary-pressed": {
+      "node": "57998:42981",
+      "size": [
+        56,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "close-primary",
+        "x": 276,
+        "y": 24
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        80,
+        80
+      ]
+    },
+    "menu-tertiary": {
+      "node": "57998:42992",
+      "size": [
+        135,
+        240
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "menu",
+        "x": 754,
+        "y": 150
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        148,
+        257
+      ],
+      "allowedDiffPixels": 79,
+      "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+    },
+    "menu-secondary": {
+      "node": "57998:43027",
+      "size": [
+        135,
+        240
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "menu",
+        "x": 443,
+        "y": 150
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        148,
+        257
+      ],
+      "allowedDiffPixels": 79,
+      "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+    },
+    "menu-primary": {
+      "node": "57998:43062",
+      "size": [
+        135,
+        240
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "menu",
+        "x": 154,
+        "y": 150
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        148,
+        257
+      ],
+      "allowedDiffPixels": 79,
+      "allowedDiffReason": "Glyph positions inside the word \"Second\" drift by up to ~0.3px towards its end (Figma vs Chrome glyph-advance accumulation for Roboto Medium 16px / 0.15px tracking; kerning off makes no difference). Text box, item geometry and the other two labels are identical."
+    }
+  }
+}
