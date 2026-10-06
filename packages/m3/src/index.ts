@@ -58,6 +58,8 @@ export { Tab, TabPanel, Tabs, TabScope } from './components/Tabs/index.ts';
 export type { TabProps, TabsProps, TabsVariant } from './components/Tabs/index.ts';
 export { NavigationBar, NavigationItem, NavigationRail, NavigationRailSection, NavigationScope } from './components/Navigation/index.ts';
 export type { NavigationBarProps, NavigationItemLayout, NavigationItemProps, NavigationRailProps, NavigationRailSectionProps } from './components/Navigation/index.ts';
+export { AppBarTitle, BottomAppBar, TopAppBar, useAppBarScroll } from './components/AppBar/index.ts';
+export type { AppBarTitleProps, BottomAppBarProps, TopAppBarProps, TopAppBarSize } from './components/AppBar/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

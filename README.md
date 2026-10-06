@@ -131,6 +131,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Navigation rail FAB | no shadow | flat FAB (Compose bottomAppBarFabElevation) — `Fab elevated={false}` |
 | Navigation rail, middle alignment | destinations centred in the full height (may overlap the header gap); overflowing rails top-align | — we follow the kit |
 | Navigation drawer (Deprecated section), XR bar / rail | in the kit | not implemented — deprecated in M3 Expressive (use the expanded rail) / XR is out of scope |
+| Top app bar, flat | no container (the frame shows through) | Surface — we follow the kit (nothing scrolls under a flat bar; scrolled bars are Surface Container) |
+| Top app bar titles | Figma legacy line height; small title 1px higher and large subtitle 1px lower than it | — we follow the kit (measured per layer) |
+| Top app bar, search / image content | search field = the Search page's bar restyled; image placeholder FIT with LUMINOSITY | `search` / `content` slots; fixtures reproduce the kit's building blocks |
+| Bottom app bar FAB | shadow clipped by its frame | `Fab elevated={false}` |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

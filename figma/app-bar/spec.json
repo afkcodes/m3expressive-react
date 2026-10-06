@@ -1,0 +1,37 @@
+{
+ "component": "app-bar",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "note": "App bars page (55141:14169): App bar (small, centred, image, search, medium, large x flat / on-scroll), building blocks, baseline bottom app bar. XR app bar out of scope.",
+ "frames": {
+  "app-bars": {
+   "node": "58114:20565",
+   "file": "_frames/app-bars.png",
+   "size": [
+    452,
+    1236
+   ],
+   "rows": "appbar-small-centered-flat 58114:20566 20,20 412x64;appbar-search-flat 58114:20571 20,104 412x64;appbar-small-image-flat 58114:20578 20,188 412x64;appbar-small-flat 58114:20585 20,272 412x64;appbar-medium-flat 58114:20592 20,356 412x112;appbar-large-flat 58114:20600 20,488 412x120;appbar-small-centered-on-scroll 58114:20608 20,628 412x64;appbar-search-on-scroll 58114:20613 20,712 412x64;appbar-small-image-on-scroll 58114:20620 20,796 412x64;appbar-small-on-scroll 58114:20627 20,880 412x64;appbar-medium-on-scroll 58114:20634 20,964 412x112;appbar-large-on-scroll 58114:20642 20,1096 412x120"
+  },
+  "blocks": {
+   "node": "58114:20522",
+   "file": "_frames/blocks.png",
+   "size": [
+    584,
+    1076
+   ],
+   "background": "#F3EDF7",
+   "setBorder": false,
+   "rows": "search-flat-left 58114:20524 146,80 292x56;search-flat-centered 58114:20526 146,152 292x56;search-onscroll-left 58114:20531 146,260 292x56;search-onscroll-centered 58114:20533 146,332 292x56;text-small-centered 58114:20538 28,436 528x44;text-small-left 58114:20541 28,484 528x44;text-medium-centered 58114:20545 28,572 528x60;text-medium-left 58114:20548 28,636 528x60;text-large-centered 58114:20552 28,744 528x76;text-large-left 58114:20555 28,832 528x76;thumbnail 58114:20558 153,952 278x40;avatar-image 58114:20561 241,1028 32x32;avatar-monogram 58114:20563 311,1028 32x32"
+  },
+  "bottom-app-bar": {
+   "node": "51159:5105",
+   "file": "_frames/bottom-app-bar.png",
+   "size": [
+    452,
+    456
+   ],
+   "rows": "bottom-4 51159:5121 20,356 412x80;bottom-3 51159:5115 20,244 412x80;bottom-2 51159:5110 20,132 412x80;bottom-1 51159:5106 19,19 412x80"
+  }
+ }
+}

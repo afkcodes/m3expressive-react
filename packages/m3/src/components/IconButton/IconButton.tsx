@@ -6,6 +6,7 @@ import { color } from '../../tokens/color.stylex';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
+import { StandardIconTintContext } from './context.ts';
 import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
 import { IconButtonFrame, base, disabled, strokeWidths, type IconButtonWidth } from './IconButtonFrame.tsx';
 
@@ -17,6 +18,7 @@ const variants = stylex.create({
   tonal: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
   outlined: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
   standard: { backgroundColor: 'transparent', color: color.onSurfaceVariant },
+  standardOnSurface: { color: color.onSurface },
 });
 
 export interface IconButtonProps
@@ -38,6 +40,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
 ) {
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
+  const tint = useContext(StandardIconTintContext);
   const pressed = forced.state === 'pressed';
   const clear = variant === 'standard' || variant === 'outlined';
 
@@ -68,6 +71,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
         focusRing={!!forced.focusRing}
         container={[
           variants[variant],
+          variant === 'standard' && tint === 'on-surface' && variants.standardOnSurface,
           variant === 'outlined' && base.stroke,
           variant === 'outlined' && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
           isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),

@@ -1017,3 +1017,32 @@ test.describe('navigation (live)', () => {
     await expect(page.locator('[data-value]')).toHaveText('3');
   });
 });
+
+// ── Top app bar: the medium bar against the kit, collapsing with the scroll (Compose) ────────
+test('app bar (live): medium bar matches the kit, collapses to 64px with the scroll', async ({ page }) => {
+  const ab = JSON.parse(readFileSync(join(REFS_DIR, 'app-bar/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/app-bar/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const header = page.locator('header');
+  const v = ab.variants['appbar-medium-flat']!;
+  const ref: Buffer = readFileSync(join(REFS_DIR, 'app-bar', 'appbar-medium-flat.png'));
+  const r = compareImages(ref, await captureRegion(page, header, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
+  test.info().annotations.push({ type: 'parity', description: `appbar-medium-flat (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  expect.soft(r.diffPixels, 'appbar-medium-flat').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+
+  const height = () => header.evaluate((el) => el.getBoundingClientRect().height);
+  const bg = () => header.evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(await height()).toBe(112);
+  // Halfway: height interpolates, the large title fades (1 − f).
+  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 24));
+  await expect.poll(height).toBe(88);
+  // Collapsed: 64px, Surface Container, the row title visible.
+  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 200));
+  await expect.poll(height).toBe(64);
+  await expect.poll(bg).toBe('rgb(243, 237, 247)');
+  await expect(header.getByRole('heading', { name: 'Label' }).first()).toBeVisible();
+  // Back to the top: expanded and flat again.
+  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 0));
+  await expect.poll(height).toBe(112);
+});
