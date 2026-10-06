@@ -1,0 +1,471 @@
+{
+  "component": "typescale",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "baseline": {
+      "node": "58186:19245",
+      "file": "_frames/typescale-baseline.png"
+    },
+    "emphasized": {
+      "node": "58186:19569",
+      "file": "_frames/typescale-emphasized.png"
+    }
+  },
+  "variants": {
+    "display-large": {
+      "node": "58186:19251",
+      "size": [
+        325,
+        64
+      ],
+      "text": "DisplayLarge",
+      "style": "M3/display/large",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 132
+      },
+      "background": "#F5F5F5"
+    },
+    "display-medium": {
+      "node": "58186:19273",
+      "size": [
+        310,
+        52
+      ],
+      "text": "DisplayMedium",
+      "style": "M3/display/medium",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 240
+      },
+      "background": "#F5F5F5"
+    },
+    "display-small": {
+      "node": "58186:19294",
+      "size": [
+        216,
+        44
+      ],
+      "text": "Display Small",
+      "style": "M3/display/small",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 336
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-large": {
+      "node": "58186:19316",
+      "size": [
+        214,
+        40
+      ],
+      "text": "Headline Large",
+      "style": "M3/headline/large",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 448
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-medium": {
+      "node": "58186:19337",
+      "size": [
+        219,
+        36
+      ],
+      "text": "Headline Medium",
+      "style": "M3/headline/medium",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 532
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-small": {
+      "node": "58186:19358",
+      "size": [
+        161,
+        32
+      ],
+      "text": "Headline Small",
+      "style": "M3/headline/small",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 612
+      },
+      "background": "#F5F5F5"
+    },
+    "title-large": {
+      "node": "58186:19380",
+      "size": [
+        104,
+        28
+      ],
+      "text": "Title Large",
+      "style": "M3/title/large",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 712
+      },
+      "background": "#F5F5F5",
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "1 glyph pixel in an inner corner: Figma vs Chrome edge coverage differs by 66/255. Renderer-level; all text-rendering modes tested, no effect. Geometry and baseline exact."
+    },
+    "title-medium": {
+      "node": "58186:19401",
+      "size": [
+        96,
+        24
+      ],
+      "text": "Title Medium",
+      "style": "M3/title/medium",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 784
+      },
+      "background": "#F5F5F5"
+    },
+    "title-small": {
+      "node": "58186:19422",
+      "size": [
+        68,
+        20
+      ],
+      "text": "Title Small",
+      "style": "M3/title/small",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 852
+      },
+      "background": "#F5F5F5"
+    },
+    "label-large": {
+      "node": "58186:19444",
+      "size": [
+        74,
+        20
+      ],
+      "text": "Label Large",
+      "style": "M3/label/large",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 940
+      },
+      "background": "#F5F5F5"
+    },
+    "label-medium": {
+      "node": "58186:19465",
+      "size": [
+        82,
+        16
+      ],
+      "text": "Label Medium",
+      "style": "M3/label/medium",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 1004
+      },
+      "background": "#F5F5F5"
+    },
+    "label-small": {
+      "node": "58186:19486",
+      "size": [
+        63,
+        16
+      ],
+      "text": "Label Small",
+      "style": "M3/label/small",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 1064
+      },
+      "background": "#F5F5F5"
+    },
+    "body-large": {
+      "node": "58186:19508",
+      "size": [
+        85,
+        24
+      ],
+      "text": "Body Large",
+      "style": "M3/body/large",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 1148
+      },
+      "background": "#F5F5F5"
+    },
+    "body-medium": {
+      "node": "58186:19529",
+      "size": [
+        89,
+        20
+      ],
+      "text": "Body Medium",
+      "style": "M3/body/medium",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 1216
+      },
+      "background": "#F5F5F5"
+    },
+    "body-small": {
+      "node": "58186:19550",
+      "size": [
+        64,
+        16
+      ],
+      "text": "Body Small",
+      "style": "M3/body/small",
+      "crop": {
+        "frame": "baseline",
+        "x": 52,
+        "y": 1280
+      },
+      "background": "#F5F5F5"
+    },
+    "display-large-emphasized": {
+      "node": "58186:19575",
+      "size": [
+        636,
+        64
+      ],
+      "text": "DisplayLargeEmphasized",
+      "style": "M3/display/large-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 132
+      },
+      "background": "#F5F5F5"
+    },
+    "display-medium-emphasized": {
+      "node": "58186:19596",
+      "size": [
+        557,
+        52
+      ],
+      "text": "DisplayMediumEmphasized",
+      "style": "M3/display/medium-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 240
+      },
+      "background": "#F5F5F5",
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "1 stem-edge pixel near the end of a 557px word: sub-pixel glyph advance accumulates to ~0.125 CSS px in Chrome. Renderer-level; all text-rendering modes tested, no effect. Node size exact."
+    },
+    "display-small-emphasized": {
+      "node": "58186:19617",
+      "size": [
+        405,
+        44
+      ],
+      "text": "DisplaySmallEmphasized",
+      "style": "M3/display/small-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 336
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-large-emphasized": {
+      "node": "58186:19639",
+      "size": [
+        382,
+        40
+      ],
+      "text": "HeadlineLargeEmphasized",
+      "style": "M3/headline/large-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 448
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-medium-emphasized": {
+      "node": "58186:19660",
+      "size": [
+        366,
+        36
+      ],
+      "text": "HeadlineMediumEmphasized",
+      "style": "M3/headline/medium-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 532
+      },
+      "background": "#F5F5F5"
+    },
+    "headline-small-emphasized": {
+      "node": "58186:19681",
+      "size": [
+        287,
+        32
+      ],
+      "text": "HeadlineSmallEmphasized",
+      "style": "M3/headline/small-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 612
+      },
+      "background": "#F5F5F5"
+    },
+    "title-large-emphasized": {
+      "node": "58186:19703",
+      "size": [
+        220,
+        28
+      ],
+      "text": "TitleLargeEmphasized",
+      "style": "M3/title/large-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 712
+      },
+      "background": "#F5F5F5"
+    },
+    "title-medium-emphasized": {
+      "node": "58186:19724",
+      "size": [
+        182,
+        24
+      ],
+      "text": "TitleMediumEmphasized",
+      "style": "M3/title/medium-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 784
+      },
+      "background": "#F5F5F5"
+    },
+    "title-small-emphasized": {
+      "node": "58186:19745",
+      "size": [
+        143,
+        20
+      ],
+      "text": "TitleSmallEmphasized",
+      "style": "M3/title/small-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 852
+      },
+      "background": "#F5F5F5"
+    },
+    "label-large-emphasized": {
+      "node": "58186:19767",
+      "size": [
+        149,
+        20
+      ],
+      "text": "LabelLargeEmphasized",
+      "style": "M3/label/large-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 940
+      },
+      "background": "#F5F5F5"
+    },
+    "label-medium-emphasized": {
+      "node": "58186:19788",
+      "size": [
+        149,
+        16
+      ],
+      "text": "LabelMediumEmphasized",
+      "style": "M3/label/medium-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 1004
+      },
+      "background": "#F5F5F5"
+    },
+    "label-small-emphasized": {
+      "node": "58186:19809",
+      "size": [
+        125,
+        16
+      ],
+      "text": "LabelSmallEmphasized",
+      "style": "M3/label/small-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 1064
+      },
+      "background": "#F5F5F5"
+    },
+    "body-large-emphasized": {
+      "node": "58186:19831",
+      "size": [
+        173,
+        24
+      ],
+      "text": "BodyLargeEmphasized",
+      "style": "M3/body/large-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 1148
+      },
+      "background": "#F5F5F5"
+    },
+    "body-medium-emphasized": {
+      "node": "58186:19852",
+      "size": [
+        164,
+        20
+      ],
+      "text": "BodyMediumEmphasized",
+      "style": "M3/body/medium-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 1216
+      },
+      "background": "#F5F5F5"
+    },
+    "body-small-emphasized": {
+      "node": "58186:19873",
+      "size": [
+        131,
+        16
+      ],
+      "text": "BodySmallEmphasized",
+      "style": "M3/body/small-emphasized",
+      "crop": {
+        "frame": "emphasized",
+        "x": 32,
+        "y": 1280
+      },
+      "background": "#F5F5F5"
+    }
+  }
+}

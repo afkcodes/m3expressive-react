@@ -1,0 +1,207 @@
+{
+  "component": "elevation",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "light": {
+      "node": "50732:11519",
+      "file": "_frames/elevation-light.png"
+    },
+    "dark": {
+      "node": "50732:11518",
+      "file": "_frames/elevation-dark.png"
+    }
+  },
+  "variants": {
+    "light-1": {
+      "node": "50732:11504",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -4,
+        -3,
+        224,
+        224
+      ],
+      "background": "#FFFFFF",
+      "crop": {
+        "frame": "light",
+        "x": 60,
+        "y": 50
+      }
+    },
+    "light-2": {
+      "node": "50732:11505",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -8,
+        -6,
+        232,
+        232
+      ],
+      "background": "#FFFFFF",
+      "crop": {
+        "frame": "light",
+        "x": 312,
+        "y": 50
+      }
+    },
+    "light-3": {
+      "node": "50732:11506",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -11,
+        -7,
+        238,
+        238
+      ],
+      "background": "#FFFFFF",
+      "crop": {
+        "frame": "light",
+        "x": 564,
+        "y": 50
+      }
+    },
+    "light-4": {
+      "node": "50732:11507",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -14,
+        -8,
+        244,
+        244
+      ],
+      "background": "#FFFFFF",
+      "crop": {
+        "frame": "light",
+        "x": 816,
+        "y": 50
+      }
+    },
+    "light-5": {
+      "node": "50732:11508",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -18,
+        -10,
+        252,
+        252
+      ],
+      "background": "#FFFFFF",
+      "crop": {
+        "frame": "light",
+        "x": 1068,
+        "y": 50
+      }
+    },
+    "dark-1": {
+      "node": "50732:11509",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -4,
+        -3,
+        224,
+        224
+      ],
+      "background": "#0F0D13",
+      "crop": {
+        "frame": "dark",
+        "x": 60,
+        "y": 50
+      }
+    },
+    "dark-2": {
+      "node": "50732:11510",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -8,
+        -6,
+        232,
+        232
+      ],
+      "background": "#0F0D13",
+      "crop": {
+        "frame": "dark",
+        "x": 312,
+        "y": 50
+      }
+    },
+    "dark-3": {
+      "node": "50732:11511",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -11,
+        -7,
+        238,
+        238
+      ],
+      "background": "#0F0D13",
+      "crop": {
+        "frame": "dark",
+        "x": 564,
+        "y": 50
+      }
+    },
+    "dark-4": {
+      "node": "50732:11512",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -14,
+        -8,
+        244,
+        244
+      ],
+      "background": "#0F0D13",
+      "crop": {
+        "frame": "dark",
+        "x": 816,
+        "y": 50
+      }
+    },
+    "dark-5": {
+      "node": "50732:11513",
+      "size": [
+        216,
+        216
+      ],
+      "renderBounds": [
+        -18,
+        -10,
+        252,
+        252
+      ],
+      "background": "#0F0D13",
+      "crop": {
+        "frame": "dark",
+        "x": 1068,
+        "y": 50
+      }
+    }
+  }
+}
