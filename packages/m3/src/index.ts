@@ -47,6 +47,8 @@ export type { SnackbarProps, SnackbarActionProps, SnackbarCloseProps, SnackbarPr
 export { Tooltip, RichTooltip, PlainTooltipSurface, RichTooltipSurface } from './components/Tooltip/index.ts';
 export type { TooltipProps, RichTooltipProps, PlainTooltipSurfaceProps, RichTooltipSurfaceProps } from './components/Tooltip/index.ts';
 export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipAvatarPlaceholder, ChipGroup } from './components/Chip/index.ts';
+export { LinearProgress, CircularProgress, LoadingIndicator } from './components/Progress/index.ts';
+export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';
 export type { AssistChipProps, FilterChipProps, InputChipProps, SuggestionChipProps, ChipGroupProps } from './components/Chip/index.ts';
 export type { DividerProps, DividerInset } from './components/Divider/index.ts';
 export type { SwitchProps } from './components/Switch/index.ts';

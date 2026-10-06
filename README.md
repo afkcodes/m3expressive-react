@@ -89,6 +89,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Plain tooltip, multi-line | variant hidden in the kit (empty export) | wraps at 200px per M3; not pixel-referenced |
 | Snackbar set | hidden in the kit; the visible "Examples" instances are referenced | — |
 | Snackbar action in examples | fixed 59px frame (label not hugged; "Longer Action" clipped) | hugging text button — we follow this |
+| Circular progress, arc lengths | drawn by eye per sample (e.g. 4 dp: 10% → 50°, 30% → 80°, 50% → 170° of arc), gaps vary 20.7–22.6° | proportional arcs — we follow the kit's samples as keyframes, interpolated in between |
+| Linear wavy progress, 100% (4 dp) | active runs 2px past the frame (to x=404) | ends at width − 2 like Flat and 8 dp — we follow this |
+| Linear wavy indeterminate, Step 2 | 40px wavelength (Step 1: 20px) | 20px (Compose `LinearIndeterminateWavelength`) — default; `wavelength` prop reproduces Step 2 |
+| Circular wavy progress, 10% | wavy (linear 10% is flat) | Compose flattens ≤10% — we follow the kit for each shape |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

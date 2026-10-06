@@ -10,6 +10,7 @@ import { CardPlayground } from './pages/CardPlayground';
 import { ChipsPlayground } from './pages/ChipsPlayground';
 import { OverlaysPlayground } from './pages/OverlaysPlayground';
 import { CheckboxPlayground } from './pages/CheckboxPlayground';
+import { ProgressPlayground } from './pages/ProgressPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /compare/:component        — Figma vs live, side by side + difference overlay
@@ -26,6 +27,7 @@ function App() {
   if (page === 'demo' && component === 'card') return <CardPlayground />;
   if (page === 'demo' && component === 'chips') return <ChipsPlayground />;
   if (page === 'demo' && (component === 'overlays' || component === 'tooltip')) return <OverlaysPlayground />;
+  if (page === 'demo' && (component === 'progress' || component === 'loading')) return <ProgressPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

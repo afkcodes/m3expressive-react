@@ -1,0 +1,59 @@
+{
+ "component": "progress",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "frames": {
+  "linear": {
+   "node": "58005:7997",
+   "file": "_frames/linear.png",
+   "size": [
+    444,
+    1235
+   ],
+   "rows": "linear-flat-4-0 58005:7998 20,20 404x12;linear-flat-4-10 58005:8002 20,71 404x12;linear-flat-4-20 58005:8009 20,122 404x12;linear-flat-4-50 58005:8017 20,173 404x12;linear-flat-4-80 58005:8025 20,224 404x12;linear-flat-4-100 58005:8033 20,275 404x12;linear-flat-8-0 58005:8036 20,326 404x12;linear-flat-8-10 58005:8040 20,377 404x12;linear-flat-8-20 58005:8047 20,428 404x12;linear-flat-8-50 58005:8055 20,479 404x12;linear-flat-8-80 58005:8063 20,530 404x12;linear-flat-8-100 58005:8071 20,581 404x12;linear-wave-4-0 58005:8074 20,632 404x12;linear-wave-4-10 58005:8078 20,683 404x12;linear-wave-4-20 58005:8085 20,734 404x12;linear-wave-4-50 58005:8115 20,785 404x12;linear-wave-4-80 58005:8145 20,836 404x12;linear-wave-4-100 58005:8175 20,887 404x12 rb0,0,406,12;linear-wave-8-0 58005:8178 20,938 404x12;linear-wave-8-10 58005:8183 20,989 404x14;linear-wave-8-20 58005:8190 20,1042 404x14;linear-wave-8-50 58005:8220 20,1095 404x14;linear-wave-8-80 58005:8250 20,1148 404x14;linear-wave-8-100 58005:8280 20,1201 404x14"
+  },
+  "linear-indet": {
+   "node": "58005:8284",
+   "file": "_frames/linear-indet.png",
+   "size": [
+    444,
+    617
+   ],
+   "rows": "linear-indet-flat-4-0 58005:8285 20,20 404x12;linear-indet-flat-4-1 58005:8288 20,71 404x12;linear-indet-flat-4-2 58005:8297 20,122 404x12;linear-indet-flat-8-0 58005:8306 20,173 404x12;linear-indet-flat-8-1 58005:8309 20,224 404x12;linear-indet-flat-8-2 58005:8318 20,275 404x12;linear-indet-wave-4-0 58005:8327 20,326 404x12;linear-indet-wave-4-1 58005:8330 20,377 404x12;linear-indet-wave-4-2 58005:8361 20,428 404x12;linear-indet-wave-8-0 58005:8392 20,479 404x12;linear-indet-wave-8-1 58005:8395 20,530 404x14;linear-indet-wave-8-2 58005:8426 20,583 404x14"
+  },
+  "circular": {
+   "node": "58005:8459",
+   "file": "_frames/circular.png",
+   "size": [
+    320,
+    427
+   ],
+   "rows": "circular-flat-4-0 58005:8460 32,26 40x40;circular-flat-8-0 58005:8462 96,24 44x44;circular-wave-4-0 58005:8464 164,22 48x48;circular-wave-8-0 58005:8466 236,20 52x52;circular-flat-4-10 58005:8468 32,93 40x40;circular-flat-8-10 58005:8471 96,91 44x44;circular-wave-4-10 58005:8474 164,89 48x48;circular-wave-8-10 58005:8477 236,87 52x52;circular-flat-4-30 58005:8480 32,160 40x40;circular-flat-8-30 58005:8483 96,158 44x44;circular-wave-4-30 58005:8486 164,156 48x48;circular-wave-8-30 58005:8489 236,154 52x52;circular-flat-4-50 58005:8492 32,227 40x40;circular-flat-8-50 58005:8495 96,225 44x44;circular-wave-4-50 58005:8498 164,223 48x48;circular-wave-8-50 58005:8501 236,221 52x52;circular-flat-4-80 58005:8504 32,294 40x40;circular-flat-8-80 58005:8507 96,292 44x44;circular-wave-4-80 58005:8510 164,290 48x48;circular-wave-8-80 58005:8513 236,288 52x52;circular-flat-4-100 58005:8516 32,361 40x40;circular-flat-8-100 58005:8518 96,359 44x44;circular-wave-4-100 58005:8520 164,357 48x48;circular-wave-8-100 58005:8522 236,355 52x52"
+  },
+  "circular-indet": {
+   "node": "58005:8525",
+   "file": "_frames/circular-indet.png",
+   "size": [
+    320,
+    159
+   ],
+   "rows": "circular-indet-flat-4-1 58005:8526 32,26 40x40;circular-indet-flat-8-1 58005:8529 96,24 44x44;circular-indet-wave-4-1 58005:8532 164,22 48x48;circular-indet-wave-8-1 58005:8535 236,20 52x52;circular-indet-flat-4-2 58005:8538 32,93 40x40;circular-indet-flat-8-2 58005:8541 96,91 44x44;circular-indet-wave-4-2 58005:8544 164,89 48x48;circular-indet-wave-8-2 58005:8547 236,87 52x52"
+  },
+  "loading": {
+   "node": "58005:8555",
+   "file": "_frames/loading.png",
+   "size": [
+    352,
+    462
+   ],
+   "rows": "loading-1-plain 58005:8556 113,12 48x48;loading-1-container 58005:8559 198,12 48x48;loading-2-plain 58005:8563 113,77 48x48;loading-2-container 58005:8566 198,77 48x48;loading-3-plain 58005:8570 113,142 48x48;loading-3-container 58005:8573 198,142 48x48;loading-4-plain 58005:8577 113,207 48x48;loading-4-container 58005:8580 198,207 48x48;loading-5-plain 58005:8584 113,272 48x48;loading-5-container 58005:8587 198,272 48x48;loading-6-plain 58005:8591 113,337 48x48;loading-6-container 58005:8594 198,337 48x48;loading-7-plain 58005:8598 113,402 48x48;loading-7-container 58005:8601 198,402 48x48"
+  }
+ },
+ "note": "Indeterminate Step frames are reproduced by freezing the animation at the kit's geometry (linear: active frames; circular: the 10% / 50% arcs rotated +100\u00b0 / \u221260\u00b0). The circular arc lengths and track starts are the kit's keyframes (see geometry.ts).",
+ "exceptions": {
+  "linear-wave-4-100": {
+   "allowedDiffPixels": 20,
+   "allowedDiffReason": "Kit slip: the Wave \u00b7 4 dp \u00b7 100% active line runs to x=404 (its render bounds are 406 wide), 2px past the frame, while Flat 4 dp, Flat 8 dp and Wave 8 dp at 100% all stop at width \u2212 thickness/2. We end at 402 like the others; the 20 drift px are the kit's cap beyond the frame edge (css x 404.5\u2013406.5)."
+  }
+ }
+}

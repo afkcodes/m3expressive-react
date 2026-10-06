@@ -13,6 +13,20 @@ export interface ForceStateValue {
   focusRing?: boolean;
   /** Frozen ripple blob from the Figma Pressed variant, in container-local px. */
   ripplePath?: string;
+  /** Frozen progress-indicator frame (the kit's still frames of animated indicators). */
+  progress?: ForcedProgressFrame;
+}
+
+export interface ForcedProgressFrame {
+  /** Wave travel: px (linear) or degrees (circular). */
+  phase?: number;
+  /** Linear indeterminate: active centre-line frames, px. */
+  actives?: [number, number][];
+  /** Circular indeterminate: the determinate arc for `value`, rotated by `rotation` degrees. */
+  value?: number;
+  rotation?: number;
+  /** Loading indicator: shape index (0-based). */
+  step?: number;
 }
 
 const ForceStateContext = createContext<ForceStateValue>({});

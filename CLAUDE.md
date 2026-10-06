@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar.
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -135,6 +135,14 @@ FAB menu, split button, button groups.
   the first baseline at ascent × size (14/20 → 13.0) instead of half-leading + ascent (≈14.83 in
   CSS); compare glyph outlines from an SVG export when text sits ~2px off, then apply
   `legacyLeading.shift(size, lineHeight)` from textBox.ts. Measured, not guessed.
+- **Animated components' still frames** (progress Step variants, wave phases, loading shapes):
+  freeze the real renderer at the kit's geometry through `ForceState progress={…}` (testing only);
+  never fork the drawing code for tests. Derive geometry from the SVG export with scripts: find
+  round caps (two cubics whose ends are `thickness` apart around a common centre), fit vector
+  corner radii as circular arcs (Figma clamps a too-large radius to the shorter segment), and
+  check whether the kit's numbers are a formula or hand-drawn keyframes before "fixing" them.
+- The Playwright config emulates `prefers-reduced-motion: reduce`; tests about motion must
+  `page.emulateMedia({ reducedMotion: 'no-preference' })` first.
 - Focused variants that show a focus indicator outside the frame don't clip, so their shadows
   have no spread (`levelNNoSpread`) — cards, FABs. Check every Focused variant's shadow.
 

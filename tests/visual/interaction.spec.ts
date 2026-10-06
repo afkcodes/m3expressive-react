@@ -617,3 +617,70 @@ test('snackbar (live): show via host, action runs', async ({ page }) => {
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-undo', '1');
 });
+
+// ── Progress: value changes spring to the kit's geometry; waves travel unless reduced motion ─
+test.describe('progress (live)', () => {
+  const prog = JSON.parse(readFileSync(join(REFS_DIR, 'progress/manifest.json'), 'utf8')) as Manifest;
+  const check = async (page: Page, target: ReturnType<Page['locator']>, name: string) => {
+    const v = prog.variants[name]!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${name}.png`));
+    const r = compareImages(ref, await captureRegion(page, target, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  };
+  /** ProgressAnimationSpec (no bounce, stiffness 50) settles in ≈1.3 s. */
+  const SPRING_SETTLE = 2000;
+  // The suite defaults to reduced motion (playwright.config); these tests are about motion.
+  test.beforeEach(async ({ page }) => page.emulateMedia({ reducedMotion: 'no-preference' }));
+
+  for (const kind of ['linear', 'circular'] as const) {
+    test(`${kind}: value change animates and lands on the kit frame`, async ({ page }) => {
+      await page.goto(`/fixture/progress/live-${kind}`);
+      const node = page.locator('[data-fixture-node]');
+      const bar = node.getByRole('progressbar');
+      const [from, to] = kind === 'linear' ? [50, 80] : [30, 80];
+      await expect(bar).toHaveAttribute('aria-valuenow', String(from));
+      await check(page, node, `${kind}-flat-4-${from}`);
+      await page.getByRole('button', { name: `${to}%` }).click();
+      await expect(bar).toHaveAttribute('aria-valuenow', String(to));
+      await page.waitForTimeout(250);
+      const mid = await captureRegion(page, node, prog.variants[`${kind}-flat-4-${to}`]!.renderBounds!);
+      const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${to}.png`));
+      expect.soft(compareImages(ref, mid, { background: [247, 242, 250] }).diffPixels, 'mid-spring frame differs from the target').toBeGreaterThan(0);
+      await page.waitForTimeout(SPRING_SETTLE);
+      await check(page, node, `${kind}-flat-4-${to}`);
+    });
+  }
+
+  for (const kind of ['linear', 'circular'] as const) {
+    test(`${kind} wave: travels; static (= kit) under reduced motion`, async ({ page }) => {
+      const name = `${kind}-wave-4-50`;
+      const rb = prog.variants[name]!.renderBounds!;
+      await page.goto(`/fixture/progress/live-wave-${kind}`);
+      const node = page.locator('[data-fixture-node]');
+      const a = await captureRegion(page, node, rb);
+      await page.waitForTimeout(300);
+      const b = await captureRegion(page, node, rb);
+      expect.soft(a.equals(b), 'wave moves').toBe(false);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.reload();
+      await page.waitForTimeout(300);
+      const c = await captureRegion(page, node, rb);
+      await page.waitForTimeout(300);
+      expect.soft(c.equals(await captureRegion(page, node, rb)), 'reduced motion: still').toBe(true);
+      await check(page, node, name);
+    });
+  }
+
+  test('indeterminate: no value, animates', async ({ page }) => {
+    await page.goto('/fixture/progress/live-indeterminate');
+    for (const label of ['Loading linear', 'Loading circular', 'Loading shape']) {
+      const bar = page.getByRole('progressbar', { name: label });
+      await expect(bar).toBeVisible();
+      expect.soft(await bar.getAttribute('aria-valuenow'), `${label}: indeterminate`).toBeNull();
+      const before = await bar.screenshot();
+      await page.waitForTimeout(200);
+      expect.soft(before.equals(await bar.screenshot()), `${label}: animates`).toBe(false);
+    }
+  });
+});
