@@ -1,0 +1,397 @@
+{
+  "component": "snackbar",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "examples": {
+      "node": "53977:34279",
+      "file": "_frames/examples.png",
+      "origin": [
+        -11,
+        -7
+      ]
+    },
+    "action": {
+      "node": "53977:33615",
+      "file": "_frames/action.png"
+    },
+    "close": {
+      "node": "53977:33628",
+      "file": "_frames/close.png"
+    }
+  },
+  "variants": {
+    "snackbar-long-2-close": {
+      "node": "53977:34280",
+      "size": [
+        344,
+        112
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 364,
+        "y": 312
+      },
+      "renderBounds": [
+        -9,
+        -5,
+        364,
+        132
+      ],
+      "refNote": "left trimmed (neighbour snackbar-long-2-noclose); top trimmed (neighbour snackbar-action-2-close)",
+      "allowedDiffPixels": 822,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-long-2-noclose": {
+      "node": "53977:34281",
+      "size": [
+        344,
+        112
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 0,
+        "y": 312
+      },
+      "renderBounds": [
+        -11,
+        -5,
+        364,
+        132
+      ],
+      "refNote": "right trimmed (neighbour snackbar-long-2-close); top trimmed (neighbour snackbar-action-2-noclose)",
+      "allowedDiffPixels": 822,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-action-2-close": {
+      "node": "53977:34282",
+      "size": [
+        344,
+        68
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 364,
+        "y": 224
+      },
+      "renderBounds": [
+        -9,
+        -5,
+        364,
+        86
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-long-2-close); left trimmed (neighbour snackbar-action-2-noclose); top trimmed (neighbour snackbar-text-2-close)",
+      "allowedDiffPixels": 361,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-action-2-noclose": {
+      "node": "53977:34283",
+      "size": [
+        344,
+        68
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 0,
+        "y": 224
+      },
+      "renderBounds": [
+        -11,
+        -5,
+        364,
+        86
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-long-2-close); right trimmed (neighbour snackbar-action-2-close); top trimmed (neighbour snackbar-text-2-noclose)",
+      "allowedDiffPixels": 361,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-text-2-close": {
+      "node": "53977:34284",
+      "size": [
+        344,
+        68
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 364,
+        "y": 136
+      },
+      "renderBounds": [
+        -9,
+        -5,
+        364,
+        86
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-action-2-close); left trimmed (neighbour snackbar-text-2-noclose); top trimmed (neighbour snackbar-action-1-close)"
+    },
+    "snackbar-text-2-noclose": {
+      "node": "53977:34285",
+      "size": [
+        344,
+        68
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 0,
+        "y": 136
+      },
+      "renderBounds": [
+        -11,
+        -5,
+        364,
+        86
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-action-2-close); right trimmed (neighbour snackbar-text-2-close); top trimmed (neighbour snackbar-action-1-noclose)"
+    },
+    "snackbar-action-1-close": {
+      "node": "53977:34286",
+      "size": [
+        344,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 364,
+        "y": 68
+      },
+      "renderBounds": [
+        -9,
+        -5,
+        364,
+        66
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-text-2-close); left trimmed (neighbour snackbar-action-1-noclose); top trimmed (neighbour snackbar-text-1-close)",
+      "allowedDiffPixels": 361,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-action-1-noclose": {
+      "node": "53977:34287",
+      "size": [
+        344,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 0,
+        "y": 68
+      },
+      "renderBounds": [
+        -11,
+        -5,
+        364,
+        66
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-text-2-close); right trimmed (neighbour snackbar-action-1-close); top trimmed (neighbour snackbar-text-1-noclose)",
+      "allowedDiffPixels": 361,
+      "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+    },
+    "snackbar-text-1-close": {
+      "node": "53977:34288",
+      "size": [
+        344,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 364,
+        "y": 0
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        364,
+        68
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-action-1-close); left trimmed (neighbour snackbar-text-1-noclose)"
+    },
+    "snackbar-text-1-noclose": {
+      "node": "53977:34289",
+      "size": [
+        344,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "examples",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -11,
+        -7,
+        364,
+        68
+      ],
+      "refNote": "bottom trimmed (neighbour snackbar-action-1-close); right trimmed (neighbour snackbar-text-1-close)"
+    },
+    "action-enabled": {
+      "node": "53977:33616",
+      "size": [
+        59,
+        40
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "action",
+        "x": 55,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+    },
+    "action-hovered": {
+      "node": "53977:33619",
+      "size": [
+        59,
+        40
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "action",
+        "x": 134,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+    },
+    "action-focused": {
+      "node": "53977:33622",
+      "size": [
+        59,
+        40
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "action",
+        "x": 213,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+    },
+    "action-pressed": {
+      "node": "53977:33625",
+      "size": [
+        59,
+        40
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "action",
+        "x": 292,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+    },
+    "close-enabled": {
+      "node": "53977:33629",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "close",
+        "x": 77,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "close-hovered": {
+      "node": "53977:33633",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "close",
+        "x": 145,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "close-focused": {
+      "node": "53977:33637",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "close",
+        "x": 213,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "close-pressed": {
+      "node": "53977:33641",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#322F35",
+      "crop": {
+        "frame": "close",
+        "x": 281,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    }
+  }
+}

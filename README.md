@@ -87,6 +87,8 @@ line to flip if you'd rather follow the M3 guidelines:
 | Assist chip, "Label & favicon" | third-party trademark image as placeholder content | not reproduced (any 18px image works) |
 | Input chip, avatar + selected + dragged | doesn't clip → shadow without spread | clipped like its siblings — we follow this |
 | Plain tooltip, multi-line | variant hidden in the kit (empty export) | wraps at 200px per M3; not pixel-referenced |
+| Snackbar set | hidden in the kit; the visible "Examples" instances are referenced | — |
+| Snackbar action in examples | fixed 59px frame (label not hugged; "Longer Action" clipped) | hugging text button — we follow this |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

@@ -605,3 +605,15 @@ test('tooltip (live): plain on hover, rich on hover', async ({ page }) => {
   await page.getByRole('button', { name: 'Details' }).hover();
   await expect(page.getByText('Supporting line text lorem ipsum dolor sit amet, consectetur')).toBeVisible();
 });
+
+// ── Snackbar host: show, action, dismiss ────────────────────────────────────────────────────
+test('snackbar (live): show via host, action runs', async ({ page }) => {
+  await page.goto('/fixture/snackbar/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.getByRole('button', { name: 'Archive' }).click();
+  await expect(page.getByText('Message archived')).toBeVisible();
+  const box = (await page.getByText('Message archived').locator('xpath=ancestor::div[1]').boundingBox())!;
+  expect.soft(box.height, 'single line = 48px').toBe(48);
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-undo', '1');
+});

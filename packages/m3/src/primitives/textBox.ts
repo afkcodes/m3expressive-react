@@ -22,3 +22,19 @@ export const textBox = stylex.create({
     },
   },
 });
+
+/**
+ * Figma's legacy line height (older text layers in the kit, e.g. snackbar and list supporting
+ * text): the first baseline sits at ascent × size instead of half-leading + ascent, so glyphs
+ * render higher than in CSS. Measured from the kit's glyph outlines (14/20 → baseline 13.0 vs
+ * 14.83 in CSS with our Roboto metrics). Shifts the text without changing layout.
+ */
+const ASCENT_CSS = 0.9832; // fonts.css ascent-override
+const DESCENT_CSS = 0.2941; // fonts.css descent-override
+const ASCENT_FIGMA = 0.927734; // Roboto hhea ascender (1900 / 2048)
+export const legacyLeading = stylex.create({
+  shift: (fontSize: number, lineHeight: number) => ({
+    position: 'relative',
+    top: `${-((lineHeight - (ASCENT_CSS + DESCENT_CSS) * fontSize) / 2 + (ASCENT_CSS - ASCENT_FIGMA) * fontSize)}px`,
+  }),
+});

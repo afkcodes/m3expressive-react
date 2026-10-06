@@ -1,0 +1,84 @@
+{
+ "component": "snackbar",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "examples": {
+   "node": "53977:34279",
+   "file": "_frames/examples.png",
+   "size": [
+    730,
+    446
+   ],
+   "origin": [
+    -11,
+    -7
+   ],
+   "rows": "snackbar-long-2-close 53977:34280 364,312 344x112 rb-11,-7,366,134;snackbar-long-2-noclose 53977:34281 0,312 344x112 rb-11,-7,366,134;snackbar-action-2-close 53977:34282 364,224 344x68 rb-11,-7,366,90;snackbar-action-2-noclose 53977:34283 0,224 344x68 rb-11,-7,366,90;snackbar-text-2-close 53977:34284 364,136 344x68 rb-11,-7,366,90;snackbar-text-2-noclose 53977:34285 0,136 344x68 rb-11,-7,366,90;snackbar-action-1-close 53977:34286 364,68 344x48 rb-11,-7,366,70;snackbar-action-1-noclose 53977:34287 0,68 344x48 rb-11,-7,366,70;snackbar-text-1-close 53977:34288 364,0 344x48 rb-11,-7,366,70;snackbar-text-1-noclose 53977:34289 0,0 344x48 rb-11,-7,366,70",
+   "setBorder": false
+  },
+  "action": {
+   "node": "53977:33615",
+   "file": "_frames/action.png",
+   "size": [
+    406,
+    80
+   ],
+   "background": "#322F35",
+   "rows": "action-enabled 53977:33616 55,20 59x40;action-hovered 53977:33619 134,20 59x40;action-focused 53977:33622 213,20 59x40;action-pressed 53977:33625 292,20 59x40"
+  },
+  "close": {
+   "node": "53977:33628",
+   "file": "_frames/close.png",
+   "size": [
+    406,
+    88
+   ],
+   "background": "#322F35",
+   "rows": "close-enabled 53977:33629 77,20 48x48;close-hovered 53977:33633 145,20 48x48;close-focused 53977:33637 213,20 48x48;close-pressed 53977:33641 281,20 48x48"
+  }
+ },
+ "note": "The Snackbar set itself is hidden in the kit; the visible \"Examples\" instances (with their text overrides) are the references.",
+ "exceptions": {
+  "snackbar-long-2-close": {
+   "allowedDiffPixels": 822,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "snackbar-long-2-noclose": {
+   "allowedDiffPixels": 822,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "snackbar-action-2-close": {
+   "allowedDiffPixels": 361,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "snackbar-action-2-noclose": {
+   "allowedDiffPixels": 361,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "snackbar-action-1-close": {
+   "allowedDiffPixels": 361,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "snackbar-action-1-noclose": {
+   "allowedDiffPixels": 361,
+   "allowedDiffReason": "Kit slip: the examples' action buttons keep the building block's fixed 59px width, so \"Action\" (42px) starts at the 12px padding instead of being hugged, and \"Longer Action\" (89px) is clipped by the frame. Our action hugs its label (M3); the label and everything right of the text shift accordingly."
+  },
+  "action-enabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+  },
+  "action-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+  },
+  "action-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+  },
+  "action-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing (1\u20132 px, \u0394 \u2264 45/255) in the label-large \"Label\"; geometry identical."
+  }
+ }
+}

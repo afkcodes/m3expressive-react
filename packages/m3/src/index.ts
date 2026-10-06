@@ -42,6 +42,8 @@ export { SegmentedButton, SegmentedButtonItem } from './components/SegmentedButt
 export { Radio, RadioGroup } from './components/Radio/index.ts';
 export { Switch } from './components/Switch/index.ts';
 export { Divider } from './components/Divider/index.ts';
+export { Snackbar, SnackbarAction, SnackbarClose, SnackbarProvider, useSnackbar } from './components/Snackbar/index.ts';
+export type { SnackbarProps, SnackbarActionProps, SnackbarCloseProps, SnackbarProviderProps, ShowSnackbarOptions } from './components/Snackbar/index.ts';
 export { Tooltip, RichTooltip, PlainTooltipSurface, RichTooltipSurface } from './components/Tooltip/index.ts';
 export type { TooltipProps, RichTooltipProps, PlainTooltipSurfaceProps, RichTooltipSurfaceProps } from './components/Tooltip/index.ts';
 export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipAvatarPlaceholder, ChipGroup } from './components/Chip/index.ts';

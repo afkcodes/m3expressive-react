@@ -9,7 +9,8 @@ Export hygiene, applied automatically (CLAUDE.md §8):
 
 usage: python3 -I scripts/build-manifest.py spec.json
 spec.json: {"component", "fileKey", "background", "frames": {name: {"node", "file", "size": [w,h],
-            "origin": [x,y]?, "background"?: per-frame override, "rows": "row;row;..."}}}
+            "origin": [x,y]?, "background"?: per-frame override, "setBorder"?: false for non-set frames,
+            "rows": "row;row;..."}}}
 Names: rows' <key> is mapped by the optional "rename" dict, else used verbatim.
 Optional "exceptions": {name: {"allowedDiffPixels": n, "allowedDiffReason": "..."}} — measured,
 documented residuals (CLAUDE.md §9); merged into the variant so regeneration never drops them.
@@ -52,11 +53,13 @@ for fname, f in spec['frames'].items():
         # frame image bounds (origin may be negative when shadows overflow)
         x0, y0 = max(x0, ox), max(y0, oy)
         x1, y1 = min(x1, ox + W), min(y1, oy + H)
-        # set border: dashed stroke 1px inside the set edge
-        if x <= 0.5: x0 = max(x0, 1); notes.append('left column under set border excluded')
-        if y <= 0.5: y0 = max(y0, 1); notes.append('top row under set border excluded')
-        if x + w >= W - 0.5: x1 = min(x1, W - 1); notes.append('right column under set border excluded')
-        if y + h >= H - 0.5: y1 = min(y1, H - 1); notes.append('bottom row under set border excluded')
+        # set border: dashed stroke 1px inside the set edge (component sets only; "setBorder": false
+        # for plain frames / sections)
+        border = f.get('setBorder', True)
+        if border and x <= 0.5: x0 = max(x0, 1); notes.append('left column under set border excluded')
+        if border and y <= 0.5: y0 = max(y0, 1); notes.append('top row under set border excluded')
+        if border and x + w >= W - 0.5: x1 = min(x1, W - 1); notes.append('right column under set border excluded')
+        if border and y + h >= H - 0.5: y1 = min(y1, H - 1); notes.append('bottom row under set border excluded')
         # neighbours: trim the side that intersects (prefer vertical trims for row layouts)
         for other, a0, b0, a1, b1 in areas:
             if other == name: continue

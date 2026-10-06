@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Button, IconButton, M3Provider, RichTooltip, Tooltip, typescale, type ColorSchemeMode } from '@m3x/react';
+import { Button, IconButton, M3Provider, RichTooltip, SnackbarProvider, Tooltip, typescale, useSnackbar, type ColorSchemeMode } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import buttonAssets from '../../../../figma/button/assets.json';
 
@@ -17,12 +17,25 @@ const Stars = () => (
   </svg>
 );
 
-/** Tooltips (and later snackbar, menus, dialogs, sheets) — everything that floats. */
+function SnackbarButtons() {
+  const snackbar = useSnackbar();
+  return (
+    <>
+      <Button variant="tonal" onClick={() => snackbar.show('Payment scheduled')}>Simple</Button>
+      <Button variant="tonal" onClick={() => snackbar.show('Message archived', { action: { label: 'Undo' } })}>With action</Button>
+      <Button variant="tonal" onClick={() => snackbar.show('Connection lost', { withClose: true, action: { label: 'Retry' } })}>Action + close</Button>
+      <Button variant="tonal" onClick={() => snackbar.show('Your statement for September is ready to download', { stacked: true, action: { label: 'Open statement' } })}>Longer action</Button>
+    </>
+  );
+}
+
+/** Tooltips, snackbars (and later menus, dialogs, sheets) — everything that floats. */
 export function OverlaysPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   return (
     <M3Provider colorScheme={scheme}>
+      <SnackbarProvider>
       <main {...stylex.props(s.page)}>
         <p style={{ margin: 0 }}><a href="/" style={{ color: 'inherit' }}>← all</a></p>
         <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>Overlays playground</h1>
@@ -47,7 +60,12 @@ export function OverlaysPlayground() {
             Funds are released in stages once each milestone is approved.
           </RichTooltip>
         </section>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Snackbars — queued, auto-dismiss</h2>
+        <section {...stylex.props(s.stage)}>
+          <SnackbarButtons />
+        </section>
       </main>
+      </SnackbarProvider>
     </M3Provider>
   );
 }
