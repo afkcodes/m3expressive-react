@@ -1,0 +1,1101 @@
+{
+  "component": "shapes",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": {
+      "node": "58548:7248",
+      "file": "_frames/shape-set.png",
+      "svg": "_frames/shape-set.svg"
+    }
+  },
+  "variants": {
+    "circle": {
+      "node": "58548:7249",
+      "figmaName": "Shape=Circle",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 0,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "square": {
+      "node": "58548:7251",
+      "figmaName": "Shape=Square",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 480,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "slanted": {
+      "node": "58548:7253",
+      "figmaName": "Shape=Slanted",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        39.0,
+        322.0,
+        302.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 960,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            40,
+            320,
+            300
+          ]
+        }
+      ]
+    },
+    "arch": {
+      "node": "58548:7255",
+      "figmaName": "Shape=Arch",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        34.0,
+        34.0,
+        312.0,
+        312.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1440,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            35,
+            35,
+            310,
+            310
+          ]
+        }
+      ]
+    },
+    "fan": {
+      "node": "58548:7257",
+      "figmaName": "Shape=Fan",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        39.0,
+        39.0,
+        302.0,
+        302.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1920,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            40,
+            40,
+            300,
+            300
+          ]
+        }
+      ]
+    },
+    "arrow": {
+      "node": "58548:7259",
+      "figmaName": "Shape=Arrow",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        44.0,
+        322.0,
+        292.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2400,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            45,
+            320,
+            290
+          ]
+        }
+      ]
+    },
+    "semi-circle": {
+      "node": "58548:7261",
+      "figmaName": "Shape=Semicircle",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        89.0,
+        322.0,
+        202.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2880,
+        "y": 0
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            90,
+            320,
+            200
+          ]
+        }
+      ]
+    },
+    "oval": {
+      "node": "58548:7263",
+      "figmaName": "Shape=Oval",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        39.0,
+        39.0,
+        302.0,
+        302.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 0,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            40,
+            40,
+            300,
+            300
+          ]
+        }
+      ]
+    },
+    "pill": {
+      "node": "58548:7265",
+      "figmaName": "Shape=Pill",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        31.0,
+        31.0,
+        318.0,
+        318.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 480,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            32,
+            32,
+            316,
+            316
+          ]
+        }
+      ]
+    },
+    "triangle": {
+      "node": "58548:7267",
+      "figmaName": "Shape=Triangle",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        31.0,
+        46.0,
+        318.0,
+        288.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 960,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            32,
+            47,
+            316,
+            286
+          ]
+        }
+      ]
+    },
+    "diamond": {
+      "node": "58548:7269",
+      "figmaName": "Shape=Diamond",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        55.0,
+        29.0,
+        270.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1440,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            56,
+            30,
+            268,
+            320
+          ]
+        }
+      ]
+    },
+    "clam-shell": {
+      "node": "58548:7271",
+      "figmaName": "Shape=Hexagon",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        3.0,
+        62.0,
+        374.0,
+        256.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1920,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            4,
+            63,
+            372,
+            254
+          ]
+        }
+      ]
+    },
+    "pentagon": {
+      "node": "58548:7273",
+      "figmaName": "Shape=Pentagon",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        32.0,
+        37.0,
+        317.0,
+        307.5
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2400,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            33,
+            38,
+            314.663,
+            305.127
+          ]
+        }
+      ]
+    },
+    "gem": {
+      "node": "58548:7275",
+      "figmaName": "Shape=Gem",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        43.0,
+        39.0,
+        294.0,
+        304.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2880,
+        "y": 486
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            44,
+            40,
+            292,
+            301.669
+          ]
+        }
+      ]
+    },
+    "very-sunny": {
+      "node": "58548:7277",
+      "figmaName": "Shape=Very sunny",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 0,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "sunny": {
+      "node": "58548:7279",
+      "figmaName": "Shape=Sunny",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 480,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "cookie-4-sided": {
+      "node": "58548:7281",
+      "figmaName": "Shape=4-sided cookie",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        43.0,
+        43.0,
+        294.0,
+        294.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 960,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            44,
+            44,
+            292,
+            292
+          ]
+        }
+      ]
+    },
+    "cookie-6-sided": {
+      "node": "58548:7283",
+      "figmaName": "Shape=6-sided cookie",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        41.0,
+        31.0,
+        298.0,
+        318.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1440,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            42,
+            32,
+            296,
+            316
+          ]
+        }
+      ]
+    },
+    "cookie-7-sided": {
+      "node": "58548:7285",
+      "figmaName": "Shape=7-sided cookie",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        31.0,
+        322.0,
+        318.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1920,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            32,
+            320,
+            316
+          ]
+        }
+      ]
+    },
+    "cookie-9-sided": {
+      "node": "58548:7287",
+      "figmaName": "Shape=9-sided cookie",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        27.0,
+        28.5,
+        326.0,
+        322.5
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2400,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            28,
+            29.9,
+            324,
+            319.95
+          ]
+        }
+      ]
+    },
+    "cookie-12-sided": {
+      "node": "58548:7289",
+      "figmaName": "Shape=12-sided cookie",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2880,
+        "y": 972
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "ghostish": {
+      "node": "58548:7291",
+      "figmaName": "Shape=Ghost-ish",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        39.0,
+        39.0,
+        302.0,
+        302.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 0,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            40,
+            40,
+            300,
+            300
+          ]
+        }
+      ]
+    },
+    "clover-4-leaf": {
+      "node": "58548:7293",
+      "figmaName": "Shape=4-leaf clover",
+      "size": [
+        381,
+        380
+      ],
+      "renderBounds": [
+        41.0,
+        41.0,
+        298.0,
+        298.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 480,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            42,
+            42,
+            296,
+            296
+          ]
+        }
+      ]
+    },
+    "clover-8-leaf": {
+      "node": "58548:7295",
+      "figmaName": "Shape=8-leaf clover",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 961,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "burst": {
+      "node": "58548:7297",
+      "figmaName": "Shape=Burst",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        23.0,
+        23.0,
+        334.0,
+        334.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1441,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            24,
+            24,
+            332,
+            332
+          ]
+        }
+      ]
+    },
+    "soft-burst": {
+      "node": "58548:7299",
+      "figmaName": "Shape=Soft burst",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        24.0,
+        322.0,
+        332.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1921,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            25,
+            320,
+            330
+          ]
+        }
+      ]
+    },
+    "boom": {
+      "node": "58548:7301",
+      "figmaName": "Shape=Boom",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        25.0,
+        25.0,
+        330.0,
+        330.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2401,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            26,
+            26,
+            328,
+            328
+          ]
+        }
+      ]
+    },
+    "soft-boom": {
+      "node": "58548:7303",
+      "figmaName": "Shape=Soft boom",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        33.0,
+        33.0,
+        314.0,
+        314.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2881,
+        "y": 1458
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            34,
+            34,
+            312,
+            312
+          ]
+        }
+      ],
+      "allowedDiffPixels": 14,
+      "allowedDiffReason": "The kit's Soft boom vector has coincident internal edges that render as a hairline seam. Figma's own export shows it too; Chrome draws the same seam with slightly different coverage along the line. Faithful to Figma; the outline itself matches."
+    },
+    "flower": {
+      "node": "58548:7305",
+      "figmaName": "Shape=Flower",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 0,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "puffy": {
+      "node": "58548:7307",
+      "figmaName": "Shape=Puffy",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        8.0,
+        45.0,
+        365.0,
+        289.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 480,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            9,
+            46,
+            363,
+            287
+          ]
+        }
+      ]
+    },
+    "puffy-diamond": {
+      "node": "58548:7309",
+      "figmaName": "Shape=Puffy diamond",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        29.0,
+        322.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 960,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            30,
+            320,
+            320
+          ]
+        }
+      ]
+    },
+    "pixel-circle": {
+      "node": "58548:7311",
+      "figmaName": "Shape=Pixel Circle",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        33.0,
+        33.0,
+        314.0,
+        314.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1440,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            34,
+            34,
+            312,
+            312
+          ]
+        }
+      ]
+    },
+    "pixel-triangle": {
+      "node": "58548:7313",
+      "figmaName": "Shape=Pixel triangle",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        65.0,
+        29.0,
+        250.0,
+        322.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 1920,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            66,
+            30,
+            248,
+            320
+          ]
+        }
+      ]
+    },
+    "bun": {
+      "node": "58548:7315",
+      "figmaName": "Shape=Bun",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        37.5,
+        33.0,
+        305.0,
+        314.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2400,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            38.875,
+            34,
+            302.25,
+            312
+          ]
+        }
+      ]
+    },
+    "heart": {
+      "node": "58548:7317",
+      "figmaName": "Shape=Heart",
+      "size": [
+        380,
+        380
+      ],
+      "renderBounds": [
+        29.0,
+        46.0,
+        322.0,
+        288.0
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 2880,
+        "y": 1944
+      },
+      "layers": [
+        {
+          "name": "shape",
+          "box": [
+            30,
+            47,
+            320,
+            286
+          ]
+        }
+      ]
+    }
+  }
+}
