@@ -71,6 +71,7 @@ export type { DialogProps, DialogSurfaceProps } from './components/Dialog/index.
 export { Carousel, CarouselItem } from './components/Carousel/index.ts';
 export type { CarouselLayout, CarouselProps } from './components/Carousel/index.ts';
 export * from './components/DatePicker/index.ts';
+export * from './components/TimePicker/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

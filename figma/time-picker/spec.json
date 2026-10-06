@@ -1,0 +1,108 @@
+{
+ "component": "time-picker",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Date & time pickers page, time half (55412:17060): building blocks (hour cell, clock faces, time selector, keyboard field, period selectors), dial pickers (12 / 24 hour, vertical / horizontal) and keyboard pickers. The 24 hour-line variants are stacked on top of each other in their set (no isolated crop): they are covered by the clock faces and the selected hour cell. The horizontal 12-hour dial sits off the pixel grid (x 368.33) and uses an individual export.",
+ "frames": {
+  "blocks": {
+   "node": "52949:28082",
+   "file": "_frames/blocks.png",
+   "size": [
+    1419,
+    696
+   ],
+   "setBorder": false,
+   "rows": "hour-sel-focused 52949:28109 380,100 48x48;hour-sel-hovered 52949:28100 312,100 48x48;hour-sel-enabled 52949:28095 244,100 48x48 rb-26.5,0,74.5,68;hour-unsel-focused 52949:28105 176,100 48x48;hour-unsel-hovered 52949:28091 108,100 48x48;hour-unsel-enabled 52949:28087 40,100 48x48;input-sel 52949:28118 1040,200 96x80;input-unsel 52949:28115 1040,100 96x80;kbinput-sel 52949:28122 1196,200 96x95;kbinput-unsel 52949:28127 1196,100 96x95;period-pm-focused 52949:28168 159.5,476 52x80;period-pm-hovered 52949:28161 99.5,476 52x80;period-pm-enabled 52949:28154 39.5,476 52x80;period-am-focused 52949:28147 159.5,376 52x80;period-am-hovered 52949:28140 99.5,376 52x80;period-am-enabled 52949:28133 39.5,376 52x80;periodh-am-enabled 52949:28176 272,376 216x38;periodh-am-hovered 52949:28183 272,422 216x38;periodh-am-focused 52949:28190 272,468 216x38;periodh-pm-enabled 52949:28197 272,526 216x38;periodh-pm-hovered 52949:28204 272,572 216x38 rb0,0,216,39;periodh-pm-focused 52949:28211 272,618 216x38;clock-12 54504:33970 468,80 256x256;clock-24 54504:34071 744,80 256x256"
+  },
+  "dial": {
+   "node": "52949:27916",
+   "file": "_frames/dial.png",
+   "size": [
+    960,
+    1119
+   ],
+   "rows": "dial-24-h 52949:28014 368,579 572x384;dial-24-v 52949:27946 20,579 328x520;dial-12-v 52949:27917 20,20 328x520"
+  },
+  "dial-12-h": {
+   "node": "52949:27985",
+   "file": "_frames/ind/dial-12-h.png",
+   "size": [
+    572,
+    384
+   ],
+   "setBorder": false,
+   "rows": "dial-12-h 52949:27985 0,0 572x384"
+  },
+  "keyboard": {
+   "node": "52949:28053",
+   "file": "_frames/keyboard.png",
+   "size": [
+    368,
+    846
+   ],
+   "rows": "keyboard-24 52949:28069 20,583 264x243;keyboard-12 52949:28054 20,20 328x243"
+  }
+ },
+ "exceptions": {
+  "hour-sel-enabled": {
+   "allowedDiffPixels": 108,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "hour-sel-hovered": {
+   "allowedDiffPixels": 19,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "hour-sel-focused": {
+   "allowedDiffPixels": 19,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "clock-12": {
+   "allowedDiffPixels": 53,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "clock-24": {
+   "allowedDiffPixels": 21,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "dial-12-v": {
+   "allowedDiffPixels": 53,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "dial-12-h": {
+   "allowedDiffPixels": 52,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "dial-24-v": {
+   "allowedDiffPixels": 24,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "dial-24-h": {
+   "allowedDiffPixels": 24,
+   "allowedDiffReason": "The clock hand's 2px line: the kit draws it from the dial centre + 0.5px past the selector's centre on the 12-hour dial (hour-line building block), but to the cell centre on the 24-hour dial; ours runs centre \u2192 selector centre. Only the line's edge pixels differ (Figma vs Chrome line raster)."
+  },
+  "periodh-am-focused": {
+   "allowedDiffPixels": 857,
+   "allowedDiffReason": "Kit inconsistency: the period selector's focused (and the horizontal PM hovered) variants inset their halves 1px inside the outline (labels 0.5\u20131px off, divider moved), while the enabled variants fill the box under the outline. We render the enabled geometry in every state."
+  },
+  "periodh-pm-hovered": {
+   "allowedDiffPixels": 395,
+   "allowedDiffReason": "Kit inconsistency: the period selector's focused (and the horizontal PM hovered) variants inset their halves 1px inside the outline (labels 0.5\u20131px off, divider moved), while the enabled variants fill the box under the outline. We render the enabled geometry in every state."
+  },
+  "periodh-pm-focused": {
+   "allowedDiffPixels": 395,
+   "allowedDiffReason": "Kit inconsistency: the period selector's focused (and the horizontal PM hovered) variants inset their halves 1px inside the outline (labels 0.5\u20131px off, divider moved), while the enabled variants fill the box under the outline. We render the enabled geometry in every state."
+  },
+  "period-pm-focused": {
+   "allowedDiffPixels": 34,
+   "allowedDiffReason": "Kit inconsistency: the period selector's focused (and the horizontal PM hovered) variants inset their halves 1px inside the outline (labels 0.5\u20131px off, divider moved), while the enabled variants fill the box under the outline. We render the enabled geometry in every state."
+  },
+  "period-am-focused": {
+   "allowedDiffPixels": 33,
+   "allowedDiffReason": "Kit inconsistency: the period selector's focused (and the horizontal PM hovered) variants inset their halves 1px inside the outline (labels 0.5\u20131px off, divider moved), while the enabled variants fill the box under the outline. We render the enabled geometry in every state."
+  },
+  "keyboard-12": {
+   "allowedDiffPixels": 1097,
+   "allowedDiffReason": "Kit slip: the 12-hour keyboard picker's hour field reads \"20\" next to a selected AM (no such 12-hour time); the fixture shows 08 AM \u2014 the two digits differ."
+  }
+ }
+}

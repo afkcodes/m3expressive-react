@@ -172,6 +172,12 @@ line to flip if you'd rather follow the M3 guidelines:
 | Input date picker | format hint drawn as input text (On Surface) | the field's placeholder (On Surface Variant, as Compose) — recorded exception |
 | Calendar rows | as many weeks as the month needs (modal); six weeks with the neighbouring days (docked) | — we follow the kit (Compose keeps six rows in the modal) |
 | Date picker motion | — | modal: the M3 dialog fade + scale; docked panel: fade + 8px drop on fast effects; full-screen range: fade + 24px rise |
+| Time picker values | 12-hour dials at 07 AM; the 12-hour keyboard picker reads "20" next to AM | fixtures use each frame's time; the keyboard field shows 08 AM — recorded exception |
+| Clock face | number cells hand-placed (inner 24-hour ring radius 70.7–77.4) | — we use the kit's cell positions at rest; in motion the selector follows the hand on Compose's radii (101 / 69) |
+| Clock hand | 12-hour: from the centre + 0.5px, 3px past the selector's centre; 24-hour: to the cell centre | centre → selector centre — recorded exceptions (line edge pixels) |
+| Period selector | focused variants inset their halves 1px (labels move 0.5–1px) | the enabled geometry in every state — recorded exceptions |
+| Hour-line building block | 24 angle variants stacked on top of each other | not fixtures (covered by the clock faces and the selected hour cell) |
+| Time picker motion | — | the hand rotates on the default spatial spring (Compose ClockDialModifier); hours ⇄ minutes cross-fade on default effects; the dialog uses the M3 dialog fade + scale |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

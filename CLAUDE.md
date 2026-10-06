@@ -11,7 +11,9 @@ hover / press / avatar, docked and full-screen views), Toolbars (floating horizo
 docked, standard / vibrant, toolbar-coloured building blocks, FAB collapse), Sheets (side standard / modal,
 bottom standard / modal with drag to dismiss), Dialogs (basic, list, scrollable list; with / without icon), Carousel (multi-browse, hero,
 centred hero, uncontained, multi-aspect, full screen; Compose keyline motion), Date pickers (modal day / year /
-input, docked day / month / year, full-screen range).
+input, docked day / month / year, full-screen range), Time pickers (dial vertical / horizontal,
+12 / 24 hour, keyboard, clock faces, period selectors). All pages done except XR and the deprecated
+navigation drawer (out of scope).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 

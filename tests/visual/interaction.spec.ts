@@ -1342,3 +1342,48 @@ test('date pickers (live): modal pick / keys / year / input, docked panel, full-
   await rp.getByRole('button', { name: 'Save' }).click();
   await expect(out('range')).toHaveText('2025-7-10..2025-7-14');
 });
+
+test('time picker (live): dial tap picks the hour then minutes; keyboard mode; Escape discards', async ({ page }) => {
+  await page.goto('/fixture/time-picker/live');
+  await page.evaluate(() => document.fonts.ready);
+  const out = page.locator('[data-time]');
+  const open = page.getByRole('button', { name: 'Pick time' });
+
+  await open.click();
+  const dialog = page.getByRole('dialog', { name: 'Select time' });
+  const dial = dialog.getByRole('slider', { name: 'Hour' });
+  await expect(dial).toHaveAttribute('aria-valuenow', '7');
+  // Tap 3 o'clock: the hour becomes 3 (PM kept), the dial moves on to minutes.
+  const b = (await dial.boundingBox())!;
+  await page.mouse.click(b.x + 128 + 101, b.y + 128);
+  const minutes = dialog.getByRole('slider', { name: 'Minute' });
+  await expect(minutes).toBeVisible();
+  // Tap 6 o'clock: 30 minutes. Arrow keys step it.
+  await page.mouse.click(b.x + 128, b.y + 128 + 101);
+  await expect(minutes).toHaveAttribute('aria-valuenow', '30');
+  await minutes.focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(minutes).toHaveAttribute('aria-valuenow', '31');
+  await dialog.getByRole('button', { name: 'OK' }).click();
+  await expect(out).toHaveText('15:31');
+
+  // Keyboard mode: type the hour (moves on to minutes), the minutes, pick AM.
+  await open.click();
+  await page.getByRole('button', { name: 'Switch to text input' }).click();
+  const kb = page.getByRole('dialog', { name: 'Enter time' });
+  await expect(kb.getByRole('textbox', { name: 'Hour' })).toBeFocused();
+  await page.keyboard.type('09');
+  await expect(kb.getByRole('textbox', { name: 'Minute' })).toBeFocused();
+  await page.keyboard.type('45');
+  await kb.getByRole('radio', { name: 'AM' }).click();
+  await kb.getByRole('button', { name: 'OK' }).click();
+  await expect(out).toHaveText('9:45');
+
+  // Escape discards.
+  await open.click();
+  const d2 = page.getByRole('dialog', { name: 'Select time' });
+  const b2 = (await d2.getByRole('slider', { name: 'Hour' }).boundingBox())!;
+  await page.mouse.click(b2.x + 128, b2.y + 128 - 101);
+  await page.keyboard.press('Escape');
+  await expect(out).toHaveText('9:45');
+});
