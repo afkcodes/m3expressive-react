@@ -1283,3 +1283,62 @@ test('carousel (live): items resize through the keylines as it scrolls; keys and
   expect(await geo()).toEqual([[16, 188], [212, 122], [342, 54]]);
   await expect(slides.first()).toHaveAttribute('aria-label', '1 of 8');
 });
+
+test('date pickers (live): modal pick / keys / year / input, docked panel, full-screen range', async ({ page }) => {
+  await page.goto('/fixture/date-picker/live');
+  await page.evaluate(() => document.fonts.ready);
+  const out = (k: string) => page.locator(`[data-${k}]`);
+
+  // Modal: the selected day holds the tab stop; arrows move it; a click selects; OK commits.
+  await page.getByRole('button', { name: 'Pick date' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  const day17 = dialog.getByRole('button', { name: 'July 17, 2025' });
+  await expect(day17).toHaveAttribute('tabindex', '0');
+  await day17.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(dialog.getByRole('button', { name: 'July 18, 2025' })).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(dialog.getByRole('button', { name: 'July 25, 2025' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(dialog.getByText('Fri, Jul 25')).toBeVisible();
+  // Next month, then the year list: picking a year returns to the days.
+  await dialog.getByRole('button', { name: 'Next month' }).click();
+  await expect(dialog.getByRole('grid', { name: 'August 2025' })).toBeVisible();
+  await dialog.getByRole('button', { name: /August 2025, select year/ }).click();
+  await dialog.getByRole('button', { name: '2027' }).click();
+  await expect(dialog.getByRole('grid', { name: 'August 2027' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'OK' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(out('date')).toHaveText('2025-7-25');
+
+  // Escape discards; the input mode parses typed dates.
+  await page.getByRole('button', { name: 'Pick date' }).click();
+  await dialog.getByRole('button', { name: 'July 1, 2025' }).click();
+  await page.keyboard.press('Escape');
+  await expect(out('date')).toHaveText('2025-7-25');
+  await page.getByRole('button', { name: 'Pick date' }).click();
+  await dialog.getByRole('button', { name: 'Switch to text input' }).click();
+  const field = dialog.getByRole('textbox', { name: 'Date' });
+  await field.fill('12/24/2025');
+  await dialog.getByRole('button', { name: 'OK' }).click();
+  await expect(out('date')).toHaveText('2025-12-24');
+
+  // Docked: the calendar button opens the panel under the field; a day + OK fills the field.
+  await page.getByRole('button', { name: 'Open calendar' }).click();
+  const panel = page.getByRole('dialog', { name: 'Choose date' });
+  await expect(panel).toBeVisible();
+  await panel.getByRole('button', { name: 'July 9, 2025' }).click();
+  await panel.getByRole('button', { name: 'OK' }).click();
+  await expect(out('docked')).toHaveText('2025-7-9');
+  await expect(page.getByRole('textbox', { name: 'Date' })).toHaveValue('7/9/2025');
+
+  // Range: start, then end; Save commits.
+  await page.getByRole('button', { name: 'Pick range' }).click();
+  const rp = page.getByRole('dialog');
+  await rp.getByRole('button', { name: 'July 10, 2025' }).click();
+  await rp.getByRole('button', { name: 'July 14, 2025' }).click();
+  await expect(rp.getByRole('button', { name: 'July 12, 2025' })).toBeVisible();
+  await rp.getByRole('button', { name: 'Save' }).click();
+  await expect(out('range')).toHaveText('2025-7-10..2025-7-14');
+});

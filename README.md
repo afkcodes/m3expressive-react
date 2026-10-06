@@ -164,6 +164,14 @@ line to flip if you'd rather follow the M3 guidelines:
 | Carousel, uncontained cut-off item | art fitted to the visible 72px | art centred in the medium keyline item — recorded exception |
 | Carousel `itemWidth` (uncontained) | — | the visible item width (Compose's own `itemWidth` excludes the spacing it adds back in the keyline) |
 | Carousel multi-aspect / full screen | — | no Compose equivalent: free scrolling at the items' aspect ratios / vertical one-item paging |
+| Date pickers, kit calendars | fictitious months (an "August 2025" starting on a Tuesday; the docked one a 30-day month starting on a Saturday) and labels ("Mon, Aug 17") | real calendars (`Intl`); fixtures lay out the kit's grids (July 2025, June 2024) and pass the kit's labels through `formatter` |
+| Modal date picker (day), selected day | label-large (the other pickers: body-large) | body-large — recorded exception |
+| Year grid | typo: 2030, 2030, 2031 | real years — recorded exception |
+| Outside-month days | building block On Surface 38%; the docked picker and the cell's hover / focus On Surface Variant | On Surface Variant 38% — recorded exception |
+| Docked month / year lists | decorative scroll thumb | a working, proportional thumb — recorded exceptions |
+| Input date picker | format hint drawn as input text (On Surface) | the field's placeholder (On Surface Variant, as Compose) — recorded exception |
+| Calendar rows | as many weeks as the month needs (modal); six weeks with the neighbouring days (docked) | — we follow the kit (Compose keeps six rows in the modal) |
+| Date picker motion | — | modal: the M3 dialog fade + scale; docked panel: fade + 8px drop on fast effects; full-screen range: fade + 24px rise |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

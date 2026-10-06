@@ -10,7 +10,8 @@ Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, 
 hover / press / avatar, docked and full-screen views), Toolbars (floating horizontal / vertical and
 docked, standard / vibrant, toolbar-coloured building blocks, FAB collapse), Sheets (side standard / modal,
 bottom standard / modal with drag to dismiss), Dialogs (basic, list, scrollable list; with / without icon), Carousel (multi-browse, hero,
-centred hero, uncontained, multi-aspect, full screen; Compose keyline motion).
+centred hero, uncontained, multi-aspect, full screen; Compose keyline motion), Date pickers (modal day / year /
+input, docked day / month / year, full-screen range).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -204,6 +205,10 @@ FAB menu, split button, button groups.
 - Give every row its full render bounds, even far outside the node (a modal sheet's scrim): the
   builder then trims neighbours that overlap it. Fixtures whose render bounds need more room
   declare `padding`; the parity spec grows the viewport to the measured capture area.
+- Figma strokes don't take auto-layout space: draw header / footer rules as inset box-shadows, not
+  borders (a 1px border moved the date picker's header button).
+- A fixture that never mounts (`[data-fixture-node]` not found) is usually a module-init error —
+  e.g. a circular import evaluated before a spread constant; keep shared constants in leaf modules.
 - A fixed-size fixture box can hide a component's natural size (a 72px bar stretched to the kit's
   64px passed until it sat in an auto-height parent): probe natural geometry in a live render.
 - Intrinsic-size collapse (toolbar leading / trailing, toolbar into its FAB): a `grid-template-columns`

@@ -1,0 +1,879 @@
+{
+  "component": "date-picker",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "blocks": {
+      "node": "51954:18816",
+      "file": "_frames/blocks.png"
+    },
+    "modal": {
+      "node": "51954:18136",
+      "file": "_frames/modal.png"
+    },
+    "docked": {
+      "node": "51954:18567",
+      "file": "_frames/docked.png"
+    },
+    "input": {
+      "node": "51954:18540",
+      "file": "_frames/input.png"
+    }
+  },
+  "variants": {
+    "day-today-disabled": {
+      "node": "51954:18857",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 224,
+        "y": 361
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-default-disabled": {
+      "node": "51954:18836",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 124,
+        "y": 361
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-selected-middle-pressed": {
+      "node": "51954:18904",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 419,
+        "y": 299
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        78,
+        50
+      ]
+    },
+    "day-selected-pressed": {
+      "node": "51954:18880",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 324,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-today-pressed": {
+      "node": "51954:18853",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 224,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-default-pressed": {
+      "node": "51954:18831",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 124,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-selected-middle-focused": {
+      "node": "51954:18898",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 419,
+        "y": 237
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        78,
+        50
+      ]
+    },
+    "day-selected-focused": {
+      "node": "51954:18873",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 324,
+        "y": 237
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-today-focused": {
+      "node": "51954:18848",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 224,
+        "y": 237
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-default-focused": {
+      "node": "51954:18826",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 124,
+        "y": 237
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-selected-middle-hovered": {
+      "node": "51954:18892",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 419,
+        "y": 175
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        78,
+        50
+      ]
+    },
+    "day-selected-hovered": {
+      "node": "51954:18867",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 324,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-today-hovered": {
+      "node": "51954:18844",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 224,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-default-hovered": {
+      "node": "51954:18822",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 124,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-null-enabled": {
+      "node": "51954:18911",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 624,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-outside-enabled": {
+      "node": "51954:18913",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 524,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "allowedDiffPixels": 46,
+      "allowedDiffReason": "Kit slip: the building block's enabled outside-month day is On Surface 38%; the docked picker's outside days and this cell's own hovered / focused variants use On Surface Variant. We render On Surface Variant 38%."
+    },
+    "day-outside-hovered": {
+      "node": "56878:2181",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 524,
+        "y": 177
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-outside-focused": {
+      "node": "56878:2189",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 524,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-selected-middle-enabled": {
+      "node": "51954:18886",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 419,
+        "y": 113
+      },
+      "renderBounds": [
+        -15,
+        -1,
+        78,
+        50
+      ]
+    },
+    "day-selected-enabled": {
+      "node": "51954:18861",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 324,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-today-enabled": {
+      "node": "51954:18840",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 224,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "day-default-enabled": {
+      "node": "51954:18818",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 124,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ]
+    },
+    "year-unsel-disabled": {
+      "node": "51954:18923",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 707,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-sel-pressed": {
+      "node": "51954:18953",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 815,
+        "y": 293
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-unsel-pressed": {
+      "node": "51954:18936",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 707,
+        "y": 293
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-sel-focused": {
+      "node": "51954:18948",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 815,
+        "y": 231
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-unsel-focused": {
+      "node": "51954:18931",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 707,
+        "y": 231
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-sel-hovered": {
+      "node": "51954:18944",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 815,
+        "y": 169
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-unsel-hovered": {
+      "node": "51954:18927",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 707,
+        "y": 169
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-sel-enabled": {
+      "node": "51954:18940",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 815,
+        "y": 107
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "year-unsel-enabled": {
+      "node": "51954:18919",
+      "size": [
+        88,
+        52
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 707,
+        "y": 107
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        90,
+        54
+      ]
+    },
+    "menu-enabled": {
+      "node": "51954:18958",
+      "size": [
+        73,
+        40
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 943,
+        "y": 113
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        75,
+        42
+      ]
+    },
+    "menu-hovered": {
+      "node": "51954:18962",
+      "size": [
+        73,
+        40
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 943,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        75,
+        42
+      ]
+    },
+    "menu-focused": {
+      "node": "51954:18966",
+      "size": [
+        73,
+        40
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 943,
+        "y": 237
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        75,
+        42
+      ]
+    },
+    "menu-pressed": {
+      "node": "51954:18970",
+      "size": [
+        73,
+        40
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 943,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        75,
+        42
+      ]
+    },
+    "menu-disabled": {
+      "node": "51954:18974",
+      "size": [
+        73,
+        40
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "blocks",
+        "x": 943,
+        "y": 361
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        75,
+        42
+      ]
+    },
+    "modal-day": {
+      "node": "51954:18137",
+      "size": [
+        360,
+        524
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "modal",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        526
+      ],
+      "allowedDiffPixels": 139,
+      "allowedDiffReason": "Kit slip: the modal (day) picker's selected day overrides its label to label-large (14/20 Medium); the building block, the docked picker and the full-screen range keep body-large. We render body-large (the \"17\" glyphs, ~110px) plus ~30 glyph-edge pixels."
+    },
+    "modal-year": {
+      "node": "51954:18216",
+      "size": [
+        360,
+        516
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "modal",
+        "x": 394,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        518
+      ],
+      "allowedDiffPixels": 230,
+      "allowedDiffReason": "Kit typo: the year grid's fourth row reads 2030, 2030, 2031 (real years 2030, 2031, 2032 \u2014 two labels differ, ~200px); the rest is glyph-edge raster."
+    },
+    "modal-range": {
+      "node": "51954:18254",
+      "size": [
+        360,
+        696
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "modal",
+        "x": 772,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        698
+      ],
+      "allowedDiffPixels": 31,
+      "allowedDiffReason": "Glyph-edge raster of a few day numbers (Figma vs Chrome text AA); layout, range bands and colours match."
+    },
+    "docked-day": {
+      "node": "51954:18568",
+      "size": [
+        360,
+        551
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "docked",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        553
+      ],
+      "allowedDiffPixels": 30,
+      "allowedDiffReason": "Glyph-edge raster of a few day numbers (Figma vs Chrome text AA); layout and colours match."
+    },
+    "docked-month": {
+      "node": "51954:18648",
+      "size": [
+        360,
+        519
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "docked",
+        "x": 394,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        521
+      ],
+      "allowedDiffPixels": 9239,
+      "allowedDiffReason": "The kit's scroll thumb is decoration (8.8 x 79.5 at the same spot in both lists, whatever the scroll position); ours is a working thumb sized and placed by the list's scroll (336 / 576 of the track). Plus ~80 glyph-edge pixels."
+    },
+    "docked-year": {
+      "node": "51954:18662",
+      "size": [
+        360,
+        519
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "docked",
+        "x": 771,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        521
+      ],
+      "allowedDiffPixels": 2772,
+      "allowedDiffReason": "The kit's scroll thumb is decoration (8.8 x 79.5 at the same spot in both lists, whatever the scroll position); ours is a working thumb sized and placed by the list's scroll (336 / 576 of the track). The kit's list sits at x 0.3 (the selected row's layer edge, 96px) plus glyph-edge raster."
+    },
+    "input-single": {
+      "node": "51954:18541",
+      "size": [
+        328,
+        278
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        330,
+        280
+      ],
+      "allowedDiffPixels": 150,
+      "allowedDiffReason": "The kit draws the format hint \"mm/dd/yyyy\" in the input-text colour (On Surface); it is the field's placeholder (Compose DateInput: placeholder = the date pattern), which we render in the placeholder colour (On Surface Variant)."
+    },
+    "input-range": {
+      "node": "51954:18554",
+      "size": [
+        328,
+        278
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 368,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        330,
+        280
+      ],
+      "allowedDiffPixels": 150,
+      "allowedDiffReason": "The kit draws the format hint \"mm/dd/yyyy\" in the input-text colour (On Surface); it is the field's placeholder (Compose DateInput: placeholder = the date pattern), which we render in the placeholder colour (On Surface Variant)."
+    }
+  }
+}

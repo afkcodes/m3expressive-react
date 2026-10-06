@@ -264,7 +264,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             ? s.cIdleOutlined
             : s.cOnSurfaceVariant;
   const lineColor = error ? 'error' : focused ? 'primary' : hovered ? 'onSurface' : 'idle';
-  const showCaret = focused && forced.state === 'focused'; // kit's static caret (tests); live uses the native one
+  const showCaret = focused && forced.state === 'focused' && forced.caret !== false; // kit's static caret (tests); live uses the native one
   const supporting = error && errorText != null ? errorText : supportingText;
 
   return (

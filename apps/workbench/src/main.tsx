@@ -23,6 +23,7 @@ import { ToolbarPlayground } from './pages/ToolbarPlayground';
 import { SheetsPlayground } from './pages/SheetsPlayground';
 import { DialogsPlayground } from './pages/DialogsPlayground';
 import { CarouselPlayground } from './pages/CarouselPlayground';
+import { DatePickerPlayground } from './pages/DatePickerPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /compare/:component        — Figma vs live, side by side + difference overlay
@@ -52,6 +53,7 @@ function App() {
   if (page === 'demo' && (component === 'sheets' || component === 'sheet')) return <SheetsPlayground />;
   if (page === 'demo' && (component === 'dialogs' || component === 'dialog')) return <DialogsPlayground />;
   if (page === 'demo' && component === 'carousel') return <CarouselPlayground />;
+  if (page === 'demo' && (component === 'date-picker' || component === 'date-pickers')) return <DatePickerPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

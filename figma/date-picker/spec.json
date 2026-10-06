@@ -1,0 +1,83 @@
+{
+ "component": "date-picker",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Date & time pickers page, date half (55412:15781): building blocks (calendar cell, year, menu button), modal (day / year / full-screen range), docked (day / month / year) and input (single / range) date pickers. The kit's calendar is fictitious (an August that starts on a Tuesday): fixtures lay out July 2025 and pass the kit's labels through the formatter.",
+ "frames": {
+  "blocks": {
+   "node": "51954:18816",
+   "file": "_frames/blocks.png",
+   "size": [
+    1036,
+    427
+   ],
+   "setBorder": false,
+   "rows": "day-today-disabled 51954:18857 224,361 48x48;day-default-disabled 51954:18836 124,361 48x48;day-selected-middle-pressed 51954:18904 419,299 48x48 rb-14.4,0,76.8,48;day-selected-pressed 51954:18880 324,299 48x48;day-today-pressed 51954:18853 224,299 48x48;day-default-pressed 51954:18831 124,299 48x48;day-selected-middle-focused 51954:18898 419,237 48x48 rb-14.4,0,76.8,48;day-selected-focused 51954:18873 324,237 48x48;day-today-focused 51954:18848 224,237 48x48;day-default-focused 51954:18826 124,237 48x48;day-selected-middle-hovered 51954:18892 419,175 48x48 rb-14.4,0,76.8,48;day-selected-hovered 51954:18867 324,175 48x48;day-today-hovered 51954:18844 224,175 48x48;day-default-hovered 51954:18822 124,175 48x48;day-null-enabled 51954:18911 624,113 48x48;day-outside-enabled 51954:18913 524,113 48x48;day-outside-hovered 56878:2181 524,177 48x48;day-outside-focused 56878:2189 524,240 48x48;day-selected-middle-enabled 51954:18886 419,113 48x48 rb-14.4,0,76.8,48;day-selected-enabled 51954:18861 324,113 48x48;day-today-enabled 51954:18840 224,113 48x48;day-default-enabled 51954:18818 124,113 48x48;year-unsel-disabled 51954:18923 707,355 88x52;year-sel-pressed 51954:18953 815,293 88x52;year-unsel-pressed 51954:18936 707,293 88x52;year-sel-focused 51954:18948 815,231 88x52;year-unsel-focused 51954:18931 707,231 88x52;year-sel-hovered 51954:18944 815,169 88x52;year-unsel-hovered 51954:18927 707,169 88x52;year-sel-enabled 51954:18940 815,107 88x52;year-unsel-enabled 51954:18919 707,107 88x52;menu-enabled 51954:18958 943,113 73x40;menu-hovered 51954:18962 943,175 73x40;menu-focused 51954:18966 943,237 73x40;menu-pressed 51954:18970 943,299 73x40;menu-disabled 51954:18974 943,361 73x40"
+  },
+  "modal": {
+   "node": "51954:18136",
+   "file": "_frames/modal.png",
+   "size": [
+    1148,
+    724
+   ],
+   "rows": "modal-day 51954:18137 16,16 360x524;modal-year 51954:18216 394,16 360x516;modal-range 51954:18254 772,16 360x696"
+  },
+  "docked": {
+   "node": "51954:18567",
+   "file": "_frames/docked.png",
+   "size": [
+    1147,
+    583
+   ],
+   "rows": "docked-day 51954:18568 16,16 360x551;docked-month 51954:18648 394,16 360x519;docked-year 51954:18662 771,16 360x519"
+  },
+  "input": {
+   "node": "51954:18540",
+   "file": "_frames/input.png",
+   "size": [
+    716,
+    314
+   ],
+   "rows": "input-single 51954:18541 20,20 328x278;input-range 51954:18554 368,20 328x278"
+  }
+ },
+ "exceptions": {
+  "modal-day": {
+   "allowedDiffPixels": 139,
+   "allowedDiffReason": "Kit slip: the modal (day) picker's selected day overrides its label to label-large (14/20 Medium); the building block, the docked picker and the full-screen range keep body-large. We render body-large (the \"17\" glyphs, ~110px) plus ~30 glyph-edge pixels."
+  },
+  "modal-year": {
+   "allowedDiffPixels": 230,
+   "allowedDiffReason": "Kit typo: the year grid's fourth row reads 2030, 2030, 2031 (real years 2030, 2031, 2032 \u2014 two labels differ, ~200px); the rest is glyph-edge raster."
+  },
+  "day-outside-enabled": {
+   "allowedDiffPixels": 46,
+   "allowedDiffReason": "Kit slip: the building block's enabled outside-month day is On Surface 38%; the docked picker's outside days and this cell's own hovered / focused variants use On Surface Variant. We render On Surface Variant 38%."
+  },
+  "docked-day": {
+   "allowedDiffPixels": 30,
+   "allowedDiffReason": "Glyph-edge raster of a few day numbers (Figma vs Chrome text AA); layout and colours match."
+  },
+  "docked-month": {
+   "allowedDiffPixels": 9239,
+   "allowedDiffReason": "The kit's scroll thumb is decoration (8.8 x 79.5 at the same spot in both lists, whatever the scroll position); ours is a working thumb sized and placed by the list's scroll (336 / 576 of the track). Plus ~80 glyph-edge pixels."
+  },
+  "docked-year": {
+   "allowedDiffPixels": 2772,
+   "allowedDiffReason": "The kit's scroll thumb is decoration (8.8 x 79.5 at the same spot in both lists, whatever the scroll position); ours is a working thumb sized and placed by the list's scroll (336 / 576 of the track). The kit's list sits at x 0.3 (the selected row's layer edge, 96px) plus glyph-edge raster."
+  },
+  "input-single": {
+   "allowedDiffPixels": 150,
+   "allowedDiffReason": "The kit draws the format hint \"mm/dd/yyyy\" in the input-text colour (On Surface); it is the field's placeholder (Compose DateInput: placeholder = the date pattern), which we render in the placeholder colour (On Surface Variant)."
+  },
+  "input-range": {
+   "allowedDiffPixels": 150,
+   "allowedDiffReason": "The kit draws the format hint \"mm/dd/yyyy\" in the input-text colour (On Surface); it is the field's placeholder (Compose DateInput: placeholder = the date pattern), which we render in the placeholder colour (On Surface Variant)."
+  },
+  "modal-range": {
+   "allowedDiffPixels": 31,
+   "allowedDiffReason": "Glyph-edge raster of a few day numbers (Figma vs Chrome text AA); layout, range bands and colours match."
+  }
+ }
+}

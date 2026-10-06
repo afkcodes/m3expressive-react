@@ -15,6 +15,8 @@ export interface ForceStateValue {
   ripplePath?: string;
   /** Which part the forced state applies to, for multi-part components (range slider thumb). */
   thumb?: number;
+  /** Text inputs under a forced focus draw the kit's static caret (default true). */
+  caret?: boolean;
   /** Frozen progress-indicator frame (the kit's still frames of animated indicators). */
   progress?: ForcedProgressFrame;
 }
