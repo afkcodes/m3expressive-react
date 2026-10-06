@@ -37,8 +37,9 @@ export interface CircularProgressProps {
  * Circular progress indicator (kit sets "Circular-determinate / -indeterminate progress
  * indicator"): 40 / 44px flat, 48 / 52px wavy. The active arc starts just right of 12 o'clock and
  * the track continues after a gap. Arc lengths follow the kit's samples (0 / 10 / 30 / 50 / 80 /
- * 100%), interpolated in between. Indeterminate: Compose's rotation + head/tail keyframes, with
- * the arc growing between the kit's 10% and 80% lengths (its Step frames are those arcs rotated).
+ * 100%), interpolated in between. Indeterminate: Compose's M3 Expressive motion (6s cycle: spin,
+ * 90° steps, 10% ↔ 87% sweep); the kit's Step frames (its 10% / 50% arcs, rotated) are
+ * reproduced as still frames.
  */
 export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(function CircularProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, sx, ...aria },
@@ -64,19 +65,20 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
     frame = circularFrame(type, t, forced.value);
     spin = forced.rotation ?? 0;
   } else if (indeterminate) {
-    // Live: the arc grows between the kit's 10% and 80% lengths with a constant gap (the 10%
-    // frame's), while Compose's rotation keyframes turn it.
-    const { grow, rotation } = circularIndeterminate(clock);
-    const lo = k.ends[1] - k.start;
-    const hi = k.ends[4] - k.start;
-    const end = k.start + lo + grow * (hi - lo);
-    frame = { start: k.start, end, trackStart: end + (k.tracks[1] - k.ends[1]), trackEnd: k.trackEnd };
+    // Live: Compose's M3 Expressive indeterminate — the arc sweeps 10% ↔ 87% while the drawing
+    // turns (constant spin + a 90° step every 1.5s). The gap is the kit's (its 10% frame).
+    const { sweep, rotation } = circularIndeterminate(clock);
+    const sw = sweep * 360;
+    const g = Math.min(sw, k.tracks[1] - k.ends[1]);
+    frame = { start: k.start, end: k.start + sw, trackStart: k.start + sw + g, trackEnd: k.start + 360 - g };
     spin = rotation;
   } else frame = circularFrame(type, t, shown);
   const size = k.size;
-  // The wave turns with the indeterminate arc (Compose rotates the whole drawing) and travels.
+  // The wave turns with the indeterminate arc (Compose rotates the whole drawing) and travels
+  // backwards under the fixed arc ends, one wave per second (Compose rotates the segment by
+  // −offset).
   const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED;
-  const phase = (forced?.phase ?? WAVE_PHASE) + spin + travel;
+  const phase = (forced?.phase ?? WAVE_PHASE) + spin - travel;
   const g = circularShapes(type, t, frame, spin, phase);
 
   return (

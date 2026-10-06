@@ -23,9 +23,9 @@ function LiveDeterminate({ kind }: { kind: 'linear' | 'circular' }) {
   const [value, setValue] = useState(kind === 'linear' ? 50 : 30);
   const P = kind === 'linear' ? LinearProgress : CircularProgress;
   return (
-    <div style={{ display: 'grid', gap: 8, width: '100%' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
       <P value={value} aria-label="Upload" />
-      <div style={{ position: 'absolute', top: 80, display: 'flex', gap: 8 }}>
+      <div style={{ position: 'absolute', top: 'calc(100% + 40px)', display: 'flex', gap: 8 }}>
         {[30, 50, 80].map((n) => <button key={n} onClick={() => setValue(n)}>{n}%</button>)}
       </div>
     </div>
@@ -66,6 +66,20 @@ const strip = (type: ProgressType) => () => (
 );
 live['strip-flat'] = { render: strip('flat') };
 live['strip-wave'] = { render: strip('wave') };
+/** Circular: one full 6s cycle, every 200ms (flat and wave, 4 / 8dp). */
+live['strip-circular'] = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 64px)', gap: 8 }}>
+      {Array.from({ length: 30 }, (_, i) => (
+        <div key={i} style={{ display: 'grid', justifyItems: 'center', gap: 2 }}>
+          <span style={{ font: '9px monospace' }}>{i * 200}</span>
+          {frozen({ time: i * 200 }, <CircularProgress aria-label="c" />)}
+          {frozen({ time: i * 200 }, <CircularProgress type="wave" aria-label="c" />)}
+        </div>
+      ))}
+    </div>
+  ),
+};
 
 const fixture: FixtureModule = {
   component: 'progress',

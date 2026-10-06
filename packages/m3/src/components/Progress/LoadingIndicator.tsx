@@ -19,8 +19,8 @@ const s = stylex.create({
   shapeOnContainer: { fill: color.onPrimaryContainer },
 });
 
-/* Compose LoadingIndicator: a new shape every 650ms, morphing on spring(0.6, 200) and turning a
- * quarter per morph, while the whole indicator spins once per 4666ms. */
+/* Compose LoadingIndicator (androidx-main): a new shape every 650ms, morphing on spring(0.6, 200),
+ * turning a quarter per morph, while the whole indicator spins once per 4666ms. */
 const MORPH_INTERVAL = 650;
 const MORPH_SPRING = { dampingRatio: 0.6, stiffness: 200 };
 const SPIN_MS = 4666;
@@ -60,9 +60,13 @@ export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps
   useEffect(() => {
     if (step !== undefined) return;
     const list = getMorphs();
-    // Morph `index` → index + 1 is in flight; a new one starts every MORPH_INTERVAL.
-    let index = -1;
-    let progress = 1;
+    // Compose LoadingIndicator: every 650ms a morph to the next shape starts on spring(0.6, 200)
+    // with a 0.1 visibility threshold; when it settles the next shape is snapped in and the
+    // rotation target advances a quarter turn. Drawing rotates by progress·90 + target + spin.
+    let index = 0;
+    let progress = 0;
+    let target = 90;
+    let started = -1;
     let spring: SpringAnimation | null = null;
     let t0: number | undefined;
     let frame = 0;
@@ -70,15 +74,25 @@ export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps
       t0 ??= now;
       const t = now - t0;
       const due = Math.floor(t / MORPH_INTERVAL);
-      if (due > index) {
-        index = due;
-        spring?.stop();
-        progress = 0;
-        spring = animateSpring({ spring: MORPH_SPRING, from: 0, to: 1, precision: 0.001, onUpdate: (v) => (progress = v) });
+      if (due > started) {
+        started = due;
+        spring?.finish();
+        spring = animateSpring({
+          spring: MORPH_SPRING,
+          from: 0,
+          to: 1,
+          precision: 0.1,
+          onUpdate: (v) => (progress = v),
+          onComplete: () => {
+            index = (index + 1) % list.length;
+            progress = 0;
+            target = (target + 90) % 360;
+            spring = null;
+          },
+        });
       }
-      const i = index % list.length;
-      path.current?.setAttribute('d', progress === 1 ? loadingShapes[(i + 1) % list.length]! : morphToSvgPath(list[i]!, progress));
-      const rotation = (t / SPIN_MS) * 360 + index * 90 + progress * 90;
+      path.current?.setAttribute('d', progress === 0 ? loadingShapes[index]! : morphToSvgPath(list[index]!, progress));
+      const rotation = progress * 90 + target + (t / SPIN_MS) * 360;
       group.current?.setAttribute('transform', `rotate(${rotation.toFixed(2)} ${C} ${C})`);
       frame = requestAnimationFrame(draw);
     };

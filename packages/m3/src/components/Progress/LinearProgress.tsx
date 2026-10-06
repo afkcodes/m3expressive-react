@@ -44,6 +44,7 @@ export interface LinearProgressProps {
  * value changes spring (Compose ProgressAnimationSpec). Wave: 40px wavelength travelling one
  * wavelength per second, flattened at ≤10% and ≥95% (Compose's amplitude rule, as the kit's 10% /
  * 100% frames show). Indeterminate: Compose's two-line keyframes; the wave uses a 20px wavelength.
+ * Waves travel towards the start, one wavelength per second, as in Compose.
  */
 export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(function LinearProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, wavelength, sx, ...aria },
@@ -87,13 +88,21 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
   const t = thickness;
   const pad = t / 2;
   let actives: [number, number][];
-  if (indeterminate) {
-    const span = width - 2 * pad;
-    actives = (frozen && forced.actives) || linearIndeterminate(clock).map(([a, b]) => [pad + a * span, pad + b * span]);
+  let gap: number | undefined;
+  if (indeterminate && frozen && forced.actives) actives = forced.actives;
+  else if (indeterminate) {
+    // Compose: line ends at fraction × width, clamped so the caps stay inside; while the leading
+    // line enters, the active ↔ track space grows from 0 with its head.
+    const lines = linearIndeterminate(clock);
+    const clamp = (x: number) => Math.min(width - pad, Math.max(pad, x * width));
+    actives = lines.map(([a, b]) => [clamp(a), clamp(b)]);
+    const head = lines[0]![1] * width;
+    gap = head < pad ? 0 : Math.min(head - pad, 4);
   } else actives = linearDeterminate(width, t, shown, type === 'wave' ? amp : 0);
   const wl = wavelength ?? (indeterminate ? WAVELENGTH.indeterminate : WAVELENGTH.determinate);
   const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED_PER_WAVELENGTH * wl;
-  const waveOrigin = frozen ? (actives[0]?.[0] ?? pad) + (forced.phase ?? 0) : pad + travel;
+  // Compose moves the wave towards the start (a crest at x is drawn at x − shift).
+  const waveOrigin = frozen ? (actives[0]?.[0] ?? pad) + (forced.phase ?? 0) : pad - travel;
   const g = linearShapes({
     width,
     thickness: t,
@@ -104,6 +113,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     waveOrigin,
     amp: type === 'wave' ? amp : 0,
     snap: frozen || (!indeterminate && shown === p),
+    gap,
   });
   const height = linearHeight(type, t);
 

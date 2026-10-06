@@ -5,8 +5,8 @@
  *
  * Linear: an active line (round caps) followed by a track piece (rounded rect) and a 4×4 stop dot.
  *   - The active is a centre line from `pad` (= thickness / 2, so it starts flush with the edge).
- *   - Track pieces start `gap` after an active's centre-line end (6 / 8 px), and end `gap` before
- *     the next one's start.
+ *   - Track pieces start 4px (Compose TrackActiveSpace) after an active's round cap, and end 4px
+ *     before the next one's.
  *   - Figma resizes the line and track vectors inside instances to whole pixels; we round the same
  *     lengths so caps, gaps and the stop land on the kit's subpixels.
  *   - The wave is the kit's segment, a polyline M0 6 L10 12 L30 0 L40 6 with corner radius 24 that
@@ -24,7 +24,8 @@ const f = (n: number) => +n.toFixed(3);
 /* ------------------------------------------------------------------ linear */
 
 export const linearHeight = (type: ProgressType, t: ProgressThickness) => (type === 'wave' && t === 8 ? 14 : 12);
-export const linearGap = (t: ProgressThickness) => (t === 4 ? 6 : 8);
+/** Visible space between the active indicator and the track (Compose TrackActiveSpace). */
+export const TRACK_ACTIVE_SPACE = 4;
 const STOP = 4;
 const stopInset = (t: ProgressThickness) => (t === 4 ? 4 : 6);
 
@@ -80,6 +81,8 @@ export interface LinearSpec {
   /** Whole-px line and track lengths, as Figma draws its still frames. Off while moving (the
    *  1px steps would make the gaps flicker). */
   snap: boolean;
+  /** Visible active ↔ track space (default 4; Compose shrinks it while a line enters). */
+  gap?: number;
 }
 
 export interface LinearShapes {
@@ -94,12 +97,14 @@ export function linearShapes(s: LinearSpec): LinearShapes {
   const { width: W, thickness: t } = s;
   const height = linearHeight(s.type, t);
   const cy = height / 2;
-  const gap = linearGap(t);
+  // Centre-line end → track edge: the cap plus the visible space (6 / 8px at the kit's 4 / 8dp).
+  const gap = t / 2 + (s.gap ?? TRACK_ACTIVE_SPACE);
   const active: string[] = [];
   const tracks: { x: number; width: number }[] = [];
   let cursor = 0;
   const len = (n: number) => (s.snap ? Math.round(n) : n);
   for (const [a, b] of s.actives) {
+    if (b - a <= 0) continue; // a line that hasn't entered (Compose draws nothing)
     const end = a + len(b - a);
     const tw = len(a - gap - cursor);
     if (tw > 0) tracks.push({ x: cursor, width: tw });

@@ -89,36 +89,43 @@ export function useSpringNumber(target: number, spring: SpringParams | null, pre
 /** Compose `ProgressIndicatorDefaults.ProgressAnimationSpec`: no bounce, StiffnessVeryLow. */
 export const PROGRESS_SPRING: SpringParams = { dampingRatio: 1, stiffness: 50 };
 
-/* Linear indeterminate — Compose material3 LinearProgressIndicator keyframes (1800ms cycle). */
-const LINEAR_CYCLE = 1800;
+/* Easing tokens (androidx MotionTokens). */
+const emphasizedAccelerate = cubicBezier(0.3, 0, 0.8, 0.15);
+const standard = cubicBezier(0.2, 0, 0, 1);
+
+/*
+ * Linear indeterminate — Compose material3 ProgressIndicator.kt (androidx-main, 2026): a 1750ms
+ * cycle of two lines. Each end runs 0 → 1 with EasingEmphasizedAccelerate in its window:
+ * line 1 head 0–1000ms, tail 250–1250ms; line 2 head 650–1500ms, tail 900–1750ms.
+ */
+const LINEAR_CYCLE = 1750;
 const LINES = [
-  { head: [0, 750, cubicBezier(0.2, 0, 0.8, 1)], tail: [333, 850, cubicBezier(0.4, 0, 1, 1)] },
-  { head: [1000, 567, cubicBezier(0, 0, 0.65, 1)], tail: [1267, 533, cubicBezier(0.1, 0, 0.45, 1)] },
+  { head: [0, 1000], tail: [250, 1000] },
+  { head: [650, 850], tail: [900, 850] },
 ] as const;
 
-/** [tail, head] fractions of the track length for each visible line at time `ms`. */
+/** [tail, head] fractions of the track width for both lines at time `ms` (equal = not visible). */
 export function linearIndeterminate(ms: number): [number, number][] {
   const t = ms % LINEAR_CYCLE;
-  const at = ([delay, dur, ease]: readonly [number, number, (x: number) => number]) => ease((t - delay) / dur);
-  return LINES.map((l) => [at(l.tail), at(l.head)] as [number, number]).filter(([a, b]) => b - a > 1e-3);
+  const at = ([delay, dur]: readonly [number, number]) => (t <= delay ? 0 : t >= delay + dur ? 1 : emphasizedAccelerate((t - delay) / dur));
+  return LINES.map((l) => [at(l.tail), at(l.head)] as [number, number]);
 }
 
-/* Circular indeterminate — Compose material3 CircularProgressIndicator keyframes. */
-const ROTATION_MS = 1332;
-const ROTATIONS_PER_CYCLE = 5;
-const BASE_ROTATION = 286;
-const JUMP_ROTATION = 290;
-const ROTATION_OFFSET = (BASE_ROTATION + JUMP_ROTATION) % 360;
-const circularEasing = cubicBezier(0.4, 0, 0.2, 1);
+/*
+ * Circular indeterminate — Compose material3 (M3 Expressive) CircularProgressIndicator /
+ * CircularWavyProgressIndicator, 6000ms cycle:
+ *   - global rotation 0 → 1080° linear;
+ *   - additional rotation: +90° every 1500ms, each step linear over 300ms (the spec's
+ *     EmphasizedDecelerate `using` clauses sit on the hold intervals, so the steps are linear);
+ *   - sweep 10% → 87% linear over 3000ms, then back to 10% with EasingStandard.
+ */
+const CIRCULAR_CYCLE = 6000;
 
-/** `grow` 0…1 (how far the arc has extended) and the rotation (degrees) at time `ms`. */
 export function circularIndeterminate(ms: number) {
-  const step = Math.floor((ms % (ROTATION_MS * ROTATIONS_PER_CYCLE)) / ROTATION_MS); // Int 0…4, as in Compose
-  const t = ms % ROTATION_MS;
-  const half = ROTATION_MS / 2;
-  const end = circularEasing(Math.min(1, t / half)) * JUMP_ROTATION;
-  const start = circularEasing(Math.max(0, (t - half) / half)) * JUMP_ROTATION;
-  // Per-cycle jumps (−286 base, −290 start, +216 step offset) cancel out: the rotation is continuous.
-  const rotation = ((step * ROTATION_OFFSET) % 360) + (t / ROTATION_MS) * BASE_ROTATION + start;
-  return { grow: (end - start) / JUMP_ROTATION, rotation };
+  const t = ms % CIRCULAR_CYCLE;
+  const global = (t / CIRCULAR_CYCLE) * 1080;
+  const step = Math.floor(t / 1500);
+  const additional = step * 90 + 90 * Math.min(1, (t - step * 1500) / 300);
+  const sweep = t < 3000 ? 0.1 + 0.77 * (t / 3000) : 0.87 - 0.77 * standard((t - 3000) / 3000);
+  return { sweep, rotation: global + additional };
 }
