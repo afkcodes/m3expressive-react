@@ -8,6 +8,7 @@ import { elevation } from '../../tokens/elevation.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
+import { usePortalContainer } from '../../theme/portal.tsx';
 
 /*
  * Figma kit, "Tooltips" page: "Plain Tooltip" and "Rich Tooltip".
@@ -102,10 +103,11 @@ export interface TooltipProps {
 
 /** Plain tooltip: shows on hover / focus after a short delay. */
 export function Tooltip({ content, children, side = 'top', delay = 500 }: TooltipProps) {
+  const portalContainer = usePortalContainer();
   return (
     <BaseTooltip.Root>
       <BaseTooltip.Trigger delay={delay} render={children} />
-      <BaseTooltip.Portal>
+      <BaseTooltip.Portal container={portalContainer}>
         <BaseTooltip.Positioner side={side} sideOffset={4}>
           <BaseTooltip.Popup {...stylex.props(s.popup)}>
             <PlainTooltipSurface>{content}</PlainTooltipSurface>
@@ -124,10 +126,11 @@ export interface RichTooltipProps extends Omit<RichTooltipSurfaceProps, 'sx'> {
 
 /** Rich tooltip: persistent, can hold actions; opens on hover or click. */
 export function RichTooltip({ trigger, side = 'bottom', ...surface }: RichTooltipProps) {
+  const portalContainer = usePortalContainer();
   return (
     <BasePopover.Root>
       <BasePopover.Trigger openOnHover delay={500} render={trigger} />
-      <BasePopover.Portal>
+      <BasePopover.Portal container={portalContainer}>
         <BasePopover.Positioner side={side} sideOffset={4}>
           <BasePopover.Popup {...stylex.props(s.popup)}>
             <RichTooltipSurface {...surface} />

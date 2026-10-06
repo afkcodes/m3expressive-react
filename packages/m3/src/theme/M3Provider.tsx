@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { MotionSchemeContext } from '../motion/context.tsx';
 import type { MotionSchemeName } from '../motion/tokens.ts';
 import { highContrastTheme, mediumContrastTheme } from '../tokens/color-themes';
 import { expressiveMotionTheme, standardMotionTheme } from '../tokens/motion-themes';
+import { PortalContainerContext } from './portal.tsx';
 
 export type ColorSchemeMode = 'light' | 'dark' | 'system';
 /** Figma "M3" collection contrast modes. */
@@ -40,6 +41,7 @@ export function M3Provider({
   motionScheme = 'expressive',
   children,
 }: M3ProviderProps) {
+  const [portal, setPortal] = useState<HTMLElement | null>(null);
   return (
     <MotionSchemeContext value={motionScheme}>
       <div
@@ -50,7 +52,9 @@ export function M3Provider({
           motionScheme === 'standard' ? standardMotionTheme : expressiveMotionTheme,
         )}
       >
-        {children}
+        <PortalContainerContext value={portal}>{children}</PortalContainerContext>
+        {/* Popups render here, inside the themed root. */}
+        <div ref={setPortal} data-m3-portal="" />
       </div>
     </MotionSchemeContext>
   );

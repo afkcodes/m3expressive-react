@@ -12,6 +12,7 @@ import { interaction } from '../../primitives/state.stylex';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { legacyLeading, textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { usePortalContainer } from '../../theme/portal.tsx';
 
 /*
  * Figma kit, "Snackbar" page: set "Snackbar" (text only / text & action / text & longer action ×
@@ -231,10 +232,11 @@ export interface SnackbarProviderProps {
 
 /** Queues snackbars (Base UI Toast: aria-live, focus handling, swipe/escape). */
 export function SnackbarProvider({ children, timeout = 6000 }: SnackbarProviderProps) {
+  const portalContainer = usePortalContainer();
   return (
     <Toast.Provider timeout={timeout} limit={1}>
       {children}
-      <Toast.Portal>
+      <Toast.Portal container={portalContainer}>
         <Toast.Viewport {...stylex.props(s.viewport)}>
           <SnackbarList />
         </Toast.Viewport>
