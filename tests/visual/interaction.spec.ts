@@ -554,3 +554,32 @@ test('switch (live): hover, toggle, keyboard', async ({ page }) => {
   await page.keyboard.press('Space');
   await expect(root).toHaveAttribute('aria-checked', 'false');
 });
+
+// ── Chips: hover (outlined gains the surface fill), filter selects with a check, input remove ─
+test('chips (live): hover, select, remove', async ({ page }) => {
+  const chips = JSON.parse(readFileSync(join(REFS_DIR, 'chips/manifest.json'), 'utf8')) as Manifest;
+  await page.goto('/fixture/chips/live');
+  await page.evaluate(() => document.fonts.ready);
+  await page.mouse.move(0, 0);
+  const node = page.locator('[data-fixture-node]');
+  const filter = node.locator('button').nth(0);
+  const b = (await filter.boundingBox())!;
+  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+  await page.waitForTimeout(SETTLE);
+  const v = chips.variants['filter-out-icon-hovered-f-f']!;
+  const ref: Buffer = readFileSync(join(REFS_DIR, 'chips', 'filter-out-icon-hovered-f-f.png'));
+  const r = compareImages(ref, await captureRegion(page, filter, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  expect.soft(r.diffPixels, 'hover = kit').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  await filter.click();
+  await expect(filter).toHaveAttribute('aria-pressed', 'true');
+  await page.mouse.move(0, 0);
+  await filter.evaluate((e) => e.blur());
+  await page.waitForTimeout(SETTLE);
+  const sel = chips.variants['filter-out-icon-enabled-t-f']!;
+  const ref2: Buffer = readFileSync(join(REFS_DIR, 'chips', 'filter-out-icon-enabled-t-f.png'));
+  const r2 = compareImages(ref2, await captureRegion(page, filter, sel.renderBounds!), { background: hexToRgb(sel.background ?? '#FFFFFF') });
+  expect.soft(r2.diffPixels, 'selected = kit (check replaces icon)').toBeLessThanOrEqual(sel.allowedDiffPixels ?? 0);
+  await node.getByRole('button', { name: 'Remove' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-removed', '1');
+});

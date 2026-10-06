@@ -1,0 +1,4977 @@
+{
+  "component": "chips",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "assist": {
+      "node": "53923:28089",
+      "file": "_frames/assist.png"
+    },
+    "filter": {
+      "node": "53923:28270",
+      "file": "_frames/filter.png"
+    },
+    "input": {
+      "node": "53923:27888",
+      "file": "_frames/input.png"
+    },
+    "suggestion": {
+      "node": "53923:28679",
+      "file": "_frames/suggestion.png"
+    },
+    "groups": {
+      "node": "57376:5501",
+      "file": "_frames/groups.png"
+    }
+  },
+  "variants": {
+    "assist-el-brand-disabled": {
+      "node": "53923:28090",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1053,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 22,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-disabled": {
+      "node": "53923:28094",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 900,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-disabled": {
+      "node": "53923:28106",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 441,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ]
+    },
+    "assist-out-icon-disabled": {
+      "node": "53923:28110",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 288,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ]
+    },
+    "assist-el-label-disabled": {
+      "node": "53923:28114",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 152,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ]
+    },
+    "assist-out-label-disabled": {
+      "node": "53923:28117",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 16,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ]
+    },
+    "assist-el-brand-dragged": {
+      "node": "53923:28120",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1054,
+        "y": 243
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-dragged": {
+      "node": "53923:28124",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 901,
+        "y": 243
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 22,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-dragged": {
+      "node": "53923:28136",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 442,
+        "y": 243
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-icon-dragged": {
+      "node": "53923:28140",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 289,
+        "y": 243
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-label-dragged": {
+      "node": "53923:28144",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 153,
+        "y": 243
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-label-dragged": {
+      "node": "53923:28147",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 17,
+        "y": 243
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-brand-pressed": {
+      "node": "53923:28150",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1055,
+        "y": 187
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-pressed": {
+      "node": "53923:28154",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 902,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-pressed": {
+      "node": "53923:28166",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 443,
+        "y": 187
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-icon-pressed": {
+      "node": "53923:28170",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 290,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-label-pressed": {
+      "node": "53923:28174",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 154,
+        "y": 187
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-label-pressed": {
+      "node": "53923:28177",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 18,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-brand-focused": {
+      "node": "53923:28180",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1054,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-focused": {
+      "node": "53923:28184",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 901,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-focused": {
+      "node": "53923:28196",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 442,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-icon-focused": {
+      "node": "53923:28200",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 289,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-label-focused": {
+      "node": "53923:28204",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 153,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-label-focused": {
+      "node": "53923:28207",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 17,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-brand-hovered": {
+      "node": "53923:28210",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1054,
+        "y": 75
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-hovered": {
+      "node": "53923:28214",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 901,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-hovered": {
+      "node": "53923:28226",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 442,
+        "y": 75
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-icon-hovered": {
+      "node": "53923:28230",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 289,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-label-hovered": {
+      "node": "53923:28234",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 153,
+        "y": 75
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-label-hovered": {
+      "node": "53923:28237",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 17,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-brand-enabled": {
+      "node": "53923:28240",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 1055,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-out-brand-enabled": {
+      "node": "53923:28244",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 902,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+    },
+    "assist-el-icon-enabled": {
+      "node": "53923:28256",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 442,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-icon-enabled": {
+      "node": "53923:28260",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 289,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-el-label-enabled": {
+      "node": "53923:28264",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 155,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "assist-out-label-enabled": {
+      "node": "53923:28267",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "assist",
+        "x": 19,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-disabled-t-t": {
+      "node": "53923:28271",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1161,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-disabled-t-t": {
+      "node": "53923:28276",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 989,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-disabled-t-f": {
+      "node": "53923:28281",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 835,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-disabled-t-f": {
+      "node": "53923:28285",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 681,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-disabled-t-t": {
+      "node": "53923:28289",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 509,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-disabled-t-t": {
+      "node": "53923:28294",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 337,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-disabled-t-f": {
+      "node": "53923:28299",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 183,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-disabled-t-f": {
+      "node": "53923:28303",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 29,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-dragged-t-t": {
+      "node": "53923:28307",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1162,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-dragged-t-t": {
+      "node": "53923:28312",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 990,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-dragged-t-f": {
+      "node": "53923:28317",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 836,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-dragged-t-f": {
+      "node": "53923:28321",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 682,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-dragged-t-t": {
+      "node": "53923:28325",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 510,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-dragged-t-t": {
+      "node": "53923:28330",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 338,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-dragged-t-f": {
+      "node": "53923:28335",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 184,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-dragged-t-f": {
+      "node": "53923:28339",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 30,
+        "y": 579
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-pressed-t-t": {
+      "node": "53923:28343",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1163,
+        "y": 523
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-pressed-t-t": {
+      "node": "53923:28348",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 991,
+        "y": 523
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-pressed-t-f": {
+      "node": "53923:28353",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 837,
+        "y": 523
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-pressed-t-f": {
+      "node": "53923:28357",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 683,
+        "y": 523
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-pressed-t-t": {
+      "node": "53923:28361",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 511,
+        "y": 523
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-pressed-t-t": {
+      "node": "53923:28366",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 339,
+        "y": 523
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-pressed-t-f": {
+      "node": "53923:28371",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 185,
+        "y": 523
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-pressed-t-f": {
+      "node": "53923:28375",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 31,
+        "y": 523
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-focused-t-t": {
+      "node": "53923:28379",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1162,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-focused-t-t": {
+      "node": "53923:28384",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 990,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-focused-t-f": {
+      "node": "53923:28389",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 836,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-focused-t-f": {
+      "node": "53923:28393",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 682,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-focused-t-t": {
+      "node": "53923:28397",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 510,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-focused-t-t": {
+      "node": "53923:28402",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 338,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-focused-t-f": {
+      "node": "53923:28407",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 184,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-focused-t-f": {
+      "node": "53923:28411",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 30,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-hovered-t-t": {
+      "node": "53923:28415",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1163,
+        "y": 411
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        121,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-hovered-t-t": {
+      "node": "53923:28420",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 991,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-hovered-t-f": {
+      "node": "53923:28425",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 837,
+        "y": 411
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-hovered-t-f": {
+      "node": "53923:28429",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 683,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-hovered-t-t": {
+      "node": "53923:28433",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 511,
+        "y": 411
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        121,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-hovered-t-t": {
+      "node": "53923:28438",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 339,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-hovered-t-f": {
+      "node": "53923:28443",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 185,
+        "y": 411
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-hovered-t-f": {
+      "node": "53923:28447",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 31,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-enabled-t-t": {
+      "node": "53923:28451",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1164,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-enabled-t-t": {
+      "node": "53923:28456",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 992,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-enabled-t-f": {
+      "node": "53923:28461",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 838,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-enabled-t-f": {
+      "node": "53923:28465",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 684,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-enabled-t-t": {
+      "node": "53923:28469",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 512,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-enabled-t-t": {
+      "node": "53923:28474",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 340,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-enabled-t-f": {
+      "node": "53923:28479",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 186,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-enabled-t-f": {
+      "node": "53923:28483",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 32,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-disabled-f-t": {
+      "node": "53923:28487",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1161,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-disabled-f-t": {
+      "node": "53923:28492",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 989,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-disabled-f-f": {
+      "node": "53923:28497",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 835,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-disabled-f-f": {
+      "node": "53923:28501",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 681,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-disabled-f-t": {
+      "node": "53923:28505",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 518,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 44,
+      "allowedDiffReason": "Kit slip: the trailing arrow in this variant is faded twice (\u224814% instead of 38%, compare the outlined sibling which matches); we render the consistent 38%."
+    },
+    "filter-out-label-disabled-f-t": {
+      "node": "53923:28509",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 346,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-disabled-f-f": {
+      "node": "53923:28513",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 192,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-disabled-f-f": {
+      "node": "53923:28516",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 38,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-dragged-f-t": {
+      "node": "53923:28519",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1162,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-dragged-f-t": {
+      "node": "53923:28524",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 990,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        133,
+        62
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-dragged-f-f": {
+      "node": "53923:28529",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 836,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-dragged-f-f": {
+      "node": "53923:28533",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 682,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-dragged-f-t": {
+      "node": "53923:28537",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 519,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-dragged-f-t": {
+      "node": "53923:28541",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 347,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        115,
+        62
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-dragged-f-f": {
+      "node": "53923:28545",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 193,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        97,
+        62
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-dragged-f-f": {
+      "node": "53923:28548",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 39,
+        "y": 243
+      },
+      "renderBounds": [
+        -15,
+        -9,
+        97,
+        62
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-pressed-f-t": {
+      "node": "53923:28551",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1163,
+        "y": 187
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-pressed-f-t": {
+      "node": "53923:28556",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 991,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-pressed-f-f": {
+      "node": "53923:28561",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 837,
+        "y": 187
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-pressed-f-f": {
+      "node": "53923:28565",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 683,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-pressed-f-t": {
+      "node": "53923:28569",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 520,
+        "y": 187
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-pressed-f-t": {
+      "node": "53923:28573",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 348,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-pressed-f-f": {
+      "node": "53923:28577",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 194,
+        "y": 187
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-pressed-f-f": {
+      "node": "53923:28580",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 40,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-focused-f-t": {
+      "node": "53923:28583",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1162,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-focused-f-t": {
+      "node": "53923:28588",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 990,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-focused-f-f": {
+      "node": "53923:28593",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 836,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-focused-f-f": {
+      "node": "53923:28597",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 682,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-focused-f-t": {
+      "node": "53923:28601",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 519,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-focused-f-t": {
+      "node": "53923:28605",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 347,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-focused-f-f": {
+      "node": "53923:28609",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 193,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-focused-f-f": {
+      "node": "53923:28612",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 39,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-hovered-f-t": {
+      "node": "53923:28615",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1163,
+        "y": 75
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        121,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-hovered-f-t": {
+      "node": "53923:28620",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 991,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-hovered-f-f": {
+      "node": "53923:28625",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 837,
+        "y": 75
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-hovered-f-f": {
+      "node": "53923:28629",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 683,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-hovered-f-t": {
+      "node": "53923:28633",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 520,
+        "y": 75
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-hovered-f-t": {
+      "node": "53923:28637",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 348,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-hovered-f-f": {
+      "node": "53923:28641",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 194,
+        "y": 75
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-hovered-f-f": {
+      "node": "53923:28644",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 40,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-enabled-f-t": {
+      "node": "53923:28647",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 1164,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        113,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-enabled-f-t": {
+      "node": "53923:28652",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 992,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-icon-enabled-f-f": {
+      "node": "53923:28657",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 838,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-icon-enabled-f-f": {
+      "node": "53923:28661",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 684,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-enabled-f-t": {
+      "node": "53923:28665",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 521,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-enabled-f-t": {
+      "node": "53923:28669",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 349,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-el-label-enabled-f-f": {
+      "node": "53923:28673",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 195,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "filter-out-label-enabled-f-f": {
+      "node": "53923:28676",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filter",
+        "x": 41,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-dragged-t-t": {
+      "node": "53923:27889",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        129,
+        56
+      ],
+      "allowedDiffPixels": 3975,
+      "allowedDiffReason": "Kit slip: this one variant doesn't clip content (its siblings do), so Figma drops the level-3 shadow's spread; we render the consistent clipped shadow."
+    },
+    "input-avatar-dragged-t-f": {
+      "node": "53923:27894",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        107,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-dragged-t-t": {
+      "node": "53923:27898",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 449,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        127,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-dragged-t-f": {
+      "node": "53923:27903",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        105,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-dragged-t-t": {
+      "node": "53923:27907",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        105,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-dragged-t-f": {
+      "node": "53923:27911",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 408
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        83,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-focused-t-t": {
+      "node": "53923:27914",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-focused-t-f": {
+      "node": "53923:27919",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-focused-t-t": {
+      "node": "53923:27923",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 449,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-focused-t-f": {
+      "node": "53923:27928",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-focused-t-t": {
+      "node": "53923:27932",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-focused-t-f": {
+      "node": "53923:27936",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 352
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-hovered-t-t": {
+      "node": "53923:27939",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-hovered-t-f": {
+      "node": "53923:27944",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-hovered-t-t": {
+      "node": "53923:27948",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 450,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-hovered-t-f": {
+      "node": "53923:27953",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-hovered-t-t": {
+      "node": "53923:27957",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-hovered-t-f": {
+      "node": "53923:27961",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 296
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-enabled-t-t": {
+      "node": "53923:27964",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 770,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-enabled-t-f": {
+      "node": "53923:27969",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 620,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-enabled-t-t": {
+      "node": "53923:27973",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 451,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-enabled-t-f": {
+      "node": "53923:27978",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 302,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-enabled-t-t": {
+      "node": "53923:27982",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 154,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-enabled-t-f": {
+      "node": "53923:27986",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 28,
+        "y": 240
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-dragged-f-t": {
+      "node": "53923:27989",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        129,
+        56
+      ],
+      "allowedDiffPixels": 5,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-dragged-f-f": {
+      "node": "53923:27994",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        107,
+        56
+      ],
+      "allowedDiffPixels": 5,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-dragged-f-t": {
+      "node": "53923:27998",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 449,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        127,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-dragged-f-f": {
+      "node": "53923:28003",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        105,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-dragged-f-t": {
+      "node": "53923:28007",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        105,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-dragged-f-f": {
+      "node": "53923:28011",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 184
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        83,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-focused-f-t": {
+      "node": "53923:28014",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-focused-f-f": {
+      "node": "53923:28019",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-focused-f-t": {
+      "node": "53923:28023",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 449,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-focused-f-f": {
+      "node": "53923:28028",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-focused-f-t": {
+      "node": "53923:28032",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-focused-f-f": {
+      "node": "53923:28036",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 128
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-hovered-f-t": {
+      "node": "53923:28039",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 769,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-hovered-f-f": {
+      "node": "53923:28044",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 619,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-hovered-f-t": {
+      "node": "53923:28048",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 450,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-hovered-f-f": {
+      "node": "53923:28053",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 301,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-hovered-f-t": {
+      "node": "53923:28057",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 153,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-hovered-f-f": {
+      "node": "53923:28061",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 27,
+        "y": 72
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-enabled-f-t": {
+      "node": "53923:28064",
+      "size": [
+        105,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 770,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        107,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-avatar-enabled-f-f": {
+      "node": "53923:28069",
+      "size": [
+        83,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 620,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        85,
+        34
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-enabled-f-t": {
+      "node": "53923:28073",
+      "size": [
+        103,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 451,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        105,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-icon-enabled-f-f": {
+      "node": "53923:28078",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 302,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-enabled-f-t": {
+      "node": "53923:28082",
+      "size": [
+        81,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 154,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        83,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "input-label-enabled-f-f": {
+      "node": "53923:28086",
+      "size": [
+        59,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "input",
+        "x": 28,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        61,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-disabled-t-t": {
+      "node": "53923:28680",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 452,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-disabled-t-t": {
+      "node": "53923:28684",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 298,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-disabled-t-f": {
+      "node": "53923:28688",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 162,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-disabled-t-f": {
+      "node": "53923:28691",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 26,
+        "y": 635
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-dragged-t-t": {
+      "node": "53923:28694",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 453,
+        "y": 579
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        109,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-dragged-t-t": {
+      "node": "53923:28698",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 579
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        109,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-dragged-t-f": {
+      "node": "53923:28702",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 163,
+        "y": 579
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        91,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-dragged-t-f": {
+      "node": "53923:28705",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 27,
+        "y": 579
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        91,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-pressed-t-t": {
+      "node": "53923:28708",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 454,
+        "y": 523
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-pressed-t-t": {
+      "node": "53923:28712",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 300,
+        "y": 523
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-pressed-t-f": {
+      "node": "53923:28716",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 164,
+        "y": 523
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-pressed-t-f": {
+      "node": "53923:28719",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 28,
+        "y": 523
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-focused-t-t": {
+      "node": "53923:28722",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 453,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-focused-t-t": {
+      "node": "53923:28726",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-focused-t-f": {
+      "node": "53923:28730",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 163,
+        "y": 467
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-focused-t-f": {
+      "node": "53923:28733",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 27,
+        "y": 467
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-hovered-t-t": {
+      "node": "53923:28736",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 454,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-hovered-t-t": {
+      "node": "53923:28740",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-hovered-t-f": {
+      "node": "53923:28744",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 164,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-hovered-t-f": {
+      "node": "53923:28747",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 28,
+        "y": 411
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-enabled-t-t": {
+      "node": "53923:28750",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 455,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-enabled-t-t": {
+      "node": "53923:28754",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 300,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-enabled-t-f": {
+      "node": "53923:28758",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 165,
+        "y": 355
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-enabled-t-f": {
+      "node": "53923:28761",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 29,
+        "y": 355
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-disabled-f-t": {
+      "node": "53923:28764",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 452,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-disabled-f-t": {
+      "node": "53923:28768",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 298,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-disabled-f-f": {
+      "node": "53923:28772",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 162,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-disabled-f-f": {
+      "node": "53923:28775",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 26,
+        "y": 299
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-dragged-f-t": {
+      "node": "53923:28778",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 453,
+        "y": 243
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        109,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-dragged-f-t": {
+      "node": "53923:28782",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 243
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        109,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-dragged-f-f": {
+      "node": "53923:28786",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 163,
+        "y": 243
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        91,
+        56
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-dragged-f-f": {
+      "node": "53923:28789",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 27,
+        "y": 243
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        91,
+        56
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-pressed-f-t": {
+      "node": "53923:28792",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 454,
+        "y": 187
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        103,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-pressed-f-t": {
+      "node": "53923:28796",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 300,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-pressed-f-f": {
+      "node": "53923:28800",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 164,
+        "y": 187
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        85,
+        50
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-pressed-f-f": {
+      "node": "53923:28803",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 28,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-focused-f-t": {
+      "node": "53923:28806",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 453,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-focused-f-t": {
+      "node": "53923:28810",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-focused-f-f": {
+      "node": "53923:28814",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 163,
+        "y": 131
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-focused-f-f": {
+      "node": "53923:28817",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 27,
+        "y": 131
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-hovered-f-t": {
+      "node": "53923:28820",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 454,
+        "y": 75
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-hovered-f-t": {
+      "node": "53923:28824",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 299,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-hovered-f-f": {
+      "node": "53923:28828",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 164,
+        "y": 75
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-hovered-f-f": {
+      "node": "53923:28831",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 28,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-enabled-f-t": {
+      "node": "53923:28834",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 455,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        95,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-enabled-f-t": {
+      "node": "53923:28838",
+      "size": [
+        85,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 300,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        87,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-el-enabled-f-f": {
+      "node": "53923:28842",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 165,
+        "y": 19
+      },
+      "renderBounds": [
+        -5,
+        -4,
+        77,
+        42
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "suggestion-out-enabled-f-f": {
+      "node": "53923:28845",
+      "size": [
+        67,
+        32
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "suggestion",
+        "x": 29,
+        "y": 19
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        69,
+        34
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+    },
+    "groups-inputchips-singlerowscrollable": {
+      "node": "57376:5500",
+      "size": [
+        360,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 16,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        50
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-inputchips-multiplerowsoverflow": {
+      "node": "57377:5752",
+      "size": [
+        360,
+        96
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 443,
+        "y": 75
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        98
+      ],
+      "allowedDiffPixels": 18,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-assistivechips-singlerowscrollable": {
+      "node": "57376:5502",
+      "size": [
+        360,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 16,
+        "y": 172
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        50
+      ],
+      "allowedDiffPixels": 5,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-assistivechips-multiplerowsoverflow": {
+      "node": "57377:5762",
+      "size": [
+        360,
+        96
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 443,
+        "y": 173
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        98
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-filterchips-singlerowscrollable": {
+      "node": "57376:5530",
+      "size": [
+        360,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 16,
+        "y": 269
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        50
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-filterchips-multiplerowsoverflow": {
+      "node": "57377:5772",
+      "size": [
+        360,
+        96
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 443,
+        "y": 271
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        98
+      ],
+      "allowedDiffPixels": 16,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-suggestionchips-singlerowscrollable": {
+      "node": "57376:5558",
+      "size": [
+        360,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 16,
+        "y": 365
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        50
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    },
+    "groups-suggestionchips-multiplerowsoverflow": {
+      "node": "57377:5782",
+      "size": [
+        360,
+        96
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "groups",
+        "x": 443,
+        "y": 369
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        98
+      ],
+      "allowedDiffPixels": 16,
+      "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+    }
+  }
+}

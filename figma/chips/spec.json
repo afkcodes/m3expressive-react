@@ -1,0 +1,1221 @@
+{
+ "component": "chips",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "assist": {
+   "node": "53923:28089",
+   "file": "_frames/assist.png",
+   "size": [
+    1164,
+    347
+   ],
+   "rows": "assist.el.brand.disabled 53923:28090 1053,299 85x32;assist.out.brand.disabled 53923:28094 900,299 85x32;assist.el.icon.disabled 53923:28106 441,299 85x32;assist.out.icon.disabled 53923:28110 288,299 85x32;assist.el.label.disabled 53923:28114 152,299 67x32;assist.out.label.disabled 53923:28117 16,299 67x32;assist.el.brand.dragged 53923:28120 1054,243 85x32 rb-8,-6,101,48;assist.out.brand.dragged 53923:28124 901,243 85x32;assist.el.icon.dragged 53923:28136 442,243 85x32 rb-8,-6,101,48;assist.out.icon.dragged 53923:28140 289,243 85x32;assist.el.label.dragged 53923:28144 153,243 67x32 rb-8,-6,83,48;assist.out.label.dragged 53923:28147 17,243 67x32;assist.el.brand.pressed 53923:28150 1055,187 85x32 rb-8,-6,101,48;assist.out.brand.pressed 53923:28154 902,187 85x32;assist.el.icon.pressed 53923:28166 443,187 85x32 rb-8,-6,101,48;assist.out.icon.pressed 53923:28170 290,187 85x32;assist.el.label.pressed 53923:28174 154,187 67x32 rb-8,-6,83,48;assist.out.label.pressed 53923:28177 18,187 67x32;assist.el.brand.focused 53923:28180 1054,131 85x32 rb-4,-3,93,40;assist.out.brand.focused 53923:28184 901,131 85x32;assist.el.icon.focused 53923:28196 442,131 85x32 rb-4,-3,93,40;assist.out.icon.focused 53923:28200 289,131 85x32;assist.el.label.focused 53923:28204 153,131 67x32 rb-4,-3,75,40;assist.out.label.focused 53923:28207 17,131 67x32;assist.el.brand.hovered 53923:28210 1054,75 85x32 rb-4,-3,93,40;assist.out.brand.hovered 53923:28214 901,75 85x32;assist.el.icon.hovered 53923:28226 442,75 85x32 rb-4,-3,93,40;assist.out.icon.hovered 53923:28230 289,75 85x32;assist.el.label.hovered 53923:28234 153,75 67x32 rb-4,-3,75,40;assist.out.label.hovered 53923:28237 17,75 67x32;assist.el.brand.enabled 53923:28240 1055,19 85x32 rb-4,-3,93,40;assist.out.brand.enabled 53923:28244 902,19 85x32;assist.el.icon.enabled 53923:28256 442,19 85x32 rb-4,-3,93,40;assist.out.icon.enabled 53923:28260 289,19 85x32;assist.el.label.enabled 53923:28264 155,19 67x32 rb-4,-3,75,40;assist.out.label.enabled 53923:28267 19,19 67x32"
+  },
+  "filter": {
+   "node": "53923:28270",
+   "file": "_frames/filter.png",
+   "size": [
+    1295,
+    683
+   ],
+   "rows": "filter.el.icon.disabled.t.t 53923:28271 1161,635 103x32;filter.out.icon.disabled.t.t 53923:28276 989,635 103x32;filter.el.icon.disabled.t.f 53923:28281 835,635 85x32;filter.out.icon.disabled.t.f 53923:28285 681,635 85x32;filter.el.label.disabled.t.t 53923:28289 509,635 103x32;filter.out.label.disabled.t.t 53923:28294 337,635 103x32;filter.el.label.disabled.t.f 53923:28299 183,635 85x32;filter.out.label.disabled.t.f 53923:28303 29,635 85x32;filter.el.icon.dragged.t.t 53923:28307 1162,579 103x32 rb-14,-8,131,60;filter.out.icon.dragged.t.t 53923:28312 990,579 103x32 rb-14,-8,131,60;filter.el.icon.dragged.t.f 53923:28317 836,579 85x32 rb-14,-8,113,60;filter.out.icon.dragged.t.f 53923:28321 682,579 85x32 rb-14,-8,113,60;filter.el.label.dragged.t.t 53923:28325 510,579 103x32 rb-14,-8,131,60;filter.out.label.dragged.t.t 53923:28330 338,579 103x32 rb-14,-8,131,60;filter.el.label.dragged.t.f 53923:28335 184,579 85x32 rb-14,-8,113,60;filter.out.label.dragged.t.f 53923:28339 30,579 85x32 rb-14,-8,113,60;filter.el.icon.pressed.t.t 53923:28343 1163,523 103x32 rb-4,-3,111,40;filter.out.icon.pressed.t.t 53923:28348 991,523 103x32;filter.el.icon.pressed.t.f 53923:28353 837,523 85x32 rb-4,-3,93,40;filter.out.icon.pressed.t.f 53923:28357 683,523 85x32;filter.el.label.pressed.t.t 53923:28361 511,523 103x32 rb-4,-3,111,40;filter.out.label.pressed.t.t 53923:28366 339,523 103x32;filter.el.label.pressed.t.f 53923:28371 185,523 85x32 rb-4,-3,93,40;filter.out.label.pressed.t.f 53923:28375 31,523 85x32;filter.el.icon.focused.t.t 53923:28379 1162,467 103x32 rb-4,-3,111,40;filter.out.icon.focused.t.t 53923:28384 990,467 103x32;filter.el.icon.focused.t.f 53923:28389 836,467 85x32 rb-4,-3,93,40;filter.out.icon.focused.t.f 53923:28393 682,467 85x32;filter.el.label.focused.t.t 53923:28397 510,467 103x32 rb-4,-3,111,40;filter.out.label.focused.t.t 53923:28402 338,467 103x32;filter.el.label.focused.t.f 53923:28407 184,467 85x32 rb-4,-3,93,40;filter.out.label.focused.t.f 53923:28411 30,467 85x32;filter.el.icon.hovered.t.t 53923:28415 1163,411 103x32 rb-8,-6,119,48;filter.out.icon.hovered.t.t 53923:28420 991,411 103x32 rb-4,-3,111,40;filter.el.icon.hovered.t.f 53923:28425 837,411 85x32 rb-8,-6,101,48;filter.out.icon.hovered.t.f 53923:28429 683,411 85x32 rb-4,-3,93,40;filter.el.label.hovered.t.t 53923:28433 511,411 103x32 rb-8,-6,119,48;filter.out.label.hovered.t.t 53923:28438 339,411 103x32 rb-4,-3,111,40;filter.el.label.hovered.t.f 53923:28443 185,411 85x32 rb-8,-6,101,48;filter.out.label.hovered.t.f 53923:28447 31,411 85x32 rb-4,-3,93,40;filter.el.icon.enabled.t.t 53923:28451 1164,355 103x32 rb-4,-3,111,40;filter.out.icon.enabled.t.t 53923:28456 992,355 103x32;filter.el.icon.enabled.t.f 53923:28461 838,355 85x32 rb-4,-3,93,40;filter.out.icon.enabled.t.f 53923:28465 684,355 85x32;filter.el.label.enabled.t.t 53923:28469 512,355 103x32 rb-4,-3,111,40;filter.out.label.enabled.t.t 53923:28474 340,355 103x32;filter.el.label.enabled.t.f 53923:28479 186,355 85x32 rb-4,-3,93,40;filter.out.label.enabled.t.f 53923:28483 32,355 85x32;filter.el.icon.disabled.f.t 53923:28487 1161,299 103x32;filter.out.icon.disabled.f.t 53923:28492 989,299 103x32;filter.el.icon.disabled.f.f 53923:28497 835,299 85x32;filter.out.icon.disabled.f.f 53923:28501 681,299 85x32;filter.el.label.disabled.f.t 53923:28505 518,299 85x32;filter.out.label.disabled.f.t 53923:28509 346,299 85x32;filter.el.label.disabled.f.f 53923:28513 192,299 67x32;filter.out.label.disabled.f.f 53923:28516 38,299 67x32;filter.el.icon.dragged.f.t 53923:28519 1162,243 103x32 rb-14,-8,131,60;filter.out.icon.dragged.f.t 53923:28524 990,243 103x32 rb-14,-8,131,60;filter.el.icon.dragged.f.f 53923:28529 836,243 85x32 rb-14,-8,113,60;filter.out.icon.dragged.f.f 53923:28533 682,243 85x32 rb-14,-8,113,60;filter.el.label.dragged.f.t 53923:28537 519,243 85x32 rb-14,-8,113,60;filter.out.label.dragged.f.t 53923:28541 347,243 85x32 rb-14,-8,113,60;filter.el.label.dragged.f.f 53923:28545 193,243 67x32 rb-14,-8,95,60;filter.out.label.dragged.f.f 53923:28548 39,243 67x32 rb-14,-8,95,60;filter.el.icon.pressed.f.t 53923:28551 1163,187 103x32 rb-4,-3,111,40;filter.out.icon.pressed.f.t 53923:28556 991,187 103x32;filter.el.icon.pressed.f.f 53923:28561 837,187 85x32 rb-4,-3,93,40;filter.out.icon.pressed.f.f 53923:28565 683,187 85x32;filter.el.label.pressed.f.t 53923:28569 520,187 85x32 rb-4,-3,93,40;filter.out.label.pressed.f.t 53923:28573 348,187 85x32;filter.el.label.pressed.f.f 53923:28577 194,187 67x32 rb-4,-3,75,40;filter.out.label.pressed.f.f 53923:28580 40,187 67x32;filter.el.icon.focused.f.t 53923:28583 1162,131 103x32 rb-4,-3,111,40;filter.out.icon.focused.f.t 53923:28588 990,131 103x32;filter.el.icon.focused.f.f 53923:28593 836,131 85x32 rb-4,-3,93,40;filter.out.icon.focused.f.f 53923:28597 682,131 85x32;filter.el.label.focused.f.t 53923:28601 519,131 85x32 rb-4,-3,93,40;filter.out.label.focused.f.t 53923:28605 347,131 85x32;filter.el.label.focused.f.f 53923:28609 193,131 67x32 rb-4,-3,75,40;filter.out.label.focused.f.f 53923:28612 39,131 67x32;filter.el.icon.hovered.f.t 53923:28615 1163,75 103x32 rb-8,-6,119,48;filter.out.icon.hovered.f.t 53923:28620 991,75 103x32;filter.el.icon.hovered.f.f 53923:28625 837,75 85x32 rb-8,-6,101,48;filter.out.icon.hovered.f.f 53923:28629 683,75 85x32;filter.el.label.hovered.f.t 53923:28633 520,75 85x32 rb-8,-6,101,48;filter.out.label.hovered.f.t 53923:28637 348,75 85x32;filter.el.label.hovered.f.f 53923:28641 194,75 67x32 rb-8,-6,83,48;filter.out.label.hovered.f.f 53923:28644 40,75 67x32;filter.el.icon.enabled.f.t 53923:28647 1164,19 103x32 rb-4,-3,111,40;filter.out.icon.enabled.f.t 53923:28652 992,19 103x32;filter.el.icon.enabled.f.f 53923:28657 838,19 85x32 rb-4,-3,93,40;filter.out.icon.enabled.f.f 53923:28661 684,19 85x32;filter.el.label.enabled.f.t 53923:28665 521,19 85x32 rb-4,-3,93,40;filter.out.label.enabled.f.t 53923:28669 349,19 85x32;filter.el.label.enabled.f.f 53923:28673 195,19 67x32 rb-4,-3,75,40;filter.out.label.enabled.f.f 53923:28676 41,19 67x32"
+  },
+  "input": {
+   "node": "53923:27888",
+   "file": "_frames/input.png",
+   "size": [
+    901,
+    471
+   ],
+   "rows": "input.avatar.dragged.t.t 53923:27889 769,408 105x32 rb-11,-7,127,54;input.avatar.dragged.t.f 53923:27894 619,408 83x32 rb-11,-7,105,54;input.icon.dragged.t.t 53923:27898 449,408 103x32 rb-11,-7,125,54;input.icon.dragged.t.f 53923:27903 301,408 81x32 rb-11,-7,103,54;input.label.dragged.t.t 53923:27907 153,408 81x32 rb-11,-7,103,54;input.label.dragged.t.f 53923:27911 27,408 59x32 rb-11,-7,81,54;input.avatar.focused.t.t 53923:27914 769,352 105x32;input.avatar.focused.t.f 53923:27919 619,352 83x32;input.icon.focused.t.t 53923:27923 449,352 103x32;input.icon.focused.t.f 53923:27928 301,352 81x32;input.label.focused.t.t 53923:27932 153,352 81x32;input.label.focused.t.f 53923:27936 27,352 59x32;input.avatar.hovered.t.t 53923:27939 769,296 105x32;input.avatar.hovered.t.f 53923:27944 619,296 83x32;input.icon.hovered.t.t 53923:27948 450,296 103x32;input.icon.hovered.t.f 53923:27953 301,296 81x32;input.label.hovered.t.t 53923:27957 153,296 81x32;input.label.hovered.t.f 53923:27961 27,296 59x32;input.avatar.enabled.t.t 53923:27964 770,240 105x32;input.avatar.enabled.t.f 53923:27969 620,240 83x32;input.icon.enabled.t.t 53923:27973 451,240 103x32;input.icon.enabled.t.f 53923:27978 302,240 81x32;input.label.enabled.t.t 53923:27982 154,240 81x32;input.label.enabled.t.f 53923:27986 28,240 59x32;input.avatar.dragged.f.t 53923:27989 769,184 105x32 rb-11,-7,127,54;input.avatar.dragged.f.f 53923:27994 619,184 83x32 rb-11,-7,105,54;input.icon.dragged.f.t 53923:27998 449,184 103x32 rb-11,-7,125,54;input.icon.dragged.f.f 53923:28003 301,184 81x32 rb-11,-7,103,54;input.label.dragged.f.t 53923:28007 153,184 81x32 rb-11,-7,103,54;input.label.dragged.f.f 53923:28011 27,184 59x32 rb-11,-7,81,54;input.avatar.focused.f.t 53923:28014 769,128 105x32;input.avatar.focused.f.f 53923:28019 619,128 83x32;input.icon.focused.f.t 53923:28023 449,128 103x32;input.icon.focused.f.f 53923:28028 301,128 81x32;input.label.focused.f.t 53923:28032 153,128 81x32;input.label.focused.f.f 53923:28036 27,128 59x32;input.avatar.hovered.f.t 53923:28039 769,72 105x32;input.avatar.hovered.f.f 53923:28044 619,72 83x32;input.icon.hovered.f.t 53923:28048 450,72 103x32;input.icon.hovered.f.f 53923:28053 301,72 81x32;input.label.hovered.f.t 53923:28057 153,72 81x32;input.label.hovered.f.f 53923:28061 27,72 59x32;input.avatar.enabled.f.t 53923:28064 770,16 105x32;input.avatar.enabled.f.f 53923:28069 620,16 83x32;input.icon.enabled.f.t 53923:28073 451,16 103x32;input.icon.enabled.f.f 53923:28078 302,16 81x32;input.label.enabled.f.t 53923:28082 154,16 81x32;input.label.enabled.f.f 53923:28086 28,16 59x32"
+  },
+  "suggestion": {
+   "node": "53923:28679",
+   "file": "_frames/suggestion.png",
+   "size": [
+    565,
+    683
+   ],
+   "rows": "suggestion.el.disabled.t.t 53923:28680 452,635 85x32;suggestion.out.disabled.t.t 53923:28684 298,635 85x32;suggestion.el.disabled.t.f 53923:28688 162,635 67x32;suggestion.out.disabled.t.f 53923:28691 26,635 67x32;suggestion.el.dragged.t.t 53923:28694 453,579 85x32 rb-11,-7,107,54;suggestion.out.dragged.t.t 53923:28698 299,579 85x32 rb-11,-7,107,54;suggestion.el.dragged.t.f 53923:28702 163,579 67x32 rb-11,-7,89,54;suggestion.out.dragged.t.f 53923:28705 27,579 67x32 rb-11,-7,89,54;suggestion.el.pressed.t.t 53923:28708 454,523 85x32 rb-8,-6,101,48;suggestion.out.pressed.t.t 53923:28712 300,523 85x32 rb-8,-6,101,48;suggestion.el.pressed.t.f 53923:28716 164,523 67x32 rb-8,-6,83,48;suggestion.out.pressed.t.f 53923:28719 28,523 67x32 rb-8,-6,83,48;suggestion.el.focused.t.t 53923:28722 453,467 85x32 rb-4,-3,93,40;suggestion.out.focused.t.t 53923:28726 299,467 85x32;suggestion.el.focused.t.f 53923:28730 163,467 67x32 rb-4,-3,75,40;suggestion.out.focused.t.f 53923:28733 27,467 67x32;suggestion.el.hovered.t.t 53923:28736 454,411 85x32 rb-4,-3,93,40;suggestion.out.hovered.t.t 53923:28740 299,411 85x32 rb-4,-3,93,40;suggestion.el.hovered.t.f 53923:28744 164,411 67x32 rb-4,-3,75,40;suggestion.out.hovered.t.f 53923:28747 28,411 67x32 rb-4,-3,75,40;suggestion.el.enabled.t.t 53923:28750 455,355 85x32 rb-4,-3,93,40;suggestion.out.enabled.t.t 53923:28754 300,355 85x32;suggestion.el.enabled.t.f 53923:28758 165,355 67x32 rb-4,-3,75,40;suggestion.out.enabled.t.f 53923:28761 29,355 67x32;suggestion.el.disabled.f.t 53923:28764 452,299 85x32;suggestion.out.disabled.f.t 53923:28768 298,299 85x32;suggestion.el.disabled.f.f 53923:28772 162,299 67x32;suggestion.out.disabled.f.f 53923:28775 26,299 67x32;suggestion.el.dragged.f.t 53923:28778 453,243 85x32 rb-11,-7,107,54;suggestion.out.dragged.f.t 53923:28782 299,243 85x32 rb-11,-7,107,54;suggestion.el.dragged.f.f 53923:28786 163,243 67x32 rb-11,-7,89,54;suggestion.out.dragged.f.f 53923:28789 27,243 67x32 rb-11,-7,89,54;suggestion.el.pressed.f.t 53923:28792 454,187 85x32 rb-8,-6,101,48;suggestion.out.pressed.f.t 53923:28796 300,187 85x32;suggestion.el.pressed.f.f 53923:28800 164,187 67x32 rb-8,-6,83,48;suggestion.out.pressed.f.f 53923:28803 28,187 67x32;suggestion.el.focused.f.t 53923:28806 453,131 85x32 rb-4,-3,93,40;suggestion.out.focused.f.t 53923:28810 299,131 85x32;suggestion.el.focused.f.f 53923:28814 163,131 67x32 rb-4,-3,75,40;suggestion.out.focused.f.f 53923:28817 27,131 67x32;suggestion.el.hovered.f.t 53923:28820 454,75 85x32 rb-4,-3,93,40;suggestion.out.hovered.f.t 53923:28824 299,75 85x32;suggestion.el.hovered.f.f 53923:28828 164,75 67x32 rb-4,-3,75,40;suggestion.out.hovered.f.f 53923:28831 28,75 67x32;suggestion.el.enabled.f.t 53923:28834 455,19 85x32 rb-4,-3,93,40;suggestion.out.enabled.f.t 53923:28838 300,19 85x32;suggestion.el.enabled.f.f 53923:28842 165,19 67x32 rb-4,-3,75,40;suggestion.out.enabled.f.f 53923:28845 29,19 67x32"
+  },
+  "groups": {
+   "node": "57376:5501",
+   "file": "_frames/groups.png",
+   "size": [
+    895,
+    486
+   ],
+   "rows": "groups.inputchips.singlerowscrollable 57376:5500 16,75 360x48;groups.inputchips.multiplerowsoverflow 57377:5752 443,75 360x96;groups.assistivechips.singlerowscrollable 57376:5502 16,172 360x48;groups.assistivechips.multiplerowsoverflow 57377:5762 443,173 360x96;groups.filterchips.singlerowscrollable 57376:5530 16,269 360x48;groups.filterchips.multiplerowsoverflow 57377:5772 443,271 360x96;groups.suggestionchips.singlerowscrollable 57376:5558 16,365 360x48;groups.suggestionchips.multiplerowsoverflow 57377:5782 443,369 360x96"
+  }
+ },
+ "rename": {
+  "assist.el.brand.disabled": "assist-el-brand-disabled",
+  "assist.out.brand.disabled": "assist-out-brand-disabled",
+  "assist.el.icon.disabled": "assist-el-icon-disabled",
+  "assist.out.icon.disabled": "assist-out-icon-disabled",
+  "assist.el.label.disabled": "assist-el-label-disabled",
+  "assist.out.label.disabled": "assist-out-label-disabled",
+  "assist.el.brand.dragged": "assist-el-brand-dragged",
+  "assist.out.brand.dragged": "assist-out-brand-dragged",
+  "assist.el.icon.dragged": "assist-el-icon-dragged",
+  "assist.out.icon.dragged": "assist-out-icon-dragged",
+  "assist.el.label.dragged": "assist-el-label-dragged",
+  "assist.out.label.dragged": "assist-out-label-dragged",
+  "assist.el.brand.pressed": "assist-el-brand-pressed",
+  "assist.out.brand.pressed": "assist-out-brand-pressed",
+  "assist.el.icon.pressed": "assist-el-icon-pressed",
+  "assist.out.icon.pressed": "assist-out-icon-pressed",
+  "assist.el.label.pressed": "assist-el-label-pressed",
+  "assist.out.label.pressed": "assist-out-label-pressed",
+  "assist.el.brand.focused": "assist-el-brand-focused",
+  "assist.out.brand.focused": "assist-out-brand-focused",
+  "assist.el.icon.focused": "assist-el-icon-focused",
+  "assist.out.icon.focused": "assist-out-icon-focused",
+  "assist.el.label.focused": "assist-el-label-focused",
+  "assist.out.label.focused": "assist-out-label-focused",
+  "assist.el.brand.hovered": "assist-el-brand-hovered",
+  "assist.out.brand.hovered": "assist-out-brand-hovered",
+  "assist.el.icon.hovered": "assist-el-icon-hovered",
+  "assist.out.icon.hovered": "assist-out-icon-hovered",
+  "assist.el.label.hovered": "assist-el-label-hovered",
+  "assist.out.label.hovered": "assist-out-label-hovered",
+  "assist.el.brand.enabled": "assist-el-brand-enabled",
+  "assist.out.brand.enabled": "assist-out-brand-enabled",
+  "assist.el.icon.enabled": "assist-el-icon-enabled",
+  "assist.out.icon.enabled": "assist-out-icon-enabled",
+  "assist.el.label.enabled": "assist-el-label-enabled",
+  "assist.out.label.enabled": "assist-out-label-enabled",
+  "filter.el.icon.disabled.t.t": "filter-el-icon-disabled-t-t",
+  "filter.out.icon.disabled.t.t": "filter-out-icon-disabled-t-t",
+  "filter.el.icon.disabled.t.f": "filter-el-icon-disabled-t-f",
+  "filter.out.icon.disabled.t.f": "filter-out-icon-disabled-t-f",
+  "filter.el.label.disabled.t.t": "filter-el-label-disabled-t-t",
+  "filter.out.label.disabled.t.t": "filter-out-label-disabled-t-t",
+  "filter.el.label.disabled.t.f": "filter-el-label-disabled-t-f",
+  "filter.out.label.disabled.t.f": "filter-out-label-disabled-t-f",
+  "filter.el.icon.dragged.t.t": "filter-el-icon-dragged-t-t",
+  "filter.out.icon.dragged.t.t": "filter-out-icon-dragged-t-t",
+  "filter.el.icon.dragged.t.f": "filter-el-icon-dragged-t-f",
+  "filter.out.icon.dragged.t.f": "filter-out-icon-dragged-t-f",
+  "filter.el.label.dragged.t.t": "filter-el-label-dragged-t-t",
+  "filter.out.label.dragged.t.t": "filter-out-label-dragged-t-t",
+  "filter.el.label.dragged.t.f": "filter-el-label-dragged-t-f",
+  "filter.out.label.dragged.t.f": "filter-out-label-dragged-t-f",
+  "filter.el.icon.pressed.t.t": "filter-el-icon-pressed-t-t",
+  "filter.out.icon.pressed.t.t": "filter-out-icon-pressed-t-t",
+  "filter.el.icon.pressed.t.f": "filter-el-icon-pressed-t-f",
+  "filter.out.icon.pressed.t.f": "filter-out-icon-pressed-t-f",
+  "filter.el.label.pressed.t.t": "filter-el-label-pressed-t-t",
+  "filter.out.label.pressed.t.t": "filter-out-label-pressed-t-t",
+  "filter.el.label.pressed.t.f": "filter-el-label-pressed-t-f",
+  "filter.out.label.pressed.t.f": "filter-out-label-pressed-t-f",
+  "filter.el.icon.focused.t.t": "filter-el-icon-focused-t-t",
+  "filter.out.icon.focused.t.t": "filter-out-icon-focused-t-t",
+  "filter.el.icon.focused.t.f": "filter-el-icon-focused-t-f",
+  "filter.out.icon.focused.t.f": "filter-out-icon-focused-t-f",
+  "filter.el.label.focused.t.t": "filter-el-label-focused-t-t",
+  "filter.out.label.focused.t.t": "filter-out-label-focused-t-t",
+  "filter.el.label.focused.t.f": "filter-el-label-focused-t-f",
+  "filter.out.label.focused.t.f": "filter-out-label-focused-t-f",
+  "filter.el.icon.hovered.t.t": "filter-el-icon-hovered-t-t",
+  "filter.out.icon.hovered.t.t": "filter-out-icon-hovered-t-t",
+  "filter.el.icon.hovered.t.f": "filter-el-icon-hovered-t-f",
+  "filter.out.icon.hovered.t.f": "filter-out-icon-hovered-t-f",
+  "filter.el.label.hovered.t.t": "filter-el-label-hovered-t-t",
+  "filter.out.label.hovered.t.t": "filter-out-label-hovered-t-t",
+  "filter.el.label.hovered.t.f": "filter-el-label-hovered-t-f",
+  "filter.out.label.hovered.t.f": "filter-out-label-hovered-t-f",
+  "filter.el.icon.enabled.t.t": "filter-el-icon-enabled-t-t",
+  "filter.out.icon.enabled.t.t": "filter-out-icon-enabled-t-t",
+  "filter.el.icon.enabled.t.f": "filter-el-icon-enabled-t-f",
+  "filter.out.icon.enabled.t.f": "filter-out-icon-enabled-t-f",
+  "filter.el.label.enabled.t.t": "filter-el-label-enabled-t-t",
+  "filter.out.label.enabled.t.t": "filter-out-label-enabled-t-t",
+  "filter.el.label.enabled.t.f": "filter-el-label-enabled-t-f",
+  "filter.out.label.enabled.t.f": "filter-out-label-enabled-t-f",
+  "filter.el.icon.disabled.f.t": "filter-el-icon-disabled-f-t",
+  "filter.out.icon.disabled.f.t": "filter-out-icon-disabled-f-t",
+  "filter.el.icon.disabled.f.f": "filter-el-icon-disabled-f-f",
+  "filter.out.icon.disabled.f.f": "filter-out-icon-disabled-f-f",
+  "filter.el.label.disabled.f.t": "filter-el-label-disabled-f-t",
+  "filter.out.label.disabled.f.t": "filter-out-label-disabled-f-t",
+  "filter.el.label.disabled.f.f": "filter-el-label-disabled-f-f",
+  "filter.out.label.disabled.f.f": "filter-out-label-disabled-f-f",
+  "filter.el.icon.dragged.f.t": "filter-el-icon-dragged-f-t",
+  "filter.out.icon.dragged.f.t": "filter-out-icon-dragged-f-t",
+  "filter.el.icon.dragged.f.f": "filter-el-icon-dragged-f-f",
+  "filter.out.icon.dragged.f.f": "filter-out-icon-dragged-f-f",
+  "filter.el.label.dragged.f.t": "filter-el-label-dragged-f-t",
+  "filter.out.label.dragged.f.t": "filter-out-label-dragged-f-t",
+  "filter.el.label.dragged.f.f": "filter-el-label-dragged-f-f",
+  "filter.out.label.dragged.f.f": "filter-out-label-dragged-f-f",
+  "filter.el.icon.pressed.f.t": "filter-el-icon-pressed-f-t",
+  "filter.out.icon.pressed.f.t": "filter-out-icon-pressed-f-t",
+  "filter.el.icon.pressed.f.f": "filter-el-icon-pressed-f-f",
+  "filter.out.icon.pressed.f.f": "filter-out-icon-pressed-f-f",
+  "filter.el.label.pressed.f.t": "filter-el-label-pressed-f-t",
+  "filter.out.label.pressed.f.t": "filter-out-label-pressed-f-t",
+  "filter.el.label.pressed.f.f": "filter-el-label-pressed-f-f",
+  "filter.out.label.pressed.f.f": "filter-out-label-pressed-f-f",
+  "filter.el.icon.focused.f.t": "filter-el-icon-focused-f-t",
+  "filter.out.icon.focused.f.t": "filter-out-icon-focused-f-t",
+  "filter.el.icon.focused.f.f": "filter-el-icon-focused-f-f",
+  "filter.out.icon.focused.f.f": "filter-out-icon-focused-f-f",
+  "filter.el.label.focused.f.t": "filter-el-label-focused-f-t",
+  "filter.out.label.focused.f.t": "filter-out-label-focused-f-t",
+  "filter.el.label.focused.f.f": "filter-el-label-focused-f-f",
+  "filter.out.label.focused.f.f": "filter-out-label-focused-f-f",
+  "filter.el.icon.hovered.f.t": "filter-el-icon-hovered-f-t",
+  "filter.out.icon.hovered.f.t": "filter-out-icon-hovered-f-t",
+  "filter.el.icon.hovered.f.f": "filter-el-icon-hovered-f-f",
+  "filter.out.icon.hovered.f.f": "filter-out-icon-hovered-f-f",
+  "filter.el.label.hovered.f.t": "filter-el-label-hovered-f-t",
+  "filter.out.label.hovered.f.t": "filter-out-label-hovered-f-t",
+  "filter.el.label.hovered.f.f": "filter-el-label-hovered-f-f",
+  "filter.out.label.hovered.f.f": "filter-out-label-hovered-f-f",
+  "filter.el.icon.enabled.f.t": "filter-el-icon-enabled-f-t",
+  "filter.out.icon.enabled.f.t": "filter-out-icon-enabled-f-t",
+  "filter.el.icon.enabled.f.f": "filter-el-icon-enabled-f-f",
+  "filter.out.icon.enabled.f.f": "filter-out-icon-enabled-f-f",
+  "filter.el.label.enabled.f.t": "filter-el-label-enabled-f-t",
+  "filter.out.label.enabled.f.t": "filter-out-label-enabled-f-t",
+  "filter.el.label.enabled.f.f": "filter-el-label-enabled-f-f",
+  "filter.out.label.enabled.f.f": "filter-out-label-enabled-f-f",
+  "input.avatar.dragged.t.t": "input-avatar-dragged-t-t",
+  "input.avatar.dragged.t.f": "input-avatar-dragged-t-f",
+  "input.icon.dragged.t.t": "input-icon-dragged-t-t",
+  "input.icon.dragged.t.f": "input-icon-dragged-t-f",
+  "input.label.dragged.t.t": "input-label-dragged-t-t",
+  "input.label.dragged.t.f": "input-label-dragged-t-f",
+  "input.avatar.focused.t.t": "input-avatar-focused-t-t",
+  "input.avatar.focused.t.f": "input-avatar-focused-t-f",
+  "input.icon.focused.t.t": "input-icon-focused-t-t",
+  "input.icon.focused.t.f": "input-icon-focused-t-f",
+  "input.label.focused.t.t": "input-label-focused-t-t",
+  "input.label.focused.t.f": "input-label-focused-t-f",
+  "input.avatar.hovered.t.t": "input-avatar-hovered-t-t",
+  "input.avatar.hovered.t.f": "input-avatar-hovered-t-f",
+  "input.icon.hovered.t.t": "input-icon-hovered-t-t",
+  "input.icon.hovered.t.f": "input-icon-hovered-t-f",
+  "input.label.hovered.t.t": "input-label-hovered-t-t",
+  "input.label.hovered.t.f": "input-label-hovered-t-f",
+  "input.avatar.enabled.t.t": "input-avatar-enabled-t-t",
+  "input.avatar.enabled.t.f": "input-avatar-enabled-t-f",
+  "input.icon.enabled.t.t": "input-icon-enabled-t-t",
+  "input.icon.enabled.t.f": "input-icon-enabled-t-f",
+  "input.label.enabled.t.t": "input-label-enabled-t-t",
+  "input.label.enabled.t.f": "input-label-enabled-t-f",
+  "input.avatar.dragged.f.t": "input-avatar-dragged-f-t",
+  "input.avatar.dragged.f.f": "input-avatar-dragged-f-f",
+  "input.icon.dragged.f.t": "input-icon-dragged-f-t",
+  "input.icon.dragged.f.f": "input-icon-dragged-f-f",
+  "input.label.dragged.f.t": "input-label-dragged-f-t",
+  "input.label.dragged.f.f": "input-label-dragged-f-f",
+  "input.avatar.focused.f.t": "input-avatar-focused-f-t",
+  "input.avatar.focused.f.f": "input-avatar-focused-f-f",
+  "input.icon.focused.f.t": "input-icon-focused-f-t",
+  "input.icon.focused.f.f": "input-icon-focused-f-f",
+  "input.label.focused.f.t": "input-label-focused-f-t",
+  "input.label.focused.f.f": "input-label-focused-f-f",
+  "input.avatar.hovered.f.t": "input-avatar-hovered-f-t",
+  "input.avatar.hovered.f.f": "input-avatar-hovered-f-f",
+  "input.icon.hovered.f.t": "input-icon-hovered-f-t",
+  "input.icon.hovered.f.f": "input-icon-hovered-f-f",
+  "input.label.hovered.f.t": "input-label-hovered-f-t",
+  "input.label.hovered.f.f": "input-label-hovered-f-f",
+  "input.avatar.enabled.f.t": "input-avatar-enabled-f-t",
+  "input.avatar.enabled.f.f": "input-avatar-enabled-f-f",
+  "input.icon.enabled.f.t": "input-icon-enabled-f-t",
+  "input.icon.enabled.f.f": "input-icon-enabled-f-f",
+  "input.label.enabled.f.t": "input-label-enabled-f-t",
+  "input.label.enabled.f.f": "input-label-enabled-f-f",
+  "suggestion.el.disabled.t.t": "suggestion-el-disabled-t-t",
+  "suggestion.out.disabled.t.t": "suggestion-out-disabled-t-t",
+  "suggestion.el.disabled.t.f": "suggestion-el-disabled-t-f",
+  "suggestion.out.disabled.t.f": "suggestion-out-disabled-t-f",
+  "suggestion.el.dragged.t.t": "suggestion-el-dragged-t-t",
+  "suggestion.out.dragged.t.t": "suggestion-out-dragged-t-t",
+  "suggestion.el.dragged.t.f": "suggestion-el-dragged-t-f",
+  "suggestion.out.dragged.t.f": "suggestion-out-dragged-t-f",
+  "suggestion.el.pressed.t.t": "suggestion-el-pressed-t-t",
+  "suggestion.out.pressed.t.t": "suggestion-out-pressed-t-t",
+  "suggestion.el.pressed.t.f": "suggestion-el-pressed-t-f",
+  "suggestion.out.pressed.t.f": "suggestion-out-pressed-t-f",
+  "suggestion.el.focused.t.t": "suggestion-el-focused-t-t",
+  "suggestion.out.focused.t.t": "suggestion-out-focused-t-t",
+  "suggestion.el.focused.t.f": "suggestion-el-focused-t-f",
+  "suggestion.out.focused.t.f": "suggestion-out-focused-t-f",
+  "suggestion.el.hovered.t.t": "suggestion-el-hovered-t-t",
+  "suggestion.out.hovered.t.t": "suggestion-out-hovered-t-t",
+  "suggestion.el.hovered.t.f": "suggestion-el-hovered-t-f",
+  "suggestion.out.hovered.t.f": "suggestion-out-hovered-t-f",
+  "suggestion.el.enabled.t.t": "suggestion-el-enabled-t-t",
+  "suggestion.out.enabled.t.t": "suggestion-out-enabled-t-t",
+  "suggestion.el.enabled.t.f": "suggestion-el-enabled-t-f",
+  "suggestion.out.enabled.t.f": "suggestion-out-enabled-t-f",
+  "suggestion.el.disabled.f.t": "suggestion-el-disabled-f-t",
+  "suggestion.out.disabled.f.t": "suggestion-out-disabled-f-t",
+  "suggestion.el.disabled.f.f": "suggestion-el-disabled-f-f",
+  "suggestion.out.disabled.f.f": "suggestion-out-disabled-f-f",
+  "suggestion.el.dragged.f.t": "suggestion-el-dragged-f-t",
+  "suggestion.out.dragged.f.t": "suggestion-out-dragged-f-t",
+  "suggestion.el.dragged.f.f": "suggestion-el-dragged-f-f",
+  "suggestion.out.dragged.f.f": "suggestion-out-dragged-f-f",
+  "suggestion.el.pressed.f.t": "suggestion-el-pressed-f-t",
+  "suggestion.out.pressed.f.t": "suggestion-out-pressed-f-t",
+  "suggestion.el.pressed.f.f": "suggestion-el-pressed-f-f",
+  "suggestion.out.pressed.f.f": "suggestion-out-pressed-f-f",
+  "suggestion.el.focused.f.t": "suggestion-el-focused-f-t",
+  "suggestion.out.focused.f.t": "suggestion-out-focused-f-t",
+  "suggestion.el.focused.f.f": "suggestion-el-focused-f-f",
+  "suggestion.out.focused.f.f": "suggestion-out-focused-f-f",
+  "suggestion.el.hovered.f.t": "suggestion-el-hovered-f-t",
+  "suggestion.out.hovered.f.t": "suggestion-out-hovered-f-t",
+  "suggestion.el.hovered.f.f": "suggestion-el-hovered-f-f",
+  "suggestion.out.hovered.f.f": "suggestion-out-hovered-f-f",
+  "suggestion.el.enabled.f.t": "suggestion-el-enabled-f-t",
+  "suggestion.out.enabled.f.t": "suggestion-out-enabled-f-t",
+  "suggestion.el.enabled.f.f": "suggestion-el-enabled-f-f",
+  "suggestion.out.enabled.f.f": "suggestion-out-enabled-f-f",
+  "groups.inputchips.singlerowscrollable": "groups-inputchips-singlerowscrollable",
+  "groups.inputchips.multiplerowsoverflow": "groups-inputchips-multiplerowsoverflow",
+  "groups.assistivechips.singlerowscrollable": "groups-assistivechips-singlerowscrollable",
+  "groups.assistivechips.multiplerowsoverflow": "groups-assistivechips-multiplerowsoverflow",
+  "groups.filterchips.singlerowscrollable": "groups-filterchips-singlerowscrollable",
+  "groups.filterchips.multiplerowsoverflow": "groups-filterchips-multiplerowsoverflow",
+  "groups.suggestionchips.singlerowscrollable": "groups-suggestionchips-singlerowscrollable",
+  "groups.suggestionchips.multiplerowsoverflow": "groups-suggestionchips-multiplerowsoverflow"
+ },
+ "note": "Assist 'Label & favicon' variants use a third-party trademark image as placeholder content; not reproduced.",
+ "exceptions": {
+  "assist-el-brand-disabled": {
+   "allowedDiffPixels": 22,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-disabled": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-brand-dragged": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-dragged": {
+   "allowedDiffPixels": 22,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-icon-dragged": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-icon-dragged": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-label-dragged": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-label-dragged": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-brand-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-icon-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-icon-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-label-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-label-pressed": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-brand-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-icon-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-icon-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-label-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-label-focused": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-brand-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-icon-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-icon-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-label-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-label-hovered": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-brand-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-out-brand-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "The brand logo is a masked multi-colour building block; its 18px raster differs slightly between Figma and Chrome (\u0394 \u2264 30/255 on the mask edge)."
+  },
+  "assist-el-icon-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-icon-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-el-label-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "assist-out-label-enabled": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-enabled-t-t": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-disabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-disabled-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-disabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-disabled-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-disabled-f-t": {
+   "allowedDiffPixels": 44,
+   "allowedDiffReason": "Kit slip: the trailing arrow in this variant is faded twice (\u224814% instead of 38%, compare the outlined sibling which matches); we render the consistent 38%."
+  },
+  "filter-out-label-disabled-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-disabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-disabled-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-dragged-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-dragged-f-t": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-dragged-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-dragged-f-f": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-dragged-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-dragged-f-t": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-dragged-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-dragged-f-f": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-icon-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-icon-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-el-label-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "filter-out-label-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-dragged-t-t": {
+   "allowedDiffPixels": 3975,
+   "allowedDiffReason": "Kit slip: this one variant doesn't clip content (its siblings do), so Figma drops the level-3 shadow's spread; we render the consistent clipped shadow."
+  },
+  "input-avatar-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-dragged-f-t": {
+   "allowedDiffPixels": 5,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-dragged-f-f": {
+   "allowedDiffPixels": 5,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-dragged-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-dragged-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-dragged-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-dragged-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-focused-f-t": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-focused-f-f": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-hovered-f-t": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-hovered-f-f": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-enabled-f-t": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-avatar-enabled-f-f": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-icon-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "input-label-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-disabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-disabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-dragged-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-dragged-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-pressed-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-pressed-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-focused-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-focused-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-hovered-t-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-hovered-t-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-enabled-t-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-enabled-t-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-disabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-disabled-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-disabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-disabled-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-dragged-f-t": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-dragged-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-dragged-f-f": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-dragged-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-pressed-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-pressed-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-focused-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-focused-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-hovered-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-hovered-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-enabled-f-t": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-el-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "suggestion-out-enabled-f-f": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical."
+  },
+  "groups-inputchips-singlerowscrollable": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-inputchips-multiplerowsoverflow": {
+   "allowedDiffPixels": 18,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-assistivechips-singlerowscrollable": {
+   "allowedDiffPixels": 5,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-assistivechips-multiplerowsoverflow": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-filterchips-singlerowscrollable": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-filterchips-multiplerowsoverflow": {
+   "allowedDiffPixels": 16,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-suggestionchips-singlerowscrollable": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  },
+  "groups-suggestionchips-multiplerowsoverflow": {
+   "allowedDiffPixels": 16,
+   "allowedDiffReason": "Label glyph anti-aliasing: one or two pixels of the label-large \"Label\" (left edge of the 'e', \u0394 \u2264 70/255) rasterise differently in Figma and Chrome at this offset; text box and geometry identical. (once per chip in the group)."
+  }
+ }
+}

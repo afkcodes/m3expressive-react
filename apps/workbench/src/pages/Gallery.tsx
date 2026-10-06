@@ -6,7 +6,7 @@ export function Gallery() {
     <main style={{ padding: 32 }}>
       <h1 style={{ fontWeight: 500 }}>M3 Expressive — workbench</h1>
       <p>
-        Playgrounds: <a href="/demo/button">button</a> · <a href="/demo/badge">badge</a> · <a href="/demo/card">card</a> · <a href="/demo/checkbox">selection controls</a> · <a href="/demo/shapes">shape morphing</a>
+        Playgrounds: <a href="/demo/button">button</a> · <a href="/demo/badge">badge</a> · <a href="/demo/card">card</a> · <a href="/demo/chips">chips</a> · <a href="/demo/checkbox">selection controls</a> · <a href="/demo/shapes">shape morphing</a>
       </p>
       {names.length === 0 && <p>No components yet. Fixtures live in apps/workbench/src/fixtures.</p>}
       <ul>

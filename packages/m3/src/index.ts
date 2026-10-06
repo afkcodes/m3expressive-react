@@ -42,6 +42,8 @@ export { SegmentedButton, SegmentedButtonItem } from './components/SegmentedButt
 export { Radio, RadioGroup } from './components/Radio/index.ts';
 export { Switch } from './components/Switch/index.ts';
 export { Divider } from './components/Divider/index.ts';
+export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipAvatarPlaceholder, ChipGroup } from './components/Chip/index.ts';
+export type { AssistChipProps, FilterChipProps, InputChipProps, SuggestionChipProps, ChipGroupProps } from './components/Chip/index.ts';
 export type { DividerProps, DividerInset } from './components/Divider/index.ts';
 export type { SwitchProps } from './components/Switch/index.ts';
 export type { RadioProps, RadioGroupProps } from './components/Radio/index.ts';

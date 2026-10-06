@@ -82,6 +82,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Connected segment XL, unselected + disabled | 16px corner (other XL states 20px) | 20px — we follow this |
 | Segmented button, density −1/−2/−3 | variants exist but are hidden (outside the set, empty exports) | implemented per M3 (36/32/28px containers); not pixel-referenced |
 | Segmented button, pressed | flat 10% layer, no ripple | — we follow the kit |
+| Chips, elevation | per chip type (e.g. assist hover 1 / press 2 / drag 2; filter hover 2 / press 1 / drag 4; input drag 3) | filter-chip values for all — we follow the kit per type |
+| Chips, outlined interacting | surface fill under the state layer while hovered / focused / pressed / dragged | no fill — we follow the kit |
+| Assist chip, "Label & favicon" | third-party trademark image as placeholder content | not reproduced (any 18px image works) |
+| Input chip, avatar + selected + dragged | doesn't clip → shadow without spread | clipped like its siblings — we follow this |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
