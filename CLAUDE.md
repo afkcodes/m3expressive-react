@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch.
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers.
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -151,6 +151,10 @@ FAB menu, split button, button groups.
    neighbour's render area (tight rows / shadows), and loses the column under the dashed set border
    when the node touches the set edge (`refNote` records each trim). Use an individual node export
    (`ref`) only when a trim would cut into the component itself.
+   Always compare the export's pixel size with the node: sections / frames with effects export
+   their overflow too (dividers: 557×945 section → 637×1025 PNG, origin −40,−40) — set the frame
+   `size` to the PNG's css size and `origin` accordingly. Variants positioned outside a set's
+   bounds aren't in its export (and may be hidden — check before referencing them).
 6. **Build** the component; **fixture** every variant (`apps/workbench/src/fixtures/<c>.fixtures.tsx`,
    keys == ref names) using the real components and the kit's exact assets (icons from the SVG).
 7. **Run** `pnpm test:visual -g <c>`; diagnose each failure with side-by-side + zoom + pixel

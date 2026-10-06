@@ -10,6 +10,7 @@ import {
   CardHeadline,
   CardMedia,
   CardText,
+  Divider,
   IconButton,
   M3Provider,
   typescale,
@@ -99,6 +100,19 @@ export function CardPlayground() {
                 Hover, press, Tab to focus, toggle “dragged”. Clicked {clicks}×
               </span>
             </Card>
+          </div>
+        </div>
+
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Dividers</h2>
+        <div style={{ display: 'grid', gap: 24, maxWidth: 360 }}>
+          <Divider />
+          <Divider inset="start" />
+          <Divider inset="middle" />
+          <Divider subheader="Subheader" />
+          <div style={{ display: 'flex', height: 120, gap: 24 }}>
+            <Divider orientation="vertical" />
+            <Divider orientation="vertical" inset="start" />
+            <Divider orientation="vertical" inset="middle" />
           </div>
         </div>
       </main>

@@ -41,6 +41,8 @@ export { ButtonGroup, ConnectedButtonGroup, ConnectedButtonGroupItem } from './c
 export { SegmentedButton, SegmentedButtonItem } from './components/SegmentedButton/index.ts';
 export { Radio, RadioGroup } from './components/Radio/index.ts';
 export { Switch } from './components/Switch/index.ts';
+export { Divider } from './components/Divider/index.ts';
+export type { DividerProps, DividerInset } from './components/Divider/index.ts';
 export type { SwitchProps } from './components/Switch/index.ts';
 export type { RadioProps, RadioGroupProps } from './components/Radio/index.ts';
 export type { SegmentedButtonProps, SegmentedButtonItemProps, SegmentedButtonDensity } from './components/SegmentedButton/index.ts';

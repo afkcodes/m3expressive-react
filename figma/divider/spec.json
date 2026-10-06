@@ -1,0 +1,20 @@
+{
+ "component": "divider",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "dividers": {
+   "node": "55412:15783",
+   "file": "_frames/dividers.png",
+   "size": [
+    637,
+    1025
+   ],
+   "rows": "horizontal-full 51816:5860 50,510 320x1;horizontal-inset 51816:5868 50,542 320x1;horizontal-middle 51816:5870 50,574 320x1;horizontal-subhead 51816:5872 50,606 320x25;vertical-full 51816:5862 50,766 1x120;vertical-inset 51816:5864 78,766 1x120;vertical-middle 51816:5866 104,766 1x120",
+   "origin": [
+    -40,
+    -40
+   ]
+  }
+ }
+}

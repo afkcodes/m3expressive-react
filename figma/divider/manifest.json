@@ -1,0 +1,150 @@
+{
+  "component": "divider",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "dividers": {
+      "node": "55412:15783",
+      "file": "_frames/dividers.png",
+      "origin": [
+        -40,
+        -40
+      ]
+    }
+  },
+  "variants": {
+    "horizontal-full": {
+      "node": "51816:5860",
+      "size": [
+        320,
+        1
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 50,
+        "y": 510
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        3
+      ]
+    },
+    "horizontal-inset": {
+      "node": "51816:5868",
+      "size": [
+        320,
+        1
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 50,
+        "y": 542
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        3
+      ]
+    },
+    "horizontal-middle": {
+      "node": "51816:5870",
+      "size": [
+        320,
+        1
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 50,
+        "y": 574
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        3
+      ]
+    },
+    "horizontal-subhead": {
+      "node": "51816:5872",
+      "size": [
+        320,
+        25
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 50,
+        "y": 606
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        322,
+        27
+      ]
+    },
+    "vertical-full": {
+      "node": "51816:5862",
+      "size": [
+        1,
+        120
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 50,
+        "y": 766
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        3,
+        122
+      ]
+    },
+    "vertical-inset": {
+      "node": "51816:5864",
+      "size": [
+        1,
+        120
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 78,
+        "y": 766
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        3,
+        122
+      ]
+    },
+    "vertical-middle": {
+      "node": "51816:5866",
+      "size": [
+        1,
+        120
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "dividers",
+        "x": 104,
+        "y": 766
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        3,
+        122
+      ]
+    }
+  }
+}
