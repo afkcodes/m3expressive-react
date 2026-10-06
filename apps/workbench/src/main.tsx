@@ -16,6 +16,7 @@ import { TextFieldPlayground } from './pages/TextFieldPlayground';
 import { ListPlayground } from './pages/ListPlayground';
 import { MenuPlayground } from './pages/MenuPlayground';
 import { TabsPlayground } from './pages/TabsPlayground';
+import { NavigationPlayground } from './pages/NavigationPlayground';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /compare/:component        — Figma vs live, side by side + difference overlay
@@ -38,6 +39,7 @@ function App() {
   if (page === 'demo' && (component === 'list' || component === 'lists')) return <ListPlayground />;
   if (page === 'demo' && (component === 'menu' || component === 'menus')) return <MenuPlayground />;
   if (page === 'demo' && component === 'tabs') return <TabsPlayground />;
+  if (page === 'demo' && (component === 'navigation' || component === 'nav')) return <NavigationPlayground />;
   if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
   return <Gallery />;
 }

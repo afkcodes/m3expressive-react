@@ -1,0 +1,460 @@
+{
+ "component": "navigation",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F7F2FA",
+ "note": "Navigation page (55141:14251): navigation bar (vertical / horizontal items, bars of 3-6), navigation rail (vertical / horizontal items, collapsed rail, expanded docked / floating). The Deprecated drawer and the XR sections are out of scope.",
+ "frames": {
+  "bar-blocks": {
+   "node": "58016:36959",
+   "file": "_frames/bar-blocks.png",
+   "size": [
+    899,
+    1316
+   ],
+   "background": "#F3EDF7",
+   "setBorder": false,
+   "rows": "bar-v-pressed-large-sel 58016:36962 582,602 104x64;bar-v-focused-large-sel 58016:36968 458,602 104x64;bar-v-hovered-large-sel 58016:36974 334,602 104x64;bar-v-enabled-large-sel 58016:36980 210,602 104x64;bar-v-pressed-small-sel 58016:36986 582,394 104x64;bar-v-focused-small-sel 58016:36992 458,394 104x64;bar-v-hovered-small-sel 58016:36998 334,394 104x64;bar-v-enabled-small-sel 58016:37004 210,394 104x64;bar-v-pressed-large-unsel 58016:37010 582,498 104x64;bar-v-focused-large-unsel 58016:37016 458,498 104x64;bar-v-hovered-large-unsel 58016:37022 334,498 104x64;bar-v-enabled-large-unsel 58016:37028 210,498 104x64;bar-v-pressed-small-unsel 58016:37034 582,290 104x64;bar-v-focused-small-unsel 58016:37040 458,290 104x64;bar-v-hovered-small-unsel 58016:37046 334,290 104x64;bar-v-enabled-small-unsel 58016:37052 210,290 104x64;bar-v-pressed-none-sel 58016:37058 582,186 104x64;bar-v-focused-none-sel 58016:37063 458,186 104x64;bar-v-hovered-none-sel 58016:37068 334,186 104x64;bar-v-enabled-none-sel 58016:37073 210,186 104x64;bar-v-pressed-none-unsel 58016:37078 582,82 104x64;bar-v-focused-none-unsel 58016:37083 458,82 104x64;bar-v-hovered-none-unsel 58016:37088 334,82 104x64;bar-v-enabled-none-unsel 58016:37093 210,82 104x64;bar-h-enabled-none-sel 58016:37100 216,870 92x64;bar-h-enabled-small-sel 58016:37105 216,1046 92x64;bar-h-enabled-large-sel 58016:37111 216,1222 92x64;bar-h-enabled-none-unsel 58016:37117 216,782 92x64;bar-h-enabled-small-unsel 58016:37122 216,958 92x64;bar-h-enabled-large-unsel 58016:37128 216,1134 92x64;bar-h-hovered-none-sel 58016:37134 340,870 92x64;bar-h-hovered-small-sel 58016:37139 340,1046 92x64;bar-h-hovered-large-sel 58016:37145 340,1222 92x64;bar-h-hovered-none-unsel 58016:37151 340,782 92x64;bar-h-hovered-small-unsel 58016:37156 340,958 92x64;bar-h-hovered-large-unsel 58016:37162 340,1134 92x64;bar-h-focused-none-sel 58016:37168 464,870 92x64;bar-h-focused-small-sel 58016:37173 464,1046 92x64;bar-h-focused-large-sel 58016:37179 464,1222 92x64;bar-h-focused-none-unsel 58016:37185 464,782 92x64;bar-h-focused-small-unsel 58016:37190 464,958 92x64;bar-h-focused-large-unsel 58016:37196 464,1134 92x64;bar-h-pressed-none-sel 58016:37202 588,870 92x64;bar-h-pressed-small-sel 58016:37207 588,1046 92x64;bar-h-pressed-large-sel 58016:37213 588,1222 92x64;bar-h-pressed-none-unsel 58016:37219 588,782 92x64;bar-h-pressed-small-unsel 58016:37224 588,958 92x64;bar-h-pressed-large-unsel 58016:37230 588,1134 92x64"
+  },
+  "bar-horizontal": {
+   "node": "58016:37236",
+   "file": "_frames/bar-horizontal.png",
+   "size": [
+    899,
+    356
+   ],
+   "rows": "nbar-h-3 58016:37237 79,20 741x64;nbar-h-4 58016:37241 79,104 741x64;nbar-h-5 58016:37246 79,188 741x64;nbar-h-6 58016:37252 79,272 741x64"
+  },
+  "bar-vertical": {
+   "node": "58016:37259",
+   "file": "_frames/bar-vertical.png",
+   "size": [
+    899,
+    272
+   ],
+   "rows": "nbar-v-3 58016:37260 243.5,20 412x64;nbar-v-4 58016:37264 243.5,104 412x64;nbar-v-5 58016:37269 243.5,188 412x64"
+  },
+  "rail-blocks": {
+   "node": "58016:36303",
+   "file": "_frames/rail-blocks.png",
+   "size": [
+    1938,
+    1340
+   ],
+   "background": "#F3EDF7",
+   "setBorder": false,
+   "rows": "rail-v-pressed-large-sel-label 58016:36307 618,1019 104x64;rail-v-focused-large-sel-label 58016:36313 494,1019 104x64;rail-v-hovered-large-sel-label 58016:36319 370,1019 104x64;rail-v-enabled-large-sel-label 58016:36325 246,1019 104x64;rail-v-pressed-small-sel-label 58016:36331 618,603 104x64;rail-v-focused-small-sel-label 58016:36337 494,603 104x64;rail-v-hovered-small-sel-label 58016:36343 370,603 104x64;rail-v-enabled-small-sel-label 58016:36349 246,603 104x64;rail-v-pressed-large-unsel-label 58016:36355 618,915 104x64;rail-v-focused-large-unsel-label 58016:36361 494,915 104x64;rail-v-hovered-large-unsel-label 58016:36367 370,915 104x64;rail-v-enabled-large-unsel-label 58016:36373 246,915 104x64;rail-v-pressed-small-unsel-label 58016:36379 618,499 104x64;rail-v-focused-small-unsel-label 58016:36385 494,499 104x64;rail-v-hovered-small-unsel-label 58016:36391 370,499 104x64;rail-v-enabled-small-unsel-label 58016:36397 246,499 104x64;rail-v-pressed-none-sel-label 58016:36403 618,187 104x64;rail-v-pressed-none-sel-nolabel 58016:36408 618,395 104x64;rail-v-pressed-small-sel-nolabel 58016:36412 618,811 104x64;rail-v-pressed-large-sel-nolabel 58016:36417 618,1227 104x64;rail-v-focused-none-sel-label 58016:36422 494,187 104x64;rail-v-focused-none-sel-nolabel 58016:36427 494,395 104x64;rail-v-focused-small-sel-nolabel 58016:36431 494,811 104x64;rail-v-focused-large-sel-nolabel 58016:36436 494,1227 104x64;rail-v-hovered-none-sel-label 58016:36441 370,187 104x64;rail-v-hovered-none-sel-nolabel 58016:36446 370,395 104x64;rail-v-hovered-small-sel-nolabel 58016:36450 370,811 104x64;rail-v-hovered-large-sel-nolabel 58016:36455 370,1227 104x64;rail-v-enabled-none-sel-label 58016:36460 246,187 104x64;rail-v-enabled-none-sel-nolabel 58016:36465 246,395 104x64;rail-v-enabled-small-sel-nolabel 58016:36469 246,811 104x64;rail-v-enabled-large-sel-nolabel 58016:36474 246,1227 104x64;rail-v-pressed-none-unsel-label 58016:36479 618,83 104x64;rail-v-focused-none-unsel-label 58016:36484 494,83 104x64;rail-v-focused-none-unsel-nolabel 58016:36489 494,291 104x64;rail-v-focused-small-unsel-nolabel 58016:36493 494,707 104x64;rail-v-focused-large-unsel-nolabel 58016:36498 494,1123 104x64;rail-v-pressed-none-unsel-nolabel 58016:36503 618,291 104x64;rail-v-pressed-small-unsel-nolabel 58016:36507 618,707 104x64;rail-v-pressed-large-unsel-nolabel 58016:36512 618,1123 104x64;rail-v-hovered-none-unsel-label 58016:36517 370,83 104x64;rail-v-hovered-none-unsel-nolabel 58016:36522 370,291 104x64;rail-v-hovered-small-unsel-nolabel 58016:36526 370,707 104x64;rail-v-hovered-large-unsel-nolabel 58016:36531 370,1123 104x64;rail-v-enabled-none-unsel-label 58016:36536 246,83 104x64;rail-v-enabled-none-unsel-nolabel 58016:36541 246,291 104x64;rail-v-enabled-small-unsel-nolabel 58016:36545 246,707 104x64;rail-v-enabled-large-unsel-nolabel 58016:36550 246,1123 104x64;rail-h-enabled-none-unsel 58016:36558 1214,84 99x56;rail-h-enabled-small-unsel 58016:36562 1214,244 99x56;rail-h-enabled-large-unsel 58016:36567 1202,404 123x56;rail-h-hovered-none-unsel 58016:36572 1347,84 99x56;rail-h-hovered-small-unsel 58016:36576 1347,244 99x56;rail-h-hovered-large-unsel 58016:36581 1335,404 123x56;rail-h-focused-none-unsel 58016:36586 1480,84 99x56;rail-h-focused-small-unsel 58016:36590 1480,244 99x56;rail-h-focused-large-unsel 58016:36595 1468,404 123x56;rail-h-pressed-none-unsel 58016:36600 1613,84 99x56;rail-h-pressed-small-unsel 58016:36604 1613,244 99x56;rail-h-pressed-large-unsel 58016:36609 1601,404 123x56;rail-h-enabled-none-sel 58016:36614 1214,164 99x56;rail-h-enabled-small-sel 58016:36618 1214,324 99x56;rail-h-enabled-large-sel 58016:36623 1202,484 123x56;rail-h-hovered-none-sel 58016:36628 1347,164 99x56;rail-h-hovered-small-sel 58016:36632 1347,324 99x56;rail-h-hovered-large-sel 58016:36637 1335,484 123x56;rail-h-focused-none-sel 58016:36642 1480,164 99x56;rail-h-focused-small-sel 58016:36646 1480,324 99x56;rail-h-focused-large-sel 58016:36651 1468,484 123x56;rail-h-pressed-none-sel 58016:36656 1613,164 101x56;rail-h-pressed-small-sel 58016:36660 1613,324 99x56;rail-h-pressed-large-sel 58016:36665 1601,484 123x56"
+  },
+  "rail": {
+   "node": "58016:36879",
+   "file": "_frames/rail.png",
+   "size": [
+    1938,
+    838
+   ],
+   "rows": "nrail-middle-3 58016:36880 1028,20 96x800;nrail-middle-4 58016:36888 1152,20 96x800;nrail-middle-5 58016:36897 1276,20 96x800;nrail-middle-6 58016:36907 1400,20 96x800;nrail-top-6 58016:36918 814,18 96x800;nrail-top-5 58016:36929 690,18 96x800;nrail-top-4 58016:36939 566,18 96x800;nrail-top-3 58016:36948 442,18 96x800"
+  },
+  "rail-expanded": {
+   "node": "58016:36670",
+   "file": "_frames/rail-expanded.png",
+   "size": [
+    1938,
+    1720
+   ],
+   "rows": "nrailx-docked-top-3 58016:36671 19,20 220x800;nrailx-docked-top-4 58016:36679 259,20 220x800;nrailx-docked-top-5 58016:36688 499,20 220x800;nrailx-docked-top-6 58016:36698 739,20 220x800;nrailx-floating-top-3 58016:36723 979,20 220x800;nrailx-floating-top-4 58016:36731 1219,20 220x800;nrailx-floating-top-5 58016:36740 1459,20 220x800;nrailx-floating-top-6 58016:36750 1699,20 220x800;nrailx-docked-middle-3 58016:36775 19,900 220x800;nrailx-docked-middle-4 58016:36783 259,900 220x800;nrailx-docked-middle-5 58016:36792 499,900 220x800;nrailx-docked-middle-6 58016:36802 739,900 220x800;nrailx-floating-middle-3 58016:36827 979,900 220x800;nrailx-floating-middle-4 58016:36835 1219,900 220x800;nrailx-floating-middle-5 58016:36844 1459,900 220x800;nrailx-floating-middle-6 58016:36854 1699,900 220x800"
+  }
+ },
+ "exceptions": {
+  "bar-h-enabled-large-sel": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-enabled-large-unsel": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-enabled-none-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-enabled-none-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-enabled-small-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-enabled-small-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-focused-large-sel": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-focused-large-unsel": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-focused-none-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-focused-none-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-focused-small-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-focused-small-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-hovered-large-sel": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-hovered-large-unsel": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-hovered-none-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-hovered-none-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-hovered-small-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-hovered-small-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-pressed-large-sel": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-pressed-large-unsel": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-h-pressed-none-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-pressed-none-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-pressed-small-sel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-h-pressed-small-unsel": {
+   "allowedDiffPixels": 1,
+   "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+  },
+  "bar-v-enabled-large-sel": {
+   "allowedDiffPixels": 39,
+   "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+  },
+  "bar-v-enabled-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-v-focused-large-sel": {
+   "allowedDiffPixels": 39,
+   "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+  },
+  "bar-v-focused-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-v-hovered-large-sel": {
+   "allowedDiffPixels": 39,
+   "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+  },
+  "bar-v-hovered-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "bar-v-pressed-large-sel": {
+   "allowedDiffPixels": 39,
+   "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+  },
+  "bar-v-pressed-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "nbar-h-3": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nbar-h-4": {
+   "allowedDiffPixels": 16,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nbar-h-5": {
+   "allowedDiffPixels": 20,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nbar-h-6": {
+   "allowedDiffPixels": 22,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nbar-v-3": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nbar-v-5": {
+   "allowedDiffPixels": 11,
+   "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+  },
+  "nrailx-docked-middle-3": {
+   "allowedDiffPixels": 14,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-middle-4": {
+   "allowedDiffPixels": 17,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-middle-5": {
+   "allowedDiffPixels": 19,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-middle-6": {
+   "allowedDiffPixels": 27,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-top-3": {
+   "allowedDiffPixels": 15,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-top-4": {
+   "allowedDiffPixels": 17,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-top-5": {
+   "allowedDiffPixels": 19,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-docked-top-6": {
+   "allowedDiffPixels": 27,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-middle-3": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-middle-4": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-middle-5": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-middle-6": {
+   "allowedDiffPixels": 18,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-top-3": {
+   "allowedDiffPixels": 6,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-top-4": {
+   "allowedDiffPixels": 8,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-top-5": {
+   "allowedDiffPixels": 10,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "nrailx-floating-top-6": {
+   "allowedDiffPixels": 18,
+   "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+  },
+  "rail-h-enabled-large-sel": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-enabled-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-enabled-none-sel": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-enabled-none-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-enabled-small-sel": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-enabled-small-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-large-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-none-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-none-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-small-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-focused-small-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-large-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-none-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-none-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-small-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-hovered-small-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-pressed-large-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-pressed-large-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-pressed-none-sel": {
+   "allowedDiffPixels": 200,
+   "allowedDiffReason": "Kit slip: Rail \u00b7 Horizontal item \u00b7 Pressed \u00b7 Selected is 101px wide; its siblings (and the content: 16 + 24 + 8 + label + 16) are 99px. We hug the content."
+  },
+  "rail-h-pressed-none-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-pressed-small-sel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-h-pressed-small-unsel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+  },
+  "rail-v-enabled-large-sel-label": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-enabled-large-sel-nolabel": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-enabled-large-unsel-label": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-enabled-large-unsel-nolabel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-enabled-small-sel-label": {
+   "allowedDiffPixels": 32,
+   "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+  },
+  "rail-v-focused-large-sel-label": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-focused-large-sel-nolabel": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-focused-large-unsel-label": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-focused-large-unsel-nolabel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-focused-small-sel-label": {
+   "allowedDiffPixels": 32,
+   "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+  },
+  "rail-v-hovered-large-sel-label": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-hovered-large-sel-nolabel": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-hovered-large-unsel-label": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-hovered-large-unsel-nolabel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-hovered-small-sel-label": {
+   "allowedDiffPixels": 32,
+   "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+  },
+  "rail-v-pressed-large-sel-label": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-pressed-large-sel-nolabel": {
+   "allowedDiffPixels": 7,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-pressed-large-unsel-label": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-pressed-large-unsel-nolabel": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+  },
+  "rail-v-pressed-small-sel-label": {
+   "allowedDiffPixels": 32,
+   "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+  }
+ }
+}

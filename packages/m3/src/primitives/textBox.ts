@@ -24,6 +24,15 @@ export const textBox = stylex.create({
 });
 
 /**
+ * Centred text in a fixed-width box: Figma centres the glyph advance without the trailing letter
+ * spacing, CSS includes it — trim it so the box (and the centring) matches. (Label-medium's 0.5px
+ * tracking would otherwise sit 0.25px left.)
+ */
+export const textCentred = stylex.create({
+  trimTracking: { marginInlineEnd: `calc(-1 * ${typeMetrics.tracking})` },
+});
+
+/**
  * Figma's legacy line height (older text layers in the kit, e.g. snackbar and list supporting
  * text): the first baseline sits at ascent × size instead of half-leading + ascent, so glyphs
  * render higher than in CSS. Measured from the kit's glyph outlines (14/20 → baseline 13.0 vs

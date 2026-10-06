@@ -1,0 +1,3098 @@
+{
+  "component": "navigation",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "bar-blocks": {
+      "node": "58016:36959",
+      "file": "_frames/bar-blocks.png"
+    },
+    "bar-horizontal": {
+      "node": "58016:37236",
+      "file": "_frames/bar-horizontal.png"
+    },
+    "bar-vertical": {
+      "node": "58016:37259",
+      "file": "_frames/bar-vertical.png"
+    },
+    "rail-blocks": {
+      "node": "58016:36303",
+      "file": "_frames/rail-blocks.png"
+    },
+    "rail": {
+      "node": "58016:36879",
+      "file": "_frames/rail.png"
+    },
+    "rail-expanded": {
+      "node": "58016:36670",
+      "file": "_frames/rail-expanded.png"
+    }
+  },
+  "variants": {
+    "bar-v-pressed-large-sel": {
+      "node": "58016:36962",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 39,
+      "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+    },
+    "bar-v-focused-large-sel": {
+      "node": "58016:36968",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 39,
+      "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+    },
+    "bar-v-hovered-large-sel": {
+      "node": "58016:36974",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 39,
+      "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+    },
+    "bar-v-enabled-large-sel": {
+      "node": "58016:36980",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 602
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 39,
+      "allowedDiffReason": "Kit slip: Bar \u00b7 Vertical item \u00b7 Badge=Large \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary. The rest is glyph-edge raster of the badge's \u20183\u2019."
+    },
+    "bar-v-pressed-small-sel": {
+      "node": "58016:36986",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 394
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-focused-small-sel": {
+      "node": "58016:36992",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 394
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-hovered-small-sel": {
+      "node": "58016:36998",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 394
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-enabled-small-sel": {
+      "node": "58016:37004",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 394
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-pressed-large-unsel": {
+      "node": "58016:37010",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-v-focused-large-unsel": {
+      "node": "58016:37016",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-v-hovered-large-unsel": {
+      "node": "58016:37022",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-v-enabled-large-unsel": {
+      "node": "58016:37028",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 498
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-v-pressed-small-unsel": {
+      "node": "58016:37034",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 290
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-focused-small-unsel": {
+      "node": "58016:37040",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 290
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-hovered-small-unsel": {
+      "node": "58016:37046",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 290
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-enabled-small-unsel": {
+      "node": "58016:37052",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 290
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-pressed-none-sel": {
+      "node": "58016:37058",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 186
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-focused-none-sel": {
+      "node": "58016:37063",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 186
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-hovered-none-sel": {
+      "node": "58016:37068",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 186
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-enabled-none-sel": {
+      "node": "58016:37073",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 186
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-pressed-none-unsel": {
+      "node": "58016:37078",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 582,
+        "y": 82
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-focused-none-unsel": {
+      "node": "58016:37083",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 458,
+        "y": 82
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-hovered-none-unsel": {
+      "node": "58016:37088",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 334,
+        "y": 82
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-v-enabled-none-unsel": {
+      "node": "58016:37093",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 210,
+        "y": 82
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "bar-h-enabled-none-sel": {
+      "node": "58016:37100",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 870
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-enabled-small-sel": {
+      "node": "58016:37105",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 1046
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-enabled-large-sel": {
+      "node": "58016:37111",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 1222
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-enabled-none-unsel": {
+      "node": "58016:37117",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 782
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-enabled-small-unsel": {
+      "node": "58016:37122",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 958
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-enabled-large-unsel": {
+      "node": "58016:37128",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 216,
+        "y": 1134
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-hovered-none-sel": {
+      "node": "58016:37134",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 870
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-hovered-small-sel": {
+      "node": "58016:37139",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 1046
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-hovered-large-sel": {
+      "node": "58016:37145",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 1222
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-hovered-none-unsel": {
+      "node": "58016:37151",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 782
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-hovered-small-unsel": {
+      "node": "58016:37156",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 958
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-hovered-large-unsel": {
+      "node": "58016:37162",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 340,
+        "y": 1134
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-focused-none-sel": {
+      "node": "58016:37168",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 870
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-focused-small-sel": {
+      "node": "58016:37173",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 1046
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-focused-large-sel": {
+      "node": "58016:37179",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 1222
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-focused-none-unsel": {
+      "node": "58016:37185",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 782
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-focused-small-unsel": {
+      "node": "58016:37190",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 958
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-focused-large-unsel": {
+      "node": "58016:37196",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 464,
+        "y": 1134
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-pressed-none-sel": {
+      "node": "58016:37202",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 870
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-pressed-small-sel": {
+      "node": "58016:37207",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 1046
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-pressed-large-sel": {
+      "node": "58016:37213",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 1222
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "bar-h-pressed-none-unsel": {
+      "node": "58016:37219",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 782
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-pressed-small-unsel": {
+      "node": "58016:37224",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 958
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "Glyph-edge raster: one pixel of the label (and the badge digit for large badges); geometry identical."
+    },
+    "bar-h-pressed-large-unsel": {
+      "node": "58016:37230",
+      "size": [
+        92,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "bar-blocks",
+        "x": 588,
+        "y": 1134
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        94,
+        66
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "nbar-h-3": {
+      "node": "58016:37237",
+      "size": [
+        741,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-horizontal",
+        "x": 79,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        743,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "nbar-h-4": {
+      "node": "58016:37241",
+      "size": [
+        741,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-horizontal",
+        "x": 79,
+        "y": 104
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        743,
+        66
+      ],
+      "allowedDiffPixels": 16,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "nbar-h-5": {
+      "node": "58016:37246",
+      "size": [
+        741,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-horizontal",
+        "x": 79,
+        "y": 188
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        743,
+        66
+      ],
+      "allowedDiffPixels": 20,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "nbar-h-6": {
+      "node": "58016:37252",
+      "size": [
+        741,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-horizontal",
+        "x": 79,
+        "y": 272
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        743,
+        66
+      ],
+      "allowedDiffPixels": 22,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "nbar-v-3": {
+      "node": "58016:37260",
+      "size": [
+        412,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-vertical",
+        "x": 243.5,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        66
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "nbar-v-4": {
+      "node": "58016:37264",
+      "size": [
+        412,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-vertical",
+        "x": 243.5,
+        "y": 104
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        66
+      ]
+    },
+    "nbar-v-5": {
+      "node": "58016:37269",
+      "size": [
+        412,
+        64
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "bar-vertical",
+        "x": 243.5,
+        "y": 188
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        66
+      ],
+      "allowedDiffPixels": 11,
+      "allowedDiffReason": "Glyph- and icon-edge raster in fractional-width items (741 or 412px shared out); pills are transform-centred to Figma's exact position."
+    },
+    "rail-v-pressed-large-sel-label": {
+      "node": "58016:36307",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 1019
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-focused-large-sel-label": {
+      "node": "58016:36313",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 1019
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-hovered-large-sel-label": {
+      "node": "58016:36319",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 1019
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-enabled-large-sel-label": {
+      "node": "58016:36325",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 1019
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-pressed-small-sel-label": {
+      "node": "58016:36331",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 603
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 32,
+      "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+    },
+    "rail-v-focused-small-sel-label": {
+      "node": "58016:36337",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 603
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 32,
+      "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+    },
+    "rail-v-hovered-small-sel-label": {
+      "node": "58016:36343",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 603
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 32,
+      "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+    },
+    "rail-v-enabled-small-sel-label": {
+      "node": "58016:36349",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 603
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 32,
+      "allowedDiffReason": "Kit slip: Rail \u00b7 Vertical item \u00b7 Badge=Small \u00b7 Selected labels bind On Secondary Container; every other selected item (and Compose) uses Secondary. We use Secondary."
+    },
+    "rail-v-pressed-large-unsel-label": {
+      "node": "58016:36355",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 915
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-focused-large-unsel-label": {
+      "node": "58016:36361",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 915
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-hovered-large-unsel-label": {
+      "node": "58016:36367",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 915
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-enabled-large-unsel-label": {
+      "node": "58016:36373",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 915
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-pressed-small-unsel-label": {
+      "node": "58016:36379",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 499
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-small-unsel-label": {
+      "node": "58016:36385",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 499
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-small-unsel-label": {
+      "node": "58016:36391",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 499
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-small-unsel-label": {
+      "node": "58016:36397",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 499
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-none-sel-label": {
+      "node": "58016:36403",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-none-sel-nolabel": {
+      "node": "58016:36408",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 395
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-small-sel-nolabel": {
+      "node": "58016:36412",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 811
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-large-sel-nolabel": {
+      "node": "58016:36417",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 1227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-focused-none-sel-label": {
+      "node": "58016:36422",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-none-sel-nolabel": {
+      "node": "58016:36427",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 395
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-small-sel-nolabel": {
+      "node": "58016:36431",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 811
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-large-sel-nolabel": {
+      "node": "58016:36436",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 1227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-hovered-none-sel-label": {
+      "node": "58016:36441",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-none-sel-nolabel": {
+      "node": "58016:36446",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 395
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-small-sel-nolabel": {
+      "node": "58016:36450",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 811
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-large-sel-nolabel": {
+      "node": "58016:36455",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 1227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-enabled-none-sel-label": {
+      "node": "58016:36460",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 187
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-none-sel-nolabel": {
+      "node": "58016:36465",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 395
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-small-sel-nolabel": {
+      "node": "58016:36469",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 811
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-large-sel-nolabel": {
+      "node": "58016:36474",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 1227
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 7,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-pressed-none-unsel-label": {
+      "node": "58016:36479",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 83
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-none-unsel-label": {
+      "node": "58016:36484",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 83
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-none-unsel-nolabel": {
+      "node": "58016:36489",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 291
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-small-unsel-nolabel": {
+      "node": "58016:36493",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 707
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-focused-large-unsel-nolabel": {
+      "node": "58016:36498",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 494,
+        "y": 1123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-pressed-none-unsel-nolabel": {
+      "node": "58016:36503",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 291
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-small-unsel-nolabel": {
+      "node": "58016:36507",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 707
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-pressed-large-unsel-nolabel": {
+      "node": "58016:36512",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 618,
+        "y": 1123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-hovered-none-unsel-label": {
+      "node": "58016:36517",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 83
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-none-unsel-nolabel": {
+      "node": "58016:36522",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 291
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-small-unsel-nolabel": {
+      "node": "58016:36526",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 707
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-hovered-large-unsel-nolabel": {
+      "node": "58016:36531",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 370,
+        "y": 1123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-v-enabled-none-unsel-label": {
+      "node": "58016:36536",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 83
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-none-unsel-nolabel": {
+      "node": "58016:36541",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 291
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-small-unsel-nolabel": {
+      "node": "58016:36545",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 707
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ]
+    },
+    "rail-v-enabled-large-unsel-nolabel": {
+      "node": "58016:36550",
+      "size": [
+        104,
+        64
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 246,
+        "y": 1123
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        106,
+        66
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the large badge's \u20183\u2019 (Figma vs Chrome text raster)."
+    },
+    "rail-h-enabled-none-unsel": {
+      "node": "58016:36558",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1214,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-enabled-small-unsel": {
+      "node": "58016:36562",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1214,
+        "y": 244
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-enabled-large-unsel": {
+      "node": "58016:36567",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1202,
+        "y": 404
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-none-unsel": {
+      "node": "58016:36572",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1347,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-small-unsel": {
+      "node": "58016:36576",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1347,
+        "y": 244
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-large-unsel": {
+      "node": "58016:36581",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1335,
+        "y": 404
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-none-unsel": {
+      "node": "58016:36586",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1480,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-small-unsel": {
+      "node": "58016:36590",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1480,
+        "y": 244
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-large-unsel": {
+      "node": "58016:36595",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1468,
+        "y": 404
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-pressed-none-unsel": {
+      "node": "58016:36600",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1613,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-pressed-small-unsel": {
+      "node": "58016:36604",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1613,
+        "y": 244
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-pressed-large-unsel": {
+      "node": "58016:36609",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1601,
+        "y": 404
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-enabled-none-sel": {
+      "node": "58016:36614",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1214,
+        "y": 164
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-enabled-small-sel": {
+      "node": "58016:36618",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1214,
+        "y": 324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-enabled-large-sel": {
+      "node": "58016:36623",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1202,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-none-sel": {
+      "node": "58016:36628",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1347,
+        "y": 164
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-small-sel": {
+      "node": "58016:36632",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1347,
+        "y": 324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-hovered-large-sel": {
+      "node": "58016:36637",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1335,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-none-sel": {
+      "node": "58016:36642",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1480,
+        "y": 164
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-small-sel": {
+      "node": "58016:36646",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1480,
+        "y": 324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-focused-large-sel": {
+      "node": "58016:36651",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1468,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-pressed-none-sel": {
+      "node": "58016:36656",
+      "size": [
+        101,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1613,
+        "y": 164
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        103,
+        58
+      ],
+      "allowedDiffPixels": 200,
+      "allowedDiffReason": "Kit slip: Rail \u00b7 Horizontal item \u00b7 Pressed \u00b7 Selected is 101px wide; its siblings (and the content: 16 + 24 + 8 + label + 16) are 99px. We hug the content."
+    },
+    "rail-h-pressed-small-sel": {
+      "node": "58016:36660",
+      "size": [
+        99,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1613,
+        "y": 324
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        101,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "rail-h-pressed-large-sel": {
+      "node": "58016:36665",
+      "size": [
+        123,
+        56
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "rail-blocks",
+        "x": 1601,
+        "y": 484
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        125,
+        58
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Glyph-edge raster of the label (two pixels); geometry identical."
+    },
+    "nrail-middle-3": {
+      "node": "58016:36880",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 1028,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-middle-4": {
+      "node": "58016:36888",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 1152,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-middle-5": {
+      "node": "58016:36897",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 1276,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-middle-6": {
+      "node": "58016:36907",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 1400,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-top-6": {
+      "node": "58016:36918",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 814,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-top-5": {
+      "node": "58016:36929",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 690,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-top-4": {
+      "node": "58016:36939",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 566,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrail-top-3": {
+      "node": "58016:36948",
+      "size": [
+        96,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail",
+        "x": 442,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        98,
+        802
+      ]
+    },
+    "nrailx-docked-top-3": {
+      "node": "58016:36671",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 19,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 15,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-top-4": {
+      "node": "58016:36679",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 259,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 17,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-top-5": {
+      "node": "58016:36688",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 499,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 19,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-top-6": {
+      "node": "58016:36698",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 739,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 27,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-top-3": {
+      "node": "58016:36723",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 979,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-top-4": {
+      "node": "58016:36731",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1219,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-top-5": {
+      "node": "58016:36740",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1459,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-top-6": {
+      "node": "58016:36750",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1699,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 18,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-middle-3": {
+      "node": "58016:36775",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 19,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 14,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-middle-4": {
+      "node": "58016:36783",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 259,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 17,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-middle-5": {
+      "node": "58016:36792",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 499,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 19,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-docked-middle-6": {
+      "node": "58016:36802",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 739,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 27,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-middle-3": {
+      "node": "58016:36827",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 979,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 6,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-middle-4": {
+      "node": "58016:36835",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1219,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 8,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-middle-5": {
+      "node": "58016:36844",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1459,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 10,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    },
+    "nrailx-floating-middle-6": {
+      "node": "58016:36854",
+      "size": [
+        220,
+        800
+      ],
+      "background": "#F7F2FA",
+      "crop": {
+        "frame": "rail-expanded",
+        "x": 1699,
+        "y": 900
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        222,
+        802
+      ],
+      "allowedDiffPixels": 18,
+      "allowedDiffReason": "Label glyph-edge pixels (two per item) and, on docked rails, anti-aliasing at the selected pill's rounded ends."
+    }
+  }
+}

@@ -640,6 +640,12 @@ test.describe('progress (live)', () => {
       const bar = node.getByRole('progressbar');
       const [from, to] = kind === 'linear' ? [50, 80] : [30, 80];
       await expect(bar).toHaveAttribute('aria-valuenow', String(from));
+      // Frame-driven: under parallel load the first frame can still be settling — poll first.
+      const start = prog.variants[`${kind}-flat-4-${from}`]!;
+      const startRef: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${from}.png`));
+      await expect
+        .poll(async () => compareImages(startRef, await captureRegion(page, node, start.renderBounds!), { background: hexToRgb(start.background ?? '#FFFFFF') }).diffPixels, { timeout: 8000 })
+        .toBeLessThanOrEqual(start.allowedDiffPixels ?? 0);
       await check(page, node, `${kind}-flat-4-${from}`);
       await page.getByRole('button', { name: `${to}%` }).click();
       await expect(bar).toHaveAttribute('aria-valuenow', String(to));
@@ -970,5 +976,44 @@ test.describe('tabs (live)', () => {
     await expect(audio).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByText('Audio panel')).toBeVisible();
     await expect.poll(indicatorBox, { timeout: 3000 }).toEqual({ inset: true, h: 3 });
+  });
+});
+
+// ── Navigation bar: the live bar against the kit, selection grows the pill, keyboard ─────────
+test.describe('navigation (live)', () => {
+  const nv = JSON.parse(readFileSync(join(REFS_DIR, 'navigation/manifest.json'), 'utf8')) as Manifest;
+
+  test('bar matches the kit; click and keyboard move the selection; the pill grows in', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/fixture/navigation/live');
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    const node = page.locator('[data-fixture-node]');
+    const v = nv.variants['nbar-v-4']!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'navigation', 'nbar-v-4.png'));
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `nbar-v-4 (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, 'nbar-v-4').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+
+    const items = page.getByRole('navigation').getByRole('button');
+    await expect(items).toHaveCount(4);
+    await expect(items.nth(0)).toHaveAttribute('aria-current', 'page');
+    // The selected fill is a separate layer growing from the pill's centre (Compose NavigationItem).
+    const fillWidth = (i: number) => items.nth(i).evaluate((el) => (el.querySelector('span > span[aria-hidden]') as HTMLElement).getBoundingClientRect().width);
+    await items.nth(2).click();
+    await expect(page.locator('[data-value]')).toHaveText('2');
+    await expect(items.nth(2)).toHaveAttribute('aria-current', 'page');
+    await expect(items.nth(0)).not.toHaveAttribute('aria-current');
+    const early = await fillWidth(2);
+    expect(early, 'the new pill starts narrow').toBeLessThan(56);
+    await expect.poll(() => fillWidth(2), { timeout: 3000 }).toBeCloseTo(56, 0);
+    await expect.poll(() => fillWidth(0), { timeout: 3000 }).toBeCloseTo(0, 0);
+
+    // Keyboard: items are buttons in tab order; Enter selects.
+    await items.nth(2).focus();
+    await page.keyboard.press('Tab');
+    await expect(items.nth(3)).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-value]')).toHaveText('3');
   });
 });

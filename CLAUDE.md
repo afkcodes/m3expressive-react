@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable).
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable), Navigation (bar with vertical / horizontal items, rail collapsed / expanded with sections).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -180,6 +180,11 @@ FAB menu, split button, button groups.
   their fractional x: an icon centred beside a label (fractional content width) lands up to
   0.5px off Figma. Verified by shifting icons by x − round(x) (0 drift) — not shipped (other
   engines snap differently); record it as a measured exception.
+- To keep Figma's exact fractional position for a box centred in a fractional-width parent, make
+  the parent `container-type: inline-size` and centre with `transform: translateX(calc(50cqw -
+  50%))` (transforms aren't snapped; same maths in every engine) — navigation pills.
+- Centred text in a fixed-width box: Figma centres the advance *without* the trailing letter
+  spacing (`textCentred.trimTracking`); label-medium's 0.5px tracking otherwise sits 0.25px left.
 - Figma's hug text boxes are whole-pixel wide, so geometry measured from label boxes (e.g. the
   primary tab indicator) uses offsetLeft / offsetWidth, not fractional rects.
 - Popups must portal into `<M3Provider>` (`usePortalContainer()`): a portal to <body> escapes the

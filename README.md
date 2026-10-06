@@ -125,6 +125,12 @@ line to flip if you'd rather follow the M3 guidelines:
 | Tabs, scrollable secondary icon + label | tabs forced to 90px, content overflowing the 16px padding | tabs ≥ 90px that grow with their content (Compose ScrollableTabRow) — we follow this |
 | Tabs, in-row content | content centred on the half pixel (47 / 63px tabs) | — we follow the kit (transform for the half pixel) |
 | Tabs, pressed ripple | painted over the content; secondary indicator above the ripple | — we follow the kit |
+| Navigation bar · vertical item · large badge · selected | label On Secondary Container (other selected items: Secondary) | Secondary (Compose) — we follow this |
+| Navigation rail · vertical item · small badge · selected | label On Secondary Container | Secondary — we follow this |
+| Navigation rail · horizontal item · pressed · selected | 101px wide (siblings 99px) | hug the content — we follow this |
+| Navigation rail FAB | no shadow | flat FAB (Compose bottomAppBarFabElevation) — `Fab elevated={false}` |
+| Navigation rail, middle alignment | destinations centred in the full height (may overlap the header gap); overflowing rails top-align | — we follow the kit |
+| Navigation drawer (Deprecated section), XR bar / rail | in the kit | not implemented — deprecated in M3 Expressive (use the expanded rail) / XR is out of scope |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
