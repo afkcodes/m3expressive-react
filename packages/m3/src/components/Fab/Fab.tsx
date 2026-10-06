@@ -79,6 +79,8 @@ const s = stylex.create({
   hovered: { boxShadow: elevation.level4 },
   focused: { boxShadow: elevation.level3NoSpread },
   ringForced: { outlineStyle: 'solid' },
+  // Flat FAB (Compose bottomAppBarFabElevation: 0 in every state) — e.g. in a navigation rail.
+  flat: { boxShadow: 'none' },
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   label: { position: 'relative', color: 'inherit' },
 });
@@ -100,7 +102,7 @@ const colors = stylex.create({
 
 type BaseProps = Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'>;
 
-function useFabRoot(fabColor: FabColor, sx?: StyleXStyles) {
+function useFabRoot(fabColor: FabColor, elevated: boolean, sx?: StyleXStyles) {
   const forced = useForcedState();
   return [
     s.root,
@@ -112,6 +114,7 @@ function useFabRoot(fabColor: FabColor, sx?: StyleXStyles) {
     forced.state === 'focused' && s.focused,
     forced.state === 'pressed' && stateLayerHost.forceHover,
     forced.focusRing && s.ringForced,
+    !elevated && s.flat,
     sx,
   ];
 }
@@ -123,16 +126,18 @@ export interface FabProps extends Omit<BaseProps, 'aria-label'> {
   color?: FabColor;
   /** The icon (use currentColor); sized 24/28/36px. */
   children: ReactNode;
+  /** Shadow (level 3; default true). Flat FABs sit in containers such as a navigation rail. */
+  elevated?: boolean;
   sx?: StyleXStyles;
 }
 
 export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
-  { size = 'default', color: fabColor = 'primary-container', children, sx, ...rest },
+  { size = 'default', color: fabColor = 'primary-container', elevated = true, children, sx, ...rest },
   ref,
 ) {
   const { box, r, icon } = FAB[size];
   return (
-    <BaseButton ref={ref} data-ripple-host="" {...rest} {...stylex.props(...useFabRoot(fabColor, sx), dyn.box(box, box, r))}>
+    <BaseButton ref={ref} data-ripple-host="" {...rest} {...stylex.props(...useFabRoot(fabColor, elevated, sx), dyn.box(box, box, r))}>
       <StateLayer />
       <span {...stylex.props(s.icon, dyn.icon(icon))}>{children}</span>
       <Ripple above />
@@ -147,11 +152,13 @@ export interface ExtendedFabProps extends BaseProps {
   icon?: ReactNode;
   /** The label. */
   children: ReactNode;
+  /** Shadow (level 3; default true). */
+  elevated?: boolean;
   sx?: StyleXStyles;
 }
 
 export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(function ExtendedFab(
-  { size = 'small', color: fabColor = 'primary-container', icon, children, sx, ...rest },
+  { size = 'small', color: fabColor = 'primary-container', elevated = true, icon, children, sx, ...rest },
   ref,
 ) {
   const e = EXT[size];
@@ -160,7 +167,7 @@ export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(funct
       ref={ref}
       data-ripple-host=""
       {...rest}
-      {...stylex.props(...useFabRoot(fabColor, sx), dyn.box(null, e.h, e.r), dyn.pad(e.padBlock, e.padInline, e.gap))}
+      {...stylex.props(...useFabRoot(fabColor, elevated, sx), dyn.box(null, e.h, e.r), dyn.pad(e.padBlock, e.padInline, e.gap))}
     >
       <StateLayer />
       {icon != null && <span {...stylex.props(s.icon, dyn.icon(e.icon))}>{icon}</span>}
