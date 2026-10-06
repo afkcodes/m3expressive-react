@@ -1,0 +1,242 @@
+{
+  "component": "carousel",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": {
+      "node": "53912:27480",
+      "file": "_frames/set.png"
+    },
+    "full": {
+      "node": "54577:26060",
+      "file": "_frames/full.png"
+    }
+  },
+  "variants": {
+    "carousel-tablet-multi": {
+      "node": "53912:27481",
+      "size": [
+        600,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 488,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        602,
+        222
+      ]
+    },
+    "carousel-tablet-uncontained": {
+      "node": "54577:25998",
+      "size": [
+        600,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 488,
+        "y": 868
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        602,
+        222
+      ],
+      "allowedDiffPixels": 7297,
+      "allowedDiffReason": "The kit fits the cut-off item's art to its visible part (a 72px frame with square right corners); in Compose's uncontained carousel that item is the medium keyline (138.3px) cut by the container edge, so its art is centred in the full item. Silhouettes match; the drift is the art inside the cut item."
+    },
+    "carousel-tablet-center-hero": {
+      "node": "54577:25914",
+      "size": [
+        600,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 488,
+        "y": 342
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        602,
+        222
+      ],
+      "allowedDiffPixels": 80849,
+      "allowedDiffReason": "Kit slip: the tablet Center-aligned hero variant is a copy of the multi-browse layout (184 / 184 / 120 / 56, including a medium item hero carousels never have). We render Compose's centred heroKeylineList for 568px (40 / 472 / 40)."
+    },
+    "carousel-tablet-hero": {
+      "node": "54577:25956",
+      "size": [
+        600,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 488,
+        "y": 66
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        602,
+        222
+      ],
+      "allowedDiffPixels": 94576,
+      "allowedDiffReason": "Kit slip: the tablet Hero variant is a copy of the multi-browse layout (184 / 184 / 120 / 56, including a medium item hero carousels never have). We render Compose's heroKeylineList for 568px (520 / 40)."
+    },
+    "carousel-mobile-multi": {
+      "node": "53912:27490",
+      "size": [
+        412,
+        221
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 605
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        223
+      ],
+      "allowedDiffPixels": 2080,
+      "allowedDiffReason": "Compose multi-browse for 380px with a 188px preferred item arranges 188 / 122 / 54 (medium = (large + small) / 2, small flexed to fit); the kit draws 188 / 120 / 56, which no Compose arrangement produces. The second and third items differ by 2px."
+    },
+    "carousel-mobile-uncontained": {
+      "node": "54577:26035",
+      "size": [
+        412,
+        221
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 876
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        223
+      ],
+      "allowedDiffPixels": 7229,
+      "allowedDiffReason": "The kit fits the cut-off item's art to its visible part (a 72px frame with square right corners); in Compose's uncontained carousel that item is the medium keyline (130.9px) cut by the container edge, so its art is centred in the full item. Silhouettes match; the drift is the art inside the cut item."
+    },
+    "carousel-mobile-center-hero": {
+      "node": "53912:27497",
+      "size": [
+        412,
+        221
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 334
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        223
+      ],
+      "allowedDiffPixels": 57,
+      "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+    },
+    "carousel-mobile-hero": {
+      "node": "54490:25276",
+      "size": [
+        412,
+        221
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 66
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        223
+      ],
+      "allowedDiffPixels": 47,
+      "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+    },
+    "carousel-mobile-aspect": {
+      "node": "58973:3142",
+      "size": [
+        412,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 16,
+        "y": 1152
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        222
+      ]
+    },
+    "carousel-tablet-aspect": {
+      "node": "58973:3148",
+      "size": [
+        600,
+        220
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 488,
+        "y": 1152
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        602,
+        222
+      ],
+      "allowedDiffPixels": 30,
+      "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+    },
+    "carousel-full": {
+      "node": "54577:26118",
+      "size": [
+        412,
+        892
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "full",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        414,
+        894
+      ]
+    }
+  }
+}

@@ -9,7 +9,8 @@ Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPP
 Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities), Tabs (primary / secondary, fixed / scrollable), Navigation (bar with vertical / horizontal items, rail collapsed / expanded with sections), App bars (top small / centred / medium / large with scroll behaviour, bottom app bar), Search (bar with
 hover / press / avatar, docked and full-screen views), Toolbars (floating horizontal / vertical and
 docked, standard / vibrant, toolbar-coloured building blocks, FAB collapse), Sheets (side standard / modal,
-bottom standard / modal with drag to dismiss), Dialogs (basic, list, scrollable list; with / without icon).
+bottom standard / modal with drag to dismiss), Dialogs (basic, list, scrollable list; with / without icon), Carousel (multi-browse, hero,
+centred hero, uncontained, multi-aspect, full screen; Compose keyline motion).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 

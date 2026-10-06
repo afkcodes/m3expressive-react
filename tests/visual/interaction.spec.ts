@@ -1239,3 +1239,47 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
   await page.mouse.click(5, 5);
   await expect(dialog).toHaveCount(0);
 });
+
+test('carousel (live): items resize through the keylines as it scrolls; keys and scrolling settle on an item', async ({ page }) => {
+  await page.goto('/fixture/carousel/live');
+  await page.evaluate(() => document.fonts.ready);
+  const carousel = page.getByRole('region', { name: 'Photos' });
+  const slides = carousel.locator('[aria-roledescription="slide"]');
+  const geo = async () => {
+    const base = (await carousel.boundingBox())!;
+    return Promise.all([0, 1, 2].map(async (i) => {
+      const b = (await slides.nth(i).boundingBox())!;
+      return [Math.round(b.x - base.x), Math.round(b.width)];
+    }));
+  };
+  // Rest: large / medium / small (Compose multi-browse for 380px, 188px preferred).
+  expect(await geo()).toEqual([[16, 188], [212, 122], [342, 54]]);
+
+  // Part way: the medium item grows towards large while the large one shrinks, edges pinned
+  // (read in the same frame as the scroll, before the settle spring moves it).
+  const part = await carousel.evaluate((el) => {
+    el.scrollLeft = 120;
+    el.dispatchEvent(new Event('scroll'));
+    return [...el.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')].slice(0, 2).map((s) => {
+      const r = s.getBoundingClientRect();
+      return [r.left - el.getBoundingClientRect().left, r.width];
+    });
+  });
+  expect(part[1]![1]).toBeGreaterThan(122);
+  expect(part[1]![1]).toBeLessThan(188);
+  expect(part[0]![0] + part[0]![1] + 8).toBeCloseTo(part[1]![0], 0);
+
+  // A free scroll comes to rest on the nearest item (Compose snap spring).
+  await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(196);
+  expect((await geo())[1]).toEqual([16, 188]);
+
+  // Arrow keys advance one item at a time.
+  await carousel.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(392);
+  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowLeft');
+  await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(0);
+  expect(await geo()).toEqual([[16, 188], [212, 122], [342, 54]]);
+  await expect(slides.first()).toHaveAttribute('aria-label', '1 of 8');
+});

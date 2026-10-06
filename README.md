@@ -156,6 +156,14 @@ line to flip if you'd rather follow the M3 guidelines:
 | Dialog motion | — | Compose dialogs use the platform window animation; we use Material Components' M3 dialog: fade + scale 0.8 → 1 over 400ms emphasized decelerate, fade out over 150ms emphasized accelerate |
 | List dialogs | baseline list items without their Surface fill, middle-inset dividers, right-aligned "100+" 10px before the checkbox | items inherit the dialog surface; `ListItem divider`; right-aligned hug text (`textEnd`) |
 | `alertdialog` | — | `Dialog role="alertdialog"` ignores outside clicks (decisions); Escape still dismisses |
+| Carousel motion | static frames only | Compose's keyline model is ported (`Carousel/keylines.ts`: multi-browse, hero, centred hero, uncontained) — items resize large → medium → small → anchor as they scroll and settle on the Compose snap spring (stiffness 400, no bounce) |
+| Carousel items | drawn at their visible size with the art fitted | the item box takes the keyline size (the same as Compose's masked crop for cover-fitted, height-bound content) |
+| Carousel padding | 16px each side (uncontained: start only) | keylines are laid out inside the padding; items leave under the padding edge (Compose's anchors sit outside the container) |
+| Carousel, mobile multi-browse | 188 / 120 / 56 | Compose arranges 188 / 122 / 54 — recorded exception |
+| Carousel, tablet hero / centred hero | copies of the multi-browse layout | Compose hero arrangements (520 / 40, 40 / 472 / 40) — recorded exceptions |
+| Carousel, uncontained cut-off item | art fitted to the visible 72px | art centred in the medium keyline item — recorded exception |
+| Carousel `itemWidth` (uncontained) | — | the visible item width (Compose's own `itemWidth` excludes the spacing it adds back in the keyline) |
+| Carousel multi-aspect / full screen | — | no Compose equivalent: free scrolling at the items' aspect ratios / vertical one-item paging |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

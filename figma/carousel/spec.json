@@ -1,0 +1,60 @@
+{
+ "component": "carousel",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Carousel page (55141:14172): the ten Carousel variants (mobile / tablet x layouts) and the full-screen carousel. Item content is the kit's placeholder art (figma/list/assets/placeholder-700.png, FIT, luminosity over Surface Container High).",
+ "frames": {
+  "set": {
+   "node": "53912:27480",
+   "file": "_frames/set.png",
+   "size": [
+    1120,
+    1405
+   ],
+   "rows": "carousel-tablet-multi 53912:27481 488,605 600x220;carousel-tablet-uncontained 54577:25998 488,868 600x220;carousel-tablet-center-hero 54577:25914 488,342 600x220;carousel-tablet-hero 54577:25956 488,66 600x220;carousel-mobile-multi 53912:27490 16,605 412x221;carousel-mobile-uncontained 54577:26035 16,876 412x221;carousel-mobile-center-hero 53912:27497 16,334 412x221;carousel-mobile-hero 54490:25276 16,66 412x221;carousel-mobile-aspect 58973:3142 16,1152 412x220;carousel-tablet-aspect 58973:3148 488,1152 600x220"
+  },
+  "full": {
+   "node": "54577:26060",
+   "file": "_frames/full.png",
+   "size": [
+    444,
+    924
+   ],
+   "rows": "carousel-full 54577:26118 16,16 412x892"
+  }
+ },
+ "exceptions": {
+  "carousel-mobile-multi": {
+   "allowedDiffPixels": 2080,
+   "allowedDiffReason": "Compose multi-browse for 380px with a 188px preferred item arranges 188 / 122 / 54 (medium = (large + small) / 2, small flexed to fit); the kit draws 188 / 120 / 56, which no Compose arrangement produces. The second and third items differ by 2px."
+  },
+  "carousel-mobile-uncontained": {
+   "allowedDiffPixels": 7229,
+   "allowedDiffReason": "The kit fits the cut-off item's art to its visible part (a 72px frame with square right corners); in Compose's uncontained carousel that item is the medium keyline (130.9px) cut by the container edge, so its art is centred in the full item. Silhouettes match; the drift is the art inside the cut item."
+  },
+  "carousel-tablet-uncontained": {
+   "allowedDiffPixels": 7297,
+   "allowedDiffReason": "The kit fits the cut-off item's art to its visible part (a 72px frame with square right corners); in Compose's uncontained carousel that item is the medium keyline (138.3px) cut by the container edge, so its art is centred in the full item. Silhouettes match; the drift is the art inside the cut item."
+  },
+  "carousel-tablet-hero": {
+   "allowedDiffPixels": 94576,
+   "allowedDiffReason": "Kit slip: the tablet Hero variant is a copy of the multi-browse layout (184 / 184 / 120 / 56, including a medium item hero carousels never have). We render Compose's heroKeylineList for 568px (520 / 40)."
+  },
+  "carousel-tablet-center-hero": {
+   "allowedDiffPixels": 80849,
+   "allowedDiffReason": "Kit slip: the tablet Center-aligned hero variant is a copy of the multi-browse layout (184 / 184 / 120 / 56, including a medium item hero carousels never have). We render Compose's centred heroKeylineList for 568px (40 / 472 / 40)."
+  },
+  "carousel-mobile-hero": {
+   "allowedDiffPixels": 47,
+   "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+  },
+  "carousel-mobile-center-hero": {
+   "allowedDiffPixels": 57,
+   "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+  },
+  "carousel-tablet-aspect": {
+   "allowedDiffPixels": 30,
+   "allowedDiffReason": "Placeholder art at a fractional offset inside the item (object-fit centring / aspect-ratio widths): Figma and Chrome resample the image edges differently; item geometry matches exactly."
+  }
+ }
+}
