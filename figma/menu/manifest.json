@@ -1,0 +1,1309 @@
+{
+  "component": "menu",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "item-standard": {
+      "node": "58966:4100",
+      "file": "_frames/item-standard.png"
+    },
+    "item-vibrant": {
+      "node": "58966:4171",
+      "file": "_frames/item-vibrant.png"
+    },
+    "menus": {
+      "node": "58966:3975",
+      "file": "_frames/menus.png"
+    },
+    "blocks": {
+      "node": "58966:4242",
+      "file": "_frames/blocks.png"
+    },
+    "baseline-menus": {
+      "node": "54061:36963",
+      "file": "_frames/baseline-menus.png"
+    },
+    "baseline-items": {
+      "node": "54061:37025",
+      "file": "_frames/baseline-items.png"
+    },
+    "baseline-elements": {
+      "node": "54061:41052",
+      "file": "_frames/baseline-elements.png"
+    }
+  },
+  "variants": {
+    "item-std-enabled-unsel": {
+      "node": "58966:4101",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-enabled-sel": {
+      "node": "58966:4107",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 268,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-hovered-unsel": {
+      "node": "58966:4113",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 77
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-hovered-sel": {
+      "node": "58966:4119",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 268,
+        "y": 77
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-focused-unsel": {
+      "node": "58966:4125",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 137
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-focused-sel": {
+      "node": "58966:4132",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 268,
+        "y": 137
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ],
+      "allowedDiffPixels": 34820,
+      "allowedDiffReason": "Kit slip: Standard \u00b7 Focused \u00b7 Selected binds its state layer to Opacity-08; Focused \u00b7 Unselected and both Vibrant Focused items use Opacity-10 (md.sys.state.focus). We render the consistent 10% focus layer."
+    },
+    "item-std-pressed-unsel": {
+      "node": "58966:4139",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 197
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-pressed-sel": {
+      "node": "58966:4146",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 268,
+        "y": 197
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ],
+      "allowedDiffPixels": 16739,
+      "allowedDiffReason": "Kit slip: Standard \u00b7 Pressed \u00b7 Selected draws its ripple at Opacity-08; Pressed \u00b7 Unselected and both Vibrant Pressed items use Opacity-10 (md.sys.state.pressed). We render the consistent 10% ripple (the drift is the ripple blob)."
+    },
+    "item-std-disabled-unsel": {
+      "node": "58966:4153",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 257
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-std-disabled-sel": {
+      "node": "58966:4159",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 268,
+        "y": 257
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ],
+      "allowedDiffPixels": 37536,
+      "allowedDiffReason": "Kit slip: Standard \u00b7 Disabled \u00b7 Selected drops the Tertiary Container fill, while Vibrant \u00b7 Disabled \u00b7 Selected keeps its Tertiary fill and Compose's StandardMenuTokens.ItemSelectedDisabledContainerColor is Tertiary Container. We keep the container (content at 38%)."
+    },
+    "item-std-active-unsel": {
+      "node": "58966:4165",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-standard",
+        "x": 16,
+        "y": 317
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-enabled-unsel": {
+      "node": "58966:4172",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-enabled-sel": {
+      "node": "58966:4178",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 268,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-hovered-unsel": {
+      "node": "58966:4184",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 77
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-hovered-sel": {
+      "node": "58966:4190",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 268,
+        "y": 77
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-focused-unsel": {
+      "node": "58966:4196",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 137
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-focused-sel": {
+      "node": "58966:4203",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 268,
+        "y": 137
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-pressed-unsel": {
+      "node": "58966:4210",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 197
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-pressed-sel": {
+      "node": "58966:4217",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 268,
+        "y": 197
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-disabled-unsel": {
+      "node": "58966:4224",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 257
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-disabled-sel": {
+      "node": "58966:4230",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 268,
+        "y": 257
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "item-vib-active-unsel": {
+      "node": "58966:4236",
+      "size": [
+        228,
+        48
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "item-vibrant",
+        "x": 16,
+        "y": 317
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        230,
+        50
+      ]
+    },
+    "menu-vib-3": {
+      "node": "58966:3976",
+      "size": [
+        208,
+        598
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 1178.5,
+        "y": 23
+      },
+      "renderBounds": [
+        -5,
+        -8,
+        225,
+        622
+      ],
+      "refNote": "left trimmed (neighbour menu-vib-2)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Three anti-aliasing pixels on the groups' rounded corners (css 200.5 / 204, 2.5\u20136 and 1, 396); Figma vs Chrome curve raster on Tertiary Container. The middle group's 2px item gap (a kit slip, all other groups: 0) is reproduced in the fixture."
+    },
+    "menu-vib-2": {
+      "node": "58966:4001",
+      "size": [
+        208,
+        394
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 954.5,
+        "y": 23
+      },
+      "renderBounds": [
+        -4.5,
+        -8,
+        217.5,
+        418
+      ],
+      "refNote": "left trimmed (neighbour menu-vib-1); right trimmed (neighbour menu-vib-3)",
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Three anti-aliasing pixels on the groups' rounded corners (css 199\u2013201, 1.5\u20133 and 1, 192); Figma vs Chrome curve raster on Tertiary Container."
+    },
+    "menu-vib-1": {
+      "node": "58966:4018",
+      "size": [
+        208,
+        292
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 731,
+        "y": 23
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        224.5,
+        316
+      ],
+      "refNote": "right trimmed (neighbour menu-vib-2)",
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Two anti-aliasing pixels where the 16px top corners meet the top edge (css 13 / 194.5, 0) on Tertiary Container; Figma vs Chrome curve raster."
+    },
+    "menu-std-3": {
+      "node": "58966:4036",
+      "size": [
+        208,
+        592
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 474.5,
+        "y": 22
+      },
+      "renderBounds": [
+        -4.5,
+        -8,
+        224.5,
+        616
+      ],
+      "refNote": "left trimmed (neighbour menu-std-2)"
+    },
+    "menu-std-2": {
+      "node": "58966:4061",
+      "size": [
+        208,
+        394
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 251,
+        "y": 22
+      },
+      "renderBounds": [
+        -5,
+        -8,
+        217.5,
+        418
+      ],
+      "refNote": "left trimmed (neighbour menu-std-1); right trimmed (neighbour menu-std-3)"
+    },
+    "menu-std-1": {
+      "node": "58966:4078",
+      "size": [
+        208,
+        292
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "menus",
+        "x": 27,
+        "y": 22
+      },
+      "renderBounds": [
+        -12,
+        -8,
+        225,
+        316
+      ],
+      "refNote": "right trimmed (neighbour menu-std-2)"
+    },
+    "lead-indent": {
+      "node": "58966:4244",
+      "size": [
+        20,
+        20
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 75.5,
+        "y": 23
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        22,
+        22
+      ]
+    },
+    "lead-icon": {
+      "node": "58966:4245",
+      "size": [
+        20,
+        20
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 103.5,
+        "y": 23
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        22,
+        22
+      ]
+    },
+    "lead-slot": {
+      "node": "58966:4247",
+      "size": [
+        44,
+        36
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 131.5,
+        "y": 15
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        46,
+        38
+      ]
+    },
+    "content-text": {
+      "node": "58966:4250",
+      "size": [
+        62.5,
+        20
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 223.5,
+        "y": 23
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        64.5,
+        22
+      ]
+    },
+    "content-slot": {
+      "node": "58966:4253",
+      "size": [
+        62.5,
+        36
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 302,
+        "y": 15
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        64.5,
+        38
+      ]
+    },
+    "trail-text": {
+      "node": "58966:4256",
+      "size": [
+        21,
+        20
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 447,
+        "y": 23
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        23,
+        22
+      ]
+    },
+    "trail-icon": {
+      "node": "58966:4260",
+      "size": [
+        49,
+        20
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 480,
+        "y": 23
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        51,
+        22
+      ]
+    },
+    "trail-slot": {
+      "node": "58966:4263",
+      "size": [
+        69,
+        36
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 541,
+        "y": 15
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        71,
+        38
+      ]
+    },
+    "trail-badge": {
+      "node": "58995:17677",
+      "size": [
+        60,
+        36
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 622,
+        "y": 15
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        62,
+        38
+      ]
+    },
+    "label-std": {
+      "node": "58966:4267",
+      "size": [
+        119.5,
+        32
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 768.5,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        121.5,
+        34
+      ]
+    },
+    "label-vib": {
+      "node": "58966:4272",
+      "size": [
+        119.5,
+        32
+      ],
+      "background": "#F3EDF7",
+      "crop": {
+        "frame": "blocks",
+        "x": 912,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        121.5,
+        34
+      ]
+    },
+    "bmenu-d0": {
+      "node": "54061:36964",
+      "size": [
+        200,
+        688
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-menus",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        218,
+        706
+      ]
+    },
+    "bmenu-dm2": {
+      "node": "54061:36980",
+      "size": [
+        200,
+        592
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-menus",
+        "x": 236,
+        "y": 16
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        218,
+        610
+      ]
+    },
+    "bmenu-dm4": {
+      "node": "54061:36996",
+      "size": [
+        200,
+        496
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-menus",
+        "x": 456,
+        "y": 16
+      },
+      "renderBounds": [
+        -9,
+        -7,
+        218,
+        514
+      ]
+    },
+    "bitem-d0-disabled": {
+      "node": "54061:37039",
+      "size": [
+        200,
+        73
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 16,
+        "y": 333
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        75
+      ]
+    },
+    "bitem-d0-selected": {
+      "node": "54061:37033",
+      "size": [
+        200,
+        73
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 16,
+        "y": 250
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        75
+      ]
+    },
+    "bitem-d0-hovered": {
+      "node": "54061:37045",
+      "size": [
+        200,
+        73
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 16,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        75
+      ]
+    },
+    "bitem-d0-focused": {
+      "node": "58729:36835",
+      "size": [
+        200,
+        73
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 16,
+        "y": 173
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        75
+      ]
+    },
+    "bitem-d0-enabled": {
+      "node": "54061:37027",
+      "size": [
+        200,
+        73
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 16,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        75
+      ]
+    },
+    "bitem-dm2-disabled": {
+      "node": "54061:37064",
+      "size": [
+        200,
+        65
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 258,
+        "y": 337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        67
+      ]
+    },
+    "bitem-dm2-selected": {
+      "node": "54061:37058",
+      "size": [
+        200,
+        65
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 258,
+        "y": 254
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        67
+      ]
+    },
+    "bitem-dm2-hovered": {
+      "node": "54061:37070",
+      "size": [
+        200,
+        65
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 258,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        67
+      ]
+    },
+    "bitem-dm2-focused": {
+      "node": "58729:36861",
+      "size": [
+        200,
+        65
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 258,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        67
+      ]
+    },
+    "bitem-dm2-enabled": {
+      "node": "54061:37052",
+      "size": [
+        200,
+        65
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 258,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        67
+      ]
+    },
+    "bitem-dm4-disabled": {
+      "node": "54061:37089",
+      "size": [
+        200,
+        57
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 500,
+        "y": 337
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        59
+      ]
+    },
+    "bitem-dm4-selected": {
+      "node": "54061:37083",
+      "size": [
+        200,
+        57
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 500,
+        "y": 254
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        59
+      ]
+    },
+    "bitem-dm4-hovered": {
+      "node": "54061:37095",
+      "size": [
+        200,
+        57
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 500,
+        "y": 97
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        59
+      ]
+    },
+    "bitem-dm4-focused": {
+      "node": "58729:36887",
+      "size": [
+        200,
+        57
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 500,
+        "y": 175
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        59
+      ]
+    },
+    "bitem-dm4-enabled": {
+      "node": "54061:37077",
+      "size": [
+        200,
+        57
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-items",
+        "x": 500,
+        "y": 16
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        202,
+        59
+      ]
+    },
+    "blead-icon": {
+      "node": "54061:37102",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 16,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "blead-indent": {
+      "node": "54061:37104",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 64,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "blead-slot": {
+      "node": "59325:8897",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 112,
+        "y": 18
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "btrail-icon": {
+      "node": "54061:37106",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 178,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "btrail-text": {
+      "node": "54061:37108",
+      "size": [
+        37,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 218,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        39,
+        26
+      ]
+    },
+    "btrail-slot": {
+      "node": "59325:8899",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 271,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "btrail-sel-icon": {
+      "node": "55286:1289",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 337,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    },
+    "btrail-sel-text": {
+      "node": "55286:1291",
+      "size": [
+        37,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 377,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        39,
+        26
+      ]
+    },
+    "btrail-sel-slot": {
+      "node": "59325:8902",
+      "size": [
+        24,
+        24
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "baseline-elements",
+        "x": 430,
+        "y": 17
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        26,
+        26
+      ]
+    }
+  }
+}

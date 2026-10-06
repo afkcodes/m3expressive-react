@@ -1,0 +1,104 @@
+{
+ "component": "menu",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F3EDF7",
+ "note": "Menu page (55141:14250). Expressive: Menu item/Standard + /Vibrant (11 each), Menu (Standard/Vibrant x 1-3 groups), building blocks. Baseline: Menu (baseline) x 3 densities, Menu list item x 3 densities, leading / trailing elements.",
+ "frames": {
+  "item-standard": {
+   "node": "58966:4100",
+   "file": "_frames/item-standard.png",
+   "size": [
+    533,
+    382
+   ],
+   "rows": "item-std-enabled-unsel 58966:4101 16,17 228x48;item-std-enabled-sel 58966:4107 268,17 228x48;item-std-hovered-unsel 58966:4113 16,77 228x48;item-std-hovered-sel 58966:4119 268,77 228x48;item-std-focused-unsel 58966:4125 16,137 228x48;item-std-focused-sel 58966:4132 268,137 228x48;item-std-pressed-unsel 58966:4139 16,197 228x48;item-std-pressed-sel 58966:4146 268,197 228x48;item-std-disabled-unsel 58966:4153 16,257 228x48;item-std-disabled-sel 58966:4159 268,257 228x48;item-std-active-unsel 58966:4165 16,317 228x48"
+  },
+  "item-vibrant": {
+   "node": "58966:4171",
+   "file": "_frames/item-vibrant.png",
+   "size": [
+    533,
+    382
+   ],
+   "rows": "item-vib-enabled-unsel 58966:4172 16,17 228x48;item-vib-enabled-sel 58966:4178 268,17 228x48;item-vib-hovered-unsel 58966:4184 16,77 228x48;item-vib-hovered-sel 58966:4190 268,77 228x48;item-vib-focused-unsel 58966:4196 16,137 228x48;item-vib-focused-sel 58966:4203 268,137 228x48;item-vib-pressed-unsel 58966:4210 16,197 228x48;item-vib-pressed-sel 58966:4217 268,197 228x48;item-vib-disabled-unsel 58966:4224 16,257 228x48;item-vib-disabled-sel 58966:4230 268,257 228x48;item-vib-active-unsel 58966:4236 16,317 228x48"
+  },
+  "menus": {
+   "node": "58966:3975",
+   "file": "_frames/menus.png",
+   "size": [
+    1409,
+    718
+   ],
+   "background": "#F5F5F5",
+   "rows": "menu-vib-3 58966:3976 1178.5,23 208x598 rb-11,-7,230,620;menu-vib-2 58966:4001 954.5,23 208x394 rb-11,-7,230,416;menu-vib-1 58966:4018 731,23 208x292 rb-11,-7,230,314;menu-std-3 58966:4036 474.5,22 208x592 rb-11,-7,230,614;menu-std-2 58966:4061 251,22 208x394 rb-11,-7,230,416;menu-std-1 58966:4078 27,22 208x292 rb-11,-7,230,314"
+  },
+  "blocks": {
+   "node": "58966:4242",
+   "file": "_frames/blocks.png",
+   "size": [
+    1111,
+    66
+   ],
+   "setBorder": false,
+   "rows": "lead-indent 58966:4244 75.5,23 20x20;lead-icon 58966:4245 103.5,23 20x20;lead-slot 58966:4247 131.5,15 44x36;content-text 58966:4250 223.5,23 62.5x20;content-slot 58966:4253 302,15 62.5x36;trail-text 58966:4256 447,23 21x20;trail-icon 58966:4260 480,23 49x20;trail-slot 58966:4263 541,15 69x36;trail-badge 58995:17677 622,15 60x36;label-std 58966:4267 768.5,17 119.5x32;label-vib 58966:4272 912,17 119.5x32"
+  },
+  "baseline-menus": {
+   "node": "54061:36963",
+   "file": "_frames/baseline-menus.png",
+   "size": [
+    672,
+    720
+   ],
+   "background": "#F5F5F5",
+   "rows": "bmenu-d0 54061:36964 16,16 200x688 rb-8,-6,216,704;bmenu-dm2 54061:36980 236,16 200x592 rb-8,-6,216,608;bmenu-dm4 54061:36996 456,16 200x496 rb-8,-6,216,512"
+  },
+  "baseline-items": {
+   "node": "54061:37025",
+   "file": "_frames/baseline-items.png",
+   "size": [
+    716,
+    426
+   ],
+   "background": "#F5F5F5",
+   "setBorder": false,
+   "rows": "bitem-d0-disabled 54061:37039 16,333 200x73;bitem-d0-selected 54061:37033 16,250 200x73;bitem-d0-hovered 54061:37045 16,97 200x73;bitem-d0-focused 58729:36835 16,173 200x73;bitem-d0-enabled 54061:37027 16,16 200x73;bitem-dm2-disabled 54061:37064 258,337 200x65;bitem-dm2-selected 54061:37058 258,254 200x65;bitem-dm2-hovered 54061:37070 258,97 200x65;bitem-dm2-focused 58729:36861 258,175 200x65;bitem-dm2-enabled 54061:37052 258,16 200x65;bitem-dm4-disabled 54061:37089 500,337 200x57;bitem-dm4-selected 54061:37083 500,254 200x57;bitem-dm4-hovered 54061:37095 500,97 200x57;bitem-dm4-focused 58729:36887 500,175 200x57;bitem-dm4-enabled 54061:37077 500,16 200x57"
+  },
+  "baseline-elements": {
+   "node": "54061:41052",
+   "file": "_frames/baseline-elements.png",
+   "size": [
+    470,
+    58
+   ],
+   "background": "#F5F5F5",
+   "setBorder": false,
+   "rows": "blead-icon 54061:37102 16,18 24x24;blead-indent 54061:37104 64,18 24x24;blead-slot 59325:8897 112,18 24x24;btrail-icon 54061:37106 178,17 24x24;btrail-text 54061:37108 218,17 37x24;btrail-slot 59325:8899 271,17 24x24;btrail-sel-icon 55286:1289 337,17 24x24;btrail-sel-text 55286:1291 377,17 37x24;btrail-sel-slot 59325:8902 430,17 24x24"
+  }
+ },
+ "exceptions": {
+  "item-std-focused-sel": {
+   "allowedDiffPixels": 34820,
+   "allowedDiffReason": "Kit slip: Standard \u00b7 Focused \u00b7 Selected binds its state layer to Opacity-08; Focused \u00b7 Unselected and both Vibrant Focused items use Opacity-10 (md.sys.state.focus). We render the consistent 10% focus layer."
+  },
+  "item-std-pressed-sel": {
+   "allowedDiffPixels": 16739,
+   "allowedDiffReason": "Kit slip: Standard \u00b7 Pressed \u00b7 Selected draws its ripple at Opacity-08; Pressed \u00b7 Unselected and both Vibrant Pressed items use Opacity-10 (md.sys.state.pressed). We render the consistent 10% ripple (the drift is the ripple blob)."
+  },
+  "item-std-disabled-sel": {
+   "allowedDiffPixels": 37536,
+   "allowedDiffReason": "Kit slip: Standard \u00b7 Disabled \u00b7 Selected drops the Tertiary Container fill, while Vibrant \u00b7 Disabled \u00b7 Selected keeps its Tertiary fill and Compose's StandardMenuTokens.ItemSelectedDisabledContainerColor is Tertiary Container. We keep the container (content at 38%)."
+  },
+  "menu-vib-1": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Two anti-aliasing pixels where the 16px top corners meet the top edge (css 13 / 194.5, 0) on Tertiary Container; Figma vs Chrome curve raster."
+  },
+  "menu-vib-2": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Three anti-aliasing pixels on the groups' rounded corners (css 199\u2013201, 1.5\u20133 and 1, 192); Figma vs Chrome curve raster on Tertiary Container."
+  },
+  "menu-vib-3": {
+   "allowedDiffPixels": 3,
+   "allowedDiffReason": "Three anti-aliasing pixels on the groups' rounded corners (css 200.5 / 204, 2.5\u20136 and 1, 396); Figma vs Chrome curve raster on Tertiary Container. The middle group's 2px item gap (a kit slip, all other groups: 0) is reproduced in the fixture."
+  }
+ }
+}

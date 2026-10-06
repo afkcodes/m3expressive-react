@@ -52,6 +52,8 @@ export { Slider, RangeSlider } from './components/Slider/index.ts';
 export { TextField } from './components/TextField/index.ts';
 export { List, ListItem, ListItemImage, ListItemVideo, ListItemMonogram, ExpandableListItem, AccordionButton, SwipeableListItem, SwipeActions, swipeLayout, swipeOffset } from './components/List/index.ts';
 export type { ListProps, ListItemProps, ListItemVariant, ExpandableListItemProps, AccordionButtonProps, SwipeableListItemProps, SwipeActionsProps, SwipeAction, SwipeRevealState } from './components/List/index.ts';
+export { Menu, MenuCheckboxItem, MenuDivider, MenuGroup, MenuItem, MenuRadioGroup, MenuRadioItem, MenuScope, MenuSectionLabel, MenuSurface, Submenu } from './components/Menu/index.ts';
+export type { MenuCheckboxItemProps, MenuDensity, MenuGroupProps, MenuItemProps, MenuProps, MenuRadioGroupProps, MenuRadioItemProps, MenuSurfaceProps, MenuVariant, SubmenuProps } from './components/Menu/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';
 export type { SliderProps, RangeSliderProps, SliderSize, SliderOrientation } from './components/Slider/index.ts';
 export type { LinearProgressProps, CircularProgressProps, LoadingIndicatorProps, ProgressType, ProgressThickness } from './components/Progress/index.ts';

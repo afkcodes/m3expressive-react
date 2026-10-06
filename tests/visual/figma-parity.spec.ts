@@ -33,6 +33,14 @@ for (const manifest of loadManifests()) {
 
       test(name, async ({ page }) => {
         test.skip(!existsSync(refPath), `no Figma ref at ${refPath}`);
+        // Screenshots clip to the viewport: grow it for nodes taller / wider than the default.
+        const vp = page.viewportSize()!;
+        const [, rby = 0, rbw = v.size[0], rbh = v.size[1]] = v.renderBounds ?? [];
+        const needW = Math.ceil(rbw + 160);
+        const needH = Math.ceil(rby + rbh + 160);
+        if (needW > vp.width || needH > vp.height) {
+          await page.setViewportSize({ width: Math.max(vp.width, needW), height: Math.max(vp.height, needH) });
+        }
         await page.goto(`/fixture/${manifest.component}/${name}`);
         await page.evaluate(() => document.fonts.ready);
         const node = page.locator('[data-fixture-node]');

@@ -850,3 +850,75 @@ test.describe('list (live)', () => {
     await check('swipe-default');
   });
 });
+
+// ── Menu: the real popup against the kit, keyboard, selection, group shape after hover ───────
+test.describe('menu (live)', () => {
+  const mn = JSON.parse(readFileSync(join(REFS_DIR, 'menu/manifest.json'), 'utf8')) as Manifest;
+
+  test('popup matches the kit menu; keyboard and click run an item and close', async ({ page }) => {
+    await page.goto('/fixture/menu/live');
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    const trigger = page.getByRole('button', { name: 'Options' });
+    await trigger.press('Enter');
+    const menu = page.getByRole('menu');
+    await expect(menu).toBeVisible();
+    await expect(page.getByRole('menuitem')).toHaveCount(8);
+    // Let the open motion (fast spatial scale + fast effects fade) settle, then compare.
+    await page.waitForTimeout(SETTLE);
+    const v = mn.variants['menu-std-2']!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'menu', 'menu-std-2.png'));
+    // Keyboard-opened menus highlight the first item: compare with the pointer-opened menu.
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeHidden();
+    await trigger.click();
+    await expect(menu).toBeVisible();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(SETTLE);
+    const r = compareImages(ref, await captureRegion(page, menu, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `menu-std-2 (live popup): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, 'menu-std-2').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+    // Arrow keys move through the items; Enter runs the highlighted one and closes the menu.
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem').nth(1)).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-log]')).toHaveText('2');
+    await expect(menu).toBeHidden();
+    await expect(trigger).toBeFocused();
+    // Pointer: a click runs the item.
+    await trigger.click();
+    await page.getByRole('menuitem').nth(5).click();
+    await expect(page.locator('[data-log]')).toHaveText('6');
+    await expect(menu).toBeHidden();
+  });
+
+  test('a group left after hover settles on the 8px inactive shape (Compose)', async ({ page }) => {
+    await page.goto('/fixture/menu/live');
+    await page.getByRole('button', { name: 'Options' }).click();
+    const groups = page.getByRole('menu').getByRole('group');
+    await expect(groups).toHaveCount(2);
+    const radius = (i: number) => groups.nth(i).evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+    expect(await radius(0)).toBe('16px');
+    await page.getByRole('menuitem').nth(1).hover();
+    await page.getByRole('menuitem').nth(6).hover();
+    await expect.poll(() => radius(0)).toBe('8px');
+  });
+
+  test('radio and checkbox items keep the menu open; Escape restores focus', async ({ page }) => {
+    await page.goto('/fixture/menu/live-select');
+    const trigger = page.getByRole('button', { name: 'View' });
+    await trigger.click();
+    const grid = page.getByRole('menuitemradio', { name: 'Grid' });
+    await grid.click();
+    await expect(grid).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByRole('menuitemradio', { name: 'List' })).toHaveAttribute('aria-checked', 'false');
+    await page.getByRole('menuitemcheckbox', { name: 'Wrap text' }).click();
+    await expect(page.locator('[data-state]')).toHaveText('grid|true');
+    await expect(page.getByRole('menu')).toBeVisible();
+    await expect(page.getByText('Layout')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('menu')).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+});

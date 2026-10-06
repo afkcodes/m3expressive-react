@@ -6,7 +6,7 @@ every component is a **100% pixel-to-pixel match of their Figma file** — not "
 parity is backed by a measurement in `pnpm test:visual`; nothing is "done" by eye.
 
 Figma file: **Material 3 Design Kit (owner's copy)**, key `uqYw0ZfySs2OjkqqjYwPPP`.
-Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline).
+Pages done: Styles (tokens), Shape, Badges, Buttons (all: core 5, icon, toggle, toggle icon, split, FAB + extended, FAB menu, standard + connected groups, segmented), Cards, Checkboxes, Radio button, Switch, Dividers, Chips, Tooltips, Snackbar, Loading & progress (linear, circular, loading indicator), Sliders (standard, centered, range), Text fields (filled, outlined), Lists (expressive: standard, segmented, expandable, swipeable, dragged; baseline), Menus (expressive standard / vibrant with groups, section labels, selection, submenus; baseline with densities).
 Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
 FAB menu, split button, button groups.
 
@@ -171,6 +171,13 @@ FAB menu, split button, button groups.
   <0.3px where Figma keeps it — record it as a measured exception, don't chase it.
 - Lifted / overlapping parts (dragged list items) need a z-index: later siblings otherwise paint
   their content over the earlier item's shadow.
+- Figma's shadow for a clipping frame comes from its content's union (gaps between children show
+  shadow) and keeps the spread only when the frame has a single child: multi-group menus match
+  `levelNNoSpread` per group, drawn on a layer below all groups (`::before`, z-index −1).
+- Chrome snaps painted box *sizes* to whole CSS px too: a 119.5px-wide box paints 120px. Kit
+  geometry with half-pixel sizes (building-block frames) is drawn at 2x under `scale(0.5)`.
+- Popups must portal into `<M3Provider>` (`usePortalContainer()`): a portal to <body> escapes the
+  provider's colour scheme, contrast, motion themes and font smoothing (live text raster differs).
 
 ## 8. Per-component procedure (Figma → code → proof)
 1. **Survey** the page read-only (`use_figma`): sections, component sets, variant properties.
