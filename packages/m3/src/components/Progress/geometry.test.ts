@@ -13,7 +13,7 @@ describe('progress geometry (kit-derived)', () => {
   });
 
   it('linear flat 4dp 10%: whole-px line, track and stop on the kit subpixels', () => {
-    const g = linearShapes({ width: 404, thickness: 4, type: 'flat', actives: linearDeterminate(404, 4, 0.1, 0), stop: true, wavelength: 40, phase: 0, amp: 0 });
+    const g = linearShapes({ width: 404, thickness: 4, type: 'flat', actives: linearDeterminate(404, 4, 0.1, 0), stop: true, wavelength: 40, waveOrigin: 2, amp: 0, snap: true });
     expect(g.active).toEqual(['M2 6H42']);
     expect(g.tracks).toEqual([{ x: 47.6, width: 356 }]);
     expect(g.stop?.x).toBeCloseTo(399.6, 5);

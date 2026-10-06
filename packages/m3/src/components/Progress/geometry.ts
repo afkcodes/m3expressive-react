@@ -37,7 +37,7 @@ export function waveArc(wavelength: number) {
 }
 
 /**
- * Centre line of the wave from x0 to x1. `phase` (px) slides the wave along the line; at phase 0
+ * Centre line of the wave from x0 to x1. `phase` (px) is x0's offset into the wave; at phase 0
  * the first half-wave bulges down from x0 (as the kit's segments do). `amp` 0…1 flattens it.
  */
 export function wavePath(x0: number, x1: number, cy: number, wavelength: number, phase: number, amp: number): string {
@@ -72,10 +72,14 @@ export interface LinearSpec {
   /** Determinate only: the stop dot at the end of the last track piece. */
   stop: boolean;
   wavelength: number;
-  /** Wave travel, px. */
-  phase: number;
+  /** x (px) where a downward half-wave starts: the wave is anchored to the track, not to the
+   *  moving segments, and travels by moving this origin. */
+  waveOrigin: number;
   /** Wave amplitude 0…1 (0 draws the flat line). */
   amp: number;
+  /** Whole-px line and track lengths, as Figma draws its still frames. Off while moving (the
+   *  1px steps would make the gaps flicker). */
+  snap: boolean;
 }
 
 export interface LinearShapes {
@@ -94,16 +98,19 @@ export function linearShapes(s: LinearSpec): LinearShapes {
   const active: string[] = [];
   const tracks: { x: number; width: number }[] = [];
   let cursor = 0;
+  const len = (n: number) => (s.snap ? Math.round(n) : n);
   for (const [a, b] of s.actives) {
-    const end = a + Math.round(b - a);
-    const tw = Math.round(a - gap - cursor);
+    const end = a + len(b - a);
+    const tw = len(a - gap - cursor);
     if (tw > 0) tracks.push({ x: cursor, width: tw });
     active.push(
-      s.type === 'wave' && s.amp > 0 ? wavePath(a, end, cy, s.wavelength, s.phase, s.amp) : `M${f(a)} ${f(cy)}H${f(end)}`,
+      s.type === 'wave' && s.amp > 0
+        ? wavePath(a, end, cy, s.wavelength, a - s.waveOrigin, s.amp)
+        : `M${f(a)} ${f(cy)}H${f(end)}`,
     );
     cursor = b + gap;
   }
-  const tw = Math.round(W - cursor);
+  const tw = len(W - cursor);
   let stop: { x: number } | null = null;
   if (tw > 0) {
     tracks.push({ x: cursor, width: tw });

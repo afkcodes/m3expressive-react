@@ -5,7 +5,7 @@ import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { CIRCULAR, circularFrame, circularShapes, type ProgressThickness, type ProgressType } from './geometry.ts';
+import { CIRCULAR, circularFrame, circularShapes, type CircularFrame, type ProgressThickness, type ProgressType } from './geometry.ts';
 import { PROGRESS_SPRING, circularIndeterminate, useFrameLoop, useSpringNumber } from './motion.ts';
 
 const s = stylex.create({
@@ -49,22 +49,33 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
   const [ms, setMs] = useState(0);
   const indeterminate = value == null;
   const p = indeterminate ? 0 : Math.min(1, Math.max(0, value / max));
-  const frozen = forced !== undefined;
-  const shown = useSpringNumber(p, frozen || reduced ? null : PROGRESS_SPRING);
-  useFrameLoop(!frozen && (indeterminate || (type === 'wave' && !reduced && p > 0)), setMs);
+  // A forced `time` renders the live animation at that instant; any other forced frame is still.
+  const frozen = forced !== undefined && forced.time === undefined;
+  const clock = forced?.time ?? ms;
+  const shown = useSpringNumber(p, forced || reduced ? null : PROGRESS_SPRING);
+  useFrameLoop(!forced && (indeterminate || (type === 'wave' && !reduced && p > 0)), setMs);
 
   const t = thickness;
-  const { size } = CIRCULAR[type][t];
-  // Indeterminate: the arc grows between the kit's 10% and 80% arcs while the drawing spins.
-  const indet = indeterminate
-    ? forced?.value !== undefined
-      ? { v: forced.value, spin: forced.rotation ?? 0 }
-      : (({ grow, rotation }) => ({ v: 0.1 + grow * 0.7, spin: rotation }))(circularIndeterminate(ms))
-    : null;
-  const frame = circularFrame(type, t, indet ? indet.v : shown);
-  const spin = indet?.spin ?? 0;
+  const k = CIRCULAR[type][t];
+  let frame: CircularFrame | null;
+  let spin = 0;
+  if (indeterminate && frozen && forced.value !== undefined) {
+    // The kit's Step frames: determinate arcs, rotated.
+    frame = circularFrame(type, t, forced.value);
+    spin = forced.rotation ?? 0;
+  } else if (indeterminate) {
+    // Live: the arc grows between the kit's 10% and 80% lengths with a constant gap (the 10%
+    // frame's), while Compose's rotation keyframes turn it.
+    const { grow, rotation } = circularIndeterminate(clock);
+    const lo = k.ends[1] - k.start;
+    const hi = k.ends[4] - k.start;
+    const end = k.start + lo + grow * (hi - lo);
+    frame = { start: k.start, end, trackStart: end + (k.tracks[1] - k.ends[1]), trackEnd: k.trackEnd };
+    spin = rotation;
+  } else frame = circularFrame(type, t, shown);
+  const size = k.size;
   // The wave turns with the indeterminate arc (Compose rotates the whole drawing) and travels.
-  const travel = frozen || reduced ? 0 : (ms / 1000) * WAVE_SPEED;
+  const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED;
   const phase = (forced?.phase ?? WAVE_PHASE) + spin + travel;
   const g = circularShapes(type, t, frame, spin, phase);
 

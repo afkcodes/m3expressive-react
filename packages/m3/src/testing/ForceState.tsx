@@ -18,7 +18,9 @@ export interface ForceStateValue {
 }
 
 export interface ForcedProgressFrame {
-  /** Wave travel: px (linear) or degrees (circular). */
+  /** Render the live animation at this time (ms) instead of a still frame. */
+  time?: number;
+  /** Wave offset: px from the first active's start (linear) or degrees (circular). */
   phase?: number;
   /** Linear indeterminate: active centre-line frames, px. */
   actives?: [number, number][];

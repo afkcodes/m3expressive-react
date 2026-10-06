@@ -75,11 +75,13 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     return () => ro.disconnect();
   }, []);
 
-  const frozen = forced !== undefined;
+  // A forced `time` renders the live animation at that instant; any other forced frame is still.
+  const frozen = forced !== undefined && forced.time === undefined;
+  const clock = forced?.time ?? ms;
   const wavyNow = type === 'wave' && (indeterminate || (p > 0.1 && p < 0.95));
-  const amp = useSpringNumber(wavyNow ? 1 : 0, frozen ? null : effects);
-  const shown = useSpringNumber(p, frozen || reduced ? null : PROGRESS_SPRING);
-  const travelling = !frozen && width > 0 && (indeterminate || (type === 'wave' && !reduced && amp > 0));
+  const amp = useSpringNumber(wavyNow ? 1 : 0, forced ? null : effects);
+  const shown = useSpringNumber(p, forced || reduced ? null : PROGRESS_SPRING);
+  const travelling = !forced && width > 0 && (indeterminate || (type === 'wave' && !reduced && amp > 0));
   useFrameLoop(travelling, setMs);
 
   const t = thickness;
@@ -87,10 +89,11 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
   let actives: [number, number][];
   if (indeterminate) {
     const span = width - 2 * pad;
-    actives = forced?.actives ?? linearIndeterminate(ms).map(([a, b]) => [pad + a * span, pad + b * span]);
+    actives = (frozen && forced.actives) || linearIndeterminate(clock).map(([a, b]) => [pad + a * span, pad + b * span]);
   } else actives = linearDeterminate(width, t, shown, type === 'wave' ? amp : 0);
   const wl = wavelength ?? (indeterminate ? WAVELENGTH.indeterminate : WAVELENGTH.determinate);
-  const phase = forced?.phase ?? (indeterminate || reduced ? 0 : -(ms / 1000) * WAVE_SPEED_PER_WAVELENGTH * wl);
+  const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED_PER_WAVELENGTH * wl;
+  const waveOrigin = frozen ? (actives[0]?.[0] ?? pad) + (forced.phase ?? 0) : pad + travel;
   const g = linearShapes({
     width,
     thickness: t,
@@ -98,8 +101,9 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     actives,
     stop: !indeterminate,
     wavelength: wl,
-    phase,
+    waveOrigin,
     amp: type === 'wave' ? amp : 0,
+    snap: frozen || (!indeterminate && shown === p),
   });
   const height = linearHeight(type, t);
 

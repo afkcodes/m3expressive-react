@@ -52,6 +52,21 @@ const live: Record<string, FixtureVariant> = {
   },
 };
 
+/** Review aid: the live indeterminate motion at fixed times (ForceState `time`), 50ms apart. */
+const strip = (type: ProgressType) => () => (
+  <div style={{ display: 'grid', gap: 6 }}>
+    {Array.from({ length: 30 }, (_, i) => (
+      <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'center', width: 520 }}>
+        <span style={{ font: '10px monospace', width: 40 }}>{i * 50}</span>
+        <div style={{ width: 404 }}>{frozen({ time: i * 50 }, <LinearProgress type={type} aria-label="l" />)}</div>
+        {frozen({ time: i * 50 }, <CircularProgress type={type} aria-label="c" />)}
+      </div>
+    ))}
+  </div>
+);
+live['strip-flat'] = { render: strip('flat') };
+live['strip-wave'] = { render: strip('wave') };
+
 const fixture: FixtureModule = {
   component: 'progress',
   variants: Object.fromEntries([
