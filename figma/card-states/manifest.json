@@ -1,0 +1,330 @@
+{
+  "component": "card-states",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "outlined": {
+      "node": "52347:27855",
+      "file": "_frames/states-outlined.png",
+      "origin": [
+        -11,
+        0
+      ]
+    },
+    "elevated": {
+      "node": "52350:27635",
+      "file": "_frames/states-elevated.png",
+      "origin": [
+        -14,
+        -3
+      ]
+    },
+    "filled": {
+      "node": "52350:27728",
+      "file": "_frames/states-filled.png",
+      "origin": [
+        -11,
+        0
+      ]
+    }
+  },
+  "variants": {
+    "outlined-enabled": {
+      "node": "52347:27854",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "outlined",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -1,
+        0,
+        362,
+        361
+      ],
+      "allowedDiffPixels": 4,
+      "allowedDiffReason": "Top row of the Figma export is the card's top edge (no row above to capture), so 4 corner-start pixels lack the neighbourhood the anti-aliasing check needs."
+    },
+    "outlined-hovered": {
+      "node": "52347:27856",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "outlined",
+        "x": 0,
+        "y": 380
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ],
+      "allowedDiffPixels": 39,
+      "allowedDiffReason": "Corner arcs where the drop shadow meets the rounded edge differ by \u2264 23/255: Chrome cuts box-shadow out under the element, Figma draws it behind (showShadowBehindNode). Emulating shadow-behind was tested and made the match worse (500+ px), so the native box-shadow is kept."
+    },
+    "outlined-focused": {
+      "node": "52347:27860",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "outlined",
+        "x": 0,
+        "y": 760
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        362
+      ]
+    },
+    "outlined-pressed": {
+      "node": "52347:27862",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "outlined",
+        "x": 0,
+        "y": 1140
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        362
+      ]
+    },
+    "outlined-dragged": {
+      "node": "52347:27864",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "outlined",
+        "x": 0,
+        "y": 1520
+      },
+      "renderBounds": [
+        -11,
+        -7,
+        382,
+        382
+      ],
+      "allowedDiffPixels": 21,
+      "allowedDiffReason": "Corner arcs where the drop shadow meets the rounded edge differ by \u2264 23/255: Chrome cuts box-shadow out under the element, Figma draws it behind (showShadowBehindNode). Emulating shadow-behind was tested and made the match worse (500+ px), so the native box-shadow is kept."
+    },
+    "elevated-enabled": {
+      "node": "52350:27634",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "elevated",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ]
+    },
+    "elevated-hovered": {
+      "node": "52350:27636",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "elevated",
+        "x": 0,
+        "y": 380
+      },
+      "renderBounds": [
+        -8,
+        -6,
+        376,
+        376
+      ]
+    },
+    "elevated-focused": {
+      "node": "52350:27639",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "elevated",
+        "x": 0,
+        "y": 760
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ]
+    },
+    "elevated-pressed": {
+      "node": "52350:27641",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "elevated",
+        "x": 0,
+        "y": 1140
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One shadow-tail pixel near the top-right corner is 7/255 lighter than Figma (blur-kernel shape; calibrated shadows have mean \u0394 \u2248 0)."
+    },
+    "elevated-dragged": {
+      "node": "52350:27643",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "elevated",
+        "x": 0,
+        "y": 1520
+      },
+      "renderBounds": [
+        -14,
+        -8,
+        388,
+        388
+      ],
+      "allowedDiffPixels": 1,
+      "allowedDiffReason": "One shadow-tail pixel near the top-right corner is 7/255 lighter than Figma (blur-kernel shape; calibrated shadows have mean \u0394 \u2248 0)."
+    },
+    "filled-enabled": {
+      "node": "52350:27727",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filled",
+        "x": 0,
+        "y": 0
+      },
+      "renderBounds": [
+        -1,
+        0,
+        362,
+        361
+      ]
+    },
+    "filled-hovered": {
+      "node": "52350:27729",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filled",
+        "x": 0,
+        "y": 380
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ]
+    },
+    "filled-focused": {
+      "node": "52350:27732",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filled",
+        "x": 0,
+        "y": 760
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ]
+    },
+    "filled-pressed": {
+      "node": "52350:27734",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filled",
+        "x": 0,
+        "y": 1140
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        368
+      ]
+    },
+    "filled-dragged": {
+      "node": "52350:27736",
+      "size": [
+        360,
+        360
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "filled",
+        "x": 0,
+        "y": 1520
+      },
+      "renderBounds": [
+        -11,
+        -7,
+        382,
+        382
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Corner arcs where the drop shadow meets the rounded edge differ by \u2264 23/255: Chrome cuts box-shadow out under the element, Figma draws it behind (showShadowBehindNode). Emulating shadow-behind was tested and made the match worse (500+ px), so the native box-shadow is kept."
+    }
+  }
+}

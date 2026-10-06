@@ -1,0 +1,25 @@
+{
+  "component": "badge",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": { "node": "51592:4768", "file": "_frames/badges.png" }
+  },
+  "variants": {
+    "large": {
+      "node": "51592:4770",
+      "size": [16, 16],
+      "renderBounds": [-1, -1, 18, 18],
+      "background": "#F5F5F5",
+      "crop": { "frame": "set", "x": 228, "y": 20 },
+      "layers": [{ "name": "Badge label", "box": [4, 0, 8, 16] }]
+    },
+    "small": {
+      "node": "51592:4769",
+      "size": [6, 6],
+      "renderBounds": [-1, -1, 8, 8],
+      "background": "#F5F5F5",
+      "crop": { "frame": "set", "x": 264, "y": 25 }
+    }
+  }
+}

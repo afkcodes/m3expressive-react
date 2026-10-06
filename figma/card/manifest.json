@@ -1,0 +1,141 @@
+{
+  "component": "card",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "stacked": {
+      "node": "52346:27573",
+      "file": "_frames/stacked.png"
+    },
+    "horizontal": {
+      "node": "52350:27876",
+      "file": "_frames/horizontal.png"
+    }
+  },
+  "variants": {
+    "stacked-outlined": {
+      "node": "52346:27574",
+      "size": [
+        360,
+        480
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "stacked",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        482
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Two glyph pixels in the supporting text (\u0394 53/255): Figma vs Chrome glyph coverage. Layout identical."
+    },
+    "stacked-elevated": {
+      "node": "52350:27693",
+      "size": [
+        360,
+        480
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "stacked",
+        "x": 428,
+        "y": 20
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        488
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Two anti-aliased pixels on the avatar circle edge between two near-identical colours (\u0394 \u2264 7/255)."
+    },
+    "stacked-filled": {
+      "node": "52350:27738",
+      "size": [
+        360,
+        480
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "stacked",
+        "x": 836,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        482
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Two anti-aliased pixels on the avatar circle edge between two near-identical colours (\u0394 \u2264 7/255)."
+    },
+    "horizontal-outlined": {
+      "node": "52350:27877",
+      "size": [
+        360,
+        80
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "horizontal",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        82
+      ]
+    },
+    "horizontal-elevated": {
+      "node": "52350:28183",
+      "size": [
+        360,
+        80
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "horizontal",
+        "x": 428,
+        "y": 20
+      },
+      "renderBounds": [
+        -4,
+        -3,
+        368,
+        88
+      ],
+      "allowedDiffPixels": 3,
+      "allowedDiffReason": "Top-right corner / shadow pixels where the media meets the rounded card edge (\u0394 \u2264 16/255)."
+    },
+    "horizontal-filled": {
+      "node": "52350:28197",
+      "size": [
+        360,
+        80
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "horizontal",
+        "x": 836,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        362,
+        82
+      ],
+      "allowedDiffPixels": 2,
+      "allowedDiffReason": "Corner anti-aliasing where the media meets the rounded card edge (\u0394 \u2264 9/255)."
+    }
+  }
+}
