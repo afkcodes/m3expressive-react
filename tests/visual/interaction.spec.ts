@@ -922,3 +922,47 @@ test.describe('menu (live)', () => {
     await expect(trigger).toBeFocused();
   });
 });
+
+// ── Tabs: the live row against the kit, click / keyboard selection, the sprung indicator ─────
+test.describe('tabs (live)', () => {
+  const tb = JSON.parse(readFileSync(join(REFS_DIR, 'tabs/manifest.json'), 'utf8')) as Manifest;
+
+  test('row matches the kit; click and keyboard select; the indicator follows the label', async ({ page }) => {
+    await page.goto('/fixture/tabs/live');
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    const node = page.locator('[data-fixture-node]');
+    const v = tb.variants['tabs-fixed-primary-label-only']!;
+    const ref: Buffer = readFileSync(join(REFS_DIR, 'tabs', 'tabs-fixed-primary-label-only.png'));
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
+    test.info().annotations.push({ type: 'parity', description: `tabs-fixed-primary-label-only (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    expect.soft(r.diffPixels, 'tabs-fixed-primary-label-only').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+
+    const photos = page.getByRole('tab', { name: 'Photos' });
+    await photos.click();
+    await expect(photos).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('[data-value]')).toHaveText('1');
+    await expect(page.getByText('Photos panel')).toBeVisible();
+    // Primary indicator: the label's width less 2px each side, on the row's bottom edge.
+    const indicatorBox = async () =>
+      page.evaluate(() => {
+        const ind = [...document.querySelectorAll('[role=tablist] > span[aria-hidden]')].at(-1) as HTMLElement;
+        const label = document.querySelector('[role=tab][aria-selected=true] [data-tab-content]') as HTMLElement;
+        const a = ind.getBoundingClientRect(), b = label.getBoundingClientRect();
+        // Inset 2px each side of the label box (whole-pixel geometry: ±0.5px).
+        return { inset: Math.abs(a.x - b.x - 2) <= 0.5 && Math.abs(b.width - a.width - 4) <= 1, h: a.height };
+      });
+    await expect.poll(indicatorBox, { timeout: 3000 }).toEqual({ inset: true, h: 3 });
+
+    // Keyboard: arrows move focus, Enter activates (Base UI activateOnFocus=false).
+    await photos.focus();
+    await page.keyboard.press('ArrowRight');
+    const audio = page.getByRole('tab', { name: 'Audio' });
+    await expect(audio).toBeFocused();
+    await expect(audio).toHaveAttribute('aria-selected', 'false');
+    await page.keyboard.press('Enter');
+    await expect(audio).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByText('Audio panel')).toBeVisible();
+    await expect.poll(indicatorBox, { timeout: 3000 }).toEqual({ inset: true, h: 3 });
+  });
+});

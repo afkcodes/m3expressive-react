@@ -121,6 +121,10 @@ line to flip if you'd rather follow the M3 guidelines:
 | Menu, ripple | painted over the item's content | under the content — we follow the kit |
 | Menu shadow (level 3) | 3px spread only when the menu is a single group (Figma ignores spread for multi-child frames) | spread always — we follow the kit |
 | Baseline menu shadow (level 2) | frame doesn't clip, so no spread | spread — we follow the kit |
+| Tabs, secondary icon + label · selected · focused | indicator at x=0.5 (other variants 0) | 0 — we follow this |
+| Tabs, scrollable secondary icon + label | tabs forced to 90px, content overflowing the 16px padding | tabs ≥ 90px that grow with their content (Compose ScrollableTabRow) — we follow this |
+| Tabs, in-row content | content centred on the half pixel (47 / 63px tabs) | — we follow the kit (transform for the half pixel) |
+| Tabs, pressed ripple | painted over the content; secondary indicator above the ripple | — we follow the kit |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |

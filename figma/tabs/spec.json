@@ -1,0 +1,42 @@
+{
+ "component": "tabs",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "note": "Tabs page (55141:14258): Tabs set (Fixed / Scrollable x Primary / Secondary x layout) and the five tab building-block sets.",
+ "frames": {
+  "tabs": {
+   "node": "54563:40023",
+   "file": "_frames/tabs.png",
+   "size": [
+    784,
+    429
+   ],
+   "rows": "tabs-fixed-secondary-label-icon 54563:40024 20,360 360x48;tabs-scrollable-secondary-label-icon 54563:40032 404,360 360x48;tabs-fixed-secondary-label-only 54563:40047 20,279 360x48;tabs-scrollable-secondary-label-only 54563:40055 404,279 360x48;tabs-fixed-primary-icon-only 54563:40070 20,198 360x48;tabs-scrollable-primary-icon-only 54563:40078 404,198 360x48;tabs-fixed-primary-label-icon 54563:40093 20,101 360x64;tabs-scrollable-primary-label-icon 54563:40101 404,101 360x64;tabs-fixed-primary-label-only 54563:40116 20,20 360x48;tabs-scrollable-primary-label-only 54563:40124 404,20 360x48"
+  },
+  "blocks": {
+   "node": "54563:40139",
+   "file": "_frames/blocks.png",
+   "size": [
+    808,
+    956
+   ],
+   "setBorder": false,
+   "rows": "tab-p-il-pressed-sel 54563:40143 587,164 56x64;tab-p-il-focused-sel 54563:40153 446,164 56x64;tab-p-il-hovered-sel 54563:40162 305,164 56x64;tab-p-il-enabled-sel 54563:40171 164,164 56x64;tab-p-il-pressed-unsel 54563:40180 587,84 56x64;tab-p-il-focused-unsel 54563:40188 446,84 56x64;tab-p-il-hovered-unsel 54563:40195 305,84 56x64;tab-p-il-enabled-unsel 54563:40202 164,84 56x64;tab-p-i-pressed-sel 54563:40210 586,352 56x48;tab-p-i-focused-sel 54563:40219 446,352 56x48;tab-p-i-hovered-sel 54563:40227 306,352 56x48;tab-p-i-enabled-sel 54563:40235 166,352 56x48;tab-p-i-pressed-unsel 54563:40243 586,288 56x48;tab-p-i-focused-unsel 54563:40250 446,288 56x48;tab-p-i-hovered-unsel 54563:40256 306,288 56x48;tab-p-i-enabled-unsel 54563:40262 166,288 56x48;tab-p-l-pressed-sel 54563:40269 585.5,524 56x48;tab-p-l-focused-sel 54563:40277 445.5,524 56x48;tab-p-l-hovered-sel 54563:40284 305.5,524 56x48;tab-p-l-enabled-sel 54563:40291 165.5,524 56x48;tab-p-l-pressed-unsel 54563:40298 585.5,460 56x48;tab-p-l-focused-unsel 54563:40304 445.5,460 56x48;tab-p-l-hovered-unsel 54563:40309 305.5,460 56x48;tab-p-l-enabled-unsel 54563:40314 165.5,460 56x48;tab-s-l-pressed-sel 54563:40320 585.5,696 56x48;tab-s-l-focused-sel 54563:40327 445.5,696 56x48;tab-s-l-hovered-sel 54563:40333 305.5,696 56x48;tab-s-l-enabled-sel 54563:40339 165.5,696 56x48;tab-s-l-pressed-unsel 54563:40345 585.5,632 56x48;tab-s-l-focused-unsel 54563:40351 445.5,632 56x48;tab-s-l-hovered-unsel 54563:40356 305.5,632 56x48;tab-s-l-enabled-unsel 54563:40361 165.5,632 56x48;tab-s-il-pressed-sel 54563:40367 569.5,868 88x48;tab-s-il-focused-sel 54563:40376 429.5,868 88x48;tab-s-il-hovered-sel 54563:40384 289.5,868 88x48;tab-s-il-enabled-sel 54563:40392 149.5,868 88x48;tab-s-il-pressed-unsel 54563:40400 569.5,804 88x48;tab-s-il-focused-unsel 54563:40408 429.5,804 88x48;tab-s-il-hovered-unsel 54563:40415 289.5,804 88x48;tab-s-il-enabled-unsel 54563:40422 149.5,804 88x48",
+   "background": "#DFD5EC"
+  }
+ },
+ "exceptions": {
+  "tab-s-il-focused-sel": {
+   "allowedDiffPixels": 4,
+   "allowedDiffReason": "Kit slip: Secondary \u00b7 Icon and label \u00b7 Selected \u00b7 Focused draws its indicator at x=0.5 (the other seven variants: x=0). We draw it at 0."
+  },
+  "tabs-fixed-secondary-label-icon": {
+   "allowedDiffPixels": 277,
+   "allowedDiffReason": "Icon edges only: each tab centres icon + label (77.4px) in 120px, so the icons sit at fractional x (57.78 / 173.53 / 297.55). Figma draws them there; Chrome paints replaced elements at the rounded x (verified: shifting each icon by x \u2212 round(x) gives 0 drift). Not corrected in code because other engines snap differently."
+  },
+  "tabs-scrollable-secondary-label-icon": {
+   "allowedDiffPixels": 4582,
+   "allowedDiffReason": "Kit slip: the scrollable secondary icon + label row forces 90px tabs although their content (16 + 24 + 8 + label + 16 \u2248 100\u2013110px) is wider, so it overflows the padding. We follow Compose ScrollableTabRow (tabs are at least 90dp and grow with their content), which also matches every other scrollable row."
+  }
+ }
+}
