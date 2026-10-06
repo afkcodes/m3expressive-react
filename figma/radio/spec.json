@@ -1,0 +1,16 @@
+{
+ "component": "radio",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "radio": {
+   "node": "51739:4608",
+   "file": "_frames/radio.png",
+   "size": [
+    472,
+    152
+   ],
+   "rows": "unselected-disabled 51739:4617 404,84 48x48;unselected-pressed 51739:4645 308,84 48x48;unselected-focused 51739:4637 212,84 48x48;unselected-hovered 51739:4629 116,84 48x48;unselected-enabled 51739:4621 20,84 48x48;selected-disabled 51739:4613 404,20 48x48;selected-pressed 51739:4641 308,20 48x48;selected-focused 51739:4633 212,20 48x48;selected-hovered 51739:4625 116,20 48x48;selected-enabled 51739:4609 20,20 48x48"
+  }
+ }
+}

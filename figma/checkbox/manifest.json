@@ -1,0 +1,917 @@
+{
+  "component": "checkbox",
+  "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+  "scale": 2,
+  "frames": {
+    "set": {
+      "node": "51859:5628",
+      "file": "_frames/checkboxes.png"
+    }
+  },
+  "variants": {
+    "selected-enabled": {
+      "node": "51859:5629",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "selected-hovered": {
+      "node": "51859:5679",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "selected-focused": {
+      "node": "51859:5695",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "selected-pressed": {
+      "node": "51859:5645",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "selected-disabled": {
+      "node": "51859:5723",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 20
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "indeterminate-enabled": {
+      "node": "51859:5637",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "indeterminate-hovered": {
+      "node": "51859:5687",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "indeterminate-focused": {
+      "node": "51859:5703",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "indeterminate-pressed": {
+      "node": "51859:5655",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "indeterminate-disabled": {
+      "node": "51859:5731",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 84
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ],
+      "allowedDiffPixels": 44,
+      "allowedDiffReason": "Kit slip: the disabled indeterminate dash is bound to On Primary, while the disabled check (and M3) use Surface. We use Surface: in light mode the two differ by ~3 levels at 38%; in dark mode On Primary would render a purple dash."
+    },
+    "unselected-enabled": {
+      "node": "51859:5665",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "unselected-hovered": {
+      "node": "51859:5711",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "unselected-focused": {
+      "node": "51859:5717",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "unselected-pressed": {
+      "node": "51859:5671",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "unselected-disabled": {
+      "node": "51859:5739",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 148
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-selected-enabled": {
+      "node": "51859:5633",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-selected-hovered": {
+      "node": "51859:5683",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-selected-focused": {
+      "node": "51859:5699",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-selected-pressed": {
+      "node": "51859:5650",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-selected-disabled": {
+      "node": "51859:5727",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 212
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-indeterminate-enabled": {
+      "node": "51859:5641",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-indeterminate-hovered": {
+      "node": "51859:5691",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-indeterminate-focused": {
+      "node": "51859:5707",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-indeterminate-pressed": {
+      "node": "51859:5660",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-indeterminate-disabled": {
+      "node": "51859:5735",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 276
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ],
+      "allowedDiffPixels": 44,
+      "allowedDiffReason": "Kit slip: the disabled indeterminate dash is bound to On Primary, while the disabled check (and M3) use Surface. We use Surface: in light mode the two differ by ~3 levels at 38%; in dark mode On Primary would render a purple dash."
+    },
+    "error-unselected-enabled": {
+      "node": "51859:5668",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 20,
+        "y": 340
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-unselected-hovered": {
+      "node": "51859:5714",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 104,
+        "y": 340
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-unselected-focused": {
+      "node": "51859:5720",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 188,
+        "y": 340
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-unselected-pressed": {
+      "node": "51859:5675",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 272,
+        "y": 340
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    },
+    "error-unselected-disabled": {
+      "node": "51859:5742",
+      "size": [
+        48,
+        48
+      ],
+      "background": "#F5F5F5",
+      "crop": {
+        "frame": "set",
+        "x": 356,
+        "y": 340
+      },
+      "renderBounds": [
+        -1,
+        -1,
+        50,
+        50
+      ],
+      "layers": [
+        {
+          "name": "container",
+          "box": [
+            15,
+            15,
+            18,
+            18
+          ]
+        }
+      ]
+    }
+  }
+}

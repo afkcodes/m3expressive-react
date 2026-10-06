@@ -1,0 +1,22 @@
+{
+ "component": "switch",
+ "fileKey": "uqYw0ZfySs2OjkqqjYwPPP",
+ "background": "#F5F5F5",
+ "frames": {
+  "switch": {
+   "node": "54446:25289",
+   "file": "_frames/switch.png",
+   "size": [
+    492,
+    312
+   ],
+   "rows": "on-plain-enabled 54446:25290 20,20 52x32;on-plain-hovered 54446:25296 120,20 52x32;on-plain-focused 54446:25302 220,20 52x32;on-plain-pressed 54446:25308 320,20 52x32;on-plain-disabled 54446:25314 420,20 52x32;on-icon-enabled 54446:25320 20,100 52x32;on-icon-hovered 54446:25327 120,100 52x32;on-icon-focused 54446:25334 220,100 52x32;on-icon-pressed 54446:25341 320,100 52x32;on-icon-disabled 54446:25348 420,100 52x32;off-plain-enabled 54446:25355 20,180 52x32;off-plain-hovered 54446:25361 120,180 52x32;off-plain-focused 54446:25367 220,180 52x32;off-plain-pressed 54446:25373 320,180 52x32;off-plain-disabled 54446:25379 420,180 52x32;off-icon-enabled 54446:25385 20,260 52x32;off-icon-hovered 54446:25392 120,260 52x32;off-icon-focused 54446:25399 220,260 52x32;off-icon-pressed 54446:25406 320,260 52x32;off-icon-disabled 54446:25413 420,260 52x32"
+  }
+ },
+ "exceptions": {
+  "on-icon-pressed": {
+   "allowedDiffPixels": 2,
+   "allowedDiffReason": "Kit slip: in this variant the check sits at x 6.5 inside the 28px handle (centred is 6, as in every other state); two edge pixels differ."
+  }
+ }
+}
