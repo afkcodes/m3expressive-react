@@ -7,6 +7,7 @@ import { highContrastTheme, mediumContrastTheme } from '../tokens/color-themes.t
 import { expressiveMotionTheme, standardMotionTheme } from '../tokens/motion-themes.ts';
 import { PortalContainerContext } from './portal.tsx';
 import { COLOR_ROLES, type DynamicColorScheme } from './colorRoles.ts';
+import { LabelsProvider, type M3Labels } from './labels.tsx';
 
 export type ColorSchemeMode = 'light' | 'dark' | 'system';
 /** Figma "M3" collection contrast modes. */
@@ -40,6 +41,8 @@ export interface M3ProviderProps {
    * baseline (Figma kit) colours.
    */
   colors?: DynamicColorScheme;
+  /** Overrides for the built-in strings (accessible names, button text) — e.g. translations. */
+  labels?: Partial<M3Labels>;
   /** Product-level motion scheme. Nest another provider to swap per subtree (M3 "level 3"). */
   motionScheme?: MotionSchemeName;
   children: ReactNode;
@@ -65,6 +68,7 @@ export function M3Provider({
   colorScheme = 'system',
   contrast = 'standard',
   colors,
+  labels,
   motionScheme = 'expressive',
   children,
 }: M3ProviderProps) {
@@ -82,7 +86,9 @@ export function M3Provider({
         )}
         style={seeded}
       >
-        <PortalContainerContext value={portal}>{children}</PortalContainerContext>
+        <PortalContainerContext value={portal}>
+          <LabelsProvider labels={labels}>{children}</LabelsProvider>
+        </PortalContainerContext>
         {/* Popups render here, inside the themed root. */}
         <div ref={setPortal} data-m3-portal="" />
       </div>

@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { useControllableState } from '../../packages/m3/src/hooks/useControllableState.ts';
 import { useMergedRefs } from '../../packages/m3/src/hooks/useMergedRefs.ts';
 import { useSpringChannel, type SpringChannel } from '../../packages/m3/src/motion/useSpringChannel.ts';
+import { M3Provider } from '../../packages/m3/src/theme/M3Provider.tsx';
+import { useLabels, type M3Labels } from '../../packages/m3/src/theme/labels.tsx';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -112,5 +114,29 @@ describe('useSpringChannel', () => {
     await unmount();
     await wait(200);
     expect(seen.length - count).toBeLessThanOrEqual(1); // stopped on unmount
+  });
+});
+
+describe('labels', () => {
+  it('defaults in English; M3Provider labels override app-wide; a component override wins', async () => {
+    function Probe({ own }: { own?: Partial<M3Labels> }) {
+      const labels = useLabels(own);
+      return <output>{`${labels.ok}|${labels.cancel}|${labels.remove('Ada')}`}</output>;
+    }
+    const { host, unmount } = await mount(
+      <>
+        <Probe />
+        <M3Provider labels={{ ok: 'D’accord', remove: (item) => `Supprimer ${item}` }}>
+          <Probe />
+          <Probe own={{ ok: 'Valider' }} />
+        </M3Provider>
+      </>,
+    );
+    expect([...host.querySelectorAll('output')].map((o) => o.textContent)).toEqual([
+      'OK|Cancel|Remove Ada',
+      'D’accord|Cancel|Supprimer Ada',
+      'Valider|Cancel|Supprimer Ada',
+    ]);
+    await unmount();
   });
 });

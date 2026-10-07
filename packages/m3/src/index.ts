@@ -1,5 +1,7 @@
 export { M3Provider } from './theme/M3Provider.tsx';
 export type { M3ProviderProps, ColorSchemeMode, ContrastLevel } from './theme/M3Provider.tsx';
+export { defaultLabels, useLabels } from './theme/labels.tsx';
+export type { M3Labels } from './theme/labels.tsx';
 // Dynamic colour scheme generation lives in '@m3x/react/dynamic-color'; the core only knows the roles.
 export { COLOR_ROLES } from './theme/colorRoles.ts';
 export type { ColorRole, DynamicColorScheme, RoleColors } from './theme/colorRoles.ts';
