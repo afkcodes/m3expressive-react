@@ -1,4 +1,4 @@
-import { forwardRef, useContext, type ReactNode } from 'react';
+import { forwardRef, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -7,9 +7,13 @@ import { elevation } from '../../tokens/elevation.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { state } from '../../tokens/state.stylex';
 import { typescale } from '../../tokens/typescale.ts';
+import { elevationMotion } from '../../primitives/elevationMotion.ts';
+import { tween } from '../../primitives/tweens.stylex';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useSpringToken } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ToolbarFabContext } from '../Toolbar/context.ts';
 
@@ -73,23 +77,54 @@ const s = stylex.create({
       ':focus-visible': { default: elevation.level3NoSpread, '@media (hover: hover)': elevation.level3NoSpread },
       ':active': { default: elevation.level3, '@media (hover: hover)': elevation.level3 },
     },
-    transitionProperty: 'box-shadow',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
+    // Shadow motion: elevationMotion.host (Compose FloatingActionButtonElevation tweens).
   },
   hovered: { boxShadow: elevation.level4 },
   focused: { boxShadow: elevation.level3NoSpread },
   ringForced: { outlineStyle: 'solid' },
   // Flat FAB (Compose bottomAppBarFabElevation: 0 in every state) — e.g. in a navigation rail.
   flat: { boxShadow: 'none' },
-  // Next to a floating toolbar: the size follows the toolbar's collapse (FastSpatial).
+  // Next to a floating toolbar: the size follows the toolbar's collapse (FastSpatial); the shadow
+  // keeps the elevation tweens of elevationMotion.host (repeated: one transition list).
   inToolbar: {
     transitionProperty: 'box-shadow, width, height',
-    transitionDuration: `${motion.fastEffectsDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
-    transitionTimingFunction: `${motion.fastEffectsEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+    transitionDuration: {
+      default: `${tween.elevationOutDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+      ':hover': { default: null, '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}` },
+      ':focus-visible': {
+        default: `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+        '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+      },
+      ':active': {
+        default: `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+        '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+      },
+    },
+    transitionTimingFunction: {
+      default: `${tween.elevationOutEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+      ':hover': { default: null, '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}` },
+      ':focus-visible': {
+        default: `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+        '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+      },
+      ':active': {
+        default: `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+        '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+      },
+    },
   },
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
-  label: { position: 'relative', color: 'inherit' },
+  // flexShrink 0: the label keeps its width (clipped) while the extended FAB collapses.
+  label: { position: 'relative', color: 'inherit', flexShrink: 0 },
+  // Collapsed extended FAB: the label stays the accessible name (Compose takes it from the icon).
+  srOnly: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    overflow: 'hidden',
+    clipPath: 'inset(50%)',
+    whiteSpace: 'nowrap',
+  },
 });
 
 const dyn = stylex.create({
@@ -113,6 +148,7 @@ function useFabRoot(fabColor: FabColor, elevated: boolean, sx?: StyleXStyles) {
   const forced = useForcedState();
   return [
     s.root,
+    elevated && elevationMotion.host,
     colors[fabColor],
     stateLayerHost.host,
     forced.state === 'hovered' && stateLayerHost.forceHover,
@@ -167,27 +203,157 @@ export interface ExtendedFabProps extends BaseProps {
   icon?: ReactNode;
   /** The label. */
   children: ReactNode;
+  /**
+   * Show the label (default true). Collapsing shrinks the FAB to its icon (a square of the FAB's
+   * height) and fades the label out; the label stays the accessible name. Needs an icon.
+   */
+  expanded?: boolean;
   /** Shadow (level 3; default true). */
   elevated?: boolean;
   sx?: StyleXStyles;
 }
 
 export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(function ExtendedFab(
-  { size = 'small', color: fabColor = 'primary-container', elevated = true, icon, children, sx, ...rest },
+  { size = 'small', color: fabColor = 'primary-container', elevated = true, expanded = true, icon, children, sx, ...rest },
   ref,
 ) {
   const e = EXT[size];
+  const root = useRef<HTMLButtonElement | null>(null);
+  const label = useRef<HTMLSpanElement | null>(null);
+  const setRoot = useCallback(
+    (node: HTMLButtonElement | null) => {
+      root.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+  const labelShown = useExpandMotion(root, label, expanded, e.h);
   return (
     <BaseButton
-      ref={ref}
+      ref={setRoot}
       data-ripple-host=""
       {...rest}
       {...stylex.props(...useFabRoot(fabColor, elevated, sx), dyn.box(null, e.h, e.r), dyn.pad(e.padBlock, e.padInline, e.gap))}
     >
       <StateLayer />
       {icon != null && <span {...stylex.props(s.icon, dyn.icon(e.icon))}>{icon}</span>}
-      <span {...stylex.props(LABEL[size], textBox.hug, s.label)}>{children}</span>
+      {labelShown ? (
+        <span ref={label} {...stylex.props(LABEL[size], textBox.hug, s.label)}>
+          {children}
+        </span>
+      ) : (
+        <span {...stylex.props(s.srOnly)}>{children}</span>
+      )}
       <Ripple above />
     </BaseButton>
   );
 });
+
+/*
+ * Expand / collapse — Compose expressive ExtendedFloatingActionButton (FloatingActionButton.kt):
+ * one transition drives width progress p on FastSpatial and label alpha on FastEffects;
+ * width = lerp(minWidth (= height), expanded width, p) with the padded content laid out at the
+ * start and clipped (padding never changes); the label is removed only once fully collapsed
+ * (target 0 and nothing running). At rest expanded nothing is overridden (the kit's frames).
+ */
+function useExpandMotion(
+  root: { current: HTMLElement | null },
+  label: { current: HTMLElement | null },
+  expanded: boolean,
+  minWidth: number,
+) {
+  const widthSpring = useSpringToken('fast-spatial');
+  const alphaSpring = useSpringToken('fast-effects')!;
+  const [labelShown, setLabelShown] = useState(expanded);
+  const st = useRef({
+    p: expanded ? 1 : 0,
+    a: expanded ? 1 : 0,
+    pAnim: null as SpringAnimation | null,
+    aAnim: null as SpringAnimation | null,
+    full: 0,
+  });
+  const first = useRef(true);
+
+  const apply = () => {
+    const node = root.current;
+    const S = st.current;
+    if (!node) return;
+    const resting = !S.pAnim && !S.aAnim;
+    if (resting && S.p === 1) {
+      for (const p of ['width', 'overflow', 'justify-content']) node.style.removeProperty(p);
+      label.current?.style.removeProperty('opacity');
+      return;
+    }
+    node.style.width = `${minWidth + Math.round((S.full - minWidth) * S.p)}px`;
+    node.style.overflow = 'hidden';
+    node.style.justifyContent = 'flex-start';
+    if (label.current) label.current.style.opacity = String(S.a);
+  };
+
+  useLayoutEffect(() => {
+    const S = st.current;
+    if (first.current) {
+      first.current = false;
+      apply();
+      return;
+    }
+    // Expanding: mount the label (transparent) first, then measure.
+    if (expanded && !labelShown) {
+      setLabelShown(true);
+      return;
+    }
+    const node = root.current;
+    if (node && labelShown && !S.pAnim) {
+      const w = node.style.width;
+      node.style.removeProperty('width');
+      S.full = node.getBoundingClientRect().width;
+      node.style.width = w;
+    }
+    const target = expanded ? 1 : 0;
+    const done = () => {
+      if (S.pAnim || S.aAnim) return;
+      apply();
+      if (S.p === 0 && S.a === 0) setLabelShown(false);
+    };
+    const run = (key: 'p' | 'a', animKey: 'pAnim' | 'aAnim', spring: typeof widthSpring) => {
+      const running = S[animKey];
+      if (!spring) {
+        running?.stop();
+        S[animKey] = null;
+        S[key] = target;
+        return;
+      }
+      if (running) return running.retarget(target);
+      if (S[key] === target) return;
+      S[animKey] = animateSpring({
+        spring,
+        from: S[key],
+        to: target,
+        onUpdate: (v) => {
+          S[key] = v;
+          apply();
+        },
+        onComplete: () => {
+          S[animKey] = null;
+          done();
+        },
+      });
+    };
+    run('p', 'pAnim', widthSpring);
+    run('a', 'aAnim', alphaSpring);
+    apply();
+    done();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expanded, labelShown]);
+
+  useEffect(
+    () => () => {
+      st.current.pAnim?.stop();
+      st.current.aAnim?.stop();
+    },
+    [],
+  );
+
+  return labelShown;
+}

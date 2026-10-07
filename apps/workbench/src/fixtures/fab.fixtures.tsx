@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ExtendedFab, Fab, type ExtendedFabSize, type FabColor, type FabSize } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/fab/manifest.json';
@@ -13,6 +14,16 @@ function StarsFilled() {
   );
 }
 
+/** Live: clicking the FAB collapses / expands it. */
+function ExtendedToggle() {
+  const [expanded, setExpanded] = useState(true);
+  return (
+    <ExtendedFab icon={<StarsFilled />} expanded={expanded} onClick={() => setExpanded((e) => !e)}>
+      Extended
+    </ExtendedFab>
+  );
+}
+
 const toColor = (c: string) => c.replace(/([A-Z])/g, (m) => '-' + m.toLowerCase()) as FabColor;
 
 /** Figma "FAB" / "Extended FAB": {fab|extended}-{colour}-{size}-{state}. */
@@ -21,6 +32,7 @@ const fixture: FixtureModule = {
   variants: Object.fromEntries([
     ['fab-live', { render: () => <Fab aria-label="Edit" size="medium"><StarsFilled /></Fab> }],
     ['extended-live', { render: () => <ExtendedFab size="medium" icon={<StarsFilled />}>Label</ExtendedFab> }],
+    ['extended-toggle', { render: () => <ExtendedToggle /> }],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [kind, c, size, state] = name.split('-') as [string, string, string, string];
       const forced: ForcedState | undefined = state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;

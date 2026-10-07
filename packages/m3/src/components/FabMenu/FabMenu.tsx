@@ -1,17 +1,32 @@
-import { Children, createContext, forwardRef, isValidElement, useContext, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  Children,
+  createContext,
+  forwardRef,
+  isValidElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex';
 import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
 import { state } from '../../tokens/state.stylex';
 import { typescale } from '../../tokens/typescale.ts';
+import { elevationMotion } from '../../primitives/elevationMotion.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useSpringToken } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { Fab } from '../Fab/Fab.tsx';
 
 export type FabMenuColor = 'primary' | 'secondary' | 'tertiary';
 
@@ -22,13 +37,22 @@ export type FabMenuColor = 'primary' | 'secondary' | 'tertiary';
  *   Close: 56px circle, {colour} fill, 20px "close" icon, level 3 (hover 4; focused: no spread).
  *   Layout: items right-aligned 4px apart, 8px above the close button.
  * Closed, the menu is a regular FAB in the {colour}-container colour.
+ *
+ * Motion — Compose FloatingActionButtonMenu.kt (androidx-main):
+ *   - The FAB and the close button are one ToggleFloatingActionButton driven by a single checked
+ *     progress on FastSpatial: corner radius lerp(16, 28), container {colour}-container → {colour}
+ *     and icon on-{colour}-container → on-{colour} (Oklab lerp), icon size lerp(24, 20); the glyph
+ *     swaps to "close" once progress > 0.5 (FloatingActionButtonMenuSample). The kit's open / closed
+ *     frames are the progress-1 / progress-0 rest states.
+ *   - Items stagger: a visible-item count springs to N (open) / 0 (close) on SlowEffects with
+ *     visibilityThreshold 1, read as an Int (truncated); item i (0 = top) is shown while
+ *     i >= N - count, so the bottom item comes first on open and the top item leaves first on close.
+ *   - Each item reveals with its width 0 → 1 (FastSpatial, anchored to the end edge, content not
+ *     moving) and alpha (FastEffects); a fully transparent item is not drawn. The list unmounts
+ *     once every item has faded out.
  */
 const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
-
-const enter = stylex.keyframes({
-  from: { opacity: 0, transform: 'translateY(12px) scale(0.92)' },
-  to: { opacity: 1, transform: 'none' },
-});
+const ITEM_PAD = 24;
 
 const s = stylex.create({
   root: { display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-end', rowGap: 8, verticalAlign: 'bottom' },
@@ -59,14 +83,9 @@ const s = stylex.create({
   item: {
     height: 56,
     paddingBlock: 16,
-    paddingInline: 24,
+    paddingInline: ITEM_PAD,
     columnGap: 8,
     borderRadius: 28,
-    // Reduced motion: no entrance (and no stagger delay).
-    animationName: { default: 'none', '@media (prefers-reduced-motion: no-preference)': enter },
-    animationDuration: motion.fastSpatialDuration,
-    animationTimingFunction: motion.fastSpatialEasing,
-    animationFillMode: 'both',
   },
   close: {
     width: 56,
@@ -79,21 +98,18 @@ const s = stylex.create({
       ':focus-visible': { default: elevation.level3NoSpread, '@media (hover: hover)': elevation.level3NoSpread },
       ':active': { default: elevation.level3, '@media (hover: hover)': elevation.level3 },
     },
-    transitionProperty: 'box-shadow',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
   },
+  // Closed: the FAB's 16px corners (ToggleFloatingActionButton at progress 0).
+  closed: { borderRadius: 16 },
   closeHovered: { boxShadow: elevation.level4 },
   closeFocused: { boxShadow: elevation.level3NoSpread },
   ringForced: { outlineStyle: 'solid' },
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   icon24: { width: 24, height: 24 },
   icon20: { width: 20, height: 20 },
+  // While the toggle morphs, the icon box follows --m3-fab-icon (set per frame).
+  iconMorph: { width: 'var(--m3-fab-icon)', height: 'var(--m3-fab-icon)' },
   label: { position: 'relative', color: 'inherit' },
-});
-
-const delay = stylex.create({
-  index: (ms: string) => ({ animationDelay: { default: '0ms', '@media (prefers-reduced-motion: no-preference)': ms } }),
 });
 
 const itemColors = stylex.create({
@@ -106,8 +122,32 @@ const closeColors = stylex.create({
   secondary: { backgroundColor: color.secondary, color: color.onSecondary },
   tertiary: { backgroundColor: color.tertiary, color: color.onTertiary },
 });
+/** [closed, open] container and content colours of the toggle, for the per-frame Oklab mix. */
+const TOGGLE_COLORS: Record<FabMenuColor, { container: [string, string]; content: [string, string] }> = {
+  primary: { container: [color.primaryContainer, color.primary], content: [color.onPrimaryContainer, color.onPrimary] },
+  secondary: { container: [color.secondaryContainer, color.secondary], content: [color.onSecondaryContainer, color.onSecondary] },
+  tertiary: { container: [color.tertiaryContainer, color.tertiary], content: [color.onTertiaryContainer, color.onTertiary] },
+};
 
-const FabMenuContext = createContext<{ color: FabMenuColor; close: () => void; index: number }>({ color: 'primary', close: () => {}, index: 0 });
+interface FabMenuContextValue {
+  color: FabMenuColor;
+  close: () => void;
+  /** 0 = top item. */
+  index: number;
+  /** Inside a FabMenu: reveal / hide with the stagger. Standalone items are static. */
+  animated: boolean;
+  visible: boolean;
+  /** Item reports whether it is drawn (alpha > 0) so the menu can unmount the list after closing. */
+  onShown: (index: number, shown: boolean) => void;
+}
+const FabMenuContext = createContext<FabMenuContextValue>({
+  color: 'primary',
+  close: () => {},
+  index: 0,
+  animated: false,
+  visible: true,
+  onShown: () => {},
+});
 
 function forcedStyles(forced: ReturnType<typeof useForcedState>) {
   return [
@@ -159,6 +199,7 @@ export function FabMenu({
     requestAnimationFrame(() => fabRef.current?.focus());
   };
   const onKeyDown = (e: KeyboardEvent) => {
+    if (!open) return;
     if (e.key === 'Escape') return close();
     if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
     const items = Array.from(listRef.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
@@ -169,70 +210,219 @@ export function FabMenu({
     e.preventDefault();
   };
   const items = Children.toArray(children).filter(isValidElement);
-
-  if (!open)
-    return (
-      <span {...stylex.props(s.root, sx)}>
-        <Fab
-          ref={fabRef}
-          aria-label={label}
-          aria-haspopup="menu"
-          aria-expanded={false}
-          color={`${menuColor}-container`}
-          onClick={() => {
-            setOpen(true);
-            // The FAB becomes the close button: keep focus on the same spot.
-            requestAnimationFrame(() => fabRef.current?.focus());
-          }}
-        >
-          {icon}
-        </Fab>
-      </span>
-    );
+  const { count, mounted, onShown } = useStagger(open, items.length);
 
   return (
     <span {...stylex.props(s.root, sx)} onKeyDown={onKeyDown}>
-      {items.length > 0 && (
-        <div ref={listRef} role="menu" aria-label={label} {...stylex.props(s.list)}>
+      {mounted && items.length > 0 && (
+        // Closing: the items fade out but are no longer part of the menu.
+        <div ref={listRef} role="menu" aria-label={label} inert={!open} {...stylex.props(s.list)}>
           {items.map((child, index) => (
-            <FabMenuContext key={child.key ?? index} value={{ color: menuColor, close, index: items.length - 1 - index }}>
+            <FabMenuContext
+              key={child.key ?? index}
+              value={{ color: menuColor, close, index, animated: true, visible: index >= items.length - count, onShown }}
+            >
               {child}
             </FabMenuContext>
           ))}
         </div>
       )}
-      <FabMenuClose ref={fabRef} color={menuColor} aria-label={closeLabel} aria-expanded onClick={close} />
+      <FabMenuToggle
+        ref={fabRef}
+        open={open}
+        color={menuColor}
+        icon={icon}
+        aria-label={open ? closeLabel : label}
+        onClick={() => (open ? close() : setOpen(true))}
+      />
     </span>
   );
 }
 
-const FabMenuClose = forwardRef<HTMLButtonElement, Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> & { color: FabMenuColor }>(
-  function FabMenuClose({ color: c, ...rest }, ref) {
-    const forced = useForcedState();
-    return (
-      <BaseButton
-        ref={ref}
-        data-ripple-host=""
-        {...rest}
-        {...stylex.props(
-          s.button,
-          s.close,
-          closeColors[c],
-          stateLayerHost.host,
-          ...forcedStyles(forced),
-          forced.state === 'hovered' && s.closeHovered,
-          forced.state === 'focused' && s.closeFocused,
-        )}
-      >
-        <StateLayer />
-        <Ripple />
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...stylex.props(s.icon, s.icon20)}>
+/** Visible-item count (stagger) and list lifetime. */
+function useStagger(open: boolean, n: number) {
+  const spring = useSpringToken('slow-effects')!;
+  const [count, setCount] = useState(open ? n : 0);
+  const [mounted, setMounted] = useState(open);
+  const value = useRef(open ? n : 0);
+  const anim = useRef<SpringAnimation | null>(null);
+  const shown = useRef(new Set<number>());
+  const live = useRef({ open, count });
+  live.current = { open, count };
+  const first = useRef(true);
+
+  const maybeUnmount = useCallback(() => {
+    const { open: isOpen } = live.current;
+    if (!isOpen && value.current === 0 && !anim.current && shown.current.size === 0) setMounted(false);
+  }, []);
+
+  const onShown = useCallback(
+    (index: number, isShown: boolean) => {
+      if (isShown) shown.current.add(index);
+      else shown.current.delete(index);
+      maybeUnmount();
+    },
+    [maybeUnmount],
+  );
+
+  useLayoutEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    const target = open ? n : 0;
+    if (open) setMounted(true);
+    if (anim.current) {
+      anim.current.retarget(target);
+      return;
+    }
+    if (value.current === target) {
+      setCount(target);
+      maybeUnmount();
+      return;
+    }
+    anim.current = animateSpring({
+      spring,
+      from: value.current,
+      to: target,
+      // Animatable<Int> with spring(visibilityThreshold = 1); the count is the truncated value.
+      precision: 1,
+      onUpdate: (v) => {
+        value.current = v;
+        setCount(Math.trunc(v));
+      },
+      onComplete: () => {
+        anim.current = null;
+        maybeUnmount();
+      },
+    });
+  }, [open, n, spring, maybeUnmount]);
+
+  useEffect(() => () => anim.current?.stop(), []);
+
+  return { count, mounted, onShown };
+}
+
+interface FabMenuToggleProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children' | 'color'> {
+  open: boolean;
+  color: FabMenuColor;
+  icon?: ReactNode;
+}
+
+/** The menu's FAB and close button: one element morphing on the checked progress. */
+const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function FabMenuToggle(
+  { open, color: c, icon, ...rest },
+  ref,
+) {
+  const forced = useForcedState();
+  const spring = useSpringToken('fast-spatial');
+  const el = useRef<HTMLButtonElement | null>(null);
+  const setRef = useMergedRef(ref, el);
+  const progress = useRef(open ? 1 : 0);
+  const anim = useRef<SpringAnimation | null>(null);
+  const [morphing, setMorphing] = useState(false);
+  const [glyphClose, setGlyphClose] = useState(open);
+  const first = useRef(true);
+
+  useLayoutEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    const node = el.current;
+    const target = open ? 1 : 0;
+    if (!anim.current && progress.current === target) return;
+    const clear = () => {
+      if (!node) return;
+      for (const p of ['border-radius', 'background-color', 'color', '--m3-fab-icon']) node.style.removeProperty(p);
+    };
+    const apply = (p: number) => {
+      if (!node) return;
+      const { container, content } = TOGGLE_COLORS[c];
+      // Compose lerps colours in Oklab; CSS color-mix needs 0–100%, so the overshoot is clamped there.
+      const mix = `${Math.min(1, Math.max(0, p)) * 100}%`;
+      node.style.borderRadius = `${16 + 12 * p}px`;
+      node.style.backgroundColor = `color-mix(in oklab, ${container[0]}, ${container[1]} ${mix})`;
+      node.style.color = `color-mix(in oklab, ${content[0]}, ${content[1]} ${mix})`;
+      const dpr = window.devicePixelRatio || 1;
+      node.style.setProperty('--m3-fab-icon', `${Math.round((24 - 4 * p) * dpr) / dpr}px`);
+      setGlyphClose(p > 0.5);
+    };
+    if (!spring) {
+      anim.current?.stop();
+      anim.current = null;
+      progress.current = target;
+      clear();
+      setMorphing(false);
+      setGlyphClose(open);
+      return;
+    }
+    setMorphing(true);
+    if (anim.current) {
+      anim.current.retarget(target);
+      return;
+    }
+    anim.current = animateSpring({
+      spring,
+      from: progress.current,
+      to: target,
+      onUpdate: (v) => {
+        progress.current = v;
+        apply(v);
+      },
+      onComplete: () => {
+        anim.current = null;
+        clear();
+        setMorphing(false);
+      },
+    });
+  }, [open, spring, c]);
+
+  useEffect(() => () => anim.current?.stop(), []);
+
+  const showClose = morphing ? glyphClose : open;
+  return (
+    <BaseButton
+      ref={setRef}
+      aria-haspopup="menu"
+      aria-expanded={open}
+      data-ripple-host=""
+      {...rest}
+      {...stylex.props(
+        s.button,
+        s.close,
+        open ? closeColors[c] : [s.closed, itemColors[c]],
+        stateLayerHost.host,
+        elevationMotion.host,
+        ...forcedStyles(forced),
+        forced.state === 'hovered' && s.closeHovered,
+        forced.state === 'focused' && s.closeFocused,
+      )}
+    >
+      <StateLayer />
+      {/* The FAB draws its pressed ripple over the icon, the close button under it (kit layer order). */}
+      <Ripple above={!open} />
+      {showClose ? (
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...stylex.props(s.icon, s.icon20, morphing && s.iconMorph)}>
           <path d={CLOSE} />
         </svg>
-      </BaseButton>
-    );
-  },
-);
+      ) : (
+        <span {...stylex.props(s.icon, s.icon24, morphing && s.iconMorph)}>{icon}</span>
+      )}
+    </BaseButton>
+  );
+});
+
+function useMergedRef<T>(outer: Ref<T> | undefined, inner: { current: T | null }) {
+  return useCallback(
+    (node: T | null) => {
+      inner.current = node;
+      if (typeof outer === 'function') outer(node);
+      else if (outer) (outer as { current: T | null }).current = node;
+    },
+    [outer, inner],
+  );
+}
 
 export interface FabMenuItemProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
   /** Leading icon (use currentColor), 24px. */
@@ -251,9 +441,12 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
 ) {
   const ctx = useContext(FabMenuContext);
   const forced = useForcedState();
+  const el = useRef<HTMLButtonElement | null>(null);
+  const setRef = useMergedRef(ref, el);
+  useItemReveal(el, ctx);
   return (
     <BaseButton
-      ref={ref}
+      ref={setRef}
       role="menuitem"
       data-ripple-host=""
       onClick={(e) => {
@@ -261,15 +454,7 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
         if (!keepOpen && !e.defaultPrevented) ctx.close();
       }}
       {...rest}
-      {...stylex.props(
-        s.button,
-        s.item,
-        delay.index(`${ctx.index * 30}ms`),
-        itemColors[colorProp ?? ctx.color],
-        stateLayerHost.host,
-        ...forcedStyles(forced),
-        sx,
-      )}
+      {...stylex.props(s.button, s.item, itemColors[colorProp ?? ctx.color], stateLayerHost.host, ...forcedStyles(forced), sx)}
     >
       <StateLayer />
       <Ripple />
@@ -278,3 +463,122 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
     </BaseButton>
   );
 });
+
+/**
+ * Item reveal — Compose FloatingActionButtonMenuItem: width = round(natural · max(w, 0)) with the
+ * padded content placed at the end edge (so it does not move), alpha a; not drawn at a = 0.
+ * Widths below the natural one clip from the start side; the FastSpatial overshoot widens the
+ * pill towards the start (extra start padding, cancelled by a negative margin so the layout and
+ * the end edge stay put).
+ */
+function useItemReveal(el: { current: HTMLElement | null }, ctx: FabMenuContextValue) {
+  const widthSpring = useSpringToken('fast-spatial');
+  const alphaSpring = useSpringToken('fast-effects')!;
+  const st = useRef({
+    w: ctx.visible ? 1 : 0,
+    a: ctx.visible ? 1 : 0,
+    wAnim: null as SpringAnimation | null,
+    aAnim: null as SpringAnimation | null,
+    natural: 0,
+    shown: false,
+  });
+  const ctxRef = useRef(ctx);
+  ctxRef.current = ctx;
+  const first = useRef(true);
+
+  const apply = () => {
+    const node = el.current;
+    const S = st.current;
+    if (!node) return;
+    const styles = node.style;
+    const resting = !S.wAnim && !S.aAnim;
+    if (resting && S.w === 1 && S.a === 1) {
+      for (const p of ['opacity', 'visibility', 'clip-path', 'margin-inline-start', 'padding-inline-start']) styles.removeProperty(p);
+      return;
+    }
+    styles.opacity = String(S.a);
+    styles.visibility = S.a === 0 ? 'hidden' : '';
+    const width = Math.round(S.natural * Math.max(S.w, 0));
+    if (width >= S.natural) {
+      const extra = width - S.natural;
+      styles.removeProperty('clip-path');
+      styles.marginInlineStart = extra ? `${-extra}px` : '';
+      styles.paddingInlineStart = extra ? `${ITEM_PAD + extra}px` : '';
+    } else {
+      const cut = `${S.natural - width}px`;
+      const rtl = getComputedStyle(node).direction === 'rtl';
+      styles.clipPath = rtl ? `inset(0 ${cut} 0 0 round 28px)` : `inset(0 0 0 ${cut} round 28px)`;
+      styles.removeProperty('margin-inline-start');
+      styles.removeProperty('padding-inline-start');
+    }
+  };
+
+  const report = () => {
+    const S = st.current;
+    const shown = S.a !== 0;
+    if (shown !== S.shown) {
+      S.shown = shown;
+      ctxRef.current.onShown(ctxRef.current.index, shown);
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (!ctx.animated) return;
+    const S = st.current;
+    const node = el.current;
+    if (first.current) {
+      first.current = false;
+      if (node) S.natural = node.getBoundingClientRect().width;
+      apply();
+      report();
+      return;
+    }
+    const target = ctx.visible ? 1 : 0;
+    // Natural width: measured while no overshoot styles are applied.
+    if (node && !S.wAnim && Math.round(S.natural * Math.max(S.w, 0)) <= S.natural) S.natural = node.getBoundingClientRect().width;
+    const run = (key: 'w' | 'a', animKey: 'wAnim' | 'aAnim', spring: typeof widthSpring) => {
+      if (!spring) {
+        S[animKey]?.stop();
+        S[animKey] = null;
+        S[key] = target;
+        return;
+      }
+      const running = S[animKey];
+      if (running) return running.retarget(target);
+      if (S[key] === target) return;
+      S[animKey] = animateSpring({
+        spring,
+        from: S[key],
+        to: target,
+        onUpdate: (v) => {
+          S[key] = v;
+          apply();
+          report();
+        },
+        onComplete: () => {
+          S[animKey] = null;
+          apply();
+          report();
+        },
+      });
+    };
+    run('w', 'wAnim', widthSpring);
+    run('a', 'aAnim', alphaSpring);
+    apply();
+    report();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ctx.visible, ctx.animated]);
+
+  useEffect(
+    () => () => {
+      const S = st.current;
+      S.wAnim?.stop();
+      S.aAnim?.stop();
+      if (S.shown) {
+        S.shown = false;
+        ctxRef.current.onShown(ctxRef.current.index, false);
+      }
+    },
+    [],
+  );
+}
