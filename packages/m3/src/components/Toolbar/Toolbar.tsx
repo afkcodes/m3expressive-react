@@ -1,10 +1,11 @@
-import { forwardRef, useCallback, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { forwardRef, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './context.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
 
 /*
@@ -25,6 +26,13 @@ import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
  * (minimumInteractiveBalancedPadding); that needs items with asymmetric touch-target insets
  * (alignment lines), which our items don't expose — for the kit's square 48px targets it adds 0.
  */
+/** ToolbarFabContext values (module constants: the context changes only with `expanded`). */
+const FAB_EXPANDED = { collapsed: false };
+const FAB_COLLAPSED = { collapsed: true };
+/** Compose: the toolbar and its FAB sit 8px apart; the FAB is 56px at rest (FabSizeRange start). */
+const FAB_GAP = 8;
+const FAB_SIZE = 56;
+
 const s = stylex.create({
   root: {
     display: 'flex',
@@ -83,7 +91,13 @@ const s = stylex.create({
   trailGapVertical: { paddingBlockStart: 4 },
   // Constant size (Compose: toolbar + 8px + the 56px FAB): the toolbar shrinks towards the FAB,
   // which grows into the space instead of moving.
-  withFab: { display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end', columnGap: 8, rowGap: 8 },
+  withFab: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    columnGap: FAB_GAP,
+    rowGap: FAB_GAP,
+  },
   withFabVertical: { flexDirection: 'column' },
   fabStart: { flexDirection: 'row-reverse' },
   fabStartVertical: { flexDirection: 'column-reverse' },
@@ -148,14 +162,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   const vertical = floating && orientationProp === 'vertical';
   const orientation = vertical ? 'vertical' : 'horizontal';
   const ref = useRef<HTMLDivElement | null>(null);
-  const setRef = useCallback(
-    (el: HTMLDivElement | null) => {
-      ref.current = el;
-      if (typeof forwardedRef === 'function') forwardedRef(el);
-      else if (forwardedRef) forwardedRef.current = el;
-    },
-    [forwardedRef],
-  );
+  const setRef = useMergedRefs(ref, forwardedRef);
 
   // The bar's natural size, for the constant-size FAB layout.
   const [natural, setNatural] = useState<[number, number] | null>(null);
@@ -231,7 +238,8 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         s.withFab,
         vertical && s.withFabVertical,
         fabPosition === 'start' && (vertical ? s.fabStartVertical : s.fabStart),
-        natural && (vertical ? s.fabSize(0, natural[1] + 8 + 56) : s.fabSize(natural[0] + 8 + 56, 0)),
+        natural &&
+          (vertical ? s.fabSize(0, natural[1] + FAB_GAP + FAB_SIZE) : s.fabSize(natural[0] + FAB_GAP + FAB_SIZE, 0)),
         sx,
       )}
     >
@@ -246,7 +254,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         <div {...stylex.props(s.shell, !expanded && s.shellCollapsed)}>{bar}</div>
       </div>
       <div {...stylex.props(s.fabSlot)}>
-        <ToolbarFabContext value={{ collapsed: !expanded }}>{fab}</ToolbarFabContext>
+        <ToolbarFabContext value={expanded ? FAB_EXPANDED : FAB_COLLAPSED}>{fab}</ToolbarFabContext>
       </div>
     </div>
   );

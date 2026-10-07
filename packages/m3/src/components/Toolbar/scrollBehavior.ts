@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useSpringToken } from '../../motion/context.tsx';
-import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useExitAlwaysOffset } from '../AppBar/exitAlways.ts';
 import { onScrollEnd } from '../AppBar/scrollEvents.ts';
 
 /** FloatingToolbarDefaults.ScrollDistanceThreshold (40dp). */
@@ -70,27 +70,36 @@ export function useFloatingToolbarNestedScroll({
 
   // updateThreshold: whenever the state or the thresholds change.
   useEffect(() => {
-    const s = st.current;
-    s.threshold = expanded
-      ? s.contentOffset - collapseScrollDistanceThreshold
-      : s.contentOffset + expandScrollDistanceThreshold;
+    const scroll = st.current;
+    scroll.threshold = expanded
+      ? scroll.contentOffset - collapseScrollDistanceThreshold
+      : scroll.contentOffset + expandScrollDistanceThreshold;
   }, [expanded, expandScrollDistanceThreshold, collapseScrollDistanceThreshold]);
 
   return useScrollDeltas((consumed) => {
-    const s = st.current;
+    const scroll = st.current;
     const scrollDelta = consumed * (opts.reverseLayout ? -1 : 1);
-    s.contentOffset += scrollDelta;
-    if (scrollDelta < 0 && s.contentOffset <= s.threshold) {
-      s.threshold = s.contentOffset + opts.expandScrollDistanceThreshold;
+    scroll.contentOffset += scrollDelta;
+    if (scrollDelta < 0 && scroll.contentOffset <= scroll.threshold) {
+      scroll.threshold = scroll.contentOffset + opts.expandScrollDistanceThreshold;
       opts.onCollapse();
-    } else if (scrollDelta > 0 && s.contentOffset >= s.threshold) {
-      s.threshold = s.contentOffset - opts.collapseScrollDistanceThreshold;
+    } else if (scrollDelta > 0 && scroll.contentOffset >= scroll.threshold) {
+      scroll.threshold = scroll.contentOffset - opts.collapseScrollDistanceThreshold;
       opts.onExpand();
     }
   });
 }
 
 export type FloatingToolbarExitDirection = 'bottom' | 'top' | 'start' | 'end';
+
+type PhysicalSide = 'top' | 'bottom' | 'left' | 'right';
+
+interface ExitGeometry {
+  /** The screen edge the toolbar leaves by. */
+  side: PhysicalSide;
+  /** state.offsetLimit: the distance to the parent's edge plus the element's size, negative. */
+  limit: number;
+}
 
 /**
  * Compose `FloatingToolbarDefaults.exitAlwaysScrollBehavior` (ExitAlwaysFloatingToolbarScrollBehavior):
@@ -103,21 +112,23 @@ export type FloatingToolbarExitDirection = 'bottom' | 'top' | 'start' | 'end';
 export function useFloatingToolbarExitAlways(exitDirection: FloatingToolbarExitDirection = 'bottom') {
   const snapSpec = useSpringToken('default-effects');
   const el = useRef<HTMLElement | null>(null);
-  const st = useRef({ offset: 0, settle: null as SpringAnimation | null });
-  useEffect(() => () => st.current.settle?.stop(), []);
+  // The exit side and limit don't change while the content scrolls (the toolbar moves by a
+  // translate): measured once per scroll, not on every event / frame.
+  const geometry = useRef<ExitGeometry | null>(null);
+  /** The last scroll has ended: the next one measures again. */
+  const ended = useRef(true);
 
-  const physical = () => {
-    const e = el.current!;
-    const rtl = getComputedStyle(e).direction === 'rtl';
-    if (exitDirection === 'top' || exitDirection === 'bottom') return exitDirection;
-    return (exitDirection === 'start') !== rtl ? 'left' : 'right';
-  };
-  /** state.offsetLimit: the distance to the parent's edge plus the element's size, negative. */
-  const limit = () => {
+  const measure = (): ExitGeometry | null => {
     const e = el.current;
-    const parent = e?.offsetParent as HTMLElement | null;
-    if (!e || !parent) return 0;
-    const side = physical();
+    if (!e) return null;
+    const side: PhysicalSide =
+      exitDirection === 'top' || exitDirection === 'bottom'
+        ? exitDirection
+        : (exitDirection === 'start') !== (getComputedStyle(e).direction === 'rtl')
+          ? 'left'
+          : 'right';
+    const parent = e.offsetParent as HTMLElement | null;
+    if (!parent) return { side, limit: 0 };
     const distance =
       side === 'top'
         ? e.offsetHeight + e.offsetTop
@@ -126,20 +137,27 @@ export function useFloatingToolbarExitAlways(exitDirection: FloatingToolbarExitD
           : side === 'left'
             ? e.offsetWidth + e.offsetLeft
             : parent.clientWidth - e.offsetLeft;
-    return -distance;
+    return { side, limit: -distance };
   };
-  const apply = () => {
-    const e = el.current;
-    if (!e) return;
-    const o = st.current.offset;
-    const side = physical();
-    e.style.translate =
-      side === 'top' ? `0 ${o}px` : side === 'bottom' ? `0 ${-o}px` : side === 'left' ? `${o}px 0` : `${-o}px 0`;
-  };
-  const setOffset = (value: number) => {
-    st.current.offset = Math.min(0, Math.max(limit(), value));
-    apply();
-  };
+  const current = () => (geometry.current ??= measure());
+
+  const offset = useExitAlwaysOffset(
+    (value) => {
+      const e = el.current;
+      const side = current()?.side;
+      if (!e || !side) return;
+      e.style.translate =
+        side === 'top'
+          ? `0 ${value}px`
+          : side === 'bottom'
+            ? `0 ${-value}px`
+            : side === 'left'
+              ? `${value}px 0`
+              : `${-value}px 0`;
+    },
+    () => current()?.limit ?? 0,
+    snapSpec,
+  );
 
   const ref = useCallback((node: HTMLElement | null) => {
     el.current = node;
@@ -147,33 +165,18 @@ export function useFloatingToolbarExitAlways(exitDirection: FloatingToolbarExitD
 
   const scrollRef = useScrollDeltas(
     (consumed) => {
-      const s = st.current;
-      s.settle?.stop();
-      s.settle = null;
-      // onPostScroll: state.offset += consumed.y.
-      setOffset(s.offset + consumed);
+      if (ended.current) {
+        ended.current = false;
+        geometry.current = null;
+      }
+      // onPostScroll: state.offset += consumed.y (a running settle stops).
+      offset.follow(consumed);
     },
     // settleFloatingToolbar once the content's scroll (including the browser's fling) ends.
     () => {
-      const s = st.current;
-      const lim = limit();
-      if (lim === 0 || s.settle) return;
-      const fraction = s.offset / lim;
-      if (fraction < 0.01 || fraction === 1) return;
-      const to = fraction < 0.5 ? 0 : lim;
-      if (!snapSpec) return setOffset(to);
-      s.settle = animateSpring({
-        spring: snapSpec,
-        from: s.offset,
-        to,
-        onUpdate: (v) => {
-          s.offset = v;
-          apply();
-        },
-        onComplete: () => {
-          s.settle = null;
-        },
-      });
+      if (ended.current) geometry.current = null;
+      offset.settle();
+      ended.current = true;
     },
   );
 
