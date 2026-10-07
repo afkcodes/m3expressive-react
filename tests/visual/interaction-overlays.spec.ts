@@ -3,31 +3,15 @@
  * drive the REAL component with a mouse / keyboard (no forced states) and compare against the Figma
  * state variants. Complements figma-parity.spec.ts, which renders states statically.
  */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { compareImages } from './compare.ts';
-import { captureRegion, hexToRgb } from './capture.ts';
-import { REFS_DIR, type Manifest } from './manifest.ts';
+import { expectKit, kitVariant } from './helpers/kit.ts';
+import { load, openFixture } from './helpers/page.ts';
 
 test('search (live): the bar matches the kit, opens the docked view, filters, closes back to the bar', async ({
   page,
 }) => {
-  const sm = JSON.parse(readFileSync(join(REFS_DIR, 'search/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/search/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  const v = sm.variants['bar-enabled-plain']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'search', 'bar-enabled-plain.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
-    background: hexToRgb(v.background ?? '#FFFFFF'),
-  });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `bar-enabled-plain (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-  });
-  expect.soft(r.diffPixels, 'bar-enabled-plain').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  const node = await openFixture(page, '/fixture/search/live');
+  await expectKit(node, 'search', 'bar-enabled-plain');
 
   // Keyboard: the menu button, then the bar's own trigger (a real button, not a wrapper around the icons).
   const trigger = page.getByRole('button', { name: 'Hinted search text' });
@@ -66,21 +50,8 @@ test('search (live): the bar matches the kit, opens the docked view, filters, cl
 test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses into a growing FAB', async ({
   page,
 }) => {
-  const tm = JSON.parse(readFileSync(join(REFS_DIR, 'toolbar/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/toolbar/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  const v = tm.variants['ex-fab-share']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'toolbar', 'ex-fab-share.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
-    background: hexToRgb(v.background ?? '#FFFFFF'),
-  });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `ex-fab-share (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-  });
-  expect.soft(r.diffPixels, 'ex-fab-share').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  const node = await openFixture(page, '/fixture/toolbar/live');
+  await expectKit(node, 'toolbar', 'ex-fab-share');
 
   // One tab stop; arrows move within the toolbar (wrapping), Home / End jump; Tab leaves to the FAB.
   const toolbar = page.getByRole('toolbar', { name: 'Actions' });
@@ -132,8 +103,7 @@ test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses i
 test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle / drag; side sheet traps focus', async ({
   page,
 }) => {
-  await page.goto('/fixture/sheets/live');
-  await page.evaluate(() => document.fonts.ready);
+  await load(page, '/fixture/sheets/live');
   const openBottom = page.getByRole('button', { name: 'Open bottom sheet' });
   const sheet = page.getByRole('dialog', { name: 'Share' });
   const ty = () =>
@@ -168,14 +138,14 @@ test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle 
   await page.mouse.move(hb.x + hb.width / 2, hb.y + 2);
   await page.mouse.down();
   await page.mouse.move(hb.x + hb.width / 2, hb.y + 30, { steps: 8 });
-  await page.waitForTimeout(150);
+  await page.waitForTimeout(150); // rest before the release: no fling, the position decides
   await page.mouse.up();
   await expect.poll(ty).toBe(0);
   await expect(sheet).toBeVisible();
   await page.mouse.move(hb.x + hb.width / 2, hb.y + 2);
   await page.mouse.down();
   await page.mouse.move(hb.x + hb.width / 2, hb.y + 120, { steps: 12 });
-  await page.waitForTimeout(150);
+  await page.waitForTimeout(150); // rest before the release: no fling, the position decides
   await page.mouse.up();
   await expect(sheet).toHaveCount(0);
 
@@ -193,9 +163,7 @@ test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle 
 test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Escape / scrim close it', async ({
   page,
 }) => {
-  const dm = JSON.parse(readFileSync(join(REFS_DIR, 'dialogs/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/dialogs/live');
-  await page.evaluate(() => document.fonts.ready);
+  await load(page, '/fixture/dialogs/live');
   const open = page.getByRole('button', { name: 'Open dialog' });
   const dialog = page.getByRole('dialog', { name: 'Basic dialog title' });
   const result = page.locator('[data-result]');
@@ -209,9 +177,8 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
     .toBe('1 1');
   // Same surface as the kit's basic dialog with icon (pixels: the static parity suite); the popup is the surface.
   const surface = dialog;
-  const v = dm.variants['basic-icon']!;
   const bb = (await surface.boundingBox())!;
-  expect([bb.width, bb.height]).toEqual(v.size);
+  expect([bb.width, bb.height]).toEqual(kitVariant('dialogs', 'basic-icon').size);
   expect(await surface.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(236, 230, 240)');
 
   // Focus is inside; the confirming action closes with its result.
@@ -236,8 +203,7 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
 test('carousel (live): items resize through the keylines as it scrolls; keys and scrolling settle on an item', async ({
   page,
 }) => {
-  await page.goto('/fixture/carousel/live');
-  await page.evaluate(() => document.fonts.ready);
+  await load(page, '/fixture/carousel/live');
   const carousel = page.getByRole('region', { name: 'Photos' });
   const slides = carousel.locator('[aria-roledescription="slide"]');
   const geo = async () => {
@@ -291,8 +257,7 @@ test('carousel (live): items resize through the keylines as it scrolls; keys and
 });
 
 test('date pickers (live): modal pick / keys / year / input, docked panel, full-screen range', async ({ page }) => {
-  await page.goto('/fixture/date-picker/live');
-  await page.evaluate(() => document.fonts.ready);
+  await load(page, '/fixture/date-picker/live');
   // The fixture's <output>s (the closing dialog's days carry data-date while they fade out: the
   // M3 dialog fade stays under reduced motion).
   const out = (k: string) => page.locator(`output[data-${k}]`);
@@ -352,8 +317,7 @@ test('date pickers (live): modal pick / keys / year / input, docked panel, full-
 });
 
 test('time picker (live): dial tap picks the hour then minutes; keyboard mode; Escape discards', async ({ page }) => {
-  await page.goto('/fixture/time-picker/live');
-  await page.evaluate(() => document.fonts.ready);
+  await load(page, '/fixture/time-picker/live');
   const out = page.locator('[data-time]');
   const open = page.getByRole('button', { name: 'Pick time' });
 

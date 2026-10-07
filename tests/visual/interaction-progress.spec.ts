@@ -3,33 +3,16 @@
  * mouse / keyboard (no forced states) and compare against the Figma state variants. Complements
  * figma-parity.spec.ts, which renders states statically.
  */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { expect, test, type Page } from '@playwright/test';
-import { compareImages } from './compare.ts';
-import { captureRegion, hexToRgb } from './capture.ts';
-import { REFS_DIR, type Manifest } from './manifest.ts';
+import { expect, test } from '@playwright/test';
+import { captureRegion } from './capture.ts';
+import { diffKit, expectKit, kitVariant } from './helpers/kit.ts';
+import { enableMotion, fontsReady, openFixture } from './helpers/page.ts';
+import { settle } from './helpers/settle.ts';
 
-/** Effects transitions (state layer, shadow) are 150 ms; allow generous settling. */
-const SETTLE = 500;
 // ── Progress: value changes spring to the kit's geometry; waves travel unless reduced motion ─
 test.describe('progress (live)', () => {
-  const prog = JSON.parse(readFileSync(join(REFS_DIR, 'progress/manifest.json'), 'utf8')) as Manifest;
-  const check = async (page: Page, target: ReturnType<Page['locator']>, name: string) => {
-    const v = prog.variants[name]!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, target, v.renderBounds!), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test
-      .info()
-      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
-    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
-  };
-  /** ProgressAnimationSpec (no bounce, stiffness 50) settles in ≈1.3 s. */
-  const SPRING_SETTLE = 2000;
   // The suite defaults to reduced motion (playwright.config); these tests are about motion.
-  test.beforeEach(async ({ page }) => page.emulateMedia({ reducedMotion: 'no-preference' }));
+  test.beforeEach(async ({ page }) => enableMotion(page));
 
   for (const kind of ['linear', 'circular'] as const) {
     test(`${kind}: value change animates and lands on the kit frame`, async ({ page }) => {
@@ -38,60 +21,47 @@ test.describe('progress (live)', () => {
       const bar = node.getByRole('progressbar');
       const [from, to] = kind === 'linear' ? [50, 80] : [30, 80];
       await expect(bar).toHaveAttribute('aria-valuenow', String(from));
+      const start = `${kind}-flat-4-${from}`;
+      const target = `${kind}-flat-4-${to}`;
       // Frame-driven: under parallel load the first frame can still be settling — poll first.
-      const start = prog.variants[`${kind}-flat-4-${from}`]!;
-      const startRef: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${from}.png`));
       await expect
-        .poll(
-          async () =>
-            compareImages(startRef, await captureRegion(page, node, start.renderBounds!), {
-              background: hexToRgb(start.background ?? '#FFFFFF'),
-            }).diffPixels,
-          { timeout: 8000 },
-        )
-        .toBeLessThanOrEqual(start.allowedDiffPixels ?? 0);
-      await check(page, node, `${kind}-flat-4-${from}`);
+        .poll(async () => (await diffKit(node, 'progress', start)).result.diffPixels, { timeout: 8000 })
+        .toBeLessThanOrEqual(kitVariant('progress', start).allowedDiffPixels ?? 0);
+      await expectKit(node, 'progress', start);
       await page.getByRole('button', { name: `${to}%` }).click();
       await expect(bar).toHaveAttribute('aria-valuenow', String(to));
+      // Mid-flight on purpose: ProgressAnimationSpec (no bounce, stiffness 50) takes ≈1.3 s.
       await page.waitForTimeout(250);
-      const mid = await captureRegion(page, node, prog.variants[`${kind}-flat-4-${to}`]!.renderBounds!);
-      const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${to}.png`));
       expect
-        .soft(
-          compareImages(ref, mid, { background: [247, 242, 250] }).diffPixels,
-          'mid-spring frame differs from the target',
-        )
+        .soft((await diffKit(node, 'progress', target)).result.diffPixels, 'mid-spring frame differs from the target')
         .toBeGreaterThan(0);
-      // The spring is frame-driven: under parallel load it can take longer than SPRING_SETTLE, so
-      // poll until it lands, then run the regular parity check.
-      const target = prog.variants[`${kind}-flat-4-${to}`]!;
-      const settled = async () =>
-        compareImages(ref, await captureRegion(page, node, target.renderBounds!), {
-          background: hexToRgb(target.background ?? '#FFFFFF'),
-        }).diffPixels;
-      await page.waitForTimeout(SPRING_SETTLE);
-      await expect.poll(settled, { timeout: 8000 }).toBeLessThanOrEqual(target.allowedDiffPixels ?? 0);
-      await check(page, node, `${kind}-flat-4-${to}`);
+      // The spring is frame-driven: poll until it lands, then run the regular parity check.
+      await expect
+        .poll(async () => (await diffKit(node, 'progress', target)).result.diffPixels, { timeout: 8000 })
+        .toBeLessThanOrEqual(kitVariant('progress', target).allowedDiffPixels ?? 0);
+      await expectKit(node, 'progress', target);
     });
   }
 
   for (const kind of ['linear', 'circular'] as const) {
     test(`${kind} wave: travels; static (= kit) under reduced motion`, async ({ page }) => {
       const name = `${kind}-wave-4-50`;
-      const rb = prog.variants[name]!.renderBounds!;
+      const rb = kitVariant('progress', name).renderBounds!;
       await page.goto(`/fixture/progress/live-wave-${kind}`);
       const node = page.locator('[data-fixture-node]');
       const a = await captureRegion(page, node, rb);
+      // Two captures 300ms apart: the travel shows between them (or, reduced, doesn't).
       await page.waitForTimeout(300);
       const b = await captureRegion(page, node, rb);
       expect.soft(a.equals(b), 'wave moves').toBe(false);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.reload();
-      await page.waitForTimeout(300);
+      await fontsReady(page);
+      await settle(page);
       const c = await captureRegion(page, node, rb);
       await page.waitForTimeout(300);
       expect.soft(c.equals(await captureRegion(page, node, rb)), 'reduced motion: still').toBe(true);
-      await check(page, node, name);
+      await expectKit(node, 'progress', name);
     });
   }
 
@@ -102,6 +72,7 @@ test.describe('progress (live)', () => {
       await expect(bar).toBeVisible();
       expect.soft(await bar.getAttribute('aria-valuenow'), `${label}: indeterminate`).toBeNull();
       const before = await bar.screenshot();
+      // Two screenshots 200ms apart: an indeterminate indicator never stands still.
       await page.waitForTimeout(200);
       expect.soft(before.equals(await bar.screenshot()), `${label}: animates`).toBe(false);
     }
@@ -110,33 +81,18 @@ test.describe('progress (live)', () => {
 
 // ── Slider: real pointer / keyboard against the kit's Medium 50% frames ──────────────────────
 test('slider (live): rest, hover, press, drag, keyboard', async ({ page }) => {
-  const sl = JSON.parse(readFileSync(join(REFS_DIR, 'slider/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/slider/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  const check = async (name: string) => {
-    const v = sl.variants[name]!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'slider', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test
-      .info()
-      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
-    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
-  };
+  const node = await openFixture(page, '/fixture/slider/live');
   const volume = page.getByRole('slider', { name: 'Volume' });
   const values = page.locator('[data-values]');
-  await check('std-h-m-enabled-50');
+  await expectKit(node, 'slider', 'std-h-m-enabled-50');
   const box = (await node.boundingBox())!;
   const handleX = box.x + 177;
   await page.mouse.move(handleX, box.y + 26);
-  await page.waitForTimeout(SETTLE);
-  await check('std-h-m-hovered-50');
+  await settle(page);
+  await expectKit(node, 'slider', 'std-h-m-hovered-50');
   await page.mouse.down();
-  await page.waitForTimeout(SETTLE);
-  await check('std-h-m-pressed-50');
+  await settle(page);
+  await expectKit(node, 'slider', 'std-h-m-pressed-50');
   await page.mouse.move(handleX + 34.2, box.y + 26, { steps: 4 });
   await page.mouse.up();
   await expect(volume).toHaveAttribute('aria-valuenow', '60');
@@ -161,27 +117,12 @@ test('slider (live): rest, hover, press, drag, keyboard', async ({ page }) => {
 
 // ── Text field: real hover, focus (label floats), typing, blur ───────────────────────────────
 test('text field (live): hover, focus floats the label, typing, blur', async ({ page }) => {
-  const tf = JSON.parse(readFileSync(join(REFS_DIR, 'text-field/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/text-field/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  const check = async (name: string) => {
-    const v = tf.variants[name]!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'text-field', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test
-      .info()
-      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
-    expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
-  };
-  await check('filled-enabled-label-xx');
+  const node = await openFixture(page, '/fixture/text-field/live');
+  await expectKit(node, 'text-field', 'filled-enabled-label-xx');
   const box = (await node.boundingBox())!;
   await page.mouse.move(box.x + 120, box.y + 28);
-  await page.waitForTimeout(SETTLE);
-  await check('filled-hovered-label-xx');
+  await settle(page);
+  await expectKit(node, 'text-field', 'filled-hovered-label-xx');
   const input = page.getByRole('textbox', { name: 'Label' });
   await page.mouse.click(box.x + 120, box.y + 28);
   await expect(input).toBeFocused();
@@ -189,8 +130,8 @@ test('text field (live): hover, focus floats the label, typing, blur', async ({ 
   await expect(page.locator('[data-value]')).toHaveText('Input');
   await page.mouse.move(0, 0);
   await input.blur();
-  await page.waitForTimeout(SETTLE);
-  await check('filled-enabled-input-xx');
+  await settle(page);
+  await expectKit(node, 'text-field', 'filled-enabled-input-xx');
   // Supporting text is the field's accessible description.
   await expect(input).toHaveAccessibleDescription('Supporting text');
 });

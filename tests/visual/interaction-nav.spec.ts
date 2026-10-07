@@ -3,34 +3,17 @@
  * component with a mouse / keyboard (no forced states) and compare against the Figma state
  * variants. Complements figma-parity.spec.ts, which renders states statically.
  */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { compareImages } from './compare.ts';
-import { captureRegion, hexToRgb } from './capture.ts';
-import { REFS_DIR, type Manifest } from './manifest.ts';
+import { expectKit } from './helpers/kit.ts';
+import { enableMotion, openFixture } from './helpers/page.ts';
+import { settle } from './helpers/settle.ts';
+import { computedStyle } from './helpers/styles.ts';
 
-/** Effects transitions (state layer, shadow) are 150 ms; allow generous settling. */
-const SETTLE = 500;
 // ── List: real hover / select / keyboard focus, accordion toggle, swipe to reveal ────────────
 test.describe('list (live)', () => {
-  const ls = JSON.parse(readFileSync(join(REFS_DIR, 'list/manifest.json'), 'utf8')) as Manifest;
   const setup = async (page: Page, variant: string) => {
-    await page.goto(`/fixture/list/${variant}`);
-    await page.evaluate(() => document.fonts.ready);
-    await page.mouse.move(0, 0);
-    const node = page.locator('[data-fixture-node]');
-    const check = async (name: string) => {
-      const v = ls.variants[name]!;
-      const ref: Buffer = readFileSync(join(REFS_DIR, 'list', `${name}.png`));
-      const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
-        background: hexToRgb(v.background ?? '#FFFFFF'),
-      });
-      test
-        .info()
-        .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
-      expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
-    };
+    const node = await openFixture(page, `/fixture/list/${variant}`);
+    const check = (name: string) => expectKit(node, 'list', name);
     return { node, check, box: (await node.boundingBox())! };
   };
 
@@ -39,24 +22,24 @@ test.describe('list (live)', () => {
     const item = page.getByRole('button', { name: /Label text/ });
     await check('item-mid-enabled-unsel');
     await page.mouse.move(box.x + 140, box.y + 40);
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('item-mid-hovered-unsel');
     await page.mouse.click(box.x + 140, box.y + 40);
     await expect(item).toHaveAttribute('aria-pressed', 'true');
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('item-mid-hovered-sel');
     await page.mouse.move(0, 0);
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('item-mid-enabled-sel');
     // Keyboard: Tab in from the document shows the focus layer; Space toggles.
     await page.mouse.click(1, 1);
     await page.keyboard.press('Tab');
     await expect(item).toBeFocused();
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('item-mid-focused-sel');
     await page.keyboard.press('Space');
     await expect(item).not.toHaveAttribute('aria-pressed');
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('item-mid-focused-unsel');
   });
 
@@ -71,7 +54,7 @@ test.describe('list (live)', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(nested).toBeVisible();
     await page.mouse.move(0, 0);
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await check('accordion-expanded');
     await toggle.press('Enter');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -91,50 +74,37 @@ test.describe('list (live)', () => {
     await page.mouse.move(box.x + 110, box.y + 26, { steps: 8 });
     await page.mouse.up();
     await expect(state).toHaveText('revealed');
-    await page.waitForTimeout(1500);
+    await settle(page);
     await check('swipe-revealed');
     const edit = page.getByRole('button', { name: 'Edit' });
     await expect(edit).toHaveAttribute('tabindex', '0');
     await edit.click();
     await expect(state).toHaveText('closed');
     await page.mouse.move(0, 0);
-    await page.waitForTimeout(1500);
+    await settle(page);
     await check('swipe-default');
   });
 });
 
 // ── Menu: the real popup against the kit, keyboard, selection, group shape after hover ───────
 test.describe('menu (live)', () => {
-  const mn = JSON.parse(readFileSync(join(REFS_DIR, 'menu/manifest.json'), 'utf8')) as Manifest;
-
   test('popup matches the kit menu; keyboard and click run an item and close', async ({ page }) => {
-    await page.goto('/fixture/menu/live');
-    await page.evaluate(() => document.fonts.ready);
-    await page.mouse.move(0, 0);
+    await openFixture(page, '/fixture/menu/live');
     const trigger = page.getByRole('button', { name: 'Options' });
     await trigger.press('Enter');
     const menu = page.getByRole('menu');
     await expect(menu).toBeVisible();
     await expect(page.getByRole('menuitem')).toHaveCount(8);
-    // Let the open motion (fast spatial scale + fast effects fade) settle, then compare.
-    await page.waitForTimeout(SETTLE);
-    const v = mn.variants['menu-std-2']!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'menu', 'menu-std-2.png'));
+    // Let the open motion (fast spatial scale + fast effects fade) settle.
+    await settle(page);
     // Keyboard-opened menus highlight the first item: compare with the pointer-opened menu.
     await page.keyboard.press('Escape');
     await expect(menu).toBeHidden();
     await trigger.click();
     await expect(menu).toBeVisible();
     await page.mouse.move(0, 0);
-    await page.waitForTimeout(SETTLE);
-    const r = compareImages(ref, await captureRegion(page, menu, v.renderBounds!), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test.info().annotations.push({
-      type: 'parity',
-      description: `menu-std-2 (live popup): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-    });
-    expect.soft(r.diffPixels, 'menu-std-2').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+    await settle(page);
+    await expectKit(menu, 'menu', 'menu-std-2');
     // Arrow keys move through the items; Enter runs the highlighted one and closes the menu.
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
@@ -155,7 +125,7 @@ test.describe('menu (live)', () => {
     await page.getByRole('button', { name: 'Options' }).click();
     const groups = page.getByRole('menu').getByRole('group');
     await expect(groups).toHaveCount(2);
-    const radius = (i: number) => groups.nth(i).evaluate((el) => getComputedStyle(el).borderTopLeftRadius);
+    const radius = (i: number) => computedStyle(groups.nth(i), 'border-top-left-radius');
     expect(await radius(0)).toBe('16px');
     await page.getByRole('menuitem').nth(1).hover();
     await page.getByRole('menuitem').nth(6).hover();
@@ -182,23 +152,9 @@ test.describe('menu (live)', () => {
 
 // ── Tabs: the live row against the kit, click / keyboard selection, the sprung indicator ─────
 test.describe('tabs (live)', () => {
-  const tb = JSON.parse(readFileSync(join(REFS_DIR, 'tabs/manifest.json'), 'utf8')) as Manifest;
-
   test('row matches the kit; click and keyboard select; the indicator follows the label', async ({ page }) => {
-    await page.goto('/fixture/tabs/live');
-    await page.evaluate(() => document.fonts.ready);
-    await page.mouse.move(0, 0);
-    const node = page.locator('[data-fixture-node]');
-    const v = tb.variants['tabs-fixed-primary-label-only']!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'tabs', 'tabs-fixed-primary-label-only.png'));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test.info().annotations.push({
-      type: 'parity',
-      description: `tabs-fixed-primary-label-only (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-    });
-    expect.soft(r.diffPixels, 'tabs-fixed-primary-label-only').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+    const node = await openFixture(page, '/fixture/tabs/live');
+    await expectKit(node, 'tabs', 'tabs-fixed-primary-label-only');
 
     const photos = page.getByRole('tab', { name: 'Photos' });
     await photos.click();
@@ -232,24 +188,10 @@ test.describe('tabs (live)', () => {
 
 // ── Navigation bar: the live bar against the kit, selection grows the pill, keyboard ─────────
 test.describe('navigation (live)', () => {
-  const nv = JSON.parse(readFileSync(join(REFS_DIR, 'navigation/manifest.json'), 'utf8')) as Manifest;
-
   test('bar matches the kit; click and keyboard move the selection; the pill grows in', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.goto('/fixture/navigation/live');
-    await page.evaluate(() => document.fonts.ready);
-    await page.mouse.move(0, 0);
-    const node = page.locator('[data-fixture-node]');
-    const v = nv.variants['nbar-v-4']!;
-    const ref: Buffer = readFileSync(join(REFS_DIR, 'navigation', 'nbar-v-4.png'));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
-      background: hexToRgb(v.background ?? '#FFFFFF'),
-    });
-    test.info().annotations.push({
-      type: 'parity',
-      description: `nbar-v-4 (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-    });
-    expect.soft(r.diffPixels, 'nbar-v-4').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+    await enableMotion(page);
+    const node = await openFixture(page, '/fixture/navigation/live');
+    await expectKit(node, 'navigation', 'nbar-v-4');
 
     const items = page.getByRole('navigation').getByRole('button');
     await expect(items).toHaveCount(4);
@@ -279,40 +221,30 @@ test.describe('navigation (live)', () => {
 
 // ── Top app bar: the medium bar against the kit, collapsing with the scroll (Compose) ────────
 test('app bar (live): medium bar matches the kit, collapses to 64px with the scroll', async ({ page }) => {
-  const ab = JSON.parse(readFileSync(join(REFS_DIR, 'app-bar/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/app-bar/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
+  await openFixture(page, '/fixture/app-bar/live');
   const header = page.locator('header');
-  const v = ab.variants['appbar-medium-flat']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'app-bar', 'appbar-medium-flat.png'));
-  const r = compareImages(ref, await captureRegion(page, header, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
-    background: hexToRgb(v.background ?? '#FFFFFF'),
-  });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `appbar-medium-flat (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
-  });
-  expect.soft(r.diffPixels, 'appbar-medium-flat').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  await expectKit(header, 'app-bar', 'appbar-medium-flat');
 
+  const scroller = page.locator('[data-scroll]');
   const height = () => header.evaluate((el) => el.getBoundingClientRect().height);
-  const bg = () => header.evaluate((el) => getComputedStyle(el).backgroundColor);
+  const bg = () => computedStyle(header, 'background-color');
+  const scrollTop = () => scroller.evaluate((el) => el.scrollTop);
+  const scrollTo = (top: number) => scroller.evaluate((el, top) => (el.scrollTop = top), top);
   expect(await height()).toBe(112);
   // A scroll that stops part-way snaps to the nearer end (Compose settleAppBar): under halfway it
   // opens again, from halfway on it collapses. (The interpolation itself: motion-nav.spec.ts.)
-  const scrollTop = () => page.locator('[data-scroll]').evaluate((el) => el.scrollTop);
-  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 12));
+  await scrollTo(12);
   await expect.poll(scrollTop).toBe(0);
   await expect.poll(height).toBe(112);
-  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 24));
+  await scrollTo(24);
   await expect.poll(scrollTop).toBe(48);
   await expect.poll(height).toBe(64);
   // Collapsed: 64px, Surface Container, the row title visible.
-  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 200));
+  await scrollTo(200);
   await expect.poll(height).toBe(64);
   await expect.poll(bg).toBe('rgb(243, 237, 247)');
   await expect(header.getByRole('heading', { name: 'Label' }).first()).toBeVisible();
   // Back to the top: expanded and flat again.
-  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 0));
+  await scrollTo(0);
   await expect.poll(height).toBe(112);
 });
