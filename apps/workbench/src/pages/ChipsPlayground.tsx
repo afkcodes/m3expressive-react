@@ -2,7 +2,6 @@ import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import {
   AssistChip,
-  ChipAvatarPlaceholder,
   ChipGroup,
   FilterChip,
   InputChip,
@@ -11,6 +10,7 @@ import {
   typescale,
   type ColorSchemeMode,
 } from '@m3x/react';
+import { ChipAvatarPlaceholder } from '@m3x/react/testing';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/chips/assets.json';
 
@@ -98,7 +98,7 @@ export function ChipsPlayground() {
               {l}
             </FilterChip>
           ))}
-          <FilterChip elevated={elevated} disabled={disabled} trailingIcon icon={<Taxi />}>
+          <FilterChip elevated={elevated} disabled={disabled} dropdown icon={<Taxi />}>
             Sort
           </FilterChip>
         </ChipGroup>

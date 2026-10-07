@@ -1,28 +1,29 @@
-import { forwardRef, useId, type ReactNode } from 'react';
+import { useId, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import { color } from '../../tokens/color.stylex.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { useSelected, type CommonProps, type SelectableProps } from './Chip.tsx';
+import { useSelected, type ChipToggleProps, type CommonProps, type SelectableProps } from './Chip.tsx';
 import { chipStyles as s, frameStyles } from './chipStyles.ts';
 import { ChipContent, Glyph, ICONS } from './ChipContent.tsx';
 
-export interface InputChipProps
-  extends
-    Omit<CommonProps, 'elevated'>,
-    SelectableProps,
-    Omit<
-      BaseToggle.Props,
-      'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'
-    > {
+/**
+ * Compound: a wrapper `<span>` holds the chip (a toggle `<button>`) and its remove button, which
+ * can't be nested in it. `ref`, native props and `sx` go to the chip button.
+ */
+export interface InputChipProps extends Omit<CommonProps, 'elevated'>, SelectableProps, ChipToggleProps {
   /** Leading avatar (24px). When selected the kit shows a check badge in its place. */
   avatar?: ReactNode;
-  /** Shows the trailing remove button. */
-  onRemove?: () => void;
-  /** Accessible name of the remove button. Default: "Remove" followed by the chip's label. */
-  removeLabel?: string;
+  /**
+   * Shows the trailing remove button, named "<labels.remove> <chip label>" (its `aria-label` is the
+   * verb, joined to the label with `aria-labelledby`).
+   */
+  onRemove?: MouseEventHandler<HTMLButtonElement>;
+  /** Overrides the built-in strings (`remove`). */
+  labels?: Partial<M3Labels>;
 }
 
 const avatarStyles = stylex.create({
@@ -30,7 +31,7 @@ const avatarStyles = stylex.create({
   check: { backgroundColor: color.onSecondaryContainer, fill: color.onSecondary },
 });
 
-/** The kit's generic avatar (person glyph on on-surface-variant). */
+/** Testing: the kit's generic avatar (person glyph on on-surface-variant), a design-time placeholder. */
 export function ChipAvatarPlaceholder() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.avatar, avatarStyles.placeholder)}>
@@ -44,24 +45,22 @@ export function ChipAvatarPlaceholder() {
   );
 }
 
-export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function InputChip(
-  {
-    icon,
-    avatar,
-    onRemove,
-    removeLabel,
-    dragged = false,
-    disabled = false,
-    selected: selectedProp,
-    defaultSelected,
-    onSelectedChange,
-    children,
-    sx,
-    ...rest
-  },
-  ref,
-) {
+export function InputChip({
+  icon,
+  avatar,
+  onRemove,
+  labels: labelOverrides,
+  dragged = false,
+  disabled = false,
+  selected: selectedProp,
+  defaultSelected,
+  onSelectedChange,
+  children,
+  sx,
+  ...rest
+}: InputChipProps) {
   const forced = useForcedState();
+  const labels = useLabels(labelOverrides);
   const [selected, setSelected] = useSelected({ selected: selectedProp, defaultSelected, onSelectedChange });
   const hasAvatar = avatar != null;
   const avatarNode = hasAvatar ? (
@@ -74,15 +73,14 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
     )
   ) : undefined;
   const trailing = onRemove != null;
-  // Default name "Remove <label>": the button's own aria-label (the verb), then the chip's label.
+  // Name "Remove <label>": the button's own aria-label (the verb), then the chip's label.
   const removeId = useId();
   const labelId = useId();
   return (
     <span {...stylex.props(s.inputWrap)}>
       <BaseToggle
-        ref={ref}
         pressed={selected}
-        onPressedChange={(next) => setSelected(next)}
+        onPressedChange={setSelected}
         disabled={disabled}
         {...rest}
         {...stylex.props(
@@ -118,8 +116,8 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
         <button
           type="button"
           id={removeId}
-          aria-label={removeLabel ?? 'Remove'}
-          aria-labelledby={removeLabel == null ? `${removeId} ${labelId}` : undefined}
+          aria-label={labels.remove}
+          aria-labelledby={`${removeId} ${labelId}`}
           disabled={disabled}
           onClick={onRemove}
           {...stylex.props(focusRing.host, s.remove)}
@@ -138,4 +136,4 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
       )}
     </span>
   );
-});
+}

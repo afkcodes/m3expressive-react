@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
+import type { SxProps } from '../../primitives/types.ts';
 
 /** Kit "Chip groups": chips 8px apart in one scrollable row or wrapping rows (16px apart). */
 const groupStyles = stylex.create({
@@ -9,12 +9,11 @@ const groupStyles = stylex.create({
   wrap: { flexWrap: 'wrap', rowGap: 16 },
 });
 
-export interface ChipGroupProps {
+/** The root is a `role="group"` `<div>`: name it with `aria-label` / `aria-labelledby`. */
+export interface ChipGroupProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** One scrollable row, or wrapping rows (kit "Chip groups"). */
   layout?: 'scroll' | 'wrap';
-  'aria-label'?: string;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 export function ChipGroup({ layout = 'wrap', children, sx, ...rest }: ChipGroupProps) {
