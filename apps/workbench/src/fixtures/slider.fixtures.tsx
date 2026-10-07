@@ -37,10 +37,32 @@ function LiveSliders() {
   );
 }
 
+/** Live (a11y): per-thumb names, value text from `valueLabel`, a reversed range value, a tick scale over the cap. */
+function LiveA11y() {
+  return (
+    <div style={{ display: 'grid', gap: 48, width: 342 }}>
+      <div data-slider="range">
+        <RangeSlider
+          defaultValue={[80, 20]}
+          getAriaLabel={(i) => (i === 0 ? 'Minimum price' : 'Maximum price')}
+          valueLabel={(v) => `$${v}`}
+        />
+      </div>
+      <div data-slider="single">
+        <Slider defaultValue={40} valueLabel={(v) => `${v}%`} aria-label="Opacity" />
+      </div>
+      <div data-slider="dense">
+        <Slider defaultValue={500} max={1000} ticks aria-label="Dense" />
+      </div>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'slider',
   variants: Object.fromEntries([
     ['live', { width: 354, height: 52, padding: 64, render: () => <LiveSliders /> } satisfies FixtureVariant],
+    ['live-a11y', { width: 342, height: 240, padding: 64, render: () => <LiveA11y /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [set, o, sz, st, val] = name.split('-') as [string, string, string, string, string];
       const [w, h] = v.size as [number, number];
