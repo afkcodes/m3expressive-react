@@ -58,7 +58,12 @@ export function useAppBarScrollEvents(
     if (exit) el.style.setProperty('overflow-anchor', 'none');
     let padded = 0;
     let settle: SpringAnimation | null = null;
+    /** The position the settle last wrote: a scroll elsewhere means another scroller took over. */
+    let written = 0;
     const update = () => {
+      // A programmatic scroll (scrollTo, focus, scrollIntoView) during the settle wins, as any scroll
+      // does in Compose (MutatorMutex); scrollTop rounds the settle's own writes to device pixels.
+      if (settle && Math.abs(el.scrollTop - written) > 1) takeOver();
       const top = Math.max(0, el.scrollTop);
       const collapsed = exit ? Math.min(range, top) : 0;
       if (exit && collapsed !== padded) {
@@ -77,7 +82,10 @@ export function useAppBarScrollEvents(
         from: el.scrollTop,
         to: fraction < 0.5 ? 0 : range,
         precision: SETTLE_PRECISION,
-        onUpdate: (value) => el.scrollTo({ top: value, behavior: 'instant' }),
+        onUpdate: (value) => {
+          written = value;
+          el.scrollTo({ top: value, behavior: 'instant' });
+        },
         onComplete: () => (settle = null),
       });
     };

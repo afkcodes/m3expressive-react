@@ -189,4 +189,21 @@ describe('useAppBarScrollEvents', () => {
     await t.unmount();
     expect(queue.size).toBe(0);
   });
+
+  it('a programmatic scroll during the settle takes over too', async () => {
+    const t = await mount('medium', { exitUntilCollapsed: true });
+    await t.scroll(30);
+    await t.end();
+    frame(0);
+    frame(16);
+    // The settle's own write comes back as a scroll event: it keeps running.
+    await t.scroll(t.top());
+    expect(queue.size).toBe(1);
+    // scrollTo / focus moved the scroller elsewhere: the settle stops and leaves it there.
+    await t.scroll(48);
+    expect(queue.size).toBe(0);
+    frame(32);
+    expect(t.top()).toBe(48);
+    await t.unmount();
+  });
 });
