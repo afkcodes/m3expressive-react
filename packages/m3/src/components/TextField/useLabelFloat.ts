@@ -24,9 +24,13 @@ function labelTransform(layoutFloated: boolean, p: number, outlined: boolean, la
   if (layoutFloated) {
     // Floated outlined labels sit in a 4px-padded notch box starting at labelLeft − 4.
     const pad = outlined ? NOTCH_PAD : 0;
-    const k = REST_SIZE / FLOAT_SIZE;
-    const q = 1 - p;
-    return { x: (-(labelLeft - pad) - pad * k) * q, y: dy * q, scale: 1 + (k - 1) * q };
+    const ratio = REST_SIZE / FLOAT_SIZE;
+    const remaining = 1 - p;
+    return {
+      x: (-(labelLeft - pad) - pad * ratio) * remaining,
+      y: dy * remaining,
+      scale: 1 + (ratio - 1) * remaining,
+    };
   }
   return { x: labelLeft * p, y: -dy * p, scale: 1 + (FLOAT_SIZE / REST_SIZE - 1) * p };
 }
@@ -75,10 +79,10 @@ export function useLabelFloat(floated: boolean, outlined: boolean, labelLeft: nu
     layout.current = { floated, outlined, labelLeft, width };
     const draw = (p: number) => {
       const current = layout.current;
-      const t = labelTransform(current.floated, p, current.outlined, current.labelLeft);
-      el.style.transform = `translate(${t.x}px, ${t.y}px) scale(${t.scale})`;
+      const transform = labelTransform(current.floated, p, current.outlined, current.labelLeft);
+      el.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`;
       if (!current.outlined) return;
-      const cut = p > 0 ? current.width * t.scale * p : 0;
+      const cut = p > 0 ? current.width * transform.scale * p : 0;
       for (const legend of legends) {
         legend.style.maxWidth = cut > 0 ? 'none' : '0.01px';
         legend.style.width = cut > 0 ? `${cut + 2 * NOTCH_PAD}px` : '';

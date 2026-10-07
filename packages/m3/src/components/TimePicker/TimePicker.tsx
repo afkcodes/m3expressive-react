@@ -246,11 +246,11 @@ export function TimeInput({
             label="Hour"
             value={hourText}
             max={is24Hour ? 23 : 12}
-            onValueChange={(t) => {
-              setHourText(t);
-              if (t !== '') {
-                const n = Number(t);
-                onChange({ hour: is24Hour ? n : (n % 12) + (pm ? 12 : 0), minute: value.minute });
+            onValueChange={(text) => {
+              setHourText(text);
+              if (text !== '') {
+                const hour = Number(text);
+                onChange({ hour: is24Hour ? hour : (hour % 12) + (pm ? 12 : 0), minute: value.minute });
               }
             }}
             onCommit={() => minuteRef.current?.focus()}
@@ -262,9 +262,9 @@ export function TimeInput({
               label="Minute"
               value={minuteText}
               max={59}
-              onValueChange={(t) => {
-                setMinuteText(t);
-                if (t !== '') onChange({ hour: value.hour, minute: Number(t) });
+              onValueChange={(text) => {
+                setMinuteText(text);
+                if (text !== '') onChange({ hour: value.hour, minute: Number(text) });
               }}
             />
           </ForceStateBoundary>

@@ -1,5 +1,7 @@
 /** Date helpers for the date pickers (local calendar dates; no time-of-day). */
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 export const sameDay = (a: Date | null | undefined, b: Date | null | undefined) =>
   !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
@@ -46,14 +48,15 @@ export function dayForKey(base: Date, key: string, firstDayOfWeek = 0, isDisable
   if (key === 'Home' || key === 'End') {
     const home = key === 'Home';
     const edge = home ? weekStart(base, firstDayOfWeek) : weekEnd(base, firstDayOfWeek);
-    const span = Math.round(Math.abs(base.getTime() - edge.getTime()) / 86400000);
+    // A day count (rounded: a DST change makes a day 23 or 25 hours long).
+    const span = Math.round(Math.abs(base.getTime() - edge.getTime()) / MS_PER_DAY);
     return firstEnabled(edge, home ? 1 : -1, isDisabled, span) ?? base;
   }
   if (key === 'PageUp' || key === 'PageDown') {
     const dir = key === 'PageUp' ? -1 : 1;
-    const y = base.getFullYear();
-    const m = base.getMonth() + dir;
-    return firstEnabled(makeDate(y, m, Math.min(base.getDate(), daysInMonth(y, m))), dir, isDisabled);
+    const year = base.getFullYear();
+    const month = base.getMonth() + dir;
+    return firstEnabled(makeDate(year, month, Math.min(base.getDate(), daysInMonth(year, month))), dir, isDisabled);
   }
   return null;
 }
@@ -95,12 +98,12 @@ const formats = new Map<string, Intl.DateTimeFormat>();
 /** One shared `Intl.DateTimeFormat` per locale and options (constructing one is expensive). */
 export function dateFormat(locale: string | undefined, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
   const key = `${locale ?? ''}|${JSON.stringify(options)}`;
-  let f = formats.get(key);
-  if (!f) {
-    f = new Intl.DateTimeFormat(locale, options);
-    formats.set(key, f);
+  let format = formats.get(key);
+  if (!format) {
+    format = new Intl.DateTimeFormat(locale, options);
+    formats.set(key, format);
   }
-  return f;
+  return format;
 }
 
 const INPUT_FORMAT: Intl.DateTimeFormatOptions = { month: 'numeric', day: 'numeric', year: 'numeric' };
@@ -166,13 +169,15 @@ export function inputFormatHint(locale?: string, upper = false): string {
 export function parseInputDate(text: string, locale?: string, yearRange?: [number, number]): Date | null {
   const parts = text.split(/[^0-9]+/).filter(Boolean);
   if (parts.length !== 3) return null;
-  const order = inputParts(locale).flatMap((p) => (p.type === 'literal' ? [] : [p.type]));
-  const v: Partial<Record<'month' | 'day' | 'year', string>> = {};
-  order.forEach((k, i) => (v[k] = parts[i]));
-  const { year: ys, month: ms, day: ds } = v;
-  if (!ys || !ms || !ds || ys.length !== 4 || ms.length > 2 || ds.length > 2) return null;
-  const [year, month, day] = [Number(ys), Number(ms), Number(ds)];
+  const order = inputParts(locale).flatMap((part) => (part.type === 'literal' ? [] : [part.type]));
+  const fields: Partial<Record<'month' | 'day' | 'year', string>> = {};
+  order.forEach((field, i) => (fields[field] = parts[i]));
+  const { year: yearText, month: monthText, day: dayText } = fields;
+  if (!yearText || !monthText || !dayText || yearText.length !== 4 || monthText.length > 2 || dayText.length > 2) {
+    return null;
+  }
+  const [year, month, day] = [Number(yearText), Number(monthText), Number(dayText)];
   if (yearRange && (year < yearRange[0] || year > yearRange[1])) return null;
-  const d = makeDate(year, month - 1, day);
-  return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day ? d : null;
+  const date = makeDate(year, month - 1, day);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day ? date : null;
 }
