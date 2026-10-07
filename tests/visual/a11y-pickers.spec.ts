@@ -6,6 +6,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { enableMotion, load } from './helpers/page.ts';
 import { countFrames } from './helpers/settle.ts';
+import { computedStyle } from './helpers/styles.ts';
 
 /** Re-render the churn fixture's parent (fresh Date / Time objects with the same values). */
 async function churn(page: Page, times = 3) {
@@ -401,7 +402,7 @@ test.describe('time picker keyboard and input', () => {
     await load(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
-    await expect.poll(() => dialog.evaluate((el) => getComputedStyle(el).scale)).toBe('1');
+    await expect.poll(() => computedStyle(dialog, 'scale')).toBe('1');
     // Count animation frames requested from now on.
     const frames = await countFrames(page);
     // Swing the hand half way round (a long spring), then close at once.
