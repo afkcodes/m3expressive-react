@@ -1472,8 +1472,8 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
   await expect
     .poll(() => dialog.evaluate((el) => [getComputedStyle(el).scale, getComputedStyle(el).opacity].join(' ')))
     .toBe('1 1');
-  // Same surface as the kit's basic dialog with icon (pixels: the static parity suite).
-  const surface = dialog.locator('> div');
+  // Same surface as the kit's basic dialog with icon (pixels: the static parity suite); the popup is the surface.
+  const surface = dialog;
   const v = dm.variants['basic-icon']!;
   const bb = (await surface.boundingBox())!;
   expect([bb.width, bb.height]).toEqual(v.size);
