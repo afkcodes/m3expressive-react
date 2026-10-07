@@ -1,4 +1,15 @@
-import { createContext, useContext, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  Children,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
@@ -245,7 +256,8 @@ export function Tab({ value, label, icon, badge, disabled = false, selected = fa
 
 /** Static tab styling context (render `<Tab>`s outside a live row). */
 export function TabScope({ variant = 'primary', children }: { variant?: TabsVariant; children: ReactNode }) {
-  return <TabsContext value={{ variant, scrollable: false, live: false }}>{children}</TabsContext>;
+  const ctx = useMemo(() => ({ variant, scrollable: false, live: false }), [variant]);
+  return <TabsContext value={ctx}>{children}</TabsContext>;
 }
 
 // ── Tabs (row) ────────────────────────────────────────────────────────────────────────────────
@@ -279,6 +291,7 @@ export function Tabs({
   // Tracks the active value (Base UI owns it when uncontrolled) to re-place the indicator.
   const [inner, setInner] = useState<unknown>(defaultValue);
   const current = value !== undefined ? value : inner;
+  const ctx = useMemo(() => ({ variant, scrollable, live: true }), [variant, scrollable]);
   return (
     <BaseTabs.Root
       {...(value !== undefined ? { value } : { defaultValue })}
@@ -288,7 +301,7 @@ export function Tabs({
       }}
       {...stylex.props(s.row, sx)}
     >
-      <TabsContext value={{ variant, scrollable, live: true }}>
+      <TabsContext value={ctx}>
         <TabList variant={variant} scrollable={scrollable} current={current} ariaLabel={ariaLabel}>
           {children}
         </TabList>
@@ -297,6 +310,18 @@ export function Tabs({
       {panels}
     </BaseTabs.Root>
   );
+}
+
+/** A frame of the sprung indicator over its StyleX geometry (null: back to the resting geometry). */
+function paintIndicator(node: HTMLElement | null, g: { x: number; w: number } | null) {
+  if (!node) return;
+  if (g) {
+    node.style.transform = `translateX(${g.x}px)`;
+    node.style.width = `${g.w}px`;
+  } else {
+    node.style.removeProperty('transform');
+    node.style.removeProperty('width');
+  }
 }
 
 function TabList({
@@ -313,38 +338,47 @@ function TabList({
   children: ReactNode;
 }) {
   const list = useRef<HTMLDivElement>(null);
+  const indicator = useRef<HTMLSpanElement>(null);
   const spring = useSpringToken('default-spatial');
   const reduced = useReducedMotion();
+  // The indicator's resting geometry (StyleX). While it springs, frames are written straight to
+  // the element (the same transform / width) instead of re-rendering the row every frame.
   const [geo, setGeo] = useState<{ x: number; w: number } | null>(null);
   const anims = useRef<{ x?: SpringAnimation; w?: SpringAnimation; scroll?: SpringAnimation }>({});
   const shown = useRef<{ x: number; w: number } | null>(null);
   // The value the row last scrolled for (Compose ScrollableTabData.selectedTab; unset at first).
   const scrolledFor = useRef<{ value: unknown } | null>(null);
+  const tabCount = Children.count(children);
 
-  useLayoutEffect(() => {
-    const el = list.current;
-    if (!el) return;
-    // Whole-pixel geometry (offsetLeft / offsetWidth), as the kit's indicators sit: the kit's hug
-    // text boxes are whole-pixel wide, so the label box lands on whole pixels too.
-    const measure = () => {
+  // Places the indicator on the active tab — sprung, or at once (first layout, resizes, reduced motion).
+  const place = useCallback(
+    (animate: boolean) => {
+      const el = list.current;
+      if (!el) return;
+      // Whole-pixel geometry (offsetLeft / offsetWidth), as the kit's indicators sit: the kit's hug
+      // text boxes are whole-pixel wide, so the label box lands on whole pixels too.
       const tab = el.querySelector<HTMLElement>('[data-active]');
-      if (!tab) return null;
-      if (variant === 'secondary') return { x: tab.offsetLeft, w: tab.offsetWidth };
-      const content = tab.querySelector<HTMLElement>('[data-tab-content]');
-      if (!content) return null;
-      return { x: tab.offsetLeft + content.offsetLeft + 2, w: content.offsetWidth - 4 };
-    };
-    const place = (animate: boolean) => {
-      const target = measure();
-      if (!target) return;
+      if (!tab) return;
+      let target: { x: number; w: number };
+      if (variant === 'secondary') target = { x: tab.offsetLeft, w: tab.offsetWidth };
+      else {
+        const content = tab.querySelector<HTMLElement>('[data-tab-content]');
+        if (!content) return;
+        target = { x: tab.offsetLeft + content.offsetLeft + 2, w: content.offsetWidth - 4 };
+      }
       const from = shown.current;
       if (!animate || !from || !spring || reduced) {
         anims.current.x?.stop();
         anims.current.w?.stop();
+        anims.current.x = anims.current.w = undefined;
         shown.current = target;
+        paintIndicator(indicator.current, null);
         setGeo(target);
         return;
       }
+      // The resting geometry moves to the target now; the frames cover it until both springs land.
+      paintIndicator(indicator.current, from);
+      setGeo(target);
       const run = (key: 'x' | 'w') => {
         const a = anims.current[key];
         if (a) a.retarget(target[key], spring);
@@ -356,14 +390,23 @@ function TabList({
             precision: 0.1,
             onUpdate: (v) => {
               shown.current = { ...(shown.current ?? target), [key]: v };
-              setGeo(shown.current);
+              paintIndicator(indicator.current, shown.current);
             },
-            onComplete: () => (anims.current[key] = undefined),
+            onComplete: () => {
+              anims.current[key] = undefined;
+              if (!anims.current.x && !anims.current.w) paintIndicator(indicator.current, null);
+            },
           });
       };
       run('x');
       run('w');
-    };
+    },
+    [variant, spring, reduced],
+  );
+
+  useLayoutEffect(() => {
+    const el = list.current;
+    if (!el) return;
     // Scrollable rows: centre the selected tab, clamped (ScrollableTabData.calculateTabOffset), once
     // per selection including the first layout. animateScrollTo cancels a running scroll and
     // starts again at zero velocity; Float visibility threshold 0.01.
@@ -399,10 +442,18 @@ function TabList({
         if (!cancelled) scrollToSelected();
       });
     } else scrollToSelected();
-    // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded. The
-    // observer's initial report isn't a resize: acting on it snapped every selection's indicator
-    // to its target one frame in.
-    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: no re-placement on resize
+    return () => {
+      cancelled = true;
+    };
+  }, [current, scrollable, place, spring, reduced]);
+
+  // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded. One
+  // observer for the row's lifetime (not one per selection); re-created when tabs come or go
+  // (`tabCount`: the tabs to observe). Its initial report isn't a resize: acting on it snapped a
+  // selection's indicator one frame in.
+  useLayoutEffect(() => {
+    const el = list.current;
+    if (!el || typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: no re-placement on resize
     let initial = true;
     const ro = new ResizeObserver(() => {
       if (initial) initial = false;
@@ -410,17 +461,25 @@ function TabList({
     });
     ro.observe(el);
     for (const tab of el.querySelectorAll('[role="tab"]')) ro.observe(tab);
+    return () => ro.disconnect();
+  }, [place, tabCount]);
+
+  // Unmount: no spring may keep writing to a detached row.
+  useEffect(() => {
+    const running = anims.current;
     return () => {
-      cancelled = true;
-      ro.disconnect();
+      running.x?.stop();
+      running.w?.stop();
+      running.scroll?.stop();
     };
-  }, [current, variant, scrollable, spring, reduced]);
+  }, []);
 
   return (
     <BaseTabs.List ref={list} aria-label={ariaLabel} {...stylex.props(s.list, scrollable && s.listScrollable)}>
       {children}
       {geo && (
         <span
+          ref={indicator}
           aria-hidden
           {...stylex.props(
             s.indicator,

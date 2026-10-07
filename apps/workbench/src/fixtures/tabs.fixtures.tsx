@@ -99,9 +99,31 @@ function LiveScrollTabs() {
   );
 }
 
+/** Live (cleanup): a scrollable row that the button unmounts, e.g. while its springs run. */
+function LiveUnmount() {
+  const [mounted, setMounted] = useState(true);
+  return (
+    <div style={{ width: 360 }}>
+      {mounted && (
+        <div data-animated>
+          <Tabs scrollable defaultValue={0} aria-label="Sections">
+            {Array.from({ length: 10 }, (_, i) => (
+              <Tab key={i} value={i} label={`Section ${i + 1}`} />
+            ))}
+          </Tabs>
+        </div>
+      )}
+      <button type="button" data-unmount onClick={() => setMounted(false)}>
+        Unmount
+      </button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'tabs',
   variants: Object.fromEntries([
+    ['live-unmount', { width: 360, height: 80, render: () => <LiveUnmount /> } satisfies FixtureVariant],
     ['live', { width: 360, height: 48, render: () => <LiveTabs /> } satisfies FixtureVariant],
     ['live-scroll', { width: 360, height: 48, render: () => <LiveScrollTabs /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
