@@ -9,6 +9,7 @@ import {
   ModalBottomSheet,
   ModalSideSheet,
   SideSheet,
+  Slider,
   typescale,
   type ColorSchemeMode,
 } from '@m3x/react';
@@ -155,6 +156,10 @@ export function SheetsPlayground() {
         >
           <ListItem>Date range</ListItem>
           <ListItem>Amount</ListItem>
+          {/* Content with its own drags (sliders, text fields, data-m3-no-drag) doesn't move the sheet. */}
+          <div style={{ paddingInline: 24, paddingBlock: 8 }}>
+            <Slider aria-label="Maximum amount" defaultValue={60} />
+          </div>
         </ModalSideSheet>
         <ModalBottomSheet open={modalBottom} onOpenChange={setModalBottom} aria-label="Share">
           {['Copy link', 'Email', 'Message', 'More options'].map((t) => (

@@ -1,4 +1,12 @@
-import { forwardRef, useId, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog } from '@base-ui/react/dialog';
@@ -6,6 +14,7 @@ import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
+import { isNoDragTarget } from './dragGuard.ts';
 import { scrim } from './scrim.ts';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
@@ -196,11 +205,17 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   const popup = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const settling = useRef<(() => void) | null>(null);
+  /** Ends the pointer gesture in progress (its window listeners); null when there is none. */
+  const gesture = useRef<(() => void) | null>(null);
   // Inward offset from Expanded (px, ≥ 0); the sheet's physical edge sets the sign.
   const offset = useRef(0);
+  // Settle callbacks outlive the render that created them.
+  const latest = useRef(onOpenChange);
+  useLayoutEffect(() => {
+    latest.current = onOpenChange;
+  });
 
-  const geometry = () => {
-    const el = popup.current!;
+  const geometry = (el: HTMLElement) => {
     const rtl = getComputedStyle(el).direction === 'rtl';
     const right = (side === 'end') !== rtl;
     const parentWidth = document.documentElement.clientWidth;
@@ -225,10 +240,22 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
     }
     showScrim(true);
   };
+  /** Drop the gesture and the settle: the window animation takes over from wherever the sheet is. */
+  const interrupt = () => {
+    gesture.current?.();
+    settling.current?.();
+    settling.current = null;
+    if (popup.current?.style.translate) {
+      popup.current.style.transition = '';
+      popup.current.style.translate = '';
+    }
+  };
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0 || !popup.current) return;
-    const g = geometry();
+    const el0 = popup.current;
+    if (e.button !== 0 || !el0 || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
+    gesture.current?.();
+    const g = geometry(el0);
     const tracker = new PointerVelocityTracker();
     tracker.down(e);
     const pointer = e.pointerId;
@@ -236,12 +263,11 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
     const y0 = e.clientY;
     let start = offset.current;
     let active = false;
-    const begin = () => {
+    const begin = (el: HTMLElement) => {
       active = true;
       settling.current?.();
       settling.current = null;
       // From wherever the sheet is (a show transition may still be running).
-      const el = popup.current!;
       const shift = el.getBoundingClientRect().left - el.offsetLeft;
       start = Math.min(g.range, Math.max(0, g.right ? shift : -shift));
       el.style.transition = 'none';
@@ -249,22 +275,26 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
     };
     const move = (ev: PointerEvent) => {
       if (ev.pointerId !== pointer) return;
+      // The sheet unmounted under the pointer (closed by a key or by its owner).
+      const el = popup.current;
+      if (!el) {
+        end();
+        return;
+      }
       tracker.move(ev);
       const dx = ev.clientX - x0;
       if (!active) {
         // ViewDragHelper.checkTouchSlop on the horizontal axis (vertical drags scroll the content).
         if (Math.abs(dx) <= TOUCH_SLOP || Math.abs(dx) <= Math.abs(ev.clientY - y0)) return;
-        begin();
+        begin(el);
       }
       // clampViewPositionHorizontal: between Expanded and fully off screen.
       place(Math.min(g.range, Math.max(0, start + (g.right ? dx : -dx))), g.right);
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== pointer) return;
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
-      if (!active) return;
+      end();
+      if (!active || !popup.current) return;
       tracker.up(ev);
       suppressNextClick();
       const { x: vx, y: vy } = tracker.velocity(MAX_FLING_VELOCITY);
@@ -273,7 +303,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       const to = hide ? g.range : 0;
       const finish = () => {
         settling.current = null;
-        if (hide) onOpenChange(false);
+        if (hide) latest.current(false);
         else reset();
       };
       const left = (inward: number) =>
@@ -290,24 +320,39 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
         onComplete: finish,
       });
     };
+    const end = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (gesture.current === end) gesture.current = null;
+    };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
+    gesture.current = end;
   };
+
+  // Closed by its owner mid-gesture or mid-settle: drop both and let the window animation take
+  // over. (A drag that dismissed the sheet has already settled off screen and stays there.)
+  useEffect(() => {
+    if (!open && (gesture.current || settling.current)) interrupt();
+  });
+  // Unmounted: nothing may run on (or call back from) a sheet that's gone.
+  useEffect(
+    () => () => {
+      gesture.current?.();
+      settling.current?.();
+      settling.current = null;
+    },
+    [],
+  );
 
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(next) => {
         // Escape / scrim: the window animation takes over from wherever a drag left the sheet.
-        if (!next) {
-          settling.current?.();
-          settling.current = null;
-          if (popup.current?.style.translate) {
-            popup.current.style.transition = '';
-            popup.current.style.translate = '';
-          }
-        }
+        if (!next) interrupt();
         onOpenChange(next);
       }}
     >
