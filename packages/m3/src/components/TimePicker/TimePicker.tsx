@@ -11,6 +11,9 @@ import { scrim } from '../Sheet/scrim.ts';
 import { dialogMotion } from '../Dialog/dialogMotion.ts';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
 import { ClockFace, PeriodSelector, TimeField, TimeSelector, TimeSeparator } from './parts.tsx';
+import { normalizeTime, type Time } from './time.ts';
+
+export type { Time } from './time.ts';
 
 /*
  * Figma kit, "Dial picker" (52949:27916) and "Keyboard picker" (52949:28053); Compose TimePicker /
@@ -81,12 +84,6 @@ const s = stylex.create({
   },
 });
 
-export interface Time {
-  /** 0–23 */
-  hour: number;
-  minute: number;
-}
-
 const pad = (n: number) => String(n).padStart(2, '0');
 const display12 = (h: number) => (h % 12 === 0 ? 12 : h % 12);
 
@@ -110,7 +107,7 @@ export interface TimePickerProps {
 
 /** The dial time picker (the dialog's content; see `ModalTimePicker`). */
 export function TimePicker({
-  value,
+  value: valueProp,
   onChange,
   is24Hour = false,
   orientation = 'vertical',
@@ -124,6 +121,7 @@ export function TimePicker({
   labels = {},
   sx,
 }: TimePickerProps) {
+  const value = normalizeTime(valueProp);
   const [innerSel, setInnerSel] = useState<'hour' | 'minute'>('hour');
   const sel = selProp ?? innerSel;
   const setSel = (v: 'hour' | 'minute') => {
@@ -226,7 +224,7 @@ export interface TimeInputProps extends Omit<
 
 /** The keyboard time picker (Compose TimeInput). */
 export function TimeInput({
-  value,
+  value: valueProp,
   onChange,
   is24Hour = false,
   title = 'Enter time',
@@ -237,6 +235,7 @@ export function TimeInput({
   autoFocus,
   sx,
 }: TimeInputProps) {
+  const value = normalizeTime(valueProp);
   const pm = value.hour >= 12;
   const [hourText, setHourText] = useState(pad(is24Hour ? value.hour : display12(value.hour)));
   const [minuteText, setMinuteText] = useState(pad(value.minute));
@@ -328,14 +327,18 @@ export interface ModalTimePickerProps extends Omit<TimePickerProps, 'onCancel' |
 /** The time picker dialog: dial ⇄ keyboard, OK commits, Cancel / Escape discard. */
 export function ModalTimePicker({ open, onOpenChange, value, onChange, ...picker }: ModalTimePickerProps) {
   const portal = usePortalContainer();
-  const [draft, setDraft] = useState<Time>(value);
+  const [draft, setDraft] = useState<Time>(() => normalizeTime(value));
   const [mode, setMode] = useState<'dial' | 'keyboard'>('dial');
-  useLayoutEffect(() => {
+  // Each opening starts from the confirmed time on the dial; a parent re-render while open keeps
+  // the time being picked.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) {
-      setDraft(value);
+      setDraft(normalizeTime(value));
       setMode('dial');
     }
-  }, [open, value]);
+  }
   const confirm = () => {
     onChange(draft);
     onOpenChange(false);

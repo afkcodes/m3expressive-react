@@ -17,6 +17,7 @@ import { useForcedState } from '../../testing/ForceState.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { pointerSlop } from '../../motion/gesture.ts';
+import { dialValue, dialValueText } from './time.ts';
 
 /*
  * Figma kit, "Date & time pickers" time building blocks (52949:28082; Compose TimePicker /
@@ -344,14 +345,26 @@ export function PeriodSelector({
 }: PeriodSelectorProps) {
   const forced = useForcedState();
   const h = orientation === 'horizontal';
+  const am = useRef<HTMLButtonElement>(null);
+  const pmRef = useRef<HTMLButtonElement>(null);
+  // A radio group: the checked half is the tab stop; any arrow checks and focuses the other half.
+  const onKey = (e: KeyboardEvent<HTMLButtonElement>, isPm: boolean) => {
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    e.preventDefault();
+    onChange(!isPm);
+    (isPm ? am : pmRef).current?.focus();
+  };
   const half = (isPm: boolean, text: string) => {
     const on = pm === isPm;
     return (
       <button
+        ref={isPm ? pmRef : am}
         type="button"
         role="radio"
         aria-checked={on}
+        tabIndex={on ? 0 : -1}
         onClick={() => onChange(isPm)}
+        onKeyDown={(e) => onKey(e, isPm)}
         {...stylex.props(
           s.half,
           isPm ? (h ? s.halfRuleStartH : s.halfRuleStart) : h ? s.halfRuleEndH : s.halfRuleEnd,
@@ -446,6 +459,8 @@ export interface ClockFaceProps {
   /** A tap / drag on the dial finished (Compose autoSwitchToMinute). */
   onCommit?: () => void;
   'aria-label'?: string;
+  /** The value as read out (default "7 o'clock" / "20 hours" / "30 minutes", as Compose). */
+  'aria-valuetext'?: string;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -453,12 +468,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
 /** The dial: tap or drag to pick; arrows step the value. */
 export function ClockFace({
   mode,
-  value,
+  value: valueProp,
   is24Hour = false,
   onChange,
   onCommit,
   'aria-label': ariaLabel,
+  'aria-valuetext': valueText,
 }: ClockFaceProps) {
+  // Out-of-range input lands on the nearest dial value (never off the kit's cells).
+  const value = dialValue(mode, valueProp, is24Hour);
   const face = useRef<HTMLDivElement>(null);
   const spring = useSpringToken('default-spatial');
   const inner = mode === 'hour' && is24Hour && (value === 0 || value > 12);
@@ -509,7 +527,13 @@ export function ClockFace({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target, spring]);
   const switchTimer = useRef<number | undefined>(undefined);
-  useEffect(() => () => window.clearTimeout(switchTimer.current), []);
+  useEffect(
+    () => () => {
+      window.clearTimeout(switchTimer.current);
+      anim.current?.stop();
+    },
+    [],
+  );
 
   const atRest = Math.abs(angle - target) % 360 < 0.05 && Number.isInteger(slot);
   const r = inner ? INNER_R : OUTER_R;
@@ -621,6 +645,7 @@ export function ClockFace({
       aria-valuemin={mode === 'minute' ? 0 : is24Hour ? 0 : 1}
       aria-valuemax={mode === 'minute' ? 59 : is24Hour ? 23 : 12}
       aria-valuenow={value}
+      aria-valuetext={valueText ?? dialValueText(mode, value, is24Hour)}
       onKeyDown={onKey}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
