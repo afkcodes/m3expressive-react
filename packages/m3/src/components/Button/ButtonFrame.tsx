@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
-import { base, containerSizes, disabled, gaps, iconSizes, labelRole, radii, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
+import { ButtonGroupContext, GROUP_BOX_ATTR } from '../ButtonGroup/context.ts';
+import { base, containerSizes, disabled, gaps, iconSizes, labelRole, PAD_INLINE, radii, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
 
 /** Inner structure shared by Button and ToggleButton: container → state layer → icon + label. */
 export function ButtonFrame({
@@ -28,8 +29,11 @@ export function ButtonFrame({
   icon?: ReactNode;
   children?: ReactNode;
 }) {
+  const { inGroup } = useContext(ButtonGroupContext);
   return (
     <span
+      // In a standard button group: the box the group widens on press; limit = end content padding.
+      {...(inGroup ? { [GROUP_BOX_ATTR]: PAD_INLINE[size] } : {})}
       {...stylex.props(
         base.container,
         containerSizes[size],

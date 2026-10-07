@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
@@ -7,6 +7,7 @@ import { state } from '../../tokens/state.stylex';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
+import { ButtonGroupContext, GROUP_BOX_ATTR } from '../ButtonGroup/context.ts';
 
 export type IconButtonWidth = 'narrow' | 'default' | 'wide';
 
@@ -140,8 +141,11 @@ export function IconButtonFrame({
   const w = widths[width];
   const rest = shape === 'round' ? `${Math.min(w, h) / 2}px` : `${SQUARE[size]}px`;
   const pressedR = `${PRESSED[size]}px`;
+  const { inGroup } = useContext(ButtonGroupContext);
   return (
     <span
+      // In a standard button group: Compose's default compression limit (ButtonDefaults.ContentPadding end, 24dp).
+      {...(inGroup ? { [GROUP_BOX_ATTR]: 24 } : {})}
       {...stylex.props(
         base.container,
         dims.box(w, h),

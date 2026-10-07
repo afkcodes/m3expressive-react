@@ -1,4 +1,17 @@
-import { Children, createContext, forwardRef, isValidElement, useContext, useState, type ReactNode } from 'react';
+import {
+  Children,
+  createContext,
+  forwardRef,
+  isValidElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
@@ -8,8 +21,11 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useSpringToken } from '../../motion/context.tsx';
+import type { SpringParams } from '../../motion/spring.ts';
 import { base, containerMotion, containerSizes, disabled, gaps, iconSizes, labelRole, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
-import { ButtonGroupContext } from './context.ts';
+import { ButtonGroupContext, GROUP_BOX_ATTR } from './context.ts';
 
 /*
  * Figma kit, Buttons page, "Standard button group" and "Connected button group" (+ segments).
@@ -136,13 +152,216 @@ export interface ButtonGroupProps {
 
 export function ButtonGroup({ size = 'small', children, sx, ...rest }: ButtonGroupProps) {
   const [gap, pad] = SPACING[size];
+  const ref = useRef<HTMLDivElement>(null);
+  const handlers = useEnlargeOnPress(ref, useSpringToken('fast-spatial'));
   return (
     <ButtonGroupContext value={{ inGroup: true }}>
-      <div role="group" {...rest} {...stylex.props(s.standard, dyn.spacing(gap, pad), sx)}>
+      <div ref={ref} role="group" {...rest} {...handlers} {...stylex.props(s.standard, dyn.spacing(gap, pad), sx)}>
         {children}
       </div>
     </ButtonGroupContext>
   );
+}
+
+/*
+ * Press to widen — Compose ButtonGroup (ButtonGroup.kt): every item tagged `animateWidth` owns a
+ * press progress (EnlargeOnPressNode) that springs 0 → 1 on FastSpatial while pressed; on
+ * release it waits until progress > 0.75 (at most 1 s), then springs back to 0. Each layout pass
+ * grows the pressed item at its neighbours' expense, so the group keeps its width:
+ *   middle item: each neighbour gives round(p · min(0.15 · w / 2, prevLimit, nextLimit));
+ *   first / last: the one neighbour gives round(p · min(0.15 · w, neighbourLimit));
+ * a neighbour never gives more than its width; limit = the neighbour's compression limit
+ * (GROUP_BOX_ATTR on its box). Widths are applied to each item's visual box; with no press in
+ * flight the boxes carry no inline width (the kit's rest layout).
+ */
+const EXPANDED_RATIO = 0.15; // ButtonGroupDefaults.ExpandedRatio
+const MAX_WAIT_MS = 1000; // MAX_WAIT_TIME_MILLIS
+
+interface PressState {
+  progress: number;
+  anim: SpringAnimation | null;
+  pressed: boolean;
+  wait: number;
+}
+
+function boxOf(item: Element): HTMLElement | null {
+  return item.matches(`[${GROUP_BOX_ATTR}]`) ? (item as HTMLElement) : item.querySelector<HTMLElement>(`[${GROUP_BOX_ATTR}]`);
+}
+
+function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: SpringParams | null) {
+  const states = useRef(new Map<Element, PressState>());
+  const base = useRef<number[] | null>(null);
+  const springRef = useRef(spring);
+  springRef.current = spring;
+  const keyItem = useRef<Element | null>(null);
+
+  const layout = () => {
+    const root = ref.current;
+    if (!root) return;
+    const items = Array.from(root.children);
+    const boxes = items.map(boxOf);
+    const progress = items.map((it) => states.current.get(it)?.progress ?? 0);
+    if (progress.every((p) => p === 0)) {
+      for (const b of boxes) b?.style.removeProperty('width');
+      base.current = null;
+      return;
+    }
+    // Natural widths, measured once per press session (no inline widths are set while base is null).
+    if (!base.current || base.current.length !== items.length) {
+      for (const b of boxes) b?.style.removeProperty('width');
+      base.current = items.map((it, i) => (boxes[i] ?? it).getBoundingClientRect().width);
+    }
+    const widths = base.current.slice();
+    const limits = boxes.map((b) => (b ? Number(b.getAttribute(GROUP_BOX_ATTR)) || 0 : 0));
+    const w = (i: number) => widths[i] ?? 0;
+    const lim = (i: number) => limits[i] ?? 0;
+    const n = widths.length;
+    if (n > 1) {
+      for (let i = 0; i < n; i++) {
+        const p = progress[i] ?? 0;
+        if (p === 0) continue;
+        let actual: number;
+        if (i >= 1 && i < n - 1) {
+          // Middle: both neighbours give way.
+          const growth = Math.round(p * Math.min((EXPANDED_RATIO * w(i)) / 2, lim(i - 1), lim(i + 1)));
+          const left = Math.min(growth, w(i - 1));
+          const right = Math.min(growth, w(i + 1));
+          widths[i - 1] = w(i - 1) - left;
+          widths[i + 1] = w(i + 1) - right;
+          actual = left + right;
+        } else if (i === 0) {
+          const growth = Math.round(p * Math.min(EXPANDED_RATIO * w(i), lim(i + 1)));
+          const right = Math.min(growth, w(i + 1));
+          widths[i + 1] = w(i + 1) - right;
+          actual = right;
+        } else {
+          const growth = Math.round(p * Math.min(EXPANDED_RATIO * w(i), lim(i - 1)));
+          const left = Math.min(growth, w(i - 1));
+          widths[i - 1] = w(i - 1) - left;
+          actual = left;
+        }
+        widths[i] = w(i) + actual;
+      }
+    }
+    boxes.forEach((b, i) => {
+      if (!b) return;
+      if (widths[i] === base.current![i]) b.style.removeProperty('width');
+      else b.style.width = `${widths[i]}px`;
+    });
+  };
+
+  const stateOf = (item: Element) => {
+    let st = states.current.get(item);
+    if (!st) states.current.set(item, (st = { progress: 0, anim: null, pressed: false, wait: 0 }));
+    return st;
+  };
+
+  const animate = (item: Element, st: PressState, to: number) => {
+    const sp = springRef.current;
+    if (!sp) {
+      st.anim?.stop();
+      st.anim = null;
+      st.progress = to;
+      layout();
+      return;
+    }
+    if (st.anim) {
+      // Still running (release while the press spring is in flight): keep its velocity.
+      st.anim.retarget(to);
+      return;
+    }
+    st.anim = animateSpring({
+      spring: sp,
+      from: st.progress,
+      to,
+      onUpdate: (v) => {
+        st.progress = v;
+        layout();
+      },
+      onComplete: () => {
+        st.anim = null;
+        if (st.progress === 0 && !st.pressed) states.current.delete(item);
+      },
+    });
+  };
+
+  const press = (item: Element) => {
+    const st = stateOf(item);
+    if (st.pressed) return;
+    st.pressed = true;
+    cancelAnimationFrame(st.wait);
+    if (st.anim && st.anim.target === 1) return;
+    // A press during the release spring cancels it (Compose resets the velocity) and starts afresh.
+    st.anim?.stop();
+    st.anim = null;
+    animate(item, st, 1);
+  };
+
+  const release = (item: Element) => {
+    const st = states.current.get(item);
+    if (!st?.pressed) return;
+    st.pressed = false;
+    const start = performance.now();
+    const check = (now: number) => {
+      if (st.pressed) return;
+      if (st.progress > 0.75 || now - start > MAX_WAIT_MS) animate(item, st, 0);
+      else st.wait = requestAnimationFrame(check);
+    };
+    st.wait = requestAnimationFrame(check);
+  };
+
+  useEffect(
+    () => () => {
+      for (const st of states.current.values()) {
+        st.anim?.stop();
+        cancelAnimationFrame(st.wait);
+      }
+    },
+    [],
+  );
+
+  const itemOf = (target: EventTarget | null): Element | null => {
+    const root = ref.current;
+    if (!root || !(target instanceof Node)) return null;
+    let node: Node | null = target;
+    while (node && node.parentNode !== root) node = node.parentNode;
+    if (!(node instanceof Element) || !boxOf(node)) return null;
+    if (node.matches(':disabled, [aria-disabled="true"], [data-disabled]')) return null;
+    return node;
+  };
+
+  return {
+    onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (e.button !== 0) return;
+      const item = itemOf(e.target);
+      if (!item) return;
+      press(item);
+      const up = () => {
+        release(item);
+        window.removeEventListener('pointerup', up);
+        window.removeEventListener('pointercancel', up);
+      };
+      window.addEventListener('pointerup', up);
+      window.addEventListener('pointercancel', up);
+    },
+    onKeyDown: (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if ((e.key !== ' ' && e.key !== 'Enter') || e.repeat) return;
+      const item = itemOf(e.target);
+      if (!item) return;
+      keyItem.current = item;
+      press(item);
+    },
+    onKeyUp: (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if ((e.key !== ' ' && e.key !== 'Enter') || !keyItem.current) return;
+      release(keyItem.current);
+      keyItem.current = null;
+    },
+    onBlur: () => {
+      if (!keyItem.current) return;
+      release(keyItem.current);
+      keyItem.current = null;
+    },
+  };
 }
 
 // ── Connected ─────────────────────────────────────────────────────────────────────────────────

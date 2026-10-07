@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 import {
+  Button,
   ButtonGroup,
   ConnectedButtonGroup,
   ConnectedButtonGroupItem,
@@ -33,6 +34,18 @@ const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s =
 const fixture: FixtureModule = {
   component: 'button-group',
   variants: Object.fromEntries([
+    [
+      'standard-live',
+      {
+        render: () => (
+          <ButtonGroup size="small" aria-label="Actions">
+            <Button variant="tonal">Archive</Button>
+            <Button variant="tonal">Move to folder</Button>
+            <Button variant="tonal">Delete</Button>
+          </ButtonGroup>
+        ),
+      },
+    ],
     [
       'connected-live',
       {
