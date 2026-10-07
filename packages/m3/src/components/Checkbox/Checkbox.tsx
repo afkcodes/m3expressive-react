@@ -1,6 +1,5 @@
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -11,6 +10,7 @@ import { Ripple } from '../../primitives/Ripple.tsx';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, Checkboxes page (set "Checkboxes", 6 types × 5 states):
@@ -155,25 +155,26 @@ const glyphFill = stylex.create({
   off: { fill: 'transparent' },
 });
 
-export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, 'className' | 'style' | 'render' | 'children'> {
+/**
+ * `ref` and the remaining props go to Base UI's root `<span role="checkbox">` (a hidden `<input>`
+ * beside it takes part in forms: `name`, `value`, `required`, `inputRef`).
+ */
+export interface CheckboxProps extends SxProps<Omit<BaseCheckbox.Root.Props, 'render' | 'nativeButton' | 'children'>> {
   /** Error styling (also sets aria-invalid). */
   error?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox(
-  {
-    checked: checkedProp,
-    defaultChecked = false,
-    onCheckedChange,
-    indeterminate = false,
-    disabled = false,
-    error = false,
-    sx,
-    ...rest
-  },
+export function Checkbox({
   ref,
-) {
+  checked: checkedProp,
+  defaultChecked = false,
+  onCheckedChange,
+  indeterminate = false,
+  disabled = false,
+  error = false,
+  sx,
+  ...rest
+}: CheckboxProps) {
   const [checked, setChecked] = useControllableState(checkedProp, defaultChecked, onCheckedChange);
   const forced = useForcedState();
   const on = checked || indeterminate;
@@ -257,4 +258,4 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
       </span>
     </BaseCheckbox.Root>
   );
-});
+}
