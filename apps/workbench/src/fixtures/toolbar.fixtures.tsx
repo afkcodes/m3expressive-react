@@ -211,10 +211,36 @@ function LiveToolbar() {
   );
 }
 
+/**
+ * Live (keyboard): a toolbar with a text field between its buttons, and the same toolbar in RTL;
+ * "Re-render" re-renders both (the roving tab stop must not rewrite unchanged tabindex values).
+ */
+function LiveToolbarInput() {
+  const [renders, setRenders] = useState(0);
+  const bar = (label: string) => (
+    <Toolbar aria-label={label}>
+      <Btn icon="share" label="Share" />
+      <input aria-label="Find" defaultValue="" style={{ width: 96, font: 'inherit' }} />
+      <Btn icon="comment" label="Comment" />
+      <Btn icon="download" label="Download" />
+    </Toolbar>
+  );
+  return (
+    <div style={{ display: 'grid', gap: 16, justifyItems: 'start', alignContent: 'start' }}>
+      {bar('Find tools')}
+      <div dir="rtl">{bar('RTL tools')}</div>
+      <button type="button" data-renders={renders} onClick={() => setRenders((n) => n + 1)}>
+        Re-render
+      </button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'toolbar',
   variants: Object.fromEntries([
     ['live', { width: 320, height: 120, render: () => <LiveToolbar /> } satisfies FixtureVariant],
+    ['live-input', { width: 360, height: 220, render: () => <LiveToolbarInput /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
