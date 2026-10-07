@@ -8,6 +8,9 @@ import { legacyLeading } from '../../primitives/textBox.ts';
 import { StandardIconTintContext } from '../IconButton/context.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { cubicBezier } from '../../motion/gesture.ts';
+import { useRovingTabStop } from '../Toolbar/roving.ts';
+import { onScrollEnd, onUserScroll } from './scrollEvents.ts';
 
 export type TopAppBarSize = 'small' | 'medium' | 'large';
 
@@ -184,33 +187,6 @@ export function AppBarTitle({ size = 'small', centered = false, children, subtit
   );
 }
 
-/** `scrollend`, or a 150ms pause in `scroll` events where the browser lacks it. */
-function onScrollEnd(el: HTMLElement, fn: () => void) {
-  if ('onscrollend' in window) {
-    el.addEventListener('scrollend', fn);
-    return () => el.removeEventListener('scrollend', fn);
-  }
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const onScroll = () => {
-    clearTimeout(timer);
-    timer = setTimeout(fn, 150);
-  };
-  el.addEventListener('scroll', onScroll, { passive: true });
-  return () => {
-    clearTimeout(timer);
-    el.removeEventListener('scroll', onScroll);
-  };
-}
-
-/** A user gesture on `el` takes over from a running settle. */
-function onUserScroll(el: HTMLElement, fn: () => void) {
-  const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
-  for (const e of events) el.addEventListener(e, fn, { passive: true });
-  return () => {
-    for (const e of events) el.removeEventListener(e, fn);
-  };
-}
-
 export interface AppBarScrollOptions {
   /**
    * Compose exitUntilCollapsedScrollBehavior (two-row bars): the scroll is consumed by the bar's
@@ -231,13 +207,13 @@ export function useAppBarScroll(
   const snapSpring = useSpringToken('default-effects');
   useEffect(() => {
     const el = target?.current;
-    if (!el) return;
+    if (!el) return undefined;
     const range = EXPANDED[size] - 64;
     const exit = exitUntilCollapsed && range > 0;
     const restore = { paddingTop: el.style.paddingTop, overflowAnchor: el.style.overflowAnchor };
     const basePadding = exit ? parseFloat(getComputedStyle(el).paddingTop) || 0 : 0;
     // Padding moves the content: scroll anchoring would fight it.
-    if (exit) el.style.overflowAnchor = 'none';
+    if (exit) el.style.setProperty('overflow-anchor', 'none');
     let padded = 0;
     let settle: SpringAnimation | null = null;
     const update = () => {
@@ -245,9 +221,15 @@ export function useAppBarScroll(
       const collapsed = exit ? Math.min(range, top) : 0;
       if (exit && collapsed !== padded) {
         padded = collapsed;
-        el.style.paddingTop = `${basePadding + collapsed}px`;
+        el.style.setProperty('padding-top', `${basePadding + collapsed}px`);
       }
-      setState({ overlapped: top > 0, fraction: range > 0 ? Math.min(1, top / range) : 0 });
+      const overlapped = top > 0;
+      const fraction = range > 0 ? Math.min(1, top / range) : 0;
+      // Most scroll events change neither (e.g. scrolling further once collapsed): keep the state
+      // object so React bails out of the render.
+      setState((prev) =>
+        prev.overlapped === overlapped && prev.fraction === fraction ? prev : { overlapped, fraction },
+      );
     };
     const snap = () => {
       if (!exit || settle) return;
@@ -278,8 +260,8 @@ export function useAppBarScroll(
       offEnd();
       offUser();
       if (exit) {
-        el.style.paddingTop = restore.paddingTop;
-        el.style.overflowAnchor = restore.overflowAnchor;
+        el.style.setProperty('padding-top', restore.paddingTop);
+        el.style.setProperty('overflow-anchor', restore.overflowAnchor);
       }
     };
   }, [target, size, exitUntilCollapsed, snapSpring]);
@@ -287,35 +269,9 @@ export function useAppBarScroll(
 }
 
 /** Compose FastOutLinearInEasing: cubic-bezier(0.4, 0, 1, 1). */
-function fastOutLinearIn(f: number) {
-  if (f <= 0) return 0;
-  if (f >= 1) return 1;
-  const x = (t: number) => 3 * 0.4 * t * (1 - t) ** 2 + 3 * t * t * (1 - t) + t ** 3;
-  const y = (t: number) => 3 * t * t * (1 - t) + t ** 3;
-  let lo = 0;
-  let hi = 1;
-  for (let i = 0; i < 30; i++) {
-    const mid = (lo + hi) / 2;
-    if (x(mid) < f) lo = mid;
-    else hi = mid;
-  }
-  return y((lo + hi) / 2);
-}
-
+const fastOutLinearIn = cubicBezier(0.4, 0, 1, 1);
 /** Compose TopTitleAlphaEasing: cubic-bezier(0.8, 0, 0.8, 0.15). */
-function topTitleAlpha(f: number) {
-  // Solve x(t) = f for the cubic, then return y(t).
-  const x = (t: number) => 3 * 0.8 * t * (1 - t) ** 2 + 3 * 0.8 * t * t * (1 - t) + t ** 3;
-  const y = (t: number) => 3 * 0.15 * t * t * (1 - t) + t ** 3;
-  let lo = 0;
-  let hi = 1;
-  for (let i = 0; i < 20; i++) {
-    const mid = (lo + hi) / 2;
-    if (x(mid) < f) lo = mid;
-    else hi = mid;
-  }
-  return y((lo + hi) / 2);
-}
+const topTitleAlpha = cubicBezier(0.8, 0, 0.8, 0.15);
 
 export interface TopAppBarProps {
   size?: TopAppBarSize;
@@ -441,6 +397,8 @@ export function TopAppBar({
 export interface BottomAppBarProps {
   /** Icon buttons, from the start. */
   actions?: ReactNode;
+  /** The toolbar's accessible name. */
+  'aria-label'?: string;
   /** A FAB at the end (use `Fab elevated={false}`: the kit's bottom-bar FAB has no shadow). */
   fab?: ReactNode;
   /**
@@ -464,7 +422,7 @@ function useBottomBarOffset(target: RefObject<HTMLElement | null> | undefined) {
   const spring = useSpringToken('fast-spatial');
   useEffect(() => {
     const el = target?.current;
-    if (!el) return;
+    if (!el) return undefined;
     const set = (v: number) => {
       offsetRef.current = Math.min(0, Math.max(-BOTTOM_HEIGHT, v));
       setOffset(offsetRef.current);
@@ -517,15 +475,33 @@ function useBottomBarOffset(target: RefObject<HTMLElement | null> | undefined) {
   return offset;
 }
 
-/** Baseline bottom app bar: 80px Surface Container, actions from the start, FAB at the end. */
-export function BottomAppBar({ actions, fab, scrollTarget, sx }: BottomAppBarProps) {
+/**
+ * Baseline bottom app bar: 80px Surface Container, actions from the start, FAB at the end. A
+ * toolbar: one tab stop, arrow keys move between its buttons. Hidden by the scroll, it leaves the
+ * tab order (inert) until it shows again.
+ */
+export function BottomAppBar({ actions, fab, scrollTarget, 'aria-label': ariaLabel, sx }: BottomAppBarProps) {
   const offset = useBottomBarOffset(scrollTarget);
+  const ref = useRef<HTMLDivElement>(null);
+  const { onFocus, onKeyDown } = useRovingTabStop(ref, false);
   const bar = (
-    <div role="toolbar" {...stylex.props(s.bottom, scrollTarget == null && sx)}>
+    <div
+      ref={ref}
+      role="toolbar"
+      aria-label={ariaLabel}
+      onFocus={onFocus}
+      onKeyDown={onKeyDown}
+      {...stylex.props(s.bottom, scrollTarget == null && sx)}
+    >
       {actions != null && <div {...stylex.props(s.bottomActions)}>{actions}</div>}
       {fab != null && <div {...stylex.props(s.bottomFab)}>{fab}</div>}
     </div>
   );
   if (scrollTarget == null) return bar;
-  return <div {...stylex.props(s.bottomClip(BOTTOM_HEIGHT + offset), sx)}>{bar}</div>;
+  const hidden = offset <= -BOTTOM_HEIGHT;
+  return (
+    <div inert={hidden || undefined} {...stylex.props(s.bottomClip(BOTTOM_HEIGHT + offset), sx)}>
+      {bar}
+    </div>
+  );
 }
