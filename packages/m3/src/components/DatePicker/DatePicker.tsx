@@ -8,6 +8,7 @@ import { usePortalContainer } from '../../theme/portal.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
 import { scrim } from '../Sheet/scrim.ts';
+import { dialogMotion } from '../Dialog/dialogMotion.ts';
 import { PickerMenuButton, YearChip } from './cells.tsx';
 import { CalendarMonth } from './CalendarMonth.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
@@ -93,11 +94,6 @@ const s = stylex.create({
     left: '50%',
     translate: '-50% -50%',
     outlineStyle: 'none',
-    opacity: { default: 1, ':is([data-starting-style], [data-ending-style])': 0 },
-    scale: { default: '1', ':is([data-starting-style])': '0.8' },
-    transitionProperty: 'opacity, scale',
-    transitionDuration: { default: '400ms', ':is([data-ending-style])': '150ms', '@media (prefers-reduced-motion: reduce)': '0ms' },
-    transitionTimingFunction: { default: 'cubic-bezier(0.05, 0.7, 0.1, 1)', ':is([data-ending-style])': 'cubic-bezier(0.3, 0, 0.8, 0.15)' },
   },
 });
 
@@ -299,7 +295,7 @@ export function ModalDatePicker({ open, onOpenChange, value, onChange, onClear, 
         <BaseDialog.Backdrop {...stylex.props(scrim.backdrop)} />
         <BaseDialog.Popup
           aria-label={typeof picker.supportingText === 'string' ? picker.supportingText : 'Select date'}
-          {...stylex.props(s.popup)}
+          {...stylex.props(s.popup, dialogMotion.fadeScale)}
         >
           {mode === 'picker' ? (
             <DatePicker

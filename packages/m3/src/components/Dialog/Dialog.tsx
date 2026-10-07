@@ -8,6 +8,7 @@ import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { InheritSurfaceContext } from '../List/surface.ts';
 import { scrim } from '../Sheet/scrim.ts';
+import { dialogMotion } from './dialogMotion.ts';
 
 /*
  * Figma kit, "Dialogs" page (Basic dialog 50723:10929, List dialog 52112:28937, Scrollable list
@@ -20,11 +21,8 @@ import { scrim } from '../Sheet/scrim.ts';
  * Motion: Compose dialogs use the platform window animation; Material Components' M3 dialog
  *   (MaterialAlertDialog.Material3.Animation → m3_motion_fade_enter / _exit) fades in while
  *   scaling 0.8 → 1 over medium4 (400ms) emphasized-decelerate, and fades out over short3
- *   (150ms) emphasized-accelerate.
+ *   (150ms) emphasized-accelerate — see ./dialogMotion.ts.
  */
-const EMPHASIZED_DECELERATE = 'cubic-bezier(0.05, 0.7, 0.1, 1)';
-const EMPHASIZED_ACCELERATE = 'cubic-bezier(0.3, 0, 0.8, 0.15)';
-const REDUCED = '@media (prefers-reduced-motion: reduce)';
 
 const s = stylex.create({
   surface: {
@@ -61,15 +59,6 @@ const s = stylex.create({
     left: '50%',
     translate: '-50% -50%',
     outlineStyle: 'none',
-    opacity: { default: 1, ':is([data-starting-style], [data-ending-style])': 0 },
-    scale: { default: '1', ':is([data-starting-style])': '0.8' },
-    transitionProperty: 'opacity, scale',
-    transitionDuration: {
-      default: '400ms',
-      ':is([data-ending-style])': '150ms',
-      [REDUCED]: '0ms',
-    },
-    transitionTimingFunction: { default: EMPHASIZED_DECELERATE, ':is([data-ending-style])': EMPHASIZED_ACCELERATE },
   },
 });
 
@@ -142,7 +131,7 @@ export function Dialog({ open, onOpenChange, role = 'dialog', ...surface }: Dial
           role={role}
           aria-labelledby={surface.headline != null ? `${id}-h` : undefined}
           aria-describedby={surface.supportingText != null ? `${id}-d` : undefined}
-          {...stylex.props(s.popup)}
+          {...stylex.props(s.popup, dialogMotion.fadeScale)}
         >
           <DialogSurface headlineId={`${id}-h`} descriptionId={`${id}-d`} {...surface} />
         </BaseDialog.Popup>
