@@ -476,3 +476,83 @@ test.describe('search', () => {
     await expect(node.getByRole('button', { name: 'Hinted search text' })).toBeFocused();
   });
 });
+
+test.describe('toolbar', () => {
+  test('scroll collapse: 40px down collapses, 40px back up from the turn expands (floatingToolbarVerticalNestedScroll)', async ({ page }) => {
+    await openFixture(page, '/demo/toolbar');
+    const scroller = page.getByText('Row 1 —').locator('xpath=..');
+    const collapsed = page.getByLabel('collapsed');
+    const scrollTo = async (y: number) => {
+      await scroller.evaluate((el, y) => (el.scrollTop = y), y);
+      await page.waitForTimeout(50);
+    };
+    await scrollTo(30);
+    await expect(collapsed).not.toBeChecked();
+    await scrollTo(45);
+    await expect(collapsed).toBeChecked();
+    await scrollTo(120); // keeps ratcheting the expand threshold
+    await scrollTo(90);
+    await expect(collapsed).toBeChecked();
+    await scrollTo(80);
+    await expect(collapsed).not.toBeChecked();
+    // Down again: 40px from the turn at 80.
+    await scrollTo(110);
+    await expect(collapsed).not.toBeChecked();
+    await scrollTo(121);
+    await expect(collapsed).toBeChecked();
+  });
+
+  test('exit always: the toolbar follows the scroll 1:1 and settles in / out at half way on default effects', async ({ page }) => {
+    await openFixture(page, '/demo/toolbar');
+    await page.getByLabel('on scroll').selectOption('exit');
+    const scroller = page.getByText('Row 1 —').locator('xpath=..');
+    const bar = page.getByRole('toolbar', { name: 'Text formatting' });
+    const ty = () => bar.evaluate((el) => el.getBoundingClientRect().top);
+    const rest = await ty();
+    // Out of the phone: its bottom edge minus the toolbar's top (64px bar, 16px from the edge).
+    const limit = Math.round((await scroller.locator('xpath=..').boundingBox())!.y + (await scroller.locator('xpath=..').boundingBox())!.height - rest);
+    expect(limit).toBe(80);
+    // 1:1 with the scroll, read in the same frame.
+    const moved = await scroller.evaluate(
+      (el) =>
+        new Promise<number>((resolve) => {
+          const bar = document.querySelector('[role="toolbar"]')!;
+          const before = bar.getBoundingClientRect().top;
+          el.addEventListener('scroll', () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)), { once: true });
+          el.scrollTop = 30;
+        }),
+    );
+    expect(Math.round(moved)).toBe(30);
+    // Under half way when the scroll ends: settles back in.
+    await expect.poll(async () => Math.round((await ty()) - rest)).toBe(0);
+    // Past half way: leaves completely.
+    await scroller.evaluate((el) => (el.scrollTop = 80));
+    await expect.poll(async () => Math.round((await ty()) - rest), { timeout: 3000 }).toBe(limit);
+    // Scrolling back up moves it back 1:1 (it settles out again when that scroll ends).
+    const back = await scroller.evaluate(
+      (el) =>
+        new Promise<number>((resolve) => {
+          const bar = document.querySelector('[role="toolbar"]')!;
+          const before = bar.getBoundingClientRect().top;
+          el.addEventListener('scroll', () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)), { once: true });
+          el.scrollTop = 70;
+        }),
+    );
+    expect(Math.round(back)).toBe(-10);
+  });
+
+  test('collapsing pins trailing content to its start, expanding to its end (Compose shrinkTowards / expandFrom)', async ({ page }) => {
+    await openFixture(page, '/demo/toolbar');
+    await page.getByLabel('FAB').uncheck();
+    const more = page.getByRole('button', { name: 'More' });
+    const clip = more.locator('xpath=..');
+    expect(await clip.evaluate((e) => getComputedStyle(e).justifyContent)).toBe('flex-end');
+    await page.getByLabel('collapsed').check();
+    expect(await clip.evaluate((e) => getComputedStyle(e).justifyContent)).toBe('normal');
+    // Mid-collapse the button keeps its place after the clip's start edge (its 4px gap).
+    await page.waitForTimeout(60);
+    const [b, c] = await Promise.all([more.boundingBox(), clip.boundingBox()]);
+    expect(c!.width).toBeLessThan(52);
+    expect(Math.abs(b!.x - c!.x - 4)).toBeLessThan(0.5);
+  });
+});

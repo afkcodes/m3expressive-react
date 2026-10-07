@@ -14,8 +14,15 @@ import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './con
  *   spaced between (Compose FlexibleHorizontalArrangement), no shape or shadow.
  *   Items are the regular icon buttons / toggles; the toolbar recolours them (context).
  * Motion (Compose FloatingToolbarDefaults.animationSpec = FastSpatial): collapsing shrinks the
- * leading / trailing content away (expandHorizontally / shrinkHorizontally); with a FAB the whole
- * toolbar shrinks into the 8px-spaced FAB, which grows from 56 to 80px (FabSizeRange).
+ * leading / trailing content away (expandHorizontally / shrinkHorizontally); horizontal leading
+ * content enters from the start and leaves towards the end, trailing content enters from the end
+ * and leaves towards the start; vertical leading content is anchored at the bottom, trailing at
+ * the top (FloatingToolbar.kt AnimatedVisibility specs). With a FAB the whole toolbar shrinks into
+ * the 8px-spaced FAB, which grows from 56 to 80px (FabSizeRange). Scroll-driven collapse:
+ * useFloatingToolbarNestedScroll / useFloatingToolbarExitAlways (./scrollBehavior.ts).
+ * Compose also balances the main content's padding when leading / trailing content hides
+ * (minimumInteractiveBalancedPadding); that needs items with asymmetric touch-target insets
+ * (alignment lines), which our items don't expose — for the kit's square 48px targets it adds 0.
  */
 const s = stylex.create({
   root: {
@@ -50,6 +57,9 @@ const s = stylex.create({
   collapsed: { gridTemplateColumns: '0fr' },
   collapsedVertical: { gridTemplateRows: '0fr' },
   clip: { display: 'flex', alignItems: 'center', columnGap: 4, rowGap: 4, minWidth: 0, minHeight: 0, overflow: 'hidden' },
+  // Which edge the content stays pinned to while the track resizes (Compose expandFrom /
+  // shrinkTowards): the overflowing content is clipped from the other side.
+  pinEnd: { justifyContent: 'flex-end' },
   // The 4px item gap travels with the collapsing content.
   leadGap: { paddingInlineEnd: 4 },
   trailGap: { paddingInlineStart: 4 },
@@ -170,22 +180,28 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     list[to]?.focus();
   };
 
-  const collapsible = (content: ReactNode, side: 'lead' | 'trail') => (
-    <div
-      inert={!expanded || undefined}
-      {...stylex.props(s.collapse, vertical && s.collapseVertical, !expanded && (vertical ? s.collapsedVertical : s.collapsed))}
-    >
+  const collapsible = (content: ReactNode, side: 'lead' | 'trail') => {
+    // Horizontal: leading expandFrom Start / shrinkTowards End, trailing End / Start.
+    // Vertical: leading Bottom / Bottom, trailing Top / Top.
+    const pinEnd = vertical ? side === 'lead' : side === 'lead' ? !expanded : expanded;
+    return (
       <div
-        {...stylex.props(
-          s.clip,
-          vertical && s.groupVertical,
-          side === 'lead' ? (vertical ? s.leadGapVertical : s.leadGap) : vertical ? s.trailGapVertical : s.trailGap,
-        )}
+        inert={!expanded || undefined}
+        {...stylex.props(s.collapse, vertical && s.collapseVertical, !expanded && (vertical ? s.collapsedVertical : s.collapsed))}
       >
-        {content}
+        <div
+          {...stylex.props(
+            s.clip,
+            vertical && s.groupVertical,
+            pinEnd && s.pinEnd,
+            side === 'lead' ? (vertical ? s.leadGapVertical : s.leadGap) : vertical ? s.trailGapVertical : s.trailGap,
+          )}
+        >
+          {content}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const bar = (
     <ToolbarColorContext value={tone}>
