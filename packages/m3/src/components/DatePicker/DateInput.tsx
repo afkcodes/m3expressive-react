@@ -8,6 +8,7 @@ import { IconButton } from '../IconButton/IconButton.tsx';
 import { TextField } from '../TextField/TextField.tsx';
 import { textFieldVars } from '../TextField/textField.stylex.ts';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
+import { SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { defaultFormatter, inputFormatHint, parseInputDate, type DatePickerFormatter } from './calendar.ts';
 
@@ -70,12 +71,6 @@ const s = stylex.create({
   },
 });
 
-const Glyph = ({ d }: { d: string }) => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ display: 'block' }}>
-    <path d={d} />
-  </svg>
-);
-
 export interface DateInputPanelProps {
   /** Start / end fields (a range). */
   range?: boolean;
@@ -124,10 +119,10 @@ export function DateInputPanel({
   autoFocus,
   sx,
 }: DateInputPanelProps) {
-  const f = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
+  const format = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
   const placeholder = placeholderProp ?? inputFormatHint(locale);
-  const [a, setA] = useState(value ? f.input(value) : '');
-  const [b, setB] = useState(end ? f.input(end) : '');
+  const [startText, setStartText] = useState(value ? format.input(value) : '');
+  const [endText, setEndText] = useState(end ? format.input(end) : '');
   const field = (
     text: string,
     set: (t: string) => void,
@@ -162,15 +157,15 @@ export function DateInputPanel({
             </p>
             {onModeToggle && (
               <IconButton aria-label={labels.mode ?? 'Switch to calendar'} width="wide" onClick={onModeToggle}>
-                <Glyph d={DATE_PICKER_ICONS.today} />
+                <SvgIcon d={DATE_PICKER_ICONS.today} />
               </IconButton>
             )}
           </div>
         </div>
       </ForceStateBoundary>
       <div data-dp-body="" {...stylex.props(s.fields)}>
-        {field(a, setA, onChange, label, range, autoFocus)}
-        {range && <ForceStateBoundary>{field(b, setB, onEndChange, endLabel, true)}</ForceStateBoundary>}
+        {field(startText, setStartText, onChange, label, range, autoFocus)}
+        {range && <ForceStateBoundary>{field(endText, setEndText, onEndChange, endLabel, true)}</ForceStateBoundary>}
       </div>
       <ForceStateBoundary>
         <div data-dp-actions="" {...stylex.props(s.actions)}>

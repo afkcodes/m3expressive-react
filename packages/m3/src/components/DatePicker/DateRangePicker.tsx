@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { usePortalContainer } from '../../theme/portal.tsx';
+import { ModalShell } from '../../primitives/ModalShell.tsx';
+import { ICON_PATHS, SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
 import { dialogMotion } from '../../primitives/dialogMotion.ts';
@@ -23,13 +23,6 @@ import { useToday } from './useToday.ts';
  *   Variant, 24px in, 16px down) over its weeks; the range draws Secondary Container bands
  *   between the Primary start / end days. Actions 60px under an Outline Variant rule.
  */
-const Glyph = ({ d }: { d: string }) => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ display: 'block' }}>
-    <path d={d} />
-  </svg>
-);
-const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
-
 const s = stylex.create({
   surface: {
     display: 'flex',
@@ -153,7 +146,7 @@ export function DateRangePicker({
   today: todayProp,
   firstDayOfWeek = 0,
   locale,
-  formatter: fmt,
+  formatter: formatterProp,
   supportingText = 'Select dates',
   placeholder = 'Start date – End date',
   onClose,
@@ -165,11 +158,13 @@ export function DateRangePicker({
   labels = {},
   sx,
 }: DateRangePickerProps) {
-  const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
+  const formatter = useMemo(() => ({ ...defaultFormatter(locale), ...formatterProp }), [locale, formatterProp]);
   const today = useToday(todayProp);
   const short = dateFormat(locale, { month: 'short', day: 'numeric' });
   const rangeText =
-    fmt?.range ?? ((r: DateRange) => (r.start ? `${short.format(r.start)} – ${r.end ? short.format(r.end) : ''}` : ''));
+    formatterProp?.range ??
+    ((range: DateRange) =>
+      range.start ? `${short.format(range.start)} – ${range.end ? short.format(range.end) : ''}` : '');
   // The list keeps its first month while days are picked (a new start doesn't shift the months).
   const [mountBase] = useState(() => value.start ?? today);
   const base = firstMonth ?? mountBase;
@@ -233,7 +228,7 @@ export function DateRangePicker({
         <div {...stylex.props(s.bar)}>
           {onClose ? (
             <IconButton aria-label={labels.close ?? 'Close'} onClick={onClose}>
-              <Glyph d={CLOSE} />
+              <SvgIcon d={ICON_PATHS.close} />
             </IconButton>
           ) : (
             <span />
@@ -253,7 +248,7 @@ export function DateRangePicker({
           </div>
           {onModeToggle && (
             <IconButton aria-label={labels.mode ?? 'Switch to text input'} onClick={onModeToggle}>
-              <Glyph d={DATE_PICKER_ICONS.edit} />
+              <SvgIcon d={DATE_PICKER_ICONS.edit} />
             </IconButton>
           )}
         </div>
@@ -261,19 +256,21 @@ export function DateRangePicker({
       <div aria-hidden {...stylex.props(s.weekdays)}>
         {Array.from({ length: 7 }, (_, i) => (
           <span key={i} {...stylex.props(s.weekday)}>
-            <span {...stylex.props(typescale.bodyLarge, textBox.hug)}>{f.weekdayNarrow(firstDayOfWeek + i)}</span>
+            <span {...stylex.props(typescale.bodyLarge, textBox.hug)}>
+              {formatter.weekdayNarrow(firstDayOfWeek + i)}
+            </span>
           </span>
         ))}
       </div>
       <div ref={scroller} {...stylex.props(s.months)}>
         {months.map((m) => (
           <section key={m.getTime()} data-month={`${m.getFullYear()}-${m.getMonth()}`}>
-            <h3 {...stylex.props(typescale.labelLarge, s.monthTitle)}>{f.monthYear(m)}</h3>
+            <h3 {...stylex.props(typescale.labelLarge, s.monthTitle)}>{formatter.monthYear(m)}</h3>
             <CalendarMonth
               month={m}
               range={rangeIn(m)}
               today={today}
-              formatter={f}
+              formatter={formatter}
               firstDayOfWeek={firstDayOfWeek}
               weekdays={false}
               onPick={pick}
@@ -327,7 +324,6 @@ export function ModalDateRangePicker({
   onClear,
   ...picker
 }: ModalDateRangePickerProps) {
-  const portal = usePortalContainer();
   const [draft, setDraft] = useState<DateRange>(value);
   // Each opening starts from the committed range; a parent re-render while open keeps the picks.
   const [wasOpen, setWasOpen] = useState(open);
@@ -340,24 +336,24 @@ export function ModalDateRangePicker({
     onOpenChange(false);
   };
   return (
-    <BaseDialog.Root open={open} onOpenChange={(next) => onOpenChange(next)}>
-      <BaseDialog.Portal container={portal}>
-        <BaseDialog.Popup
-          aria-label={typeof picker.supportingText === 'string' ? picker.supportingText : 'Select dates'}
-          {...stylex.props(s.popup, dialogMotion.fadeRise)}
-        >
-          <DateRangePicker
-            {...picker}
-            value={draft}
-            onChange={setDraft}
-            onClose={() => onOpenChange(false)}
-            onSave={commit}
-            onClear={onClear ?? (() => setDraft({ start: null, end: null }))}
-            onCancel={() => onOpenChange(false)}
-            onConfirm={commit}
-          />
-        </BaseDialog.Popup>
-      </BaseDialog.Portal>
-    </BaseDialog.Root>
+    // Full screen: the surface covers the page, no scrim.
+    <ModalShell
+      open={open}
+      onOpenChange={onOpenChange}
+      scrim={false}
+      aria-label={typeof picker.supportingText === 'string' ? picker.supportingText : 'Select dates'}
+      sx={[s.popup, dialogMotion.fadeRise]}
+    >
+      <DateRangePicker
+        {...picker}
+        value={draft}
+        onChange={setDraft}
+        onClose={() => onOpenChange(false)}
+        onSave={commit}
+        onClear={onClear ?? (() => setDraft({ start: null, end: null }))}
+        onCancel={() => onOpenChange(false)}
+        onConfirm={commit}
+      />
+    </ModalShell>
   );
 }
