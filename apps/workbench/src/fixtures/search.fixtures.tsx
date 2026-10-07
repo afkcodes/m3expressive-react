@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { searchViewVars } from '@m3x/react/components/Search/searchView.stylex';
@@ -98,11 +98,6 @@ function LiveSearch() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const bar = useRef<HTMLDivElement>(null);
-  const wasOpen = useRef(false);
-  useEffect(() => {
-    if (wasOpen.current && !open) bar.current?.querySelector<HTMLElement>('[data-search-trigger]')?.focus();
-    wasOpen.current = open;
-  }, [open]);
   const close = () => {
     setOpen(false);
     setQ('');
@@ -154,7 +149,10 @@ function LiveSearch() {
   );
 }
 
-/** Live: the full-screen view expanding from the bar (Compose contained search). */
+/**
+ * Live: the full-screen view expanding from the bar (Compose contained search). Controlled through
+ * `onOpenChange` (Escape); focus moves in and back by itself (no autoFocus).
+ */
 function LiveSearchFull() {
   const [open, setOpen] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -174,7 +172,7 @@ function LiveSearchFull() {
         expandedFrom={bar}
         value=""
         onValueChange={() => {}}
-        onDismiss={() => setOpen(false)}
+        onOpenChange={setOpen}
         placeholder="Hinted search text"
         sx={fx.fullOverlay}
         leading={
