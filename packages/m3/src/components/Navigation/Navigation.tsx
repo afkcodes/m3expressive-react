@@ -1,11 +1,12 @@
-import { Children, useMemo, type ReactNode } from 'react';
+import { Children, useMemo, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
-import { NavContext } from './context.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { NavContext, type NavigationItemLayout } from './context.ts';
 
 export type { NavigationItemLayout } from './context.ts';
-export { NavigationItem, NavigationScope } from './NavigationItem.tsx';
+export { NavigationItem } from './NavigationItem.tsx';
 export type { NavigationItemProps } from './NavigationItem.tsx';
 export { NavigationRail, NavigationRailSection } from './NavigationRail.tsx';
 export type { NavigationRailProps, NavigationRailSectionProps } from './NavigationRail.tsx';
@@ -47,38 +48,38 @@ const s = stylex.create({
 
 // ── Bar ───────────────────────────────────────────────────────────────────────────────────────
 
-export interface NavigationBarProps {
+/** `ref`, native props and `sx` go to the `<nav>`. */
+export interface NavigationBarProps extends SxProps<Omit<ComponentPropsWithRef<'nav'>, 'defaultValue'>> {
+  /** The selected destination (the `value` of a `NavigationItem`). */
   value?: unknown;
+  defaultValue?: unknown;
   onValueChange?: (value: unknown) => void;
-  /** 'vertical' (icon over label, compact windows) or 'horizontal' (icon + label in a row). */
-  itemLayout?: 'vertical' | 'horizontal';
+  /** Item layout: `vertical` (icon over label, compact windows) or `horizontal` (icon + label in a row). */
+  layout?: NavigationItemLayout;
   children: ReactNode;
-  'aria-label'?: string;
-  sx?: StyleXStyles;
 }
 
 /** Bottom navigation bar (Compose ShortNavigationBar): 64px, Surface Container. */
 export function NavigationBar({
   value,
+  defaultValue,
   onValueChange,
-  itemLayout = 'vertical',
+  layout = 'vertical',
   children,
-  'aria-label': ariaLabel,
   sx,
+  ...rest
 }: NavigationBarProps) {
+  const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange);
   // Rendered items only (conditional children leave false / null behind).
   const count = Children.toArray(children).length;
   // Kit: horizontal-item bars inset their items 160 / 120 / 80 / 40px for 3 / 4 / 5 / 6 items.
-  const inset = itemLayout === 'horizontal' ? Math.max(0, HORIZONTAL_INSET_BASE - HORIZONTAL_INSET_STEP * count) : 0;
+  const inset = layout === 'horizontal' ? Math.max(0, HORIZONTAL_INSET_BASE - HORIZONTAL_INSET_STEP * count) : 0;
   const ctx = useMemo(
-    () => ({ layout: itemLayout, value, onSelect: onValueChange, showLabels: true, fill: true }),
-    [itemLayout, value, onValueChange],
+    () => ({ layout, value: selected, onSelect: setSelected, showLabels: true, fill: true }),
+    [layout, selected, setSelected],
   );
   return (
-    <nav
-      aria-label={ariaLabel}
-      {...stylex.props(s.bar, itemLayout === 'horizontal' && [s.barHorizontal, s.barInset(inset)], sx)}
-    >
+    <nav {...rest} {...stylex.props(s.bar, layout === 'horizontal' && [s.barHorizontal, s.barInset(inset)], sx)}>
       <NavContext value={ctx}>{children}</NavContext>
     </nav>
   );

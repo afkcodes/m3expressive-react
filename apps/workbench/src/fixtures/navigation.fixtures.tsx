@@ -8,10 +8,8 @@ import {
   NavigationItem,
   NavigationRail,
   NavigationRailSection,
-  NavigationScope,
-  type NavigationItemLayout,
 } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { ForceState, NavigationScope, type ForcedState, type NavigationScopeProps } from '@m3x/react/testing';
 import manifest from '../../../../figma/navigation/manifest.json';
 import assets from '../../../../figma/navigation/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -44,12 +42,13 @@ function render(name: string): ReactNode {
   const p = name.split('-');
   if (p[0] === 'bar' || p[0] === 'rail') {
     // {bar|rail}-{v|h}-{state}-{badge}-{sel|unsel}[-{label|nolabel}]
-    const layout: NavigationItemLayout = p[1] === 'v' ? 'vertical' : p[0] === 'bar' ? 'horizontal' : 'rail-horizontal';
+    const layout: NavigationScopeProps['layout'] =
+      p[1] === 'v' ? 'vertical' : p[0] === 'bar' ? 'horizontal' : 'railHorizontal';
     const [state, badge, sel, label] = [p[2]!, p[3]!, p[4] === 'sel', p[5]];
     return (
       <NavigationScope layout={layout} showLabels={label !== 'nolabel'}>
-        <ForceState state={asForced(state)}>
-          {item(0, { selected: sel, badge: badgeFor(badge), badgeSize: badge === 'small' ? 'small' : 'large' })}
+        <ForceState state={asForced(state)} selected={sel}>
+          {item(0, { badge: badgeFor(badge), badgeSize: badge === 'small' ? 'small' : 'large' })}
         </ForceState>
       </NavigationScope>
     );
@@ -57,7 +56,7 @@ function render(name: string): ReactNode {
   const n = Number(p[p.length - 1]);
   if (p[0] === 'nbar') {
     return (
-      <NavigationBar itemLayout={p[1] === 'h' ? 'horizontal' : 'vertical'} value={0} aria-label="Primary">
+      <NavigationBar layout={p[1] === 'h' ? 'horizontal' : 'vertical'} value={0} aria-label="Primary">
         {Array.from({ length: n }, (_, i) => item(i))}
       </NavigationBar>
     );
@@ -82,7 +81,7 @@ function render(name: string): ReactNode {
   return (
     <NavigationRail
       expanded={expanded}
-      type={expanded && p[1] === 'floating' ? 'floating' : 'docked'}
+      layout={expanded && p[1] === 'floating' ? 'floating' : 'docked'}
       alignment={(expanded ? p[2] : p[1]) === 'middle' ? 'middle' : 'top'}
       value={0}
       header={header}

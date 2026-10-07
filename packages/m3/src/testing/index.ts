@@ -12,5 +12,7 @@ export type { SwipeActionsProps } from '../components/List/SwipeActions.tsx';
 export { swipeOffset } from '../components/List/swipeGeometry.ts';
 export { MenuScope } from '../components/Menu/Menu.tsx';
 export type { MenuScopeProps } from '../components/Menu/Menu.tsx';
+export { NavigationScope } from '../components/Navigation/NavigationItem.tsx';
+export type { NavigationScopeProps } from '../components/Navigation/NavigationItem.tsx';
 
 // — Selection, pickers, inputs, media

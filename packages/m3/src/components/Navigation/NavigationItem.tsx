@@ -1,6 +1,17 @@
-import { useContext, useMemo, type MouseEvent, type MouseEventHandler, type ReactNode, type RefObject } from 'react';
+import {
+  useContext,
+  useMemo,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
+  type MouseEvent,
+  type MouseEventHandler,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
@@ -9,7 +20,7 @@ import { interaction } from '../../primitives/state.stylex.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { visuallyHidden } from '../../primitives/visuallyHidden.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { NavContext, type NavigationItemLayout } from './context.ts';
+import { NavContext, type NavLayout } from './context.ts';
 import { useRailLabelMetrics, useRailMorphGeometry } from './useRailItemMorph.tsx';
 
 /* A navigation destination in its bar / rail layouts — kit geometry and motion in ./Navigation.tsx. */
@@ -142,7 +153,8 @@ const s = stylex.create({
   mRound: { borderRadius: 9999, isolation: 'isolate' },
 });
 
-interface NavigationItemBaseProps {
+interface NavigationItemOwnProps {
+  /** The value its bar / rail selects it by. */
   value: unknown;
   icon: ReactNode;
   /** Icon shown while selected (the kit swaps to the filled glyph). */
@@ -151,11 +163,19 @@ interface NavigationItemBaseProps {
   badge?: ReactNode;
   badgeSize?: 'small' | 'large';
   disabled?: boolean;
+  /** Makes the item a link (`<a>`); otherwise it is a `<button>`. */
   href?: string;
   onClick?: MouseEventHandler<HTMLElement>;
-  /** Static rendering (outside a bar / rail). */
-  selected?: boolean;
-  sx?: StyleXStyles;
+}
+
+/** Native props of the item, whichever element it renders (`<a>` with `href`, else `<button>`). */
+type ItemNativeProps = HTMLAttributes<HTMLElement> &
+  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel' | 'download' | 'hrefLang' | 'ping' | 'referrerPolicy'>;
+
+/** Native props, `ref` and `sx` go to the item's `<button>` (or `<a>`). */
+interface NavigationItemBaseProps
+  extends NavigationItemOwnProps, SxProps<Omit<ItemNativeProps, keyof NavigationItemOwnProps | 'aria-label'>> {
+  ref?: Ref<HTMLAnchorElement | HTMLButtonElement>;
 }
 
 /**
@@ -176,13 +196,15 @@ export function NavigationItem({
   disabled = false,
   href,
   onClick,
-  selected: selectedProp,
   sx,
   'aria-label': ariaLabel,
+  ref,
+  ...rest
 }: NavigationItemProps) {
   const ctx = useContext(NavContext);
   const forced = useForcedState();
-  const selected = selectedProp ?? (ctx.value !== undefined && ctx.value === value);
+  // A single item drawn outside a bar / rail (the kit's building blocks) takes its selection from ForceState.
+  const selected = forced.selected ?? (ctx.value !== undefined && ctx.value === value);
   const showLabel = label != null && (ctx.layout !== 'vertical' || ctx.showLabels);
   // Rail items: indicator from the start edge, label colour animated (bar items: neither).
   const rail = !ctx.fill;
@@ -193,6 +215,7 @@ export function NavigationItem({
     ctx.progress,
     metrics?.box ?? null,
   );
+  const itemRef = useMergedRefs<HTMLElement>(rootRef, ref);
   const iconEl = (
     <span {...stylex.props(s.icon, selected && s.iconSelected)}>
       {selected && selectedIcon != null ? selectedIcon : icon}
@@ -301,6 +324,7 @@ export function NavigationItem({
     );
   }
   const props = {
+    ...rest,
     ...stylex.props(
       rootStyles,
       rail && s.labelMotion,
@@ -319,28 +343,30 @@ export function NavigationItem({
   };
   if (href != null && !disabled) {
     return (
-      <a ref={rootRef as RefObject<HTMLAnchorElement | null>} href={href} {...props}>
+      <a ref={itemRef} href={href} {...props}>
         {body}
       </a>
     );
   }
   return (
-    <button ref={rootRef as RefObject<HTMLButtonElement | null>} type="button" disabled={disabled} {...props}>
+    <button ref={itemRef} type="button" disabled={disabled} {...props}>
       {body}
     </button>
   );
 }
 
-/** Static item styling context (items outside a bar / rail fill their flex container). */
-export function NavigationScope({
-  layout = 'vertical',
-  showLabels = true,
-  children,
-}: {
-  layout?: NavigationItemLayout;
+export interface NavigationScopeProps {
+  /** `railHorizontal`: an expanded rail's item. */
+  layout?: NavLayout;
   showLabels?: boolean;
   children: ReactNode;
-}) {
+}
+
+/**
+ * Item styling context without a bar or rail: items drawn on their own (the kit's building
+ * blocks) fill their flex container. Exported from `@m3x/react/testing`.
+ */
+export function NavigationScope({ layout = 'vertical', showLabels = true, children }: NavigationScopeProps) {
   const ctx = useMemo(() => ({ layout, value: undefined, showLabels, fill: true }), [layout, showLabels]);
   return <NavContext value={ctx}>{children}</NavContext>;
 }

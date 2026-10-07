@@ -1,7 +1,10 @@
 import { createContext } from 'react';
 
-/** How an item lays out: icon over label (bar / collapsed rail), or in a row (wide bar / expanded rail). */
-export type NavigationItemLayout = 'vertical' | 'horizontal' | 'rail-horizontal';
+/** How a bar's items lay out: icon over label (compact windows), or icon and label in a row. */
+export type NavigationItemLayout = 'vertical' | 'horizontal';
+
+/** An item's layout in its container: a bar's, or a rail's (collapsed: vertical; expanded: `railHorizontal`). */
+export type NavLayout = NavigationItemLayout | 'railHorizontal';
 
 /** A rail collapsing / expanding (see railMorph.ts). Changes only when the morph starts, flips or ends. */
 export interface RailMorph {
@@ -41,7 +44,7 @@ export function createRailProgress(initial: number): RailProgress & { set: (valu
 }
 
 export interface NavContextValue {
-  layout: NavigationItemLayout;
+  layout: NavLayout;
   value: unknown;
   onSelect?: (value: unknown) => void;
   /** Collapsed rail: show labels under icons (default true). */
