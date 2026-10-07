@@ -24,7 +24,7 @@ scripts/              gen-motion (springs → CSS), figma-pull (REST re-sync, op
 |---|---|
 | `pnpm dev` | workbench on http://localhost:5199 |
 | `pnpm test` | unit tests (spring physics, token sync) |
-| `pnpm test:visual` | Figma parity suite — diffs land in `tests/visual/__output__` |
+| `pnpm test:visual` | Figma parity + live interaction / motion / a11y suites — diffs land in `tests/visual/__output__` (`test:visual:parity`, `test:visual:live`: one half) |
 | `pnpm gen:motion` | regenerate CSS motion tokens from `motion/tokens.ts` |
 | `pnpm gen:tokens` | regenerate colour/type/shape/elevation tokens from `figma/_tokens/foundations.json` |
 | `pnpm figma:crop <component>` | cut per-variant refs out of whole-frame Figma exports |

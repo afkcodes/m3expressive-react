@@ -24,7 +24,7 @@ navigation drawer (out of scope).
 3. **0 drift pixels**, or a per-variant `allowedDiffPixels` + `allowedDiffReason` in the manifest
    that names the measured cause (never a vague "rendering differences").
 4. **Live behaviour verified** where the kit draws states: real hover / keyboard focus / held
-   press compared against the Figma state variants (`tests/visual/interaction.spec.ts`).
+   press compared against the Figma state variants (`tests/visual/interaction-*.spec.ts`).
 5. Light + dark render from tokens (no hardcoded colours); reduced motion respected.
 6. A playground page at `/demo/<component>` so the owner can try the real thing.
 7. README "kit deviations" table updated for any place we knowingly differ from the kit.
@@ -130,6 +130,12 @@ navigation drawer (out of scope).
   - Live motion tests: computed durations read back in seconds ("0.369s"); await `document.fonts.ready`
     before measuring text; dispatch velocity-dependent drags in-page at fixed intervals (CDP timing jitters)
     and avoid speeds right at a threshold (2px / 16ms is exactly 125px/s).
+  - Live-test helpers live in `tests/visual/helpers/`: `settle()` before reading an end state (waits for CSS /
+    WAAPI animations *and* rAF loops — springs here are rAF-driven; pass `springs: false` on pages with endless
+    motion), `recordFrames` / `sampleFrames` for per-frame reads (page-function factories, values via `arg`, no
+    string eval), `pointerDrag` / `touchDrag` for velocity-dependent drags, `openFixture` / `enableMotion`.
+    Keep a fixed `waitForTimeout` only where the timing itself is under test, with a one-line reason. A snap
+    spring that writes `scrollTop` must finish (`settle`) before the next programmatic scroll.
 
 ## 6. Interaction states
 - State layer = content colour at **8% hover · 10% focus · 10% pressed · 16% dragged**
@@ -336,7 +342,7 @@ navigation drawer (out of scope).
 |---|---|
 | `pnpm dev` | workbench http://localhost:5199 — `/compare/<c>`, `/fixture/<c>/<variant>`, `/demo/<c>` |
 | `pnpm test` | unit tests (springs, tokens sync, baseline, shapes port, morph) |
-| `pnpm test:visual` | Figma parity + live interaction suites (`-g <component>` to filter) |
+| `pnpm test:visual` | Figma parity + live suites (`-g <component>` to filter); `test:visual:parity` / `test:visual:live` run one half |
 | `npx playwright show-report` | per-variant diff / actual images |
 | `pnpm gen:tokens` · `gen:motion` · `gen:shapes` · `figma:crop <c>` | generators — never hand-edit outputs |
 | `python3 -I scripts/build-manifest.py figma/<c>/spec.json` | manifest from spec rows (export hygiene + exceptions) |
