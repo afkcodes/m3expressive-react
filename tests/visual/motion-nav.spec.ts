@@ -192,24 +192,48 @@ test.describe('list motion', () => {
   });
 });
 
-/** Sample `read(el)` every animation frame for `ms`, in-page (values with their time in ms). */
-async function sampleFrames<T>(el: Locator, read: string, ms: number): Promise<{ t: number; v: T }[]> {
+/**
+ * Sample `read(el)` every animation frame for `ms`, in-page (values with their time in ms). The
+ * optional `act(el)` runs right after the first sample (e.g. a click), so the motion starts in view.
+ */
+async function sampleFrames<T>(el: Locator, read: string, ms: number, act?: string): Promise<{ t: number; v: T }[]> {
   const frames = await el.evaluate(
     (node, o) =>
       new Promise<{ t: number; v: unknown }[]>((resolve) => {
         const fn = new Function('el', `return (${o.read})(el)`) as (e: Element) => unknown;
+        const action = o.act ? (new Function('el', `return (${o.act})(el)`) as (e: Element) => unknown) : null;
         const out: { t: number; v: unknown }[] = [];
         const t0 = performance.now();
         const tick = (now: number) => {
           out.push({ t: now - t0, v: fn(node) });
+          if (out.length === 1) action?.(node);
           if (now - t0 < o.ms) requestAnimationFrame(tick);
           else resolve(out);
         };
         requestAnimationFrame(tick);
       }),
-    { read, ms },
+    { read, ms, act },
   );
   return frames as { t: number; v: T }[];
+}
+
+/**
+ * Frames sampled from a value springing `from` → `to` (starting at rest) follow `stepSpring`: the
+ * start time is fitted (it falls between two frames), then every moving frame must sit within 2%
+ * of the travel (+1px rounding) of the spring.
+ */
+function expectSpring(frames: { t: number; v: number }[], from: number, to: number, spring: { dampingRatio: number; stiffness: number }) {
+  const start = frames.findIndex((f) => Math.abs(f.v - from) > 0.5);
+  expect(start, 'the value moves').toBeGreaterThan(0);
+  const moving = frames.slice(start, start + 20);
+  const lo = frames[start - 1]!.t;
+  const hi = frames[start]!.t;
+  let best = { err: Infinity, t0: lo };
+  for (let t0 = lo - 20; t0 <= hi; t0 += 0.25) {
+    const err = Math.max(...moving.map((f) => Math.abs(f.v - stepSpring(spring, { value: from, velocity: 0 }, to, f.t - t0).value)));
+    if (err < best.err) best = { err, t0 };
+  }
+  expect(best.err, `max deviation from the spring (start fitted at ${best.t0.toFixed(1)}ms)`).toBeLessThan(Math.abs(to - from) * 0.02 + 1);
 }
 
 // ── Menu ──────────────────────────────────────────────────────────────────────────────────────
@@ -289,6 +313,48 @@ test.describe('menu motion', () => {
     await expect(item).toHaveAttribute('aria-checked', 'false');
     await page.waitForTimeout(SETTLE);
     expect(await box()).toEqual({ w: 0, o: 0 });
+  });
+});
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────────────────────
+test.describe('tabs motion', () => {
+  /** ScrollableTabData.calculateTabOffset for the selected tab. */
+  const centredOffset = (list: Locator) =>
+    list.evaluate((el) => {
+      const tab = el.querySelector<HTMLElement>('[data-active]')!;
+      const visible = el.clientWidth;
+      const centred = tab.offsetLeft - (Math.trunc(visible / 2) - Math.trunc(tab.offsetWidth / 2));
+      return Math.min(Math.max(0, el.scrollWidth - visible), Math.max(0, centred));
+    });
+
+  test('scrollable row centres the selected tab on the default spatial spring, also on first layout', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/fixture/tabs/live-scroll');
+    const list = page.getByRole('tablist');
+    // First layout: Compose animates to the selected tab (not a jump, not left at 0).
+    const first = await sampleFrames<number>(list, '(el) => el.scrollLeft', 700);
+    const target0 = await centredOffset(list);
+    expect(target0).toBeGreaterThan(0);
+    expect(first.some((f) => f.v > 0 && f.v < target0 - 1), 'animated').toBe(true);
+    expect(first.at(-1)!.v).toBeCloseTo(target0, 0);
+    // Both edge paddings are scrollable (layoutWidth = 2 × 52 + tabs).
+    const ends = await list.evaluate((el) => {
+      const last = el.querySelector<HTMLElement>('[role=tab]:last-of-type')!;
+      return el.scrollWidth - (last.offsetLeft + last.offsetWidth);
+    });
+    expect(ends).toBe(52);
+    // A new selection: sampled scroll follows a default-spatial spring from rest.
+    const from = target0;
+    const frames = await sampleFrames<number>(list, '(el) => el.scrollLeft', 700, `(el) => [...el.querySelectorAll('[role=tab]')][6].click()`);
+    await expect(page.getByRole('tab', { name: 'Section 7' })).toHaveAttribute('aria-selected', 'true');
+    const to = await centredOffset(list);
+    expect(to).not.toBe(from);
+    expectSpring(frames, from, to, motionSchemes.expressive['default-spatial']);
+    expect(frames.at(-1)!.v).toBeCloseTo(to, 0);
+    // The last tab: clamped to the end.
+    await page.getByRole('tab', { name: 'Section 10' }).click();
+    await page.waitForTimeout(SETTLE);
+    expect(await list.evaluate((el) => el.scrollWidth - el.clientWidth - el.scrollLeft)).toBeLessThanOrEqual(1);
   });
 });
 

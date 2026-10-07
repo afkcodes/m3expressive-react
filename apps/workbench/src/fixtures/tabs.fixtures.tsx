@@ -75,10 +75,24 @@ function LiveTabs() {
   );
 }
 
+/** Live (motion): a scrollable row of ten tabs that starts on the fifth (centred on first layout). */
+function LiveScrollTabs() {
+  return (
+    <div style={{ width: 360 }}>
+      <Tabs scrollable defaultValue={4} aria-label="Sections">
+        {Array.from({ length: 10 }, (_, i) => (
+          <Tab key={i} value={i} label={`Section ${i + 1}`} />
+        ))}
+      </Tabs>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'tabs',
   variants: Object.fromEntries([
     ['live', { width: 360, height: 48, render: () => <LiveTabs /> } satisfies FixtureVariant],
+    ['live-scroll', { width: 360, height: 48, render: () => <LiveScrollTabs /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex', flexDirection: 'column' }}>{render(name)}</div> }];
