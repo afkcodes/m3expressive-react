@@ -1,12 +1,12 @@
 import {
   Children,
   createContext,
-  forwardRef,
   isValidElement,
   useContext,
   useMemo,
   useState,
   type ReactNode,
+  type Ref,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
@@ -20,6 +20,7 @@ import { useControllableState } from '../../hooks/useControllableState.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 
 export type SegmentedButtonDensity = 0 | -1 | -2 | -3;
@@ -166,17 +167,18 @@ const SegmentedContext = createContext<SegmentedContextValue | null>(null);
 /** The item's position in its group (a number, so the provider value is stable). */
 const SegmentedIndexContext = createContext(0);
 
-export interface SegmentedButtonProps {
+/** The root is Base UI's ToggleGroup `<div>` (`role="group"`): name it with `aria-label`. */
+export interface SegmentedButtonProps extends SxProps<
+  Omit<BaseToggleGroup.Props, 'render' | 'children' | 'value' | 'defaultValue' | 'onValueChange'>
+> {
   density?: SegmentedButtonDensity;
   value?: readonly string[];
   defaultValue?: readonly string[];
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: string[], details: BaseToggleGroup.ChangeEventDetails) => void;
   /** Allow several segments to be selected. */
   multiple?: boolean;
   disabled?: boolean;
-  'aria-label'?: string;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 export function SegmentedButton({
@@ -209,9 +211,9 @@ export function SegmentedButton({
       value={selected}
       multiple={multiple}
       disabled={disabled}
-      onValueChange={(next: string[]) => {
+      onValueChange={(next: string[], details) => {
         setSelected(next);
-        onValueChange?.(next);
+        onValueChange?.(next, details);
       }}
       {...rest}
       {...stylex.props(s.group, sx)}
@@ -221,40 +223,36 @@ export function SegmentedButton({
   );
 }
 
-export interface SegmentedButtonItemProps extends Omit<
-  BaseToggle.Props,
-  'className' | 'style' | 'render' | 'children' | 'value'
-> {
+/**
+ * A segment of a `SegmentedButton`, which sets its density, position and selection. Outside a
+ * group it is a plain toggle (`pressed` / `defaultPressed` / `onPressedChange`) at density 0.
+ */
+export interface SegmentedButtonItemProps extends SxProps<Omit<BaseToggle.Props, 'render' | 'children' | 'value'>> {
+  ref?: Ref<HTMLButtonElement>;
   value: string;
   /** 18px icon (use currentColor). */
   icon?: ReactNode;
   children?: ReactNode;
-  /** Standalone use (building blocks): position in a row, selection, density. */
-  position?: 'start' | 'middle' | 'end' | 'only';
-  selected?: boolean;
-  density?: SegmentedButtonDensity;
-  sx?: StyleXStyles;
 }
 
-export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButtonItemProps>(function SegmentedButtonItem(
-  {
-    value,
-    icon,
-    children,
-    position: positionProp = 'only',
-    selected: selectedProp = false,
-    density: densityProp = 0,
-    disabled,
-    sx,
-    ...rest
-  },
-  ref,
-) {
+export function SegmentedButtonItem({
+  value,
+  icon,
+  children,
+  disabled,
+  pressed,
+  defaultPressed = false,
+  onPressedChange,
+  sx,
+  ...rest
+}: SegmentedButtonItemProps) {
   const group = useContext(SegmentedContext);
   const index = useContext(SegmentedIndexContext);
   const forced = useForcedState();
-  const density = group?.density ?? densityProp;
-  const isSelected = group ? group.selected.includes(value) : selectedProp;
+  const density = group?.density ?? 0;
+  const [ownPressed, setOwnPressed] = useControllableState(pressed, defaultPressed, onPressedChange);
+  // Outside a group (the kit's building blocks): position and selection can come from ForceState.
+  const isSelected = group ? group.selected.includes(value) : (forced.selected ?? ownPressed);
   const position = group
     ? group.count === 1
       ? 'only'
@@ -263,7 +261,7 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
         : index === group.count - 1
           ? 'end'
           : 'middle'
-    : positionProp;
+    : (forced.position ?? 'only');
   const isDisabled = !!disabled || !!group?.disabled;
   const box = SEGMENT_HEIGHT + DENSITY_STEP * density;
   const full = `${box / 2}px`;
@@ -288,10 +286,9 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
 
   return (
     <BaseToggle
-      ref={ref}
       value={value}
       disabled={isDisabled}
-      {...(group ? {} : { pressed: isSelected })}
+      {...(group ? { onPressedChange } : { pressed: isSelected, onPressedChange: setOwnPressed })}
       {...rest}
       {...stylex.props(
         s.root,
@@ -333,7 +330,7 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
       </span>
     </BaseToggle>
   );
-});
+}
 
 function CheckIcon({ sx }: { sx?: StyleXStyles }) {
   return (

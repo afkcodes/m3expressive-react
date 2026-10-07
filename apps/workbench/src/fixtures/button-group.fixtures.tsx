@@ -10,7 +10,7 @@ import {
   type ButtonShape,
   type ButtonSize,
 } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { ConnectedButtonGroupScope, ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/button-group/manifest.json';
 import assets from '../../../../figma/button-group/assets.json';
 import toggleAssets from '../../../../figma/toggle-button/assets.json';
@@ -161,19 +161,19 @@ const fixture: FixtureModule = {
           assets.segRipple[{ xsmall: 'xs', small: 's', medium: 'm', large: 'l', xlarge: 'xl' }[size] as 'xs'][sel];
         const width = state === 'disabled' && sel === 'unselected' ? DISABLED_W[size] : undefined;
         render = () => (
-          <ForceState state={asForced(state)} ripplePath={ripple}>
-            <ConnectedButtonGroupItem
-              value="a"
-              size={size}
-              selected={sel === 'selected'}
-              icon={stars}
-              selectedIcon={starsFilled}
-              disabled={state === 'disabled'}
-              sx={width ? w.px(width) : undefined}
-            >
-              Label
-            </ConnectedButtonGroupItem>
-          </ForceState>
+          <ConnectedButtonGroupScope size={size}>
+            <ForceState state={asForced(state)} ripplePath={ripple} selected={sel === 'selected'}>
+              <ConnectedButtonGroupItem
+                value="a"
+                icon={stars}
+                selectedIcon={starsFilled}
+                disabled={state === 'disabled'}
+                sx={width ? w.px(width) : undefined}
+              >
+                Label
+              </ConnectedButtonGroupItem>
+            </ForceState>
+          </ConnectedButtonGroupScope>
         );
       }
       return [name, { node: v.node, render }];

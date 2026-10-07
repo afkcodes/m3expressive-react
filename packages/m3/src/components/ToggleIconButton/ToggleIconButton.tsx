@@ -1,10 +1,10 @@
-import { forwardRef, useContext, type ReactNode } from 'react';
+import { useContext, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import { color } from '../../tokens/color.stylex.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import { needsTouchTarget, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
@@ -59,10 +59,11 @@ const selectedColors = stylex.create({
   standard: { backgroundColor: 'transparent', color: color.primary },
 });
 
-export interface ToggleIconButtonProps extends Omit<
-  BaseToggle.Props,
-  'className' | 'style' | 'render' | 'children' | 'aria-label'
-> {
+/**
+ * Selection is Base UI Toggle's `pressed` / `defaultPressed` / `onPressedChange(pressed, details)`.
+ */
+export interface ToggleIconButtonProps extends SxProps<Omit<BaseToggle.Props, 'render' | 'children' | 'aria-label'>> {
+  ref?: Ref<HTMLButtonElement>;
   /** Accessible name — required, the button has no visible text. */
   'aria-label': string;
   variant?: IconButtonVariant;
@@ -74,26 +75,22 @@ export interface ToggleIconButtonProps extends Omit<
   children: ReactNode;
   /** Icon when selected (e.g. the filled version). Defaults to `children`. */
   selectedIcon?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonProps>(function ToggleIconButton(
-  {
-    variant = 'standard',
-    size = 'small',
-    width = 'default',
-    shape = 'round',
-    pressed,
-    defaultPressed = false,
-    onPressedChange,
-    disabled = false,
-    children,
-    selectedIcon,
-    sx,
-    ...rest
-  },
-  ref,
-) {
+export function ToggleIconButton({
+  variant = 'standard',
+  size = 'small',
+  width = 'default',
+  shape = 'round',
+  pressed,
+  defaultPressed = false,
+  onPressedChange,
+  disabled = false,
+  children,
+  selectedIcon,
+  sx,
+  ...rest
+}: ToggleIconButtonProps) {
   const [selected, setSelected] = useControllableState(pressed, defaultPressed, onPressedChange);
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
@@ -105,7 +102,6 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
 
   return (
     <BaseToggle
-      ref={ref}
       pressed={selected}
       onPressedChange={setSelected}
       disabled={disabled}
@@ -143,4 +139,4 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
       </IconButtonFrame>
     </BaseToggle>
   );
-});
+}

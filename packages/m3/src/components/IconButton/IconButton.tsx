@@ -1,9 +1,9 @@
-import { forwardRef, useContext, type ReactNode } from 'react';
+import { useContext, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
 import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import { StandardIconTintContext } from './context.ts';
@@ -25,25 +25,29 @@ const variants = stylex.create({
   standardVibrant: { color: color.onPrimaryContainer },
 });
 
-export interface IconButtonProps extends Omit<
-  BaseButton.Props,
-  'className' | 'style' | 'render' | 'children' | 'aria-label'
-> {
+export interface IconButtonProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children' | 'aria-label'>> {
+  ref?: Ref<HTMLButtonElement>;
   /** Accessible name — required, the button has no visible text. */
   'aria-label': string;
   variant?: IconButtonVariant;
   size?: ButtonSize;
+  /** Container width (M3 "narrow" / "default" / "wide"), at the size's height. */
   width?: IconButtonWidth;
   shape?: ButtonShape;
   /** The icon (use currentColor); sized by the button: 20/24/24/32/40px. */
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function IconButton(
-  { variant = 'standard', size = 'small', width = 'default', shape = 'round', disabled = false, children, sx, ...rest },
-  ref,
-) {
+export function IconButton({
+  variant = 'standard',
+  size = 'small',
+  width = 'default',
+  shape = 'round',
+  disabled = false,
+  children,
+  sx,
+  ...rest
+}: IconButtonProps) {
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
   const tint = useContext(StandardIconTintContext);
@@ -52,7 +56,6 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
 
   return (
     <BaseButton
-      ref={ref}
       disabled={disabled}
       data-ripple-host=""
       {...rest}
@@ -75,7 +78,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
         ringForced={!!forced.focusRing}
         container={[
           variants[variant],
-          variant === 'standard' && tint === 'on-surface' && variants.standardOnSurface,
+          variant === 'standard' && tint === 'onSurface' && variants.standardOnSurface,
           variant === 'standard' && toolbar === 'vibrant' && variants.standardVibrant,
           variant === 'outlined' && iconButtonBase.stroke,
           variant === 'outlined' && iconStrokeWidth(size),
@@ -86,4 +89,4 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
       </IconButtonFrame>
     </BaseButton>
   );
-});
+}

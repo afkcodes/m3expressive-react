@@ -75,7 +75,7 @@ const fixture: FixtureModule = {
                 <SplitButtonLeading icon={<StarsFilled />}>Label</SplitButtonLeading>
               </ForceState>
               <ForceState state={asForced(trail)} ripplePath={assets.ripple.trailing[size]}>
-                <SplitButtonTrailing aria-label="More options" expanded={trail === 'selected'} />
+                <SplitButtonTrailing aria-label="More options" open={trail === 'selected'} />
               </ForceState>
             </SplitButton>
           ),

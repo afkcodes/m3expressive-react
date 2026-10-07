@@ -121,11 +121,9 @@ const fixture: FixtureModule = {
         {
           node: v.node,
           render: () => (
-            <ForceState state={asForced(state)}>
+            <ForceState state={asForced(state)} position={position} selected={sel === 'selected'}>
               <SegmentedButtonItem
                 value="a"
-                position={position}
-                selected={sel === 'selected'}
                 disabled={state === 'disabled'}
                 icon={cfg !== 'label' ? <Stars /> : undefined}
                 sx={w.px(108)}

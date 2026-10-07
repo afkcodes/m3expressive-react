@@ -306,7 +306,7 @@ export function TopAppBar({
           {navigationIcon != null && (
             <span {...stylex.props(s.slot)}>
               {/* The navigation icon is On Surface; actions keep On Surface Variant. */}
-              <StandardIconTintContext value="on-surface">{navigationIcon}</StandardIconTintContext>
+              <StandardIconTintContext value="onSurface">{navigationIcon}</StandardIconTintContext>
             </span>
           )}
           {search != null ? (
@@ -350,7 +350,7 @@ export function TopAppBar({
         {navigationIcon != null && (
           <span {...stylex.props(s.slot)}>
             {/* The navigation icon is On Surface; actions keep On Surface Variant. */}
-            <StandardIconTintContext value="on-surface">{navigationIcon}</StandardIconTintContext>
+            <StandardIconTintContext value="onSurface">{navigationIcon}</StandardIconTintContext>
           </span>
         )}
         <span ref={rowTitle} {...stylex.props(s.centre, s.fade(frame.rowTitleAlpha))} aria-hidden={fraction < 0.5}>

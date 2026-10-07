@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, type ComponentPropsWithRef, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -6,6 +6,7 @@ import { useControllableState } from '../../hooks/useControllableState.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState, type ForceStateValue } from '../../testing/ForceState.tsx';
 import { ButtonContent } from '../Button/ButtonContent.tsx';
 import { buttonBase, buttonDisabled, sizes, type ButtonSize } from '../Button/buttonStyles.ts';
@@ -35,21 +36,28 @@ interface SplitContextValue {
 }
 const SplitContext = createContext<SplitContextValue>({ variant: 'filled', size: 'small', disabled: false });
 
-export interface SplitButtonProps {
+/** The root is a `role="group"` `<div>`: name it with `aria-label` / `aria-labelledby`. */
+export interface SplitButtonProps extends SxProps<ComponentPropsWithRef<'div'>> {
   variant?: SplitButtonVariant;
   size?: ButtonSize;
   /** Disables both buttons. */
   disabled?: boolean;
   /** <SplitButtonLeading/> then <SplitButtonTrailing/>. */
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export function SplitButton({ variant = 'filled', size = 'small', disabled = false, children, sx }: SplitButtonProps) {
+export function SplitButton({
+  variant = 'filled',
+  size = 'small',
+  disabled = false,
+  children,
+  sx,
+  ...rest
+}: SplitButtonProps) {
   const ctx = useMemo(() => ({ variant, size, disabled }), [variant, size, disabled]);
   return (
     <SplitContext value={ctx}>
-      <div role="group" {...stylex.props(s.group, sx)}>
+      <div role="group" {...rest} {...stylex.props(s.group, sx)}>
         {children}
       </div>
     </SplitContext>
@@ -76,20 +84,15 @@ function rootStyles(size: ButtonSize, disabled: boolean, forced: ForceStateValue
   ];
 }
 
-export interface SplitButtonLeadingProps extends Omit<
-  BaseButton.Props,
-  'className' | 'style' | 'render' | 'children' | 'disabled'
-> {
+/** `disabled` comes from the `SplitButton`. */
+export interface SplitButtonLeadingProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children' | 'disabled'>> {
+  ref?: Ref<HTMLButtonElement>;
   /** Leading icon (use currentColor), sized 20/20/24/32/40px. */
   icon?: ReactNode;
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadingProps>(function SplitButtonLeading(
-  { icon, children, sx, ...rest },
-  ref,
-) {
+export function SplitButtonLeading({ icon, children, sx, ...rest }: SplitButtonLeadingProps) {
   const { variant, size, disabled, forced } = usePart();
   const outer = `${HEIGHT[size] / 2}px`;
   const [restRadius, activeRadius] = INNER_RADII[size].map((radius) => `${radius}px`) as [string, string];
@@ -105,7 +108,6 @@ export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadi
   const [padStart, padEnd] = LEADING_PAD[size];
   return (
     <BaseButton
-      ref={ref}
       disabled={disabled}
       data-ripple-host=""
       {...rest}
@@ -134,40 +136,44 @@ export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadi
       </span>
     </BaseButton>
   );
-});
+}
 
-export interface SplitButtonTrailingProps extends Omit<
-  BaseButton.Props,
-  'className' | 'style' | 'render' | 'children' | 'disabled' | 'aria-label'
+/** `disabled` comes from the `SplitButton`. */
+export interface SplitButtonTrailingProps extends SxProps<
+  Omit<BaseButton.Props, 'render' | 'children' | 'disabled' | 'aria-label'>
 > {
+  ref?: Ref<HTMLButtonElement>;
   /** Accessible name — required (e.g. "More options"). */
   'aria-label': string;
   /**
-   * Menu open ("Selected" in the kit). Controlled. As the trigger of a `<Menu>` (or a Base UI menu)
-   * the button follows the menu's own state and announces it (aria-haspopup / aria-expanded);
-   * standalone it toggles on click and announces only aria-expanded.
+   * Menu open ("Selected" in the kit). As the trigger of a `<Menu>` (or a Base UI menu) the button
+   * follows the menu's own state and announces it (aria-haspopup / aria-expanded); standalone it
+   * toggles on click and announces only aria-expanded.
    */
-  expanded?: boolean;
-  defaultExpanded?: boolean;
+  open?: boolean;
+  defaultOpen?: boolean;
   /** Standalone toggling (a menu trigger reports through the menu's `onOpenChange`). */
-  onExpandedChange?: (expanded: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
   /** Replaces the chevron. */
   icon?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrailingProps>(function SplitButtonTrailing(
-  { expanded: expandedProp, defaultExpanded = false, onExpandedChange, icon, onClick, sx, ...rest },
-  ref,
-) {
+export function SplitButtonTrailing({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  icon,
+  onClick,
+  sx,
+  ...rest
+}: SplitButtonTrailingProps) {
   const { variant, size, disabled, forced } = usePart();
-  const [ownExpanded, setOwnExpanded] = useControllableState(expandedProp, defaultExpanded, onExpandedChange);
+  const [ownOpen, setOwnOpen] = useControllableState(openProp, defaultOpen, onOpenChange);
   // A menu trigger (Base UI passes aria-haspopup / aria-expanded with the popup's state) shows the
   // menu's real state; standalone, the button keeps its own.
   const popupExpanded = rest['aria-expanded'];
   const isTrigger = rest['aria-haspopup'] != null && popupExpanded != null;
-  const expanded =
-    expandedProp === undefined && isTrigger ? popupExpanded === true || popupExpanded === 'true' : ownExpanded;
+  const expanded = openProp === undefined && isTrigger ? popupExpanded === true || popupExpanded === 'true' : ownOpen;
   const outer = `${HEIGHT[size] / 2}px`;
   const [restRadius, activeRadius] = INNER_RADII[size].map((radius) => `${radius}px`) as [string, string];
   const pressedForced = forced.state === 'pressed';
@@ -180,14 +186,13 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
   const centre = expanded || pressedForced;
   return (
     <BaseButton
-      ref={ref}
       disabled={disabled}
       aria-expanded={expanded}
       data-ripple-host=""
       onClick={(e) => {
         onClick?.(e);
         if (isTrigger) return;
-        setOwnExpanded(!expanded);
+        setOwnOpen(!expanded);
       }}
       {...rest}
       {...stylex.props(...rootStyles(size, disabled, forced, sx), expanded && !disabled && stateLayerHost.forceFocus)}
@@ -228,4 +233,4 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
       </span>
     </BaseButton>
   );
-});
+}
