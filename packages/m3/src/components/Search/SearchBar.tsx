@@ -6,7 +6,7 @@ import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { forcedStateLayer, StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { ForceStateBoundary, useForcedState } from '../../testing/ForceState.tsx';
 
@@ -142,9 +142,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(function Sea
         s.bar,
         // The expanded input bar is a text field: no state layer (Compose InputField).
         !input && s.triggerHost,
-        !input && forced.state === 'hovered' && stateLayerHost.forceHover,
-        !input && forced.state === 'pressed' && stateLayerHost.forceHover,
-        !input && forced.state === 'focused' && stateLayerHost.forceFocus,
+        !input && forcedStateLayer(forced.state, 'hover'),
         sx,
       )}
     >
