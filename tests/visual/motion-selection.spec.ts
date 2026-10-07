@@ -4,32 +4,26 @@
  * checks. Transitions are inspected through the Web Animations API (paused at fixed times and
  * compared with the spring maths) rather than by sampling wall-clock frames.
  */
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { REFS_DIR, type Manifest } from './manifest.ts';
 import { stepSpring, type SpringParams } from '../../packages/m3/src/motion/spring.ts';
 import { motionSchemes } from '../../packages/m3/src/motion/tokens.ts';
+import { kitVariant } from './helpers/kit.ts';
+import { enableMotion, openFixture } from './helpers/page.ts';
+import { settle } from './helpers/settle.ts';
+import { computedStyle, transitionOf as transitionOfLocator } from './helpers/styles.ts';
 
 const spring = motionSchemes.expressive;
 /** Value of a 0 → 1 spring after `ms`. */
 const progress = (p: SpringParams, ms: number) => stepSpring(p, { value: 0, velocity: 0 }, 1, ms).value;
 
-async function open(page: Page, component: string, variant: string) {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto(`/fixture/${component}/${variant}`);
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
-  return node;
-}
+test.beforeEach(async ({ page }) => enableMotion(page));
 
 /**
  * Pause the running CSS transition of `property` on the element matched by `selector`, seek it to
- * each time in `times` (ms from its start, delay excluded) and read `read(el)` there.
+ * each time in `times` (ms from its start, delay excluded) and read the computed values of `read`
+ * there (CSS property names, joined by a space).
  */
-async function seek(page: Page, selector: string, property: string, times: number[], read: string) {
+async function seek(page: Page, selector: string, property: string, times: number[], read: string[]) {
   return page.evaluate(
     ({ selector, property, times, read }) => {
       const el = document.querySelector(selector)!;
@@ -39,9 +33,9 @@ async function seek(page: Page, selector: string, property: string, times: numbe
       anim.pause();
       const timing = anim.effect!.getComputedTiming();
       const out = times.map((t) => {
-        anim.currentTime = t + Number(timing.delay ?? 0);
-        // eslint-disable-next-line no-new-func
-        return new Function('el', `return ${read}`)(el) as string;
+        anim.currentTime = t + (timing.delay ?? 0);
+        const cs = getComputedStyle(el);
+        return read.map((name) => cs.getPropertyValue(name)).join(' ');
       });
       return { duration: timing.duration, delay: timing.delay, out };
     },
@@ -49,16 +43,8 @@ async function seek(page: Page, selector: string, property: string, times: numbe
   );
 }
 
-const transitionOf = (page: Page, selector: string) =>
-  page.evaluate((selector) => {
-    const cs = getComputedStyle(document.querySelector(selector)!);
-    return {
-      property: cs.transitionProperty,
-      duration: cs.transitionDuration,
-      delay: cs.transitionDelay,
-      easing: cs.transitionTimingFunction,
-    };
-  }, selector);
+/** The computed transition lists of the first element matching `selector`. */
+const transitionOf = (page: Page, selector: string) => transitionOfLocator(page.locator(selector).first());
 
 const transitions = (page: Page, selector: string) =>
   page.evaluate(
@@ -85,14 +71,14 @@ test.describe('checkbox motion', () => {
   };
 
   test('check draws on DefaultSpatial; box colour on DefaultEffects in, FastEffects out', async ({ page }) => {
-    await open(page, 'checkbox', 'unselected-live');
+    await openFixture(page, '/fixture/checkbox/unselected-live');
     expect((await transitionOf(page, BOX)).duration, 'unchecked box: FastEffects').toBe('0.15s');
     await page.locator('[role=checkbox]').click();
     const t = await transitionOf(page, BOX);
     expect(t.duration, 'into checked: DefaultEffects').toBe('0.231s');
     expect(t.easing).toContain('linear(');
     const times = [30, 60, 100, 150, 250];
-    const r = (await seek(page, GLYPH, 'clip-path', times, 'getComputedStyle(el).clipPath'))!;
+    const r = (await seek(page, GLYPH, 'clip-path', times, ['clip-path']))!;
     expect(r.duration, 'checkDrawFraction: DefaultSpatial').toBe(435);
     times.forEach((ms, i) => {
       expect
@@ -102,28 +88,28 @@ test.describe('checkbox motion', () => {
   });
 
   test('uncheck: colour fades on FastEffects, the check snaps away after 100ms', async ({ page }) => {
-    await open(page, 'checkbox', 'selected-live');
-    await page.waitForTimeout(300);
+    await openFixture(page, '/fixture/checkbox/selected-live');
+    await settle(page);
     await page.locator('[role=checkbox]').click();
     expect((await transitionOf(page, BOX)).duration).toBe('0.15s');
-    const clip = (await seek(page, GLYPH, 'clip-path', [-50, 0], 'getComputedStyle(el).clipPath'))!;
+    const clip = (await seek(page, GLYPH, 'clip-path', [-50, 0], ['clip-path']))!;
     expect([clip.duration, clip.delay], 'snap(delayMillis = 100)').toEqual([0, 100]);
     expect(drawn(clip.out[0]!), 'still drawn during the delay').toBeCloseTo(1, 5);
     expect(drawn(clip.out[1]!), 'gone after it').toBeCloseTo(0, 5);
-    const fill = (await seek(page, GLYPH, 'fill', [0, 75, 150], 'getComputedStyle(el).fill'))!;
+    const fill = (await seek(page, GLYPH, 'fill', [0, 75, 150], ['fill']))!;
     expect(fill.duration, 'checkmark colour → transparent on FastEffects').toBe(150);
     expect(fill.out[2]).toBe('rgba(0, 0, 0, 0)');
   });
 
   test('check ⇄ indeterminate morphs on DefaultSpatial; from unchecked it snaps', async ({ page }) => {
-    await open(page, 'checkbox', 'tristate-live');
-    const d = () => page.evaluate((sel) => getComputedStyle(document.querySelector(sel)!).d, PATH);
+    await openFixture(page, '/fixture/checkbox/tristate-live');
+    const d = () => computedStyle(page.locator(PATH).first(), 'd');
     await page.click('[data-set=indeterminate]');
     expect(await transitions(page, PATH), 'off → indeterminate: no morph').toEqual([]);
     expect(await d()).toBe('path("M 12 13 L 6 13 L 6 11 L 12 11 L 18 11 L 18 13 L 12 13 Z")');
-    await page.waitForTimeout(500);
+    await settle(page);
     await page.click('[data-set=on]');
-    const mid = (await seek(page, PATH, 'd', [60], 'getComputedStyle(el).d'))!;
+    const mid = (await seek(page, PATH, 'd', [60], ['d']))!;
     expect(mid.duration, 'checkCenterGravitationShiftFraction: DefaultSpatial').toBe(435);
     // 60ms in: the check's elbow (10, 16.4) is on its way from the dash centre (12, 13).
     const p = progress(spring['default-spatial'], 60);
@@ -135,14 +121,14 @@ test.describe('checkbox motion', () => {
     expect(await transitions(page, PATH), 'on → indeterminate: morph').toEqual(['d']);
     await page.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
     await page.click('[data-set=off]');
-    const off = (await seek(page, PATH, 'd', [-1, 0], 'getComputedStyle(el).d'))!;
+    const off = (await seek(page, PATH, 'd', [-1, 0], ['d']))!;
     expect([off.duration, off.delay], 'to unchecked: snap after 100ms').toEqual([0, 100]);
     expect(off.out[0], 'the dash stays through the delay').toContain('M 12 13');
     expect(off.out[1]).toContain('M 10 16.4');
   });
 
   test('disabled snaps the box colour', async ({ page }) => {
-    await open(page, 'checkbox', 'selected-disabled');
+    await openFixture(page, '/fixture/checkbox/selected-disabled');
     expect((await transitionOf(page, BOX)).duration).toBe('0s');
   });
 });
@@ -152,7 +138,7 @@ test.describe('radio motion', () => {
   test('dot radius springs on FastSpatial, drawn at r − 1dp and never below 0; colour on DefaultEffects', async ({
     page,
   }) => {
-    await open(page, 'radio', 'live');
+    await openFixture(page, '/fixture/radio/live');
     const glyph = await transitionOf(page, '[role=radio] svg');
     expect([glyph.property, glyph.duration], 'radio colour: DefaultEffects').toEqual(['color', '0.231s']);
     expect(glyph.easing).toContain('linear(');
@@ -164,7 +150,7 @@ test.describe('radio motion', () => {
     const entering = '[role=radio][data-i="1"] svg path:nth-of-type(2)';
     const fast = spring['fast-spatial'];
     const times = [20, 60, 100, 120, 160, 250];
-    const read = `[getComputedStyle(el).getPropertyValue('--m3x-radio-dot'), getComputedStyle(el).scale].join(' ')`;
+    const read = ['--m3x-radio-dot', 'scale'];
     const out = (await seek(page, leaving, '--m3x-radio-dot', times, read))!;
     const inn = (await seek(page, entering, '--m3x-radio-dot', times, read))!;
     expect(out.duration, 'FastSpatial').toBe(369);
@@ -189,7 +175,7 @@ test.describe('radio motion', () => {
   });
 
   test('disabled snaps the colour', async ({ page }) => {
-    await open(page, 'radio', 'selected-disabled');
+    await openFixture(page, '/fixture/radio/selected-disabled');
     expect((await transitionOf(page, '[role=radio] svg')).duration).toBe('0s');
   });
 });
@@ -198,7 +184,7 @@ test.describe('radio motion', () => {
 test('switch motion: press snaps into the 28px handle, release springs on FastSpatial; colours snap', async ({
   page,
 }) => {
-  const node = await open(page, 'switch', 'live');
+  const node = await openFixture(page, '/fixture/switch/live');
   const sw = node.getByRole('switch');
   const handle = '[role=switch] > span > span:last-child';
   const root = await transitionOf(page, '[role=switch]');
@@ -218,7 +204,7 @@ test('switch motion: press snaps into the 28px handle, release springs on FastSp
   await expect(sw).toHaveAttribute('aria-checked', 'true');
   const props = await transitions(page, handle);
   expect(props.sort(), 'release: size springs').toEqual(['height', 'width']);
-  const w = (await seek(page, handle, 'width', [0, 369], 'getComputedStyle(el).width'))!;
+  const w = (await seek(page, handle, 'width', [0, 369], ['width']))!;
   expect(w.duration, 'FastSpatial').toBe(369);
   expect(w.out).toEqual(['28px', '24px']);
   expect(await transitions(page, '[role=switch] > span'), 'thumb slides').toEqual(['translate']);
@@ -227,10 +213,8 @@ test('switch motion: press snaps into the 28px handle, release springs on FastSp
 
 // ── Chips: Chip.kt (animateElevation, AnimatingChipContent of the expressive SelectableChip) ──
 test.describe('chips motion', () => {
-  const chips = JSON.parse(readFileSync(join(REFS_DIR, 'chips/manifest.json'), 'utf8')) as Manifest;
-
   test('elevation uses the Compose elevation tweens; container colour is not animated', async ({ page }) => {
-    const node = await open(page, 'chips', 'filter-live');
+    const node = await openFixture(page, '/fixture/chips/filter-live');
     const elevated = node.locator('button').nth(1);
     await elevated.evaluate((e) => e.setAttribute('data-probe', ''));
     let t = await transitionOf(page, '[data-probe]');
@@ -245,37 +229,38 @@ test.describe('chips motion', () => {
       '0.12s',
       'cubic-bezier(0.4, 0, 0.2, 1)',
     ]);
-    await open(page, 'chips', 'filter-el-label-disabled-f-f');
+    await openFixture(page, '/fixture/chips/filter-el-label-disabled-f-f');
     expect((await transitionOf(page, '[data-fixture-node] button')).duration, 'disabled snaps').toBe('0s');
   });
 
   test("icon-less filter chip: the check expands from the start (FastSpatial) and fades (DefaultEffects); widths stay the kit's", async ({
     page,
   }) => {
-    const node = await open(page, 'chips', 'filter-live');
+    const node = await openFixture(page, '/fixture/chips/filter-live');
     const chip = node.locator('button').nth(0);
     await chip.evaluate((e) => e.setAttribute('data-probe', ''));
-    const kitOff = chips.variants['filter-out-label-enabled-f-f']!.size[0];
-    const kitOn = chips.variants['filter-out-label-enabled-t-f']!.size[0];
+    const kitOff = kitVariant('chips', 'filter-out-label-enabled-f-f').size[0];
+    const kitOn = kitVariant('chips', 'filter-out-label-enabled-t-f').size[0];
     expect((await chip.boundingBox())!.width, 'unselected = kit').toBe(kitOff);
     await chip.click();
     const slot = '[data-probe] [data-part=check-slot]';
     const times = [40, 80, 120, 200];
-    const w = (await seek(page, slot, 'width', times, 'parseFloat(getComputedStyle(el).width)'))!;
+    const w = (await seek(page, slot, 'width', times, ['width']))!;
+    const widths = w.out.map((v) => parseFloat(v));
     expect(w.duration, 'expandHorizontally: FastSpatial').toBe(369);
     times.forEach((ms, i) =>
-      expect.soft(Number(w.out[i]), `slot width at ${ms}ms`).toBeCloseTo(18 * progress(spring['fast-spatial'], ms), 1),
+      expect.soft(widths[i], `slot width at ${ms}ms`).toBeCloseTo(18 * progress(spring['fast-spatial'], ms), 1),
     );
-    expect(Math.max(...w.out.map(Number)), 'the IntSize spring overshoots').toBeGreaterThan(18);
-    const o = (await seek(page, slot, 'opacity', [0], 'getComputedStyle(el).opacity'))!;
+    expect(Math.max(...widths), 'the IntSize spring overshoots').toBeGreaterThan(18);
+    const o = (await seek(page, slot, 'opacity', [0], ['opacity']))!;
     expect(o.duration, 'fadeIn: DefaultEffects').toBe(231);
     await page.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
     await page.mouse.move(0, 0);
     expect((await chip.boundingBox())!.width, 'selected = kit').toBe(kitOn);
     await chip.click();
-    const exit = (await seek(page, slot, 'width', [0, 369], 'parseFloat(getComputedStyle(el).width)'))!;
+    const exit = (await seek(page, slot, 'width', [0, 369], ['width']))!;
     expect(exit.duration, 'shrinkHorizontally: FastSpatial, the check stays mounted').toBe(369);
-    expect(exit.out.map(Number)).toEqual([18, 0]);
+    expect(exit.out.map((v) => parseFloat(v))).toEqual([18, 0]);
     await page.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
     expect((await chip.boundingBox())!.width).toBe(kitOff);
     expect(await transitions(page, '[data-probe]'), 'no container colour transition').toEqual([]);
@@ -290,7 +275,7 @@ test.describe('tooltip motion and behaviour', () => {
   test('mouse: shows on enter with no delay, scales about its centre; rich dismisses on exit unless persistent; one at a time', async ({
     page,
   }) => {
-    await open(page, 'tooltip', 'live');
+    await openFixture(page, '/fixture/tooltip/live');
     await page.getByRole('button', { name: 'Favourite' }).hover();
     // Compose: PointerEventType.Enter → show(). Mounted on the next frame, no 500ms delay.
     await expect(page.getByText(plainText, { exact: true })).toBeVisible({ timeout: 100 });
@@ -311,7 +296,7 @@ test.describe('tooltip motion and behaviour', () => {
     await page.getByRole('button', { name: 'Pinned' }).hover();
     await expect(page.getByText('Persistent rich tooltip')).toBeVisible({ timeout: 200 });
     await page.mouse.move(2, 2);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(500); // longer than the non-persistent dismissal above took
     await expect(page.getByText('Persistent rich tooltip'), 'persistent: stays on pointer exit').toBeVisible();
     await page.keyboard.press('Escape');
     await expect(page.getByText('Persistent rich tooltip')).toBeHidden();
@@ -324,7 +309,7 @@ test.describe('tooltip motion and behaviour', () => {
       page,
       context,
     }) => {
-      await open(page, 'tooltip', 'live');
+      await openFixture(page, '/fixture/tooltip/live');
       const fav = page.getByRole('button', { name: 'Favourite' });
       const b = (await fav.boundingBox())!;
       const pt = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
@@ -344,6 +329,7 @@ test.describe('tooltip motion and behaviour', () => {
         }).observe(document.body, { subtree: true, childList: true });
       });
       const cdp = await context.newCDPSession(page);
+      // The waits below time the component's own timers (400ms long press, 1500ms TooltipDuration).
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [pt] });
       await page.waitForTimeout(250);
       await expect(page.getByText(plainText, { exact: true }), 'not before the long-press timeout').toBeHidden();
@@ -374,7 +360,7 @@ test.describe('snackbar motion and queue', () => {
     page,
   }) => {
     test.setTimeout(30_000);
-    await open(page, 'snackbar', 'queue-live');
+    await openFixture(page, '/fixture/snackbar/queue-live');
     await page.click('[data-show=first]');
     await page.click('[data-show=second]');
     const first = page.locator(root('First message'));
@@ -417,10 +403,10 @@ test.describe('snackbar motion and queue', () => {
 
   test('with an action: indefinite by default; the action and the close affordance dismiss', async ({ page }) => {
     test.setTimeout(30_000);
-    await open(page, 'snackbar', 'queue-live');
+    await openFixture(page, '/fixture/snackbar/queue-live');
     await page.click('[data-show=action]');
     await expect(page.getByText('Connection lost')).toBeVisible();
-    await page.waitForTimeout(4600);
+    await page.waitForTimeout(4600); // past SnackbarDuration.Short (4000ms): it would be gone by now
     await expect(page.getByText('Connection lost'), 'not Short: Indefinite with an action').toBeVisible();
     const exit = page.locator(root('Connection lost'));
     await page.getByRole('button', { name: 'Retry' }).click();

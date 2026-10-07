@@ -4,18 +4,16 @@
  * (the config emulates reduced motion for the static suites).
  */
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { recordFrames, sampleFrames } from './helpers/frames.ts';
+import { enableMotion, load } from './helpers/page.ts';
+import { pointerDrag, touchDrag, type DragStep } from './helpers/pointer.ts';
+import { settle } from './helpers/settle.ts';
+import { computedStyle, translateOf } from './helpers/styles.ts';
 
-test.beforeEach(async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-});
-
-async function openFixture(page: Page, path: string) {
-  await page.goto(path);
-  await page.evaluate(() => document.fonts.ready);
-}
+test.beforeEach(async ({ page }) => enableMotion(page));
 
 /** Wait for a dialog's enter animation (scale 0.8 → 1) so boxes are final. */
-const settled = (popup: Locator) => expect.poll(() => popup.evaluate((el) => getComputedStyle(el).scale)).toBe('1');
+const settled = (popup: Locator) => expect.poll(() => computedStyle(popup, 'scale')).toBe('1');
 
 /** Degrees clockwise from 12 o'clock of the dial hand (the line from the centre). */
 const handAngle = (dial: Locator) =>
@@ -30,7 +28,7 @@ test.describe('time picker', () => {
   test('a drag moves the hand with the pointer and springs to the value on release; taps pick 5-minute steps', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/time-picker/live');
+    await load(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
     await settled(dialog);
@@ -46,6 +44,7 @@ test.describe('time picker', () => {
     await page.mouse.down();
     for (const deg of [20, 30, 40, 50]) {
       await page.mouse.move(...at(deg), { steps: 2 });
+      // Two frames, not a settle: a spring here would still be on its way.
       await page.waitForTimeout(32);
       expect(await handAngle(dial)).toBeCloseTo(deg, 0);
     }
@@ -62,7 +61,7 @@ test.describe('time picker', () => {
   });
 
   test('an hour tap moves on to minutes after 100ms, a drag at once; numbers cross-fade', async ({ page }) => {
-    await openFixture(page, '/fixture/time-picker/live');
+    await load(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
     await settled(dialog);
@@ -118,9 +117,7 @@ test.describe('time picker', () => {
     await expect.poll(async () => (await rings()).map((r) => r.opacity)).toEqual(['0', '1']);
     expect((await rings())[0]!.duration).toBe('0.231s');
     // The selector boxes don't animate their colours (Compose: no animation).
-    expect(
-      await dialog.getByRole('button', { name: /^Hour/ }).evaluate((e) => getComputedStyle(e).transitionDuration),
-    ).toBe('0s');
+    expect(await computedStyle(dialog.getByRole('button', { name: /^Hour/ }), 'transition-duration')).toBe('0s');
   });
 });
 
@@ -128,7 +125,7 @@ test.describe('dialog', () => {
   test('MDC fade-scale: 400ms emphasized decelerate in (scale 0.8 → 1), 150ms emphasized accelerate out', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/dialogs/live');
+    await load(page, '/fixture/dialogs/live');
     await page.getByRole('button', { name: 'Open dialog' }).click();
     const popup = page.getByRole('dialog', { name: 'Basic dialog title' });
     await expect(popup).toBeVisible();
@@ -160,7 +157,7 @@ test.describe('dialog', () => {
 
   test('reduced motion drops the scale and keeps the fade', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await openFixture(page, '/fixture/dialogs/live');
+    await load(page, '/fixture/dialogs/live');
     await page.getByRole('button', { name: 'Open dialog' }).click();
     const popup = page.getByRole('dialog', { name: 'Basic dialog title' });
     const first = await popup.evaluate((el) => ({
@@ -169,67 +166,16 @@ test.describe('dialog', () => {
     }));
     expect(first.scale).toBe('1');
     expect(first.opacity).toBeLessThan(1);
-    await expect.poll(() => popup.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+    await expect.poll(() => computedStyle(popup, 'opacity')).toBe('1');
   });
 });
 
-/** The `translate` of an element as [x, y] px. */
-const translateOf = (el: Locator) =>
-  el.evaluate((e) => {
-    const t = getComputedStyle(e).translate;
-    if (!t || t === 'none') return [0, 0];
-    const [x = '0', y = '0'] = t.split(' ');
-    return [parseFloat(x), parseFloat(y)];
-  });
-
-/**
- * A pointer drag dispatched inside the page with exact timing (busy-waits between events), so
- * velocity-dependent behaviour doesn't depend on test-runner latency: down at (x, y), then a move
- * to each [dx, dy] after `wait` ms, then up at once (a release while moving).
- */
-async function synthDrag(page: Page, x: number, y: number, points: [dx: number, dy: number, wait: number][]) {
-  await page.evaluate(
-    ([x, y, points]) => {
-      const target = document.elementFromPoint(x, y)!;
-      const fire = (type: string, cx: number, cy: number) =>
-        target.dispatchEvent(
-          new PointerEvent(type, {
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            pointerId: 7,
-            pointerType: 'mouse',
-            isPrimary: true,
-            button: 0,
-            buttons: type === 'pointerup' ? 0 : 1,
-            clientX: cx,
-            clientY: cy,
-          }),
-        );
-      const busy = (ms: number) => {
-        const t = performance.now();
-        while (performance.now() - t < ms);
-      };
-      fire('pointerdown', x, y);
-      let [cx, cy] = [x, y];
-      for (const [dx, dy, wait] of points) {
-        busy(wait);
-        [cx, cy] = [x + dx, y + dy];
-        fire('pointermove', cx, cy);
-      }
-      fire('pointerup', cx, cy);
-    },
-    [x, y, points] as const,
-  );
-}
-
-/** A quick drag: `n` moves of dx / n px, `ms` apart, released while moving. */
+/** A quick drag: `n` moves of (dx, dy) / n, `ms` apart, released while moving. */
 async function flick(page: Page, x: number, y: number, dx: number, dy = 0, n = 4, ms = 8) {
-  await synthDrag(
+  await pointerDrag(
     page,
-    x,
-    y,
-    Array.from({ length: n }, (_, i) => [(dx * (i + 1)) / n, (dy * (i + 1)) / n, ms] as [number, number, number]),
+    { x, y },
+    Array.from({ length: n }, (_, i): DragStep => [(dx * (i + 1)) / n, (dy * (i + 1)) / n, ms]),
   );
 }
 
@@ -244,23 +190,23 @@ async function slowRelease(
   from: [number, number] = [0, 0],
 ) {
   const n = Math.max(Math.abs(dx), Math.abs(dy)) / step;
-  await synthDrag(page, x, y, [
+  await pointerDrag(page, { x, y }, [
     ...(from[0] || from[1]
       ? ([
           [from[0], from[1], 16],
           [from[0], from[1], 60],
-        ] as [number, number, number][])
+        ] as DragStep[])
       : []),
-    ...Array.from(
-      { length: n },
-      (_, i) => [from[0] + (dx * (i + 1)) / n, from[1] + (dy * (i + 1)) / n, 16] as [number, number, number],
-    ),
+    ...Array.from({ length: n }, (_, i): DragStep => [from[0] + (dx * (i + 1)) / n, from[1] + (dy * (i + 1)) / n, 16]),
   ]);
 }
 
+/** The sheet's offset from its laid-out place (its drag / settle translation), px. */
+const sheetTop = () => (el: Element) => el.getBoundingClientRect().top - (el as HTMLElement).offsetTop;
+
 test.describe('modal bottom sheet', () => {
   async function openSheet(page: Page) {
-    await openFixture(page, '/fixture/sheets/live');
+    await load(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Share' });
     await expect(sheet).toBeVisible();
@@ -273,22 +219,10 @@ test.describe('modal bottom sheet', () => {
   test('shows on the default spatial spring: the overshoot lifts it and the surface continues below', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/sheets/live');
+    await load(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Share' });
-    const ys = await sheet.evaluate(
-      (el) =>
-        new Promise<number[]>((resolve) => {
-          const out: number[] = [];
-          const t0 = performance.now();
-          const tick = () => {
-            out.push(el.getBoundingClientRect().top - (el as HTMLElement).offsetTop);
-            if (performance.now() - t0 < 700) requestAnimationFrame(tick);
-            else resolve(out);
-          };
-          tick();
-        }),
-    );
+    const ys = (await sampleFrames(sheet, 700, sheetTop)).map((f) => f.v);
     expect(Math.min(...ys)).toBeLessThan(-1);
     const after = await sheet.evaluate((el) => {
       const cs = getComputedStyle(el, '::after');
@@ -320,7 +254,7 @@ test.describe('modal bottom sheet', () => {
     await page.mouse.move(x, y);
     await page.mouse.down();
     await page.mouse.move(x, y + 90, { steps: 10 });
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
     await expect(sheet).toBeVisible();
@@ -348,10 +282,10 @@ test.describe('modal bottom sheet', () => {
     await page.mouse.move(x, y - 60, { steps: 6 });
     expect((await translateOf(sheet))[1]).toBe(0);
     await page.mouse.move(x, y + height * 0.6, { steps: 10 });
-    await expect.poll(() => scrim.evaluate((e) => getComputedStyle(e).opacity)).toBe('0');
+    await expect.poll(() => computedStyle(scrim, 'opacity')).toBe('0');
     await page.mouse.move(x, y + height * 0.3, { steps: 6 });
-    await expect.poll(() => scrim.evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
-    await page.waitForTimeout(120);
+    await expect.poll(() => computedStyle(scrim, 'opacity')).toBe('1');
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
   });
@@ -364,7 +298,7 @@ test.describe('modal bottom sheet', () => {
     await page.mouse.down();
     await page.mouse.move(b.x + 20, b.y + b.height / 2 + 40, { steps: 6 });
     expect((await translateOf(sheet))[1]).toBeGreaterThan(30);
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
     await expect(sheet).toBeVisible(); // the drag didn't click the item
@@ -374,22 +308,10 @@ test.describe('modal bottom sheet', () => {
 
   test('settles from the release velocity with the default spatial spring', async ({ page }) => {
     const { sheet, x, y } = await openSheet(page);
-    const sampling = sheet.evaluate(
-      (el) =>
-        new Promise<number[]>((resolve) => {
-          const out: number[] = [];
-          const t0 = performance.now();
-          const tick = () => {
-            out.push(el.getBoundingClientRect().top - (el as HTMLElement).offsetTop);
-            if (performance.now() - t0 < 700) requestAnimationFrame(tick);
-            else resolve(out);
-          };
-          tick();
-        }),
-    );
+    const sampling = await recordFrames(sheet, 700, sheetTop);
     // Down 40px, then a quick flick back up: Expanded, overshooting above it on the way (the
     // release velocity carries into the default spatial spring).
-    await synthDrag(page, x, y, [
+    await pointerDrag(page, { x, y }, [
       [0, 20, 16],
       [0, 40, 16],
       [0, 40, 60],
@@ -397,7 +319,7 @@ test.describe('modal bottom sheet', () => {
       [0, 20, 8],
       [0, 10, 8],
     ]);
-    const samples = await sampling;
+    const samples = (await sampling()).map((f) => f.v);
     expect(Math.min(...samples)).toBeLessThan(-0.5);
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
   });
@@ -406,22 +328,15 @@ test.describe('modal bottom sheet', () => {
 test.describe('modal bottom sheet (touch)', () => {
   test.use({ hasTouch: true });
   test('a touch drag on the content moves the sheet while the content is at its top', async ({ page }) => {
-    await openFixture(page, '/fixture/sheets/live');
+    await load(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Share' });
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
     const b = (await sheet.getByText('Email').boundingBox())!;
-    const cdp = await page.context().newCDPSession(page);
-    const touch = (type: 'touchStart' | 'touchMove' | 'touchEnd', y: number) =>
-      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: b.x + 20, y }] });
-    await touch('touchStart', b.y + 10);
-    for (let i = 1; i <= 12; i++) {
-      await touch('touchMove', b.y + 10 + i * 10);
-      await page.waitForTimeout(16);
-    }
+    const release = await touchDrag(page, { x: b.x + 20, y: b.y + 10 }, 0, 120, 12);
     expect((await translateOf(sheet))[1]).toBeGreaterThan(80);
-    await page.waitForTimeout(120);
-    await touch('touchEnd', 0);
+    await page.waitForTimeout(120); // rest before the release: no fling
+    await release();
     // Released at rest past the half way point of the 204px sheet: Hidden.
     await expect(sheet).toHaveCount(0);
   });
@@ -431,7 +346,7 @@ test.describe('modal side sheet', () => {
   test('enters from the end edge by the window width over 275ms on the emphasized path; RTL enters from the left', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/sheets/live');
+    await load(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open side sheet' }).click();
     const side = page.getByRole('dialog', { name: 'Filters' });
     const style = await side.evaluate((el) => ({
@@ -459,7 +374,7 @@ test.describe('modal side sheet', () => {
   test('drags to dismiss (SideSheetBehavior: half way or a 500px/s swipe), otherwise settles back', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/sheets/live');
+    await load(page, '/fixture/sheets/live');
     const open = async () => {
       await page.getByRole('button', { name: 'Open side sheet' }).click();
       const side = page.getByRole('dialog', { name: 'Filters' });
@@ -473,7 +388,7 @@ test.describe('modal side sheet', () => {
     await page.mouse.down();
     await page.mouse.move(x + 120, y, { steps: 10 });
     expect((await translateOf(side))[0]).toBeGreaterThan(100);
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
     // Can't drag outwards past Expanded.
@@ -486,7 +401,7 @@ test.describe('modal side sheet', () => {
     await page.mouse.move(x, y);
     await page.mouse.down();
     await page.mouse.move(x + 200, y, { steps: 10 });
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect(side).toHaveCount(0);
     // A quick 90px swipe (> 500px/s, mostly horizontal; at rest it would stay): hides.
@@ -496,46 +411,31 @@ test.describe('modal side sheet', () => {
   });
 });
 
-/** Sample `read` every frame for `ms` in the page. */
-function sampleFrames<T>(page: Page, ms: number, read: string): Promise<{ t: number; v: T }[]> {
-  return page.evaluate(
-    ([ms, read]) =>
-      new Promise<{ t: number; v: T }[]>((resolve) => {
-        const fn = new Function(`return (${read})`) as () => T;
-        const out: { t: number; v: T }[] = [];
-        const t0 = performance.now();
-        const tick = () => {
-          out.push({ t: performance.now() - t0, v: fn() });
-          if (performance.now() - t0 < ms) requestAnimationFrame(tick);
-          else resolve(out);
-        };
-        tick();
-      }),
-    [ms, read] as const,
-  );
-}
-
 test.describe('search', () => {
   test('full screen: the input grows from the collapsed bar, the surface fades in with progress, results after 50ms', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/search/live-full');
+    await load(page, '/fixture/search/live-full');
     const node = page.locator('[data-fixture-node]');
     const collapsed = (await node
       .getByRole('button', { name: 'Hinted search text' })
       .locator('xpath=ancestor::div[1]')
       .boundingBox())!;
-    const read = `(() => {
+    const sampling = await recordFrames(page, 700, () => () => {
       const view = document.querySelector('[data-fixture-node] [role="search"]');
       if (!view) return null;
       const r = view.getBoundingClientRect();
-      const root = view.parentElement.parentElement;
-      const results = root.lastElementChild;
-      return { x: r.x, w: r.width, alpha: root.style.getPropertyValue('--m3-search-surface-alpha'), results: getComputedStyle(results).opacity };
-    })()`;
-    const sampling = sampleFrames<{ x: number; w: number; alpha: string; results: string } | null>(page, 700, read);
+      const root = view.parentElement!.parentElement!;
+      const results = root.lastElementChild!;
+      return {
+        x: r.x,
+        w: r.width,
+        alpha: root.style.getPropertyValue('--m3-search-surface-alpha'),
+        results: getComputedStyle(results).opacity,
+      };
+    });
     await node.getByRole('button', { name: 'Hinted search text' }).click();
-    const frames = (await sampling).filter((f) => f.v);
+    const frames = (await sampling()).filter((f) => f.v);
     const first = frames[0]!.v!;
     expect(first.w).toBeGreaterThan(collapsed.width - 3);
     expect(first.w).toBeLessThan(collapsed.width + 3);
@@ -558,18 +458,21 @@ test.describe('search', () => {
   });
 
   test('docked: the panel appears past 10% progress, its list sliding down from −height/2', async ({ page }) => {
-    await openFixture(page, '/fixture/search/live');
+    await load(page, '/fixture/search/live');
     const node = page.locator('[data-fixture-node]');
-    const read = `(() => {
+    const sampling = await recordFrames(page, 700, () => () => {
       const view = document.querySelector('[data-fixture-node] [role="search"]');
       if (!view) return null;
-      const results = view.parentElement.parentElement.lastElementChild;
-      const list = results.firstElementChild;
-      return { visible: getComputedStyle(results).visibility, ty: new DOMMatrix(getComputedStyle(list).transform).m42, h: results.offsetHeight };
-    })()`;
-    const sampling = sampleFrames<{ visible: string; ty: number; h: number } | null>(page, 700, read);
+      const results = view.parentElement!.parentElement!.lastElementChild as HTMLElement;
+      const list = results.firstElementChild!;
+      return {
+        visible: getComputedStyle(results).visibility,
+        ty: new DOMMatrix(getComputedStyle(list).transform).m42,
+        h: results.offsetHeight,
+      };
+    });
     await node.getByRole('button', { name: 'Hinted search text' }).click();
-    const frames = (await sampling).filter((f) => f.v);
+    const frames = (await sampling()).filter((f) => f.v);
     expect(frames[0]!.v!.visible).toBe('hidden');
     const shown = frames.find((f) => f.v!.visible === 'visible')!;
     expect(shown.v!.ty).toBeLessThan(-shown.v!.h / 4);
@@ -585,13 +488,21 @@ test.describe('toolbar', () => {
   test('scroll collapse: 40px down collapses, 40px back up from the turn expands (floatingToolbarVerticalNestedScroll)', async ({
     page,
   }) => {
-    await openFixture(page, '/demo/toolbar');
+    await load(page, '/demo/toolbar');
     const scroller = page.getByText('Row 1 —').locator('xpath=..');
     const collapsed = page.getByLabel('collapsed');
-    const scrollTo = async (y: number) => {
-      await scroller.evaluate((el, y) => (el.scrollTop = y), y);
-      await page.waitForTimeout(50);
-    };
+    // Each scroll lands (its scroll event, then two frames for the state it sets) before the next.
+    const scrollTo = (y: number) =>
+      scroller.evaluate(
+        (el, y) =>
+          new Promise<void>((resolve) => {
+            el.addEventListener('scroll', () => requestAnimationFrame(() => requestAnimationFrame(() => resolve())), {
+              once: true,
+            });
+            el.scrollTop = y;
+          }),
+        y,
+      );
     await scrollTo(30);
     await expect(collapsed).not.toBeChecked();
     await scrollTo(45);
@@ -611,7 +522,7 @@ test.describe('toolbar', () => {
   test('exit always: the toolbar follows the scroll 1:1 and settles in / out at half way on default effects', async ({
     page,
   }) => {
-    await openFixture(page, '/demo/toolbar');
+    await load(page, '/demo/toolbar');
     await page.getByLabel('on scroll').selectOption('exit');
     const scroller = page.getByText('Row 1 —').locator('xpath=..');
     const bar = page.getByRole('toolbar', { name: 'Text formatting' });
@@ -664,14 +575,14 @@ test.describe('toolbar', () => {
   test('collapsing pins trailing content to its start, expanding to its end (Compose shrinkTowards / expandFrom)', async ({
     page,
   }) => {
-    await openFixture(page, '/demo/toolbar');
+    await load(page, '/demo/toolbar');
     await page.getByLabel('FAB').uncheck();
     const more = page.getByRole('button', { name: 'More' });
     const clip = more.locator('xpath=..');
-    expect(await clip.evaluate((e) => getComputedStyle(e).justifyContent)).toBe('flex-end');
+    expect(await computedStyle(clip, 'justify-content')).toBe('flex-end');
     await page.getByLabel('collapsed').check();
-    expect(await clip.evaluate((e) => getComputedStyle(e).justifyContent)).toBe('normal');
-    // Mid-collapse the button keeps its place after the clip's start edge (its 4px gap).
+    expect(await computedStyle(clip, 'justify-content')).toBe('normal');
+    // Mid-collapse on purpose: the button keeps its place after the clip's start edge (its 4px gap).
     await page.waitForTimeout(60);
     const [b, c] = await Promise.all([more.boundingBox(), clip.boundingBox()]);
     expect(c!.width).toBeLessThan(52);
@@ -681,7 +592,7 @@ test.describe('toolbar', () => {
 
 test.describe('carousel', () => {
   async function setup(page: Page, variant = 'live') {
-    await openFixture(page, `/fixture/carousel/${variant}`);
+    await load(page, `/fixture/carousel/${variant}`);
     const carousel = page.getByRole('region', { name: 'Photos' });
     const b = (await carousel.boundingBox())!;
     const scroll = () => carousel.evaluate((el) => Math.round(el.scrollLeft));
@@ -697,7 +608,7 @@ test.describe('carousel', () => {
       await page.mouse.move(x, y);
       await page.mouse.down();
       await page.mouse.move(x + dx, y, { steps: 10 });
-      await page.waitForTimeout(120);
+      await page.waitForTimeout(120); // rest before the release: no fling
       await page.mouse.up();
     };
     // 40px and rest: closest item (back).
@@ -722,22 +633,10 @@ test.describe('carousel', () => {
 
   test('the snap starts from the release velocity (no stop at release)', async ({ page }) => {
     const { carousel, x, y } = await setup(page);
-    const sampling = carousel.evaluate(
-      (el) =>
-        new Promise<number[]>((resolve) => {
-          const out: number[] = [];
-          const t0 = performance.now();
-          const tick = () => {
-            out.push(el.scrollLeft);
-            if (performance.now() - t0 < 400) requestAnimationFrame(tick);
-            else resolve(out);
-          };
-          tick();
-        }),
-    );
+    const sampling = await recordFrames(carousel, 400, () => (el) => el.scrollLeft);
     // 60px at ~1900px/s, released while moving.
     await flick(page, x, y, -60, 0, 4, 8);
-    const s = await sampling;
+    const s = (await sampling()).map((f) => f.v);
     // After the release (60px) it keeps moving forward at speed (a v0 = 0 spring would ease in).
     const i = s.findIndex((v) => v >= 60);
     expect(i).toBeGreaterThanOrEqual(0);
@@ -750,17 +649,17 @@ test.describe('carousel', () => {
     await flick(page, x, y, -50);
     // Decays past the release point …
     await expect.poll(scroll).toBeGreaterThan(80);
-    const end = await scroll();
-    await page.waitForTimeout(800);
     // … and stays wherever it stopped (no snap to an item).
-    expect(await scroll()).toBe(await scroll());
+    await settle(page);
+    const end = await scroll();
+    expect(await scroll()).toBe(end);
     expect(end).toBeGreaterThan(50);
   });
 });
 
 test.describe('date picker', () => {
   async function openPicker(page: Page) {
-    await openFixture(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     await settled(dialog);
@@ -769,16 +668,15 @@ test.describe('date picker', () => {
 
   test('next month slides the grids one width on spring(1500); the weekday row stays', async ({ page }) => {
     const dialog = await openPicker(page);
-    const read = `(() => {
+    const sampling = await recordFrames(page, 500, () => () => {
       const grids = [...document.querySelectorAll('[role="dialog"] [role="grid"]')];
-      const main = grids.find((g) => !g.closest('[data-month-copy]'));
+      const main = grids.find((g) => !g.closest('[data-month-copy]'))!;
       const rows = [...main.querySelectorAll(':scope > [role="row"]')];
-      const tx = (el) => new DOMMatrix(getComputedStyle(el).transform).m41;
-      return { grids: grids.length, header: tx(rows[0]), week: tx(rows[1]) };
-    })()`;
-    const sampling = sampleFrames<{ grids: number; header: number; week: number }>(page, 500, read);
+      const tx = (el: Element) => new DOMMatrix(getComputedStyle(el).transform).m41;
+      return { grids: grids.length, header: tx(rows[0]!), week: tx(rows[1]!) };
+    });
     await dialog.getByRole('button', { name: 'Next month' }).click();
-    const frames = await sampling;
+    const frames = await sampling();
     const moving = frames.filter((f) => f.v.grids === 2);
     expect(moving.length).toBeGreaterThan(2);
     // The new month enters from the right (+336 → 0), the weekday headings don't move.
@@ -797,7 +695,7 @@ test.describe('date picker', () => {
     await page.mouse.move(x, y);
     await page.mouse.down();
     await page.mouse.move(x - 100, y, { steps: 10 });
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(100); // rest before the release: no fling
     await page.mouse.up();
     await expect(dialog.getByRole('grid', { name: 'July 2025' })).toBeVisible();
     await expect(dialog.locator('[data-month-copy]')).toHaveCount(0);
@@ -805,7 +703,7 @@ test.describe('date picker', () => {
     await page.mouse.move(x, y);
     await page.mouse.down();
     await page.mouse.move(x - 200, y, { steps: 10 });
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(100); // rest before the release: no fling
     await page.mouse.up();
     await expect(dialog.getByRole('grid', { name: 'August 2025' })).toBeVisible();
     // A quick 120px flick to the right (at rest it would stay): back to July; no day was picked.
@@ -818,16 +716,21 @@ test.describe('date picker', () => {
     page,
   }) => {
     const dialog = await openPicker(page);
-    const read = `(() => {
+    const read = () => () => {
       const list = document.querySelector('[role="dialog"] [role="listbox"]');
       if (!list) return null;
-      const box = list.parentElement.parentElement;
+      const box = list.parentElement!.parentElement!;
       const cs = getComputedStyle(box);
-      return { pos: cs.position, h: box.getBoundingClientRect().height, o: Number(cs.opacity), cal: !!document.querySelector('[role="dialog"] [role="grid"]') };
-    })()`;
-    let sampling = sampleFrames<{ pos: string; h: number; o: number; cal: boolean } | null>(page, 600, read);
+      return {
+        pos: cs.position,
+        h: box.getBoundingClientRect().height,
+        o: Number(cs.opacity),
+        cal: !!document.querySelector('[role="dialog"] [role="grid"]'),
+      };
+    };
+    let sampling = await recordFrames(page, 600, read);
     await dialog.getByRole('button', { name: /select year/ }).click();
-    let frames = (await sampling).filter((f) => f.v);
+    let frames = (await sampling()).filter((f) => f.v);
     const first = frames[0]!.v!;
     expect(first.pos).toBe('absolute');
     expect(first.h).toBeLessThan(140);
@@ -836,17 +739,14 @@ test.describe('date picker', () => {
     expect(first.cal).toBe(true);
     expect(frames.at(-1)!.v).toEqual({ pos: 'static', h: 280, o: 1, cal: false });
     // Back: the calendar returns under the shrinking list, which fades out on fast effects.
-    sampling = sampleFrames(page, 600, read);
+    sampling = await recordFrames(page, 600, read);
     await dialog.getByRole('button', { name: /select year/ }).click();
-    frames = (await sampling).filter((f) => f.v);
+    frames = (await sampling()).filter((f) => f.v);
     expect(frames.some((f) => f.v!.cal && f.v!.pos === 'absolute')).toBe(true);
     await expect(dialog.getByRole('listbox')).toHaveCount(0);
     // The arrow flips without animation (Compose rotates it instantly).
     expect(
-      await dialog
-        .getByRole('button', { name: /select year/ })
-        .locator('svg')
-        .evaluate((e) => getComputedStyle(e).transitionDuration),
+      await computedStyle(dialog.getByRole('button', { name: /select year/ }).locator('svg'), 'transition-duration'),
     ).toBe('0s');
   });
 
@@ -857,39 +757,32 @@ test.describe('date picker', () => {
     const day = dialog.getByRole('button', { name: 'July 9, 2025' });
     await day.click();
     const circle = day.locator('> span').nth(0);
-    expect(
-      await circle.evaluate((e) =>
-        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
-      ),
-    ).toBe('background-color 0.231s');
-    expect(
-      await day.evaluate((e) =>
-        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
-      ),
-    ).toBe('color 0.231s');
+    const transition = async (el: Locator) =>
+      `${await computedStyle(el, 'transition-property')} ${await computedStyle(el, 'transition-duration')}`;
+    expect(await transition(circle)).toBe('background-color 0.231s');
+    expect(await transition(day)).toBe('color 0.231s');
     // Deselected: the container snaps (no transition on the unselected state).
     await dialog.getByRole('button', { name: 'July 10, 2025' }).click();
-    expect(await circle.evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+    expect(await computedStyle(circle, 'transition-duration')).toBe('0s');
     await dialog.getByRole('button', { name: /select year/ }).click();
     const year = dialog.getByRole('option', { name: '2025', exact: true });
-    expect(
-      await year.evaluate((e) =>
-        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
-      ),
-    ).toBe('color, background-color 0.231s');
+    expect(await transition(year)).toBe('color, background-color 0.231s');
   });
 
   test('picker ⇄ input: bodies slide and fade, the size animates on default spatial', async ({ page }) => {
     const dialog = await openPicker(page);
-    const read = `(() => {
-      const slots = [...document.querySelectorAll('[role="dialog"] [data-mode-slot]')];
-      const wrap = slots[0] && slots[0].parentElement;
+    const sampling = await recordFrames(page, 700, () => () => {
+      const slots = [...document.querySelectorAll<HTMLElement>('[role="dialog"] [data-mode-slot]')];
+      const wrap = slots[0]?.parentElement;
       const input = document.querySelector('[role="dialog"] [data-mode-slot="input"] [data-dp-body]');
-      return { slots: slots.map((s) => s.dataset.modeSlot).join(','), w: wrap ? wrap.getBoundingClientRect().width : 0, o: input ? Number(getComputedStyle(input).opacity) : null };
-    })()`;
-    const sampling = sampleFrames<{ slots: string; w: number; o: number | null }>(page, 700, read);
+      return {
+        slots: slots.map((s) => s.dataset.modeSlot).join(','),
+        w: wrap ? wrap.getBoundingClientRect().width : 0,
+        o: input ? Number(getComputedStyle(input).opacity) : null,
+      };
+    });
     await dialog.getByRole('button', { name: 'Switch to text input' }).click();
-    const frames = await sampling;
+    const frames = await sampling();
     const both = frames.filter((f) => f.v.slots === 'picker,input');
     expect(both.length).toBeGreaterThan(3);
     expect(both[0]!.v.o!).toBeLessThan(0.5);
