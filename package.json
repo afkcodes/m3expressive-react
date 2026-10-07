@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter workbench dev",
+    "showcase": "pnpm --filter showcase dev",
     "build": "pnpm -r build",
     "typecheck": "tsc --noEmit && pnpm -r typecheck",
     "lint": "oxlint --type-aware",
