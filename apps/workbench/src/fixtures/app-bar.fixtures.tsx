@@ -131,10 +131,35 @@ function LiveAppBar() {
   );
 }
 
+/** Live (motion): the kit's 3-action bottom bar under a scroll container — it hides with the scroll. */
+function LiveBottomAppBar() {
+  const ref = useRef<HTMLDivElement>(null);
+  const icons: IconName[] = ['search-24', 'delete-24', 'archive-24'];
+  return (
+    <div style={{ width: 412, height: 400, display: 'flex', flexDirection: 'column' }}>
+      <div ref={ref} data-scroll style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ height: 1200, padding: 16 }}>Content</div>
+      </div>
+      <BottomAppBar
+        scrollTarget={ref}
+        actions={icons.map((i) => (
+          <Btn key={i} icon={i} label={i.replace('-24', '')} />
+        ))}
+        fab={
+          <Fab aria-label="Add" color="secondary-container" elevated={false}>
+            <Icon name="add-24" />
+          </Fab>
+        }
+      />
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'app-bar',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 400, render: () => <LiveAppBar /> } satisfies FixtureVariant],
+    ['live-bottom', { width: 412, height: 400, render: () => <LiveBottomAppBar /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> }];
