@@ -1,7 +1,16 @@
 import { useRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
-import { AppBarTitle, Avatar, BottomAppBar, Fab, IconButton, TopAppBar, typescale, type TopAppBarSize } from '@m3x/react';
+import {
+  AppBarTitle,
+  Avatar,
+  BottomAppBar,
+  Fab,
+  IconButton,
+  TopAppBar,
+  typescale,
+  type TopAppBarSize,
+} from '@m3x/react';
 import manifest from '../../../../figma/app-bar/manifest.json';
 import assets from '../../../../figma/app-bar/assets.json';
 import placeholder700 from '../../../../figma/list/assets/placeholder-700.png';
@@ -47,7 +56,12 @@ const AvatarSlot = () => (
 );
 const Placeholder = ({ w, h, src }: { w: number; h: number; src: string }) => (
   <span {...stylex.props(fx.placeholderBg)} style={{ display: 'block', width: w, height: h, overflow: 'hidden' }}>
-    <img src={src} alt="" {...stylex.props(fx.placeholderImg)} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }} />
+    <img
+      src={src}
+      alt=""
+      {...stylex.props(fx.placeholderImg)}
+      style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+    />
   </span>
 );
 const SearchPill = ({ scrolled, centred }: { scrolled: boolean; centred?: boolean }) => (
@@ -62,9 +76,24 @@ function render(name: string): ReactNode {
     const scrolled = name.endsWith('on-scroll');
     const config = p.slice(1, scrolled ? -2 : -1).join('-');
     if (config === 'small-centered')
-      return <TopAppBar centered title="Label" scrolled={scrolled} navigationIcon={<Btn icon="menu-24" label="Menu" />} actions={<AvatarSlot />} />;
+      return (
+        <TopAppBar
+          centered
+          title="Label"
+          scrolled={scrolled}
+          navigationIcon={<Btn icon="menu-24" label="Menu" />}
+          actions={<AvatarSlot />}
+        />
+      );
     if (config === 'search')
-      return <TopAppBar scrolled={scrolled} navigationIcon={<Btn icon="menu-24" label="Menu" />} search={<SearchPill scrolled={scrolled} />} actions={<AvatarSlot />} />;
+      return (
+        <TopAppBar
+          scrolled={scrolled}
+          navigationIcon={<Btn icon="menu-24" label="Menu" />}
+          search={<SearchPill scrolled={scrolled} />}
+          actions={<AvatarSlot />}
+        />
+      );
     if (config === 'small-image')
       return (
         <TopAppBar
@@ -123,7 +152,13 @@ function LiveAppBar() {
   const ref = useRef<HTMLDivElement>(null);
   return (
     <div style={{ width: 412, height: 400, display: 'flex', flexDirection: 'column' }}>
-      <TopAppBar size="medium" title="Label" navigationIcon={<Btn icon="arrow_back-24" label="Back" />} actions={<Btn icon="search-24" label="Search" />} scrollTarget={ref} />
+      <TopAppBar
+        size="medium"
+        title="Label"
+        navigationIcon={<Btn icon="arrow_back-24" label="Back" />}
+        actions={<Btn icon="search-24" label="Search" />}
+        scrollTarget={ref}
+      />
       <div ref={ref} data-scroll style={{ flex: 1, overflowY: 'auto' }}>
         <div style={{ height: 1200, padding: 16 }}>Content</div>
       </div>
@@ -162,7 +197,15 @@ const fixture: FixtureModule = {
     ['live-bottom', { width: 412, height: 400, render: () => <LiveBottomAppBar /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
-      return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> }];
+      return [
+        name,
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
+      ];
     }),
   ]),
 };

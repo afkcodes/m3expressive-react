@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Button, Checkbox, Dialog, List, ListItem, ListItemMonogram, M3Provider, typescale, type ColorSchemeMode } from '@m3x/react';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  List,
+  ListItem,
+  ListItemMonogram,
+  M3Provider,
+  typescale,
+  type ColorSchemeMode,
+} from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/dialogs/assets.json';
 

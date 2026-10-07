@@ -41,30 +41,59 @@ type IconName = keyof typeof assets.icons;
 const Icon = ({ name }: { name: IconName }) => {
   const size = Number(name.split('-').pop());
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      fill="currentColor"
+      aria-hidden
+      style={{ display: 'block' }}
+    >
       <path d={assets.icons[name]} />
     </svg>
   );
 };
 /** The kit's outlined "⌘C" (Roboto has no ⌘): label-large (expressive) and body-large (baseline). */
 const Shortcut = () => (
-  <svg width={21} height={20} viewBox="0 0 21 20" fill="currentColor" aria-label="⌘C" style={{ display: 'block', flexShrink: 0 }}>
+  <svg
+    width={21}
+    height={20}
+    viewBox="0 0 21 20"
+    fill="currentColor"
+    aria-label="⌘C"
+    style={{ display: 'block', flexShrink: 0 }}
+  >
     <path d={listAssets.shortcut.d} />
   </svg>
 );
 const ShortcutBaseline = () => (
-  <svg width={37} height={24} viewBox={assets.shortcutBaseline.viewBox} fill="currentColor" aria-label="⌘C" style={{ display: 'block' }}>
+  <svg
+    width={37}
+    height={24}
+    viewBox={assets.shortcutBaseline.viewBox}
+    fill="currentColor"
+    aria-label="⌘C"
+    style={{ display: 'block' }}
+  >
     <path d={assets.shortcutBaseline.d} />
   </svg>
 );
-const Img = ({ src, w, h }: { src: string; w: number; h: number }) => <img src={src} alt="" width={w} height={h} style={{ display: 'block', flexShrink: 0 }} />;
+const Img = ({ src, w, h }: { src: string; w: number; h: number }) => (
+  <img src={src} alt="" width={w} height={h} style={{ display: 'block', flexShrink: 0 }} />
+);
 /*
  * Chrome snaps painted box sizes to whole CSS px, so the kit's half-pixel blocks (62.5px slot,
  * 119.5px labels) are drawn at 2x and scaled down: transforms keep device-pixel precision.
  */
 const HalfPxImg = ({ src, w, h }: { src: string; w: number; h: number }) => (
   <div style={{ width: w, height: h, flexShrink: 0 }}>
-    <img src={src} alt="" width={w * 2} height={h * 2} style={{ display: 'block', transform: 'scale(0.5)', transformOrigin: '0 0' }} />
+    <img
+      src={src}
+      alt=""
+      width={w * 2}
+      height={h * 2}
+      style={{ display: 'block', transform: 'scale(0.5)', transformOrigin: '0 0' }}
+    />
   </div>
 );
 const LabelBlock = ({ vibrant }: { vibrant: boolean }) => (
@@ -72,14 +101,27 @@ const LabelBlock = ({ vibrant }: { vibrant: boolean }) => (
     <div style={{ position: 'relative', width: 119.5, height: 32, isolation: 'isolate' }}>
       <div
         {...stylex.props(vibrant ? fx.groupVibrant : fx.groupStandard)}
-        style={{ position: 'absolute', left: 0, top: 0, width: 239, height: 64, borderRadius: 8, transform: 'scale(0.5)', transformOrigin: '0 0', zIndex: -1 }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: 239,
+          height: 64,
+          borderRadius: 8,
+          transform: 'scale(0.5)',
+          transformOrigin: '0 0',
+          zIndex: -1,
+        }}
       />
       <MenuSectionLabel>Label</MenuSectionLabel>
     </div>
   </MenuScope>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
-const row = (children: ReactNode, gap = 8) => <div style={{ display: 'flex', alignItems: 'center', columnGap: gap }}>{children}</div>;
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
+const row = (children: ReactNode, gap = 8) => (
+  <div style={{ display: 'flex', alignItems: 'center', columnGap: gap }}>{children}</div>
+);
 
 const items = (n: number, offset = 0) =>
   Array.from({ length: n }, (_, i) => (
@@ -95,7 +137,8 @@ function render(name: string): ReactNode {
     const vib = p[1] === 'vib';
     const state = p[2]!;
     const sel = p[3] === 'sel';
-    const ripple = state === 'pressed' ? (vib && sel ? assets.ripple['vibrant-selected'] : assets.ripple.default) : undefined;
+    const ripple =
+      state === 'pressed' ? (vib && sel ? assets.ripple['vibrant-selected'] : assets.ripple.default) : undefined;
     return (
       <div {...stylex.props(vib ? fx.groupVibrant : fx.groupStandard)} style={{ width: 228 }}>
         <MenuScope variant={vib ? 'vibrant' : 'standard'}>
@@ -119,18 +162,20 @@ function render(name: string): ReactNode {
     const groups = Number(p[2]);
     return (
       <MenuSurface variant={p[1] === 'vib' ? 'vibrant' : 'standard'} width={208}>
-        {groups === 1
-          ? <MenuGroup>{items(6)}</MenuGroup>
-          : Array.from({ length: groups }, (_, g) => (
-              <MenuGroup key={g} sx={p[1] === 'vib' && groups === 3 && g === 1 ? fx.slipGap : undefined}>
-                {items(4, g * 4)}
-              </MenuGroup>
-            ))}
+        {groups === 1 ? (
+          <MenuGroup>{items(6)}</MenuGroup>
+        ) : (
+          Array.from({ length: groups }, (_, g) => (
+            <MenuGroup key={g} sx={p[1] === 'vib' && groups === 3 && g === 1 ? fx.slipGap : undefined}>
+              {items(4, g * 4)}
+            </MenuGroup>
+          ))
+        )}
       </MenuSurface>
     );
   }
   if (p[0] === 'bmenu') {
-    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4);
+    const density = p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4;
     return (
       <MenuSurface variant="baseline" density={density} width={200}>
         {Array.from({ length: 12 }, (_, i) => (
@@ -143,13 +188,18 @@ function render(name: string): ReactNode {
   }
   if (p[0] === 'bitem') {
     // bitem-d{0|m2|m4}-{state}
-    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4);
+    const density = p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4;
     const state = p[2]!;
     return (
       <MenuScope variant="baseline" density={density}>
         <div style={{ width: 200 }}>
           <ForceState state={asForced(state)}>
-            <MenuItem leading={<Icon name="content_cut-24" />} trailing={<Icon name="arrow_right-24" />} selected={state === 'selected'} disabled={state === 'disabled'}>
+            <MenuItem
+              leading={<Icon name="content_cut-24" />}
+              trailing={<Icon name="arrow_right-24" />}
+              selected={state === 'selected'}
+              disabled={state === 'disabled'}
+            >
               Menu item
             </MenuItem>
           </ForceState>
@@ -161,24 +211,83 @@ function render(name: string): ReactNode {
   // Building blocks.
   const blocks: Record<string, ReactNode> = {
     'lead-indent': <div style={{ width: 20, height: 20 }} />,
-    'lead-icon': <span {...stylex.props(fx.onSurfaceVariant)}><Icon name="stars-20" /></span>,
+    'lead-icon': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        <Icon name="stars-20" />
+      </span>
+    ),
     'lead-slot': <Img src={slotLead} w={44} h={36} />,
-    'content-text': <span {...stylex.props(typescale.labelLarge, fx.onSurface)} style={{ display: 'block', width: 62.5 }}>Label</span>,
+    'content-text': (
+      <span {...stylex.props(typescale.labelLarge, fx.onSurface)} style={{ display: 'block', width: 62.5 }}>
+        Label
+      </span>
+    ),
     'content-slot': <HalfPxImg src={slotContent} w={62.5} h={36} />,
-    'trail-text': <span {...stylex.props(fx.onSurfaceVariant)}><Shortcut /></span>,
-    'trail-icon': <span {...stylex.props(fx.onSurfaceVariant)}>{row(<><Shortcut /><Icon name="arrow_right-20" /></>)}</span>,
-    'trail-slot': <span {...stylex.props(fx.onSurfaceVariant)}>{row(<><Shortcut /><Img src={slotTrail} w={40} h={36} /></>)}</span>,
-    'trail-badge': <span {...stylex.props(fx.onSurfaceVariant)}>{row(<><Badge>New</Badge><Shortcut /></>)}</span>,
+    'trail-text': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        <Shortcut />
+      </span>
+    ),
+    'trail-icon': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        {row(
+          <>
+            <Shortcut />
+            <Icon name="arrow_right-20" />
+          </>,
+        )}
+      </span>
+    ),
+    'trail-slot': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        {row(
+          <>
+            <Shortcut />
+            <Img src={slotTrail} w={40} h={36} />
+          </>,
+        )}
+      </span>
+    ),
+    'trail-badge': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        {row(
+          <>
+            <Badge>New</Badge>
+            <Shortcut />
+          </>,
+        )}
+      </span>
+    ),
     'label-std': <LabelBlock vibrant={false} />,
     'label-vib': <LabelBlock vibrant />,
-    'blead-icon': <span {...stylex.props(fx.onSurfaceVariant)}><Icon name="content_cut-24" /></span>,
+    'blead-icon': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        <Icon name="content_cut-24" />
+      </span>
+    ),
     'blead-indent': <div style={{ width: 24, height: 24 }} />,
     'blead-slot': <div style={{ width: 24, height: 24 }} />,
-    'btrail-icon': <span {...stylex.props(fx.onSurfaceVariant)}><Icon name="arrow_right-24" /></span>,
-    'btrail-text': <span {...stylex.props(fx.onSurfaceVariant)}><ShortcutBaseline /></span>,
+    'btrail-icon': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        <Icon name="arrow_right-24" />
+      </span>
+    ),
+    'btrail-text': (
+      <span {...stylex.props(fx.onSurfaceVariant)}>
+        <ShortcutBaseline />
+      </span>
+    ),
     'btrail-slot': <div style={{ width: 24, height: 24 }} />,
-    'btrail-sel-icon': <span {...stylex.props(fx.onSecondaryContainer)}><Icon name="arrow_right-24" /></span>,
-    'btrail-sel-text': <span {...stylex.props(fx.onSecondaryContainer)}><ShortcutBaseline /></span>,
+    'btrail-sel-icon': (
+      <span {...stylex.props(fx.onSecondaryContainer)}>
+        <Icon name="arrow_right-24" />
+      </span>
+    ),
+    'btrail-sel-text': (
+      <span {...stylex.props(fx.onSecondaryContainer)}>
+        <ShortcutBaseline />
+      </span>
+    ),
     'btrail-sel-slot': <div style={{ width: 24, height: 24 }} />,
   };
   return blocks[name];
@@ -193,7 +302,12 @@ function LiveMenu() {
         {[0, 1].map((g) => (
           <MenuGroup key={g}>
             {[0, 1, 2, 3].map((i) => (
-              <MenuItem key={i} leading={<Icon name="stars-20" />} trailing={<Icon name="arrow_right-20" />} onClick={() => setLog(String(g * 4 + i + 1))}>
+              <MenuItem
+                key={i}
+                leading={<Icon name="stars-20" />}
+                trailing={<Icon name="arrow_right-20" />}
+                onClick={() => setLog(String(g * 4 + i + 1))}
+              >
                 Label
               </MenuItem>
             ))}
@@ -257,7 +371,12 @@ function LiveMotionMenu() {
         <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap} selectedLeading={<Check />}>
           Word wrap
         </MenuCheckboxItem>
-        <Submenu items={['Email', 'Link'].map((t) => <MenuItem key={t}>{t}</MenuItem>)} trailing={<Icon name="arrow_right-20" />}>
+        <Submenu
+          items={['Email', 'Link'].map((t) => (
+            <MenuItem key={t}>{t}</MenuItem>
+          ))}
+          trailing={<Icon name="arrow_right-20" />}
+        >
           Share
         </Submenu>
       </Menu>
@@ -283,7 +402,17 @@ const fixture: FixtureModule = {
           height: h,
           render: () =>
             isBlock ? (
-              <div style={{ width: w, height: h, display: 'flex', alignItems: 'center', justifyContent: name.startsWith('trail') ? 'flex-end' : 'flex-start' }}>{node}</div>
+              <div
+                style={{
+                  width: w,
+                  height: h,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: name.startsWith('trail') ? 'flex-end' : 'flex-start',
+                }}
+              >
+                {node}
+              </div>
             ) : (
               <div style={{ width: w }}>{node}</div>
             ),

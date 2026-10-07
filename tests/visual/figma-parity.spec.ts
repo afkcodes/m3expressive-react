@@ -74,7 +74,10 @@ for (const manifest of loadManifests()) {
           const delta = Math.max(...rel.map((n, i) => Math.abs(n - layer.box[i]!)));
           maxBoxDelta = Math.max(maxBoxDelta, delta);
           expect
-            .soft(delta, `layer "${layer.name}" box ${rel.map((n) => n.toFixed(3)).join(',')} vs Figma ${layer.box.join(',')}`)
+            .soft(
+              delta,
+              `layer "${layer.name}" box ${rel.map((n) => n.toFixed(3)).join(',')} vs Figma ${layer.box.join(',')}`,
+            )
             .toBeLessThanOrEqual(BOX_EPSILON);
         }
 
@@ -109,7 +112,10 @@ for (const manifest of loadManifests()) {
           type: 'parity',
           description: `${result.diffPixels} drift px (${pct}%; ${result.flatDriftPixels} flat) · ${result.aaPixels} AA · ${result.rasterPixels} glyph-edge raster (max Δ${result.rasterMaxDelta}/255)${v.layers?.length ? ` · layer Δ ${maxBoxDelta.toFixed(3)}px` : ''}`,
         });
-        expect(result.sizeMatch, `image size ref ${result.refSize.join('×')} vs actual ${result.actualSize.join('×')}`).toBe(true);
+        expect(
+          result.sizeMatch,
+          `image size ref ${result.refSize.join('×')} vs actual ${result.actualSize.join('×')}`,
+        ).toBe(true);
         expect(result.diffPixels, `non-AA pixel drift (${pct}%)`).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
       });
     }

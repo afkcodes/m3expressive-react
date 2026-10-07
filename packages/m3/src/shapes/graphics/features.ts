@@ -80,12 +80,9 @@ export abstract class Feature {
   private static validated(feature: Feature): Feature {
     require(feature.cubics.length > 0, () => 'Features need at least one cubic.');
 
-    require(
-      Feature.isContinuous(feature),
-      () =>
-        'Feature must be continuous, with the anchor points of all cubics ' +
-        'matching the anchor points of the preceding and succeeding cubics',
-    );
+    require(Feature.isContinuous(feature), () =>
+      'Feature must be continuous, with the anchor points of all cubics ' +
+      'matching the anchor points of the preceding and succeeding cubics');
 
     return feature;
   }

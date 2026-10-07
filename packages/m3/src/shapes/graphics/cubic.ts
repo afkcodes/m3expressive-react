@@ -385,8 +385,7 @@ export class Cubic {
     const cosa = p0d.dotProduct(p1d);
     if (cosa > 0.999) /* p0 ~= p1 */ return Cubic.straightLine(x0, y0, x1, y1);
     const k =
-      ((((distance(x0 - centerX, y0 - centerY) * 4) / 3) *
-        (Math.sqrt(2 * (1 - cosa)) - Math.sqrt(1 - cosa * cosa))) /
+      ((((distance(x0 - centerX, y0 - centerY) * 4) / 3) * (Math.sqrt(2 * (1 - cosa)) - Math.sqrt(1 - cosa * cosa))) /
         (1 - cosa)) *
       (clockwise ? 1 : -1);
     return new Cubic(

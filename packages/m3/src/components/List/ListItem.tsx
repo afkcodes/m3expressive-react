@@ -1,4 +1,14 @@
-import { createContext, forwardRef, useContext, useEffect, useLayoutEffect, useRef, useState, type MouseEventHandler, type ReactNode } from 'react';
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
@@ -72,7 +82,14 @@ const s = stylex.create({
     transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.defaultEffectsEasing}, ${motion.defaultEffectsEasing}, ${motion.fastSpatialEasing}, step-end`,
   },
   interactive: { cursor: 'pointer', userSelect: 'none' },
-  expressive: { columnGap: 12, paddingBlock: 10, paddingInline: 16, minHeight: 48, alignItems: 'center', borderRadius: 4 },
+  expressive: {
+    columnGap: 12,
+    paddingBlock: 10,
+    paddingInline: 16,
+    minHeight: 48,
+    alignItems: 'center',
+    borderRadius: 4,
+  },
   expressiveShapes: { borderRadius: { default: 4, ':hover': 12, ':focus-visible': 16, ':active': 16 } },
   forceHover: { borderRadius: 12 },
   forceFull: { borderRadius: 16 },
@@ -95,7 +112,11 @@ const s = stylex.create({
   lines2: { minHeight: 72 },
   lines3: { minHeight: 88, paddingBlock: 12, alignItems: 'flex-start' },
   top: { alignItems: 'flex-start' },
-  selected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer, [interaction.layerColor]: color.onSecondaryContainer },
+  selected: {
+    backgroundColor: color.secondaryContainer,
+    color: color.onSecondaryContainer,
+    [interaction.layerColor]: color.onSecondaryContainer,
+  },
   selectedDisabled: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
   // Lifted above its siblings: the shadow falls over the neighbouring rows.
   // Lifting is immediate (z-index 0s); the layer opacity comes from stateLayerHost.forceDragged.
@@ -109,7 +130,14 @@ const s = stylex.create({
   },
   // Compose material-ripple StateLayer: the drag layer fades out over 150ms (linear).
   leavingDrag: { [interaction.layerDuration]: '150ms' },
-  slot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: color.onSurfaceVariant, ...colorMotion },
+  slot: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    color: color.onSurfaceVariant,
+    ...colorMotion,
+  },
   slotExpressive: { minHeight: 28 },
   // The text sets the row height (10 + content + 10); taller slots (40px accordion button, 48px
   // controls) are centred and spill into the padding, as the kit's fixed-height rows do.
@@ -121,7 +149,15 @@ const s = stylex.create({
   slotOnSelected: { color: color.onSecondaryContainer },
   slotOnDragged: { color: color.onTertiaryContainer },
   dim: { opacity: 0.38 },
-  content: { display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flexGrow: 1, flexShrink: 1, flexBasis: 0, minWidth: 0 },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    minWidth: 0,
+  },
   contentExpressive: { minHeight: 32 },
   // The kit's Dragged variants centre the text column (the rest stack it from the top).
   contentCentered: { justifyContent: 'center' },
@@ -203,7 +239,11 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
   const interactive = !disabled && (onClick != null || href != null || forced.state != null);
   const lines =
     linesProp ??
-    (supportingText != null && (overline != null || (supportingMaxLines ?? 1) > 1) ? 3 : supportingText != null || overline != null ? 2 : 1);
+    (supportingText != null && (overline != null || (supportingMaxLines ?? 1) > 1)
+      ? 3
+      : supportingText != null || overline != null
+        ? 2
+        : 1);
   const tone = disabled ? null : dragged ? 'dragged' : selected ? 'selected' : null;
   // Leaving drag fades the 16% layer over 150ms; the flag clears once that has run.
   const [leavingDrag, setLeavingDrag] = useState(false);
@@ -217,7 +257,13 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     if (!dragged) leaveTimer.current = setTimeout(() => setLeavingDrag(false), 150);
   }, [dragged]);
   useEffect(() => () => clearTimeout(leaveTimer.current), []);
-  const textTone = disabled ? s.textDisabled : tone === 'dragged' ? s.onDragged : tone === 'selected' ? s.onSelected : null;
+  const textTone = disabled
+    ? s.textDisabled
+    : tone === 'dragged'
+      ? s.onDragged
+      : tone === 'selected'
+        ? s.onSelected
+        : null;
 
   const body = (
     <>
@@ -240,7 +286,9 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
       )}
       <span {...stylex.props(s.content, expressive && s.contentExpressive, expressive && dragged && s.contentCentered)}>
         {overline != null && (
-          <span {...stylex.props(expressive ? typescale.labelMedium : typescale.labelSmall, s.overline, textTone)}>{overline}</span>
+          <span {...stylex.props(expressive ? typescale.labelMedium : typescale.labelSmall, s.overline, textTone)}>
+            {overline}
+          </span>
         )}
         <span {...stylex.props(typescale.bodyLarge, s.headline, textTone)}>{children}</span>
         {supportingText != null && (
@@ -276,7 +324,14 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
           )}
         >
           {trailingText != null && (
-            <span {...stylex.props(expressive ? typescale.labelLarge : [typescale.labelSmall, textBox.hug, textEnd.trimTracking], s.trailingText)}>{trailingText}</span>
+            <span
+              {...stylex.props(
+                expressive ? typescale.labelLarge : [typescale.labelSmall, textBox.hug, textEnd.trimTracking],
+                s.trailingText,
+              )}
+            >
+              {trailingText}
+            </span>
           )}
           {trailing}
         </span>
@@ -286,7 +341,9 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
 
   const styles = stylex.props(
     s.root,
-    expressive ? s.expressive : [s.baseline, lines === 1 ? s.lines1 : lines === 2 ? s.lines2 : s.lines3, inheritSurface && s.inheritSurface],
+    expressive
+      ? s.expressive
+      : [s.baseline, lines === 1 ? s.lines1 : lines === 2 ? s.lines2 : s.lines3, inheritSurface && s.inheritSurface],
     expressive && alignment === 'top' && s.top,
     expressive && list.segmented && s.segmentedFill,
     interactive && s.interactive,
@@ -302,7 +359,11 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     !dragged && leavingDrag && s.leavingDrag,
     sx,
   );
-  const common = { ...styles, 'data-ripple-host': interactive ? '' : undefined, 'data-selected': selected ? '' : undefined };
+  const common = {
+    ...styles,
+    'data-ripple-host': interactive ? '' : undefined,
+    'data-selected': selected ? '' : undefined,
+  };
 
   let el: ReactNode;
   if (href != null && !disabled) {
@@ -313,7 +374,14 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     );
   } else if (onClick != null) {
     el = (
-      <button ref={ref as React.Ref<HTMLButtonElement>} type="button" disabled={disabled} aria-pressed={selected || undefined} onClick={onClick} {...common}>
+      <button
+        ref={ref as React.Ref<HTMLButtonElement>}
+        type="button"
+        disabled={disabled}
+        aria-pressed={selected || undefined}
+        onClick={onClick}
+        {...common}
+      >
         {body}
       </button>
     );

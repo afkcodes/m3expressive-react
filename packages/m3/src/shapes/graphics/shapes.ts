@@ -167,7 +167,13 @@ export interface PillOptions {
  *
  * @throws IllegalArgumentError if either [width] or [height] are <= 0.
  */
-export function pill({ width = 2, height = 1, smoothing = 0, centerX = 0, centerY = 0 }: PillOptions = {}): RoundedPolygon {
+export function pill({
+  width = 2,
+  height = 1,
+  smoothing = 0,
+  centerX = 0,
+  centerY = 0,
+}: PillOptions = {}): RoundedPolygon {
   if (!(width > 0 && height > 0)) {
     throw new IllegalArgumentError('Pill shapes must have positive width and height');
   }

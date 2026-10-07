@@ -25,7 +25,9 @@ const C = 24;
 let morphs: Morph[] | null = null;
 const getMorphs = () => {
   if (!morphs) {
-    const polys = loadingShapes.map((d) => RoundedPolygon.fromFeatures(SvgPathParser.parseFeatures(d), { centerX: C, centerY: C }));
+    const polys = loadingShapes.map((d) =>
+      RoundedPolygon.fromFeatures(SvgPathParser.parseFeatures(d), { centerX: C, centerY: C }),
+    );
     morphs = polys.map((p, i) => new Morph(p, polys[(i + 1) % polys.length]!));
   }
   return morphs;
@@ -106,7 +108,11 @@ export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps
       <svg width={48} height={48} viewBox="0 0 48 48" {...stylex.props(s.svg)} aria-hidden>
         {container && <circle cx={C} cy={C} r={24} {...stylex.props(s.container)} />}
         <g ref={group}>
-          <path ref={path} d={loadingShapes[(step ?? 0) % loadingShapes.length]} {...stylex.props(container ? s.shapeOnContainer : s.shape)} />
+          <path
+            ref={path}
+            d={loadingShapes[(step ?? 0) % loadingShapes.length]}
+            {...stylex.props(container ? s.shapeOnContainer : s.shape)}
+          />
         </g>
       </svg>
     </Progress.Root>

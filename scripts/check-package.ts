@@ -14,7 +14,10 @@ const out = mkdtempSync(join(tmpdir(), 'm3x-pack-'));
 const run = (cmd: string, args: string[], cwd = pkg) => execFileSync(cmd, args, { cwd, stdio: 'inherit' });
 
 run('pnpm', ['pack', '--pack-destination', out]);
-const tarball = join(out, readdirSync(out).find((f) => f.endsWith('.tgz'))!);
+const tarball = join(
+  out,
+  readdirSync(out).find((f) => f.endsWith('.tgz'))!,
+);
 run('pnpm', ['exec', 'publint', 'run', tarball]);
 // fonts.css is a stylesheet entry; attw only resolves script modules.
 run('pnpm', ['exec', 'attw', tarball, '--profile', 'esm-only', '--exclude-entrypoints', 'fonts.css']);

@@ -1,11 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "react",
-    "jsx-a11y",
-    "import"
-  ],
+  "plugins": ["typescript", "react", "jsx-a11y", "import"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn"
@@ -32,13 +27,7 @@
     "jsx-a11y/label-has-associated-control": [
       "error",
       {
-        "controlComponents": [
-          "Checkbox",
-          "Switch",
-          "Radio",
-          "Slider",
-          "TextField"
-        ]
+        "controlComponents": ["Checkbox", "Switch", "Radio", "Slider", "TextField"]
       }
     ]
   },
@@ -55,34 +44,20 @@
   ],
   "overrides": [
     {
-      "files": [
-        "**/*.test.ts"
-      ],
-      "plugins": [
-        "typescript",
-        "vitest"
-      ],
+      "files": ["**/*.test.ts"],
+      "plugins": ["typescript", "vitest"],
       "rules": {
         "vitest/expect-expect": [
           "error",
           {
-            "assertFunctionNames": [
-              "expect",
-              "expect.*",
-              "assert*"
-            ]
+            "assertFunctionNames": ["expect", "expect.*", "assert*"]
           }
         ]
       }
     },
     {
-      "files": [
-        "**/shapes/graphics/**"
-      ],
-      "plugins": [
-        "typescript",
-        "vitest"
-      ],
+      "files": ["**/shapes/graphics/**"],
+      "plugins": ["typescript", "vitest"],
       "rules": {
         "vitest/expect-expect": "off",
         "vitest/no-conditional-expect": "off"

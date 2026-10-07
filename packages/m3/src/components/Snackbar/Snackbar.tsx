@@ -98,7 +98,15 @@ const s = stylex.create({
     color: color.inversePrimary,
     [interaction.layerColor]: color.inversePrimary,
   },
-  close: { width: 48, height: 48, padding: 0, borderRadius: 24, color: color.inverseOnSurface, [interaction.layerColor]: color.inverseOnSurface, outlineStyle: 'none' },
+  close: {
+    width: 48,
+    height: 48,
+    padding: 0,
+    borderRadius: 24,
+    color: color.inverseOnSurface,
+    [interaction.layerColor]: color.inverseOnSurface,
+    outlineStyle: 'none',
+  },
   closeCircle: {
     position: 'relative',
     isolation: 'isolate',
@@ -156,10 +164,17 @@ export interface SnackbarActionProps extends Omit<BaseButton.Props, 'className' 
 }
 
 /** The snackbar's inverse text button. */
-export const SnackbarAction = forwardRef<HTMLButtonElement, SnackbarActionProps>(function SnackbarAction({ children, sx, ...rest }, ref) {
+export const SnackbarAction = forwardRef<HTMLButtonElement, SnackbarActionProps>(function SnackbarAction(
+  { children, sx, ...rest },
+  ref,
+) {
   const f = useForcedState();
   return (
-    <BaseButton ref={ref} {...rest} {...stylex.props(s.button, s.action, stateLayerHost.hostPressLayer, ...forced(f), sx)}>
+    <BaseButton
+      ref={ref}
+      {...rest}
+      {...stylex.props(s.button, s.action, stateLayerHost.hostPressLayer, ...forced(f), sx)}
+    >
       <StateLayer />
       <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{children}</span>
     </BaseButton>
@@ -171,10 +186,27 @@ export interface SnackbarCloseProps extends Omit<BaseButton.Props, 'className' |
 }
 
 /** The close affordance (48px target, 40px circle). */
-export const SnackbarClose = forwardRef<HTMLButtonElement, SnackbarCloseProps>(function SnackbarClose({ sx, 'aria-label': label = 'Dismiss', ...rest }, ref) {
+export const SnackbarClose = forwardRef<HTMLButtonElement, SnackbarCloseProps>(function SnackbarClose(
+  { sx, 'aria-label': label = 'Dismiss', ...rest },
+  ref,
+) {
   const f = useForcedState();
   return (
-    <BaseButton ref={ref} aria-label={label} {...rest} {...stylex.props(s.button, s.close, stateLayerHost.hostPressLayer, stylex.defaultMarker(), f.state === 'hovered' && stateLayerHost.forceHover, f.state === 'focused' && stateLayerHost.forceFocus, f.state === 'pressed' && stateLayerHost.forcePressed, sx)}>
+    <BaseButton
+      ref={ref}
+      aria-label={label}
+      {...rest}
+      {...stylex.props(
+        s.button,
+        s.close,
+        stateLayerHost.hostPressLayer,
+        stylex.defaultMarker(),
+        f.state === 'hovered' && stateLayerHost.forceHover,
+        f.state === 'focused' && stateLayerHost.forceFocus,
+        f.state === 'pressed' && stateLayerHost.forcePressed,
+        sx,
+      )}
+    >
       <span {...stylex.props(s.closeCircle, f.focusRing && s.ringForced)}>
         <StateLayer />
         <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.icon)}>
@@ -337,12 +369,21 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
     return {
       show(message, options = {}) {
         const id = `m3x-snackbar-${++snackbarCount}`;
-        const ms = options.timeout ?? (options.duration ? DURATION_MS[options.duration] : (timeoutRef.current ?? DURATION_MS[options.action ? 'indefinite' : 'short']));
+        const ms =
+          options.timeout ??
+          (options.duration
+            ? DURATION_MS[options.duration]
+            : (timeoutRef.current ?? DURATION_MS[options.action ? 'indefinite' : 'short']));
         state.current.queue.push({
           id,
           message,
           timeout: ms,
-          data: { actionLabel: options.action?.label, onAction: options.action?.onClick, withClose: options.withClose, stacked: options.stacked },
+          data: {
+            actionLabel: options.action?.label,
+            onAction: options.action?.onClick,
+            withClose: options.withClose,
+            stacked: options.stacked,
+          },
         });
         pump();
         return id;

@@ -13,7 +13,13 @@ type Sample = { t: number; v: number };
  * Samples `read(el)` every animation frame for `ms` after clicking the button labelled `click`
  * (inside the page, so t = 0 is the click). `el` is the element matching `selector`.
  */
-async function sampleAfterClick(page: Page, selector: string, click: string | null, ms: number, read: string): Promise<Sample[]> {
+async function sampleAfterClick(
+  page: Page,
+  selector: string,
+  click: string | null,
+  ms: number,
+  read: string,
+): Promise<Sample[]> {
   return page.evaluate(
     ([selector, click, ms, read]) =>
       new Promise<Sample[]>((resolve) => {
@@ -23,7 +29,7 @@ async function sampleAfterClick(page: Page, selector: string, click: string | nu
         if (click) [...document.querySelectorAll('button')].find((b) => b.textContent === click)!.click();
         const tick = (now: number) => {
           out.push({ t: now - t0, v: fn(document.querySelector(selector)!) });
-          if (now - t0 < (ms)) requestAnimationFrame(tick);
+          if (now - t0 < ms) requestAnimationFrame(tick);
           else resolve(out);
         };
         requestAnimationFrame(tick);
@@ -40,7 +46,9 @@ test.describe('progress motion', () => {
   const headX = '(el) => { const b = el.getBBox(); return b.x + b.width; }';
   const height = '(el) => el.getBBox().height';
 
-  test('wavy value change: tween(500ms, linear) — WavyProgressIndicatorDefaults.ProgressAnimationSpec', async ({ page }) => {
+  test('wavy value change: tween(500ms, linear) — WavyProgressIndicatorDefaults.ProgressAnimationSpec', async ({
+    page,
+  }) => {
     await page.goto('/fixture/progress/live-motion?v=30');
     await page.waitForTimeout(600);
     const s = await sampleAfterClick(page, wave, '80%', 800, headX);
@@ -59,7 +67,9 @@ test.describe('progress motion', () => {
     expect(mid).toBeLessThan(0.6);
   });
 
-  test('linear wave amplitude: ramps down (EmphasizedAccelerate, 500ms) once the drawn value passes 95%, up (Standard) below it', async ({ page }) => {
+  test('linear wave amplitude: ramps down (EmphasizedAccelerate, 500ms) once the drawn value passes 95%, up (Standard) below it', async ({
+    page,
+  }) => {
     await page.goto('/fixture/progress/live-motion?v=50');
     await page.waitForTimeout(600);
     const full = await page.locator(wave).evaluate((el) => (el as SVGPathElement).getBBox().height);
@@ -80,7 +90,9 @@ test.describe('progress motion', () => {
     expect(at(up, 650) / full).toBeGreaterThan(0.99);
   });
 
-  test('circular wave: flat below 10% and still; ramps into the wave after 10%, flattens and stops again', async ({ page }) => {
+  test('circular wave: flat below 10% and still; ramps into the wave after 10%, flattens and stops again', async ({
+    page,
+  }) => {
     const ring = '[aria-label="Circular wave"] path:last-of-type';
     await page.goto('/fixture/progress/live-motion?v=5');
     await page.waitForTimeout(600);
@@ -89,7 +101,13 @@ test.describe('progress motion', () => {
     expect(flat).not.toMatch(/L/); // a plain arc on the crest circle
     await page.waitForTimeout(300);
     expect(await d(), 'no amplitude → the wave does not travel').toBe(flat);
-    const kinds = await sampleAfterClick(page, ring, '30%', 1200, "(el) => { const d = el.getAttribute('d'); return d.includes('A4.793') ? 2 : d.includes('L') ? 1 : 0; }");
+    const kinds = await sampleAfterClick(
+      page,
+      ring,
+      '30%',
+      1200,
+      "(el) => { const d = el.getAttribute('d'); return d.includes('A4.793') ? 2 : d.includes('L') ? 1 : 0; }",
+    );
     // 5% → 30% passes 10% at 100ms: arc, then partial-amplitude blends, then the kit's star.
     expect(kinds.some((x) => x.v === 1)).toBe(true);
     expect(at(kinds, 50)).toBe(0);
@@ -118,7 +136,13 @@ test.describe('progress motion', () => {
     await page.goto('/fixture/progress/live-indeterminate');
     await page.waitForTimeout(300);
     const g = '[aria-label="Loading shape"] g';
-    const raw = await sampleAfterClick(page, g, null, 2400, "(el) => Number(/rotate\\(([-\\d.]+)/.exec(el.getAttribute('transform'))[1])");
+    const raw = await sampleAfterClick(
+      page,
+      g,
+      null,
+      2400,
+      "(el) => Number(/rotate\\(([-\\d.]+)/.exec(el.getAttribute('transform'))[1])",
+    );
     // Unwrap the 360° target wrap and remove the global spin (360° / 4666ms): what's left is
     // progress·90 + target, flat between morphs.
     let k = 0;
@@ -154,7 +178,9 @@ test.describe('progress motion', () => {
 });
 
 // ── Slider ──────────────────────────────────────────────────────────────────────────────────
-test('slider value indicator: appears / disappears with no transition (Compose Label); press and keyboard focus, not hover', async ({ page }) => {
+test('slider value indicator: appears / disappears with no transition (Compose Label); press and keyboard focus, not hover', async ({
+  page,
+}) => {
   await page.goto('/fixture/slider/live');
   await page.mouse.move(0, 0);
   const volume = page.getByRole('slider', { name: 'Volume' });
@@ -187,19 +213,34 @@ test.describe('text field motion', () => {
       return { property: cs.transitionProperty, duration: cs.transitionDuration };
     }, pick);
 
-  test('indicator / outline: colour on FastEffects, thickness on FastSpatial, snap when disabled; container FastEffects; supporting text not animated', async ({ page }) => {
+  test('indicator / outline: colour on FastEffects, thickness on FastSpatial, snap when disabled; container FastEffects; supporting text not animated', async ({
+    page,
+  }) => {
     await page.goto('/fixture/text-field/filled-enabled-label-xx');
     // Filled indicator line (Compose IndicatorLineNode).
-    expect(await transitionOf(page, 'span[aria-hidden]:last-child')).toEqual({ property: 'top, height, background-color', duration: '0.369s, 0.369s, 0.15s' });
+    expect(await transitionOf(page, 'span[aria-hidden]:last-child')).toEqual({
+      property: 'top, height, background-color',
+      duration: '0.369s, 0.369s, 0.15s',
+    });
     // Container colour (TextFieldDefaults.Container) and supporting text (not animated).
-    expect(await transitionOf(page, '[data-fixture-node] > div > div')).toEqual({ property: 'background-color', duration: '0.15s' });
+    expect(await transitionOf(page, '[data-fixture-node] > div > div')).toEqual({
+      property: 'background-color',
+      duration: '0.15s',
+    });
     const supporting = page.getByText('Supporting text');
-    expect(await supporting.evaluate((el) => getComputedStyle(el).transitionProperty + ' ' + getComputedStyle(el).transitionDuration)).toBe('all 0s');
+    expect(
+      await supporting.evaluate(
+        (el) => getComputedStyle(el).transitionProperty + ' ' + getComputedStyle(el).transitionDuration,
+      ),
+    ).toBe('all 0s');
     await page.goto('/fixture/text-field/filled-disabled-label-xx');
     expect((await transitionOf(page, 'span[aria-hidden]:last-child')).duration).toBe('0s');
     // Outlined stroke (animateBorderStrokeAsState).
     await page.goto('/fixture/text-field/outlined-enabled-label-xx');
-    expect(await transitionOf(page, 'fieldset')).toEqual({ property: 'border-width, padding-inline-start, border-color', duration: '0.369s, 0.369s, 0.15s' });
+    expect(await transitionOf(page, 'fieldset')).toEqual({
+      property: 'border-width, padding-inline-start, border-color',
+      duration: '0.369s, 0.369s, 0.15s',
+    });
     await page.goto('/fixture/text-field/outlined-disabled-label-xx');
     expect((await transitionOf(page, 'fieldset')).duration).toBe('0s');
   });
@@ -207,10 +248,11 @@ test.describe('text field motion', () => {
   test('placeholder: fades in on SlowEffects when focused, out on FastEffects when blurred', async ({ page }) => {
     await page.goto('/fixture/text-field/live');
     const name = page.getByRole('textbox', { name: 'Name' });
-    const ph = () => name.evaluate((el) => {
-      const cs = getComputedStyle(el, '::placeholder');
-      return { opacity: Number(cs.opacity), duration: cs.transitionDuration };
-    });
+    const ph = () =>
+      name.evaluate((el) => {
+        const cs = getComputedStyle(el, '::placeholder');
+        return { opacity: Number(cs.opacity), duration: cs.transitionDuration };
+      });
     expect(await ph()).toEqual({ opacity: 0, duration: '0.15s' });
     await name.focus();
     const fading = await ph();
@@ -224,7 +266,9 @@ test.describe('text field motion', () => {
     await expect.poll(async () => (await ph()).opacity).toBe(0);
   });
 
-  test('outlined notch opens with the label: label width × progress + 4px each side (Compose outlineCutout)', async ({ page }) => {
+  test('outlined notch opens with the label: label width × progress + 4px each side (Compose outlineCutout)', async ({
+    page,
+  }) => {
     await page.goto('/fixture/text-field/live');
     await page.evaluate(() => document.fonts.ready); // the label is measured when the float starts
     const frames = await page.evaluate(
@@ -261,7 +305,9 @@ test.describe('text field motion', () => {
     expect(mid.legend).toBeLessThan(final * 0.8);
   });
 
-  test('label float interrupted mid-flight continues from its position and velocity (Compose Transition)', async ({ page }) => {
+  test('label float interrupted mid-flight continues from its position and velocity (Compose Transition)', async ({
+    page,
+  }) => {
     await page.goto('/fixture/text-field/live');
     await page.evaluate(() => document.fonts.ready);
     const ys = await page.evaluate(
@@ -287,7 +333,8 @@ test.describe('text field motion', () => {
         }),
     );
     const rest = ys[0]!.y;
-    for (let i = 1; i < ys.length; i++) expect(Math.abs(ys[i]!.y - ys[i - 1]!.y), `jump at ${ys[i]!.t.toFixed(0)}ms`).toBeLessThan(7);
+    for (let i = 1; i < ys.length; i++)
+      expect(Math.abs(ys[i]!.y - ys[i - 1]!.y), `jump at ${ys[i]!.t.toFixed(0)}ms`).toBeLessThan(7);
     const i = ys.findIndex((s) => s.blurred);
     const before = ys[i - 1]!.y - ys[i - 2]!.y; // moving up (negative)
     expect(before).toBeLessThan(-1);

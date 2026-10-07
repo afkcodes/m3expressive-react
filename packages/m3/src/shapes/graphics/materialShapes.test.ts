@@ -106,9 +106,14 @@ describe('Morph between material shapes', () => {
   ];
   // Every shape is used as a start and an end at least once: each shape morphs to the next one.
   const ring = materialShapeNames.map(
-    (name, i) => [name, materialShapeNames[(i + 1) % materialShapeNames.length]!] as [MaterialShapeName, MaterialShapeName],
+    (name, i) =>
+      [name, materialShapeNames[(i + 1) % materialShapeNames.length]!] as [MaterialShapeName, MaterialShapeName],
   );
-  const endpointPairs = [...namedPairs, ...namedPairs.map(([a, b]) => [b, a] as [MaterialShapeName, MaterialShapeName]), ...ring];
+  const endpointPairs = [
+    ...namedPairs,
+    ...namedPairs.map(([a, b]) => [b, a] as [MaterialShapeName, MaterialShapeName]),
+    ...ring,
+  ];
 
   it.each(endpointPairs)('Morph(%s, %s) matches the start shape at 0 and the end shape at 1', (a, b) => {
     const morph = new Morph(materialShapes[a], materialShapes[b]);

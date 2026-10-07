@@ -4,10 +4,18 @@ import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 
-const CHECK = 'M7.95831 15.0001L3.20831 10.2501L4.39581 9.06258L7.95831 12.6251L15.6041 4.97925L16.7916 6.16675L7.95831 15.0001Z';
+const CHECK =
+  'M7.95831 15.0001L3.20831 10.2501L4.39581 9.06258L7.95831 12.6251L15.6041 4.97925L16.7916 6.16675L7.95831 15.0001Z';
 
 const s = stylex.create({
-  media: { position: 'relative', display: 'block', flexShrink: 0, boxSizing: 'border-box', overflow: 'hidden', backgroundColor: color.surfaceContainerHigh },
+  media: {
+    position: 'relative',
+    display: 'block',
+    flexShrink: 0,
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+    backgroundColor: color.surfaceContainerHigh,
+  },
   // Expressive thumbnails: 4px corners and a 1px outline-variant stroke (inside).
   expressive: { borderRadius: 4 },
   stroke: {
@@ -56,7 +64,14 @@ interface MediaProps {
 }
 
 /** 56px image thumbnail. `selected` overlays the expressive check badge. */
-export function ListItemImage({ src, alt = '', expressive = true, selected = false, imageSx, sx }: MediaProps & { selected?: boolean }) {
+export function ListItemImage({
+  src,
+  alt = '',
+  expressive = true,
+  selected = false,
+  imageSx,
+  sx,
+}: MediaProps & { selected?: boolean }) {
   return (
     <span {...stylex.props(s.media, s.image, expressive && s.expressive, sx)}>
       {src && <img src={src} alt={alt} {...stylex.props(s.img, imageSx)} />}

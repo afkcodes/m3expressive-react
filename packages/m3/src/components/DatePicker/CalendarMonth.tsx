@@ -67,14 +67,23 @@ export function CalendarMonth({
     const first = weeks[0]!.findIndex((d) => d != null);
     const start = new Date(y, m, 1 - first);
     const count = 42;
-    const days = Array.from({ length: count }, (_, i) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + i));
+    const days = Array.from(
+      { length: count },
+      (_, i) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + i),
+    );
     weeks = Array.from({ length: 6 }, (_, w) => days.slice(w * 7, w * 7 + 7));
   }
   const inMonth = (d: Date) => d.getMonth() === m && d.getFullYear() === y;
   const grid = useRef<HTMLDivElement>(null);
   const [focusDay, setFocusDay] = useState<Date | null>(null);
   const inThisMonth = (d: Date | null | undefined) => !!d && inMonth(d);
-  const tabDay = inThisMonth(focusDay) ? focusDay! : inThisMonth(value) ? value! : inThisMonth(today) ? today : new Date(y, m, 1);
+  const tabDay = inThisMonth(focusDay)
+    ? focusDay!
+    : inThisMonth(value)
+      ? value!
+      : inThisMonth(today)
+        ? today
+        : new Date(y, m, 1);
 
   useLayoutEffect(() => {
     if (!focusDay || !grid.current) return;
@@ -88,7 +97,11 @@ export function CalendarMonth({
     const base = focusDay ?? tabDay;
     let next: Date;
     if (e.key === 'PageUp' || e.key === 'PageDown')
-      next = new Date(base.getFullYear(), base.getMonth() + (e.key === 'PageUp' ? -1 : 1), Math.min(base.getDate(), 28));
+      next = new Date(
+        base.getFullYear(),
+        base.getMonth() + (e.key === 'PageUp' ? -1 : 1),
+        Math.min(base.getDate(), 28),
+      );
     else if (e.key === 'Home') next = new Date(base.getTime() - ((base.getDay() - firstDayOfWeek + 7) % 7) * DAY);
     else if (e.key === 'End') next = new Date(base.getTime() + ((firstDayOfWeek + 6 - base.getDay() + 7) % 7) * DAY);
     else next = new Date(base.getFullYear(), base.getMonth(), base.getDate() + step[e.key]!);
@@ -110,7 +123,12 @@ export function CalendarMonth({
       {weekdays && (
         <div role="row" {...stylex.props(s.week)}>
           {Array.from({ length: 7 }, (_, i) => (
-            <span key={i} role="columnheader" aria-label={f.weekdayLong(firstDayOfWeek + i)} {...stylex.props(s.weekday)}>
+            <span
+              key={i}
+              role="columnheader"
+              aria-label={f.weekdayLong(firstDayOfWeek + i)}
+              {...stylex.props(s.weekday)}
+            >
               <span aria-hidden {...stylex.props(typescale.bodyLarge, textBox.hug)}>
                 {f.weekdayNarrow(firstDayOfWeek + i)}
               </span>

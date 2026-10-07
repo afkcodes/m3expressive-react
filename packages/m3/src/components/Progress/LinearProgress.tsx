@@ -5,7 +5,14 @@ import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { determinateTrackSpace, linearDeterminate, linearHeight, linearShapes, type ProgressThickness, type ProgressType } from './geometry.ts';
+import {
+  determinateTrackSpace,
+  linearDeterminate,
+  linearHeight,
+  linearShapes,
+  type ProgressThickness,
+  type ProgressType,
+} from './geometry.ts';
 import {
   PROGRESS_SPRING,
   WAVY_PROGRESS_TWEEN,

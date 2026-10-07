@@ -17,8 +17,24 @@ import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/list/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
   stage: { display: 'flex', flexWrap: 'wrap', gap: 32, alignItems: 'start' },
   column: { display: 'grid', gap: 8, width: 320 },
   card: { padding: 8, borderRadius: 20, backgroundColor: color.surfaceContainer },
@@ -29,7 +45,14 @@ type IconName = keyof typeof assets.icons;
 const Icon = ({ name }: { name: IconName }) => {
   const size = Number(name.split('-').pop());
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      fill="currentColor"
+      aria-hidden
+      style={{ display: 'block' }}
+    >
       <path d={assets.icons[name]} />
     </svg>
   );
@@ -105,7 +128,10 @@ export function ListPlayground() {
           </label>
         </section>
         <div {...stylex.props(s.stage)}>
-          <Section title="Selectable" note="Hover rounds the corners to 12px, press / focus / selected to 16px (fast spatial spring).">
+          <Section
+            title="Selectable"
+            note="Hover rounds the corners to 12px, press / focus / selected to 16px (fast spatial spring)."
+          >
             <List type={type} aria-label="Folders">
               {FOLDERS.map((f, i) => (
                 <ListItem
@@ -123,7 +149,10 @@ export function ListPlayground() {
               ))}
             </List>
           </Section>
-          <Section title="Expandable" note="The accordion button toggles nested items: the panel grows on the fast spatial spring with its items sliding down from the header (Compose expandVertically).">
+          <Section
+            title="Expandable"
+            note="The accordion button toggles nested items: the panel grows on the fast spatial spring with its items sliding down from the header (Compose expandVertically)."
+          >
             <List type="segmented" aria-label="Settings">
               <ExpandableListItem
                 leading={<Icon name="stars-20" />}
@@ -131,7 +160,12 @@ export function ListPlayground() {
                 supportingMaxLines={1}
                 defaultExpanded
                 items={['Display', 'Sound', 'Storage'].map((t) => (
-                  <ListItem key={t} leading={<Icon name="stars-20" />} trailing={<Icon name="arrow_right-20" />} onClick={() => setLog(t)}>
+                  <ListItem
+                    key={t}
+                    leading={<Icon name="stars-20" />}
+                    trailing={<Icon name="arrow_right-20" />}
+                    onClick={() => setLog(t)}
+                  >
                     {t}
                   </ListItem>
                 ))}
@@ -150,16 +184,29 @@ export function ListPlayground() {
               </ExpandableListItem>
             </List>
           </Section>
-          <Section title="Swipeable" note={`Drag a row left: peek → revealed actions → a full swipe archives. A flick (≥ 125px/s) or 56px of travel decides where it settles (300ms). Last action: ${log}`}>
+          <Section
+            title="Swipeable"
+            note={`Drag a row left: peek → revealed actions → a full swipe archives. A flick (≥ 125px/s) or 56px of travel decides where it settles (300ms). Last action: ${log}`}
+          >
             <List type={type} aria-label="Messages">
               {messages.map((t) => (
-                <SwipeableListItem key={t} actions={actions} swipeAction={archive(t)} leading={<Icon name="stars-20" />} trailing={<Icon name="more_vert-20" />}>
+                <SwipeableListItem
+                  key={t}
+                  actions={actions}
+                  swipeAction={archive(t)}
+                  leading={<Icon name="stars-20" />}
+                  trailing={<Icon name="more_vert-20" />}
+                >
                   {t}
                 </SwipeableListItem>
               ))}
             </List>
             {messages.length < MESSAGES.length && (
-              <button type="button" onClick={() => setMessages(MESSAGES)} style={{ marginTop: 8, font: 'inherit', fontSize: 13 }}>
+              <button
+                type="button"
+                onClick={() => setMessages(MESSAGES)}
+                style={{ marginTop: 8, font: 'inherit', fontSize: 13 }}
+              >
                 Restore archived
               </button>
             )}
@@ -184,18 +231,29 @@ export function ListPlayground() {
                   {t}
                 </ListItem>
               ))}
-              <ListItem trailing={<Switch checked={wifi} onCheckedChange={setWifi} aria-label="Wi-Fi" disabled={disabled} />} disabled={disabled}>
+              <ListItem
+                trailing={<Switch checked={wifi} onCheckedChange={setWifi} aria-label="Wi-Fi" disabled={disabled} />}
+                disabled={disabled}
+              >
                 Wi-Fi
               </ListItem>
             </List>
           </Section>
-          <Section title="Lifted (reorder)" note="The dragged state for your drag-and-drop layer: tertiary container, elevation 5, 16px corners; it stays above its neighbours until the shadow has animated out.">
+          <Section
+            title="Lifted (reorder)"
+            note="The dragged state for your drag-and-drop layer: tertiary container, elevation 5, 16px corners; it stays above its neighbours until the shadow has animated out."
+          >
             <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14, marginBottom: 8 }}>
               <input type="checkbox" checked={dragged} onChange={(e) => setDragged(e.target.checked)} /> dragged
             </label>
             <List aria-label="Queue">
               {['First', 'Second', 'Third'].map((t, i) => (
-                <ListItem key={t} leading={<Icon name="stars-20" />} trailing={<Icon name="drag_handle-20" />} dragged={dragged && i === 1}>
+                <ListItem
+                  key={t}
+                  leading={<Icon name="stars-20" />}
+                  trailing={<Icon name="drag_handle-20" />}
+                  dragged={dragged && i === 1}
+                >
                   {t}
                 </ListItem>
               ))}

@@ -68,7 +68,9 @@ export function useFloatingToolbarNestedScroll({
   // updateThreshold: whenever the state or the thresholds change.
   useEffect(() => {
     const s = st.current;
-    s.threshold = expanded ? s.contentOffset - collapseScrollDistanceThreshold : s.contentOffset + expandScrollDistanceThreshold;
+    s.threshold = expanded
+      ? s.contentOffset - collapseScrollDistanceThreshold
+      : s.contentOffset + expandScrollDistanceThreshold;
   }, [expanded, expandScrollDistanceThreshold, collapseScrollDistanceThreshold]);
 
   return useScrollDeltas((consumed) => {
@@ -128,7 +130,8 @@ export function useFloatingToolbarExitAlways(exitDirection: FloatingToolbarExitD
     if (!e) return;
     const o = st.current.offset;
     const side = physical();
-    e.style.translate = side === 'top' ? `0 ${o}px` : side === 'bottom' ? `0 ${-o}px` : side === 'left' ? `${o}px 0` : `${-o}px 0`;
+    e.style.translate =
+      side === 'top' ? `0 ${o}px` : side === 'bottom' ? `0 ${-o}px` : side === 'left' ? `${o}px 0` : `${-o}px 0`;
   };
   const setOffset = (value: number) => {
     st.current.offset = Math.min(0, Math.max(limit(), value));

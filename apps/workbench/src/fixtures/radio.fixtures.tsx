@@ -20,7 +20,8 @@ const fixture: FixtureModule = {
     ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [sel, state] = name.split('-') as ['selected' | 'unselected', string];
-      const forced = state === 'hovered' || state === 'focused' || state === 'pressed' ? (state as ForcedState) : undefined;
+      const forced =
+        state === 'hovered' || state === 'focused' || state === 'pressed' ? (state as ForcedState) : undefined;
       return [
         name,
         {

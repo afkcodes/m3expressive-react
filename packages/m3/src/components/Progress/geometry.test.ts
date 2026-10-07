@@ -15,7 +15,7 @@ describe('progress geometry (kit-derived)', () => {
   it('wave segment: 40px wavelength → r 19.437, sagitta 2.770 (Figma-clamped corner radius)', () => {
     const { r, sag } = waveArc(40);
     expect(r).toBeCloseTo(19.437, 3);
-    expect(sag).toBeCloseTo(2.770, 3);
+    expect(sag).toBeCloseTo(2.77, 3);
   });
 
   it('wavy ring crests sit on the track ring radius (≈22.08)', () => {
@@ -23,7 +23,17 @@ describe('progress geometry (kit-derived)', () => {
   });
 
   it('linear flat 4dp 10%: whole-px line, track and stop on the kit subpixels', () => {
-    const g = linearShapes({ width: 404, thickness: 4, type: 'flat', actives: linearDeterminate(404, 4, 0.1, 0), stop: true, wavelength: 40, waveOrigin: 2, amp: 0, snap: true });
+    const g = linearShapes({
+      width: 404,
+      thickness: 4,
+      type: 'flat',
+      actives: linearDeterminate(404, 4, 0.1, 0),
+      stop: true,
+      wavelength: 40,
+      waveOrigin: 2,
+      amp: 0,
+      snap: true,
+    });
     expect(g.active).toEqual(['M2 6H42']);
     expect(g.tracks).toEqual([{ x: 47.6, width: 356 }]);
     expect(g.stop?.x).toBeCloseTo(399.6, 5);
@@ -50,7 +60,19 @@ describe('progress geometry (kit-derived)', () => {
 
   it('stop dot: flat stays put whatever the progress; wavy shrinks from its start as the active reaches it', () => {
     const at = (type: 'flat' | 'wave', head: number) =>
-      linearShapes({ width: 404, thickness: 4, type, actives: [[2, head]], stop: true, stopShrink: type === 'wave', wavelength: 40, waveOrigin: 2, amp: 0, snap: false, gap: 4 }).stop;
+      linearShapes({
+        width: 404,
+        thickness: 4,
+        type,
+        actives: [[2, head]],
+        stop: true,
+        stopShrink: type === 'wave',
+        wavelength: 40,
+        waveOrigin: 2,
+        amp: 0,
+        snap: false,
+        gap: 4,
+      }).stop;
     expect(at('flat', 399)).toEqual({ x: 400, size: 4 });
     expect(at('flat', 402)).toBeNull(); // a full active covers it
     expect(at('wave', 396)).toEqual({ x: 400, size: 4 });

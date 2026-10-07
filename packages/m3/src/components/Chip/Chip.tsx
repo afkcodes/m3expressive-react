@@ -55,7 +55,13 @@ const ELEVATION: Record<string, Record<StateKey, Level>> = {
   'input-outlined': { enabled: 0, hovered: 0, focused: 0, pressed: 0, dragged: 3 },
 };
 const SHADOW = [elevation.level0, elevation.level1, elevation.level2, elevation.level3, elevation.level4] as const;
-const SHADOW_NO_SPREAD = [elevation.level0, elevation.level1NoSpread, elevation.level2NoSpread, elevation.level3NoSpread, elevation.level4NoSpread] as const;
+const SHADOW_NO_SPREAD = [
+  elevation.level0,
+  elevation.level1NoSpread,
+  elevation.level2NoSpread,
+  elevation.level3NoSpread,
+  elevation.level4NoSpread,
+] as const;
 
 const s = stylex.create({
   root: {
@@ -184,7 +190,8 @@ const dyn = stylex.create({
 const ICONS = {
   check: 'M7.16 13.5L2.89 9.225L3.96 8.156L7.16 11.362L14.04 4.481L15.11 5.55L7.16 13.5Z',
   arrowDropDown: 'M9 11.25L5.25 7.5H12.75L9 11.25Z',
-  close: 'M4.8 14.25L3.75 13.2L7.95 9L3.75 4.8L4.8 3.75L9 7.95L13.2 3.75L14.25 4.8L10.05 9L14.25 13.2L13.2 14.25L9 10.05L4.8 14.25Z',
+  close:
+    'M4.8 14.25L3.75 13.2L7.95 9L3.75 4.8L4.8 3.75L9 7.95L13.2 3.75L14.25 4.8L10.05 9L14.25 13.2L13.2 14.25L9 10.05L4.8 14.25Z',
   avatarCheck: 'M9.078 16.311L4.872 12.104L3.44 13.527L9.078 19.165L21.182 7.061L19.76 5.639L9.078 16.311Z',
 } as const;
 
@@ -211,15 +218,29 @@ interface FrameOptions {
 
 function frameStyles({ kind, elevated, selected, disabled, dragged, forced, leading, trailing, pill }: FrameOptions) {
   const style = elevated ? 'elevated' : 'outlined';
-  const table = ELEVATION[`${kind}-${style}${selected && !elevated && (kind === 'filter' || kind === 'suggestion') ? '-selected' : ''}`] ?? ELEVATION['input-outlined']!;
+  const table =
+    ELEVATION[
+      `${kind}-${style}${selected && !elevated && (kind === 'filter' || kind === 'suggestion') ? '-selected' : ''}`
+    ] ?? ELEVATION['input-outlined']!;
   const fs = forced.state;
-  const stateKey: StateKey | null = dragged ? 'dragged' : fs === 'hovered' || fs === 'focused' || fs === 'pressed' ? fs : fs === 'dragged' ? 'dragged' : null;
+  const stateKey: StateKey | null = dragged
+    ? 'dragged'
+    : fs === 'hovered' || fs === 'focused' || fs === 'pressed'
+      ? fs
+      : fs === 'dragged'
+        ? 'dragged'
+        : null;
   const lvl = (k: StateKey) => table[k];
   const shadow = disabled
     ? null
     : stateKey
       ? dyn.fixedShadow(stateKey === 'focused' ? SHADOW_NO_SPREAD[lvl('focused')] : SHADOW[lvl(stateKey)])
-      : dyn.shadow(SHADOW[lvl('enabled')], SHADOW[lvl('hovered')], SHADOW_NO_SPREAD[lvl('focused')], SHADOW[lvl('pressed')]);
+      : dyn.shadow(
+          SHADOW[lvl('enabled')],
+          SHADOW[lvl('hovered')],
+          SHADOW_NO_SPREAD[lvl('focused')],
+          SHADOW[lvl('pressed')],
+        );
   const start = leading === 'avatar' ? 4 : leading === 'icon' || leading === 'slot' ? 8 : kind === 'input' ? 12 : 16;
   const end = trailing ? 8 : kind === 'input' ? 12 : 16;
   const outlinedUnselected = !elevated && !selected;
@@ -270,10 +291,24 @@ interface ContentProps {
   label: ReactNode;
 }
 
-function ChipContent({ kind, selected, disabled, icon, avatar, showCheck, checkSlot = false, trailingIcon, label }: ContentProps) {
+function ChipContent({
+  kind,
+  selected,
+  disabled,
+  icon,
+  avatar,
+  showCheck,
+  checkSlot = false,
+  trailingIcon,
+  label,
+}: ContentProps) {
   // Colours (kit): label on-surface (assist) / on-surface-variant; icons primary; trailing
   // on-surface-variant; selected → on-secondary-container (suggestion / input keep a primary icon).
-  const labelTone = selected ? color.onSecondaryContainer : kind === 'assist' ? color.onSurface : color.onSurfaceVariant;
+  const labelTone = selected
+    ? color.onSecondaryContainer
+    : kind === 'assist'
+      ? color.onSurface
+      : color.onSurfaceVariant;
   const iconTone = selected && kind === 'filter' ? color.onSecondaryContainer : color.primary;
   const trailingTone = selected ? color.onSecondaryContainer : color.onSurfaceVariant;
   return (
@@ -283,9 +318,15 @@ function ChipContent({ kind, selected, disabled, icon, avatar, showCheck, checkS
         <span data-part="check-slot" {...stylex.props(s.checkSlot, showCheck ? s.checkSlotIn : s.checkSlotOut)}>
           <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} />
         </span>
-      ) : showCheck ? <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} /> : icon != null ? <span style={{ display: 'contents', color: disabled ? undefined : iconTone }}>{icon}</span> : null}
+      ) : showCheck ? (
+        <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} />
+      ) : icon != null ? (
+        <span style={{ display: 'contents', color: disabled ? undefined : iconTone }}>{icon}</span>
+      ) : null}
       <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{label}</span>
-      {trailingIcon != null && <span style={{ display: 'contents', color: disabled ? undefined : trailingTone }}>{trailingIcon}</span>}
+      {trailingIcon != null && (
+        <span style={{ display: 'contents', color: disabled ? undefined : trailingTone }}>{trailingIcon}</span>
+      )}
     </span>
   );
 }
@@ -302,7 +343,8 @@ interface CommonProps {
   sx?: StyleXStyles;
 }
 
-export interface AssistChipProps extends CommonProps, Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {}
+export interface AssistChipProps
+  extends CommonProps, Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {}
 
 export const AssistChip = forwardRef<HTMLButtonElement, AssistChipProps>(function AssistChip(
   { elevated = false, icon, dragged = false, disabled = false, children, sx, ...rest },
@@ -310,7 +352,24 @@ export const AssistChip = forwardRef<HTMLButtonElement, AssistChipProps>(functio
 ) {
   const forced = useForcedState();
   return (
-    <BaseButton ref={ref} disabled={disabled} {...rest} {...stylex.props(...frameStyles({ kind: 'assist', elevated, selected: false, disabled, dragged, forced, leading: icon != null ? 'icon' : 'none', trailing: false }), sx)}>
+    <BaseButton
+      ref={ref}
+      disabled={disabled}
+      {...rest}
+      {...stylex.props(
+        ...frameStyles({
+          kind: 'assist',
+          elevated,
+          selected: false,
+          disabled,
+          dragged,
+          forced,
+          leading: icon != null ? 'icon' : 'none',
+          trailing: false,
+        }),
+        sx,
+      )}
+    >
       <StateLayer />
       <ChipContent kind="assist" selected={false} disabled={disabled} icon={icon} showCheck={false} label={children} />
     </BaseButton>
@@ -326,32 +385,101 @@ interface SelectableProps {
 function useSelected({ selected, defaultSelected = false, onSelectedChange }: SelectableProps) {
   const [inner, setInner] = useState(defaultSelected);
   const value = selected ?? inner;
-  return [value, (next: boolean) => { if (selected === undefined) setInner(next); onSelectedChange?.(next); }] as const;
+  return [
+    value,
+    (next: boolean) => {
+      if (selected === undefined) setInner(next);
+      onSelectedChange?.(next);
+    },
+  ] as const;
 }
 
-export interface SuggestionChipProps extends CommonProps, SelectableProps, Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'> {}
+export interface SuggestionChipProps
+  extends
+    CommonProps,
+    SelectableProps,
+    Omit<
+      BaseToggle.Props,
+      'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'
+    > {}
 
 export const SuggestionChip = forwardRef<HTMLButtonElement, SuggestionChipProps>(function SuggestionChip(
-  { elevated = false, icon, dragged = false, disabled = false, selected: selectedProp, defaultSelected, onSelectedChange, children, sx, ...rest },
+  {
+    elevated = false,
+    icon,
+    dragged = false,
+    disabled = false,
+    selected: selectedProp,
+    defaultSelected,
+    onSelectedChange,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const forced = useForcedState();
   const [selected, setSelected] = useSelected({ selected: selectedProp, defaultSelected, onSelectedChange });
   return (
-    <BaseToggle ref={ref} pressed={selected} onPressedChange={setSelected} disabled={disabled} {...rest} {...stylex.props(...frameStyles({ kind: 'suggestion', elevated, selected, disabled, dragged, forced, leading: icon != null ? 'icon' : 'none', trailing: false }), sx)}>
+    <BaseToggle
+      ref={ref}
+      pressed={selected}
+      onPressedChange={setSelected}
+      disabled={disabled}
+      {...rest}
+      {...stylex.props(
+        ...frameStyles({
+          kind: 'suggestion',
+          elevated,
+          selected,
+          disabled,
+          dragged,
+          forced,
+          leading: icon != null ? 'icon' : 'none',
+          trailing: false,
+        }),
+        sx,
+      )}
+    >
       <StateLayer />
-      <ChipContent kind="suggestion" selected={selected} disabled={disabled} icon={icon} showCheck={false} label={children} />
+      <ChipContent
+        kind="suggestion"
+        selected={selected}
+        disabled={disabled}
+        icon={icon}
+        showCheck={false}
+        label={children}
+      />
     </BaseToggle>
   );
 });
 
-export interface FilterChipProps extends CommonProps, SelectableProps, Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'> {
+export interface FilterChipProps
+  extends
+    CommonProps,
+    SelectableProps,
+    Omit<
+      BaseToggle.Props,
+      'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'
+    > {
   /** Show the trailing drop-down arrow (filter menus). */
   trailingIcon?: boolean;
 }
 
 export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(function FilterChip(
-  { elevated = false, icon, trailingIcon = false, dragged = false, disabled = false, selected: selectedProp, defaultSelected, onSelectedChange, children, sx, ...rest },
+  {
+    elevated = false,
+    icon,
+    trailingIcon = false,
+    dragged = false,
+    disabled = false,
+    selected: selectedProp,
+    defaultSelected,
+    onSelectedChange,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const forced = useForcedState();
@@ -359,7 +487,26 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(functio
   // Selected: a check replaces the leading icon (or springs open in front of label-only chips).
   const leading = icon != null ? 'icon' : 'slot';
   return (
-    <BaseToggle ref={ref} pressed={selected} onPressedChange={setSelected} disabled={disabled} {...rest} {...stylex.props(...frameStyles({ kind: 'filter', elevated, selected, disabled, dragged, forced, leading, trailing: trailingIcon }), sx)}>
+    <BaseToggle
+      ref={ref}
+      pressed={selected}
+      onPressedChange={setSelected}
+      disabled={disabled}
+      {...rest}
+      {...stylex.props(
+        ...frameStyles({
+          kind: 'filter',
+          elevated,
+          selected,
+          disabled,
+          dragged,
+          forced,
+          leading,
+          trailing: trailingIcon,
+        }),
+        sx,
+      )}
+    >
       <StateLayer />
       <ChipContent
         kind="filter"
@@ -375,7 +522,14 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(functio
   );
 });
 
-export interface InputChipProps extends Omit<CommonProps, 'elevated'>, SelectableProps, Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'> {
+export interface InputChipProps
+  extends
+    Omit<CommonProps, 'elevated'>,
+    SelectableProps,
+    Omit<
+      BaseToggle.Props,
+      'className' | 'style' | 'render' | 'children' | 'pressed' | 'defaultPressed' | 'onPressedChange'
+    > {
   /** Leading avatar (24px). When selected the kit shows a check badge in its place. */
   avatar?: ReactNode;
   /** Shows the trailing remove button. */
@@ -392,28 +546,45 @@ const avatarStyles = stylex.create({
 export function ChipAvatarPlaceholder() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.avatar, avatarStyles.placeholder)}>
-      <path fillRule="evenodd" clipRule="evenodd" d="M15.6 9.6C15.6 11.5882 13.988 13.2 12 13.2C10.012 13.2 8.4 11.5882 8.4 9.6C8.4 7.6118 10.012 6 12 6C13.988 6 15.6 7.6118 15.6 9.6ZM14.4 9.6C14.4 10.9255 13.326 12 12 12C10.675 12 9.6 10.9255 9.6 9.6C9.6 8.2745 10.675 7.2 12 7.2C13.326 7.2 14.4 8.2745 14.4 9.6Z" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M15.6 9.6C15.6 11.5882 13.988 13.2 12 13.2C10.012 13.2 8.4 11.5882 8.4 9.6C8.4 7.6118 10.012 6 12 6C13.988 6 15.6 7.6118 15.6 9.6ZM14.4 9.6C14.4 10.9255 13.326 12 12 12C10.675 12 9.6 10.9255 9.6 9.6C9.6 8.2745 10.675 7.2 12 7.2C13.326 7.2 14.4 8.2745 14.4 9.6Z"
+      />
       <path d="M12 15C8.116 15 4.806 17.2971 3.545 20.5152C3.852 20.8202 4.176 21.1087 4.514 21.3793C5.453 18.4246 8.398 16.2 12 16.2C15.602 16.2 18.547 18.4246 19.486 21.3793C19.825 21.1087 20.148 20.8202 20.455 20.5153C19.195 17.2971 15.885 15 12 15Z" />
     </svg>
   );
 }
 
 export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function InputChip(
-  { icon, avatar, onRemove, removeLabel = 'Remove', dragged = false, disabled = false, selected: selectedProp, defaultSelected, onSelectedChange, children, sx, ...rest },
+  {
+    icon,
+    avatar,
+    onRemove,
+    removeLabel = 'Remove',
+    dragged = false,
+    disabled = false,
+    selected: selectedProp,
+    defaultSelected,
+    onSelectedChange,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const forced = useForcedState();
   const [selected, setSelected] = useSelected({ selected: selectedProp, defaultSelected, onSelectedChange });
   const hasAvatar = avatar != null;
-  const avatarNode = hasAvatar
-    ? selected
-      ? (
-        <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.avatar, avatarStyles.check)}>
-          <path d={ICONS.avatarCheck} />
-        </svg>
-      )
-      : avatar
-    : undefined;
+  const avatarNode = hasAvatar ? (
+    selected ? (
+      <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.avatar, avatarStyles.check)}>
+        <path d={ICONS.avatarCheck} />
+      </svg>
+    ) : (
+      avatar
+    )
+  ) : undefined;
   const trailing = onRemove != null;
   return (
     <span {...stylex.props(s.inputWrap)}>
@@ -423,7 +594,20 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
         onPressedChange={setSelected}
         disabled={disabled}
         {...rest}
-        {...stylex.props(...frameStyles({ kind: 'input', elevated: false, selected, disabled, dragged, forced, leading: hasAvatar ? 'avatar' : icon != null ? 'icon' : 'none', trailing, pill: hasAvatar }), sx)}
+        {...stylex.props(
+          ...frameStyles({
+            kind: 'input',
+            elevated: false,
+            selected,
+            disabled,
+            dragged,
+            forced,
+            leading: hasAvatar ? 'avatar' : icon != null ? 'icon' : 'none',
+            trailing,
+            pill: hasAvatar,
+          }),
+          sx,
+        )}
       >
         <StateLayer />
         <ChipContent
@@ -446,7 +630,16 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
           onClick={onRemove}
           {...stylex.props(s.remove)}
         >
-          <Glyph d={ICONS.close} tone={disabled ? `color-mix(in srgb, ${color.onSurface} 38%, transparent)` : selected ? color.onSecondaryContainer : color.onSurfaceVariant} />
+          <Glyph
+            d={ICONS.close}
+            tone={
+              disabled
+                ? `color-mix(in srgb, ${color.onSurface} 38%, transparent)`
+                : selected
+                  ? color.onSecondaryContainer
+                  : color.onSurfaceVariant
+            }
+          />
         </button>
       )}
     </span>
@@ -470,7 +663,11 @@ export interface ChipGroupProps {
 
 export function ChipGroup({ layout = 'wrap', children, sx, ...rest }: ChipGroupProps) {
   return (
-    <div role="group" {...rest} {...stylex.props(groupStyles.group, layout === 'scroll' ? groupStyles.scroll : groupStyles.wrap, sx)}>
+    <div
+      role="group"
+      {...rest}
+      {...stylex.props(groupStyles.group, layout === 'scroll' ? groupStyles.scroll : groupStyles.wrap, sx)}
+    >
       {children}
     </div>
   );

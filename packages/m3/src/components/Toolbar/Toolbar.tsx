@@ -1,4 +1,13 @@
-import { forwardRef, useCallback, useLayoutEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
@@ -42,7 +51,14 @@ const s = stylex.create({
     boxShadow: elevation.level3NoSpread,
   },
   floatingVertical: { flexDirection: 'column', minHeight: 0, minWidth: 64 },
-  docked: { width: '100%', height: 64, paddingBlock: 12, paddingInline: 16, columnGap: 8, justifyContent: 'space-between' },
+  docked: {
+    width: '100%',
+    height: 64,
+    paddingBlock: 12,
+    paddingInline: 16,
+    columnGap: 8,
+    justifyContent: 'space-between',
+  },
   group: { display: 'flex', alignItems: 'center', columnGap: 4, rowGap: 4 },
   groupVertical: { flexDirection: 'column' },
   // Collapsible leading / trailing content: a 0fr ⇄ 1fr track animates the intrinsic size.
@@ -56,7 +72,15 @@ const s = stylex.create({
   collapseVertical: { gridTemplateColumns: 'auto', gridTemplateRows: '1fr' },
   collapsed: { gridTemplateColumns: '0fr' },
   collapsedVertical: { gridTemplateRows: '0fr' },
-  clip: { display: 'flex', alignItems: 'center', columnGap: 4, rowGap: 4, minWidth: 0, minHeight: 0, overflow: 'hidden' },
+  clip: {
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: 4,
+    rowGap: 4,
+    minWidth: 0,
+    minHeight: 0,
+    overflow: 'hidden',
+  },
   // Which edge the content stays pinned to while the track resizes (Compose expandFrom /
   // shrinkTowards): the overflowing content is clipped from the other side.
   pinEnd: { justifyContent: 'flex-end' },
@@ -89,7 +113,8 @@ const s = stylex.create({
   fabSlot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
 });
 
-const FOCUSABLE = 'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])';
+const FOCUSABLE =
+  'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])';
 
 export interface ToolbarProps {
   /** Floating (a rounded, elevated bar) or docked (full width, flat). */
@@ -152,7 +177,8 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   }, [hasFab]);
 
   // Roving tab stop (WAI-ARIA toolbar): exactly one item is in the tab order.
-  const items = () => [...(ref.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter((el) => !el.closest('[inert]'));
+  const items = () =>
+    [...(ref.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter((el) => !el.closest('[inert]'));
   const rove = (to: HTMLElement | undefined) => {
     for (const el of items()) el.tabIndex = el === to ? 0 : -1;
   };
@@ -176,7 +202,12 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     const i = list.indexOf(document.activeElement as HTMLElement);
     if (i < 0) return;
     e.preventDefault();
-    const to = e.key === 'Home' ? 0 : e.key === 'End' ? list.length - 1 : (i + (e.key === next ? 1 : -1) + list.length) % list.length;
+    const to =
+      e.key === 'Home'
+        ? 0
+        : e.key === 'End'
+          ? list.length - 1
+          : (i + (e.key === next ? 1 : -1) + list.length) % list.length;
     list[to]?.focus();
   };
 
@@ -187,7 +218,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     return (
       <div
         inert={!expanded || undefined}
-        {...stylex.props(s.collapse, vertical && s.collapseVertical, !expanded && (vertical ? s.collapsedVertical : s.collapsed))}
+        {...stylex.props(
+          s.collapse,
+          vertical && s.collapseVertical,
+          !expanded && (vertical ? s.collapsedVertical : s.collapsed),
+        )}
       >
         <div
           {...stylex.props(
@@ -239,7 +274,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     >
       <div
         inert={!expanded || undefined}
-        {...stylex.props(s.collapse, vertical && s.collapseVertical, !expanded && (vertical ? s.collapsedVertical : s.collapsed))}
+        {...stylex.props(
+          s.collapse,
+          vertical && s.collapseVertical,
+          !expanded && (vertical ? s.collapsedVertical : s.collapsed),
+        )}
       >
         <div {...stylex.props(s.shell, !expanded && s.shellCollapsed)}>{bar}</div>
       </div>

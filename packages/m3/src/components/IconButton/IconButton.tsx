@@ -24,8 +24,10 @@ const variants = stylex.create({
   standardVibrant: { color: color.onPrimaryContainer },
 });
 
-export interface IconButtonProps
-  extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children' | 'aria-label'> {
+export interface IconButtonProps extends Omit<
+  BaseButton.Props,
+  'className' | 'style' | 'render' | 'children' | 'aria-label'
+> {
   /** Accessible name — required, the button has no visible text. */
   'aria-label': string;
   variant?: IconButtonVariant;
@@ -38,7 +40,16 @@ export interface IconButtonProps
 }
 
 export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function IconButton(
-  { variant = 'standard', size = 'small', width = 'default', shape = 'round', disabled: isDisabled = false, children, sx, ...rest },
+  {
+    variant = 'standard',
+    size = 'small',
+    width = 'default',
+    shape = 'round',
+    disabled: isDisabled = false,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const forced = useForcedState();

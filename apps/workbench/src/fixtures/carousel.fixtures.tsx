@@ -28,8 +28,14 @@ const config: Record<string, Omit<CarouselProps, 'aria-label' | 'children'>> = {
   'carousel-tablet-center-hero': { layout: 'center-hero', initialItem: 1 },
   'carousel-mobile-uncontained': { layout: 'uncontained', itemWidth: 154 },
   'carousel-tablet-uncontained': { layout: 'uncontained', itemWidth: 512 / 3 - 8 },
-  'carousel-mobile-aspect': { layout: 'multi-aspect', aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204] },
-  'carousel-tablet-aspect': { layout: 'multi-aspect', aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204] },
+  'carousel-mobile-aspect': {
+    layout: 'multi-aspect',
+    aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204],
+  },
+  'carousel-tablet-aspect': {
+    layout: 'multi-aspect',
+    aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204],
+  },
   'carousel-full': { layout: 'full-screen' },
 };
 
@@ -46,12 +52,20 @@ const fixture: FixtureModule = {
   component: 'carousel',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 221, render: () => render('carousel-mobile-multi') } satisfies FixtureVariant],
-    ['live-uncontained', { width: 412, height: 221, render: () => render('carousel-mobile-uncontained') } satisfies FixtureVariant],
+    [
+      'live-uncontained',
+      { width: 412, height: 221, render: () => render('carousel-mobile-uncontained') } satisfies FixtureVariant,
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
         name,
-        { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> },
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
       ];
     }),
   ]),

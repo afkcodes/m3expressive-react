@@ -113,7 +113,9 @@ export function SheetsPlayground() {
         </section>
         <div {...stylex.props(s.stage)}>
           <div {...stylex.props(s.frame)}>
-            <div {...stylex.props(typescale.bodyLarge, s.main)}>Page content. The standard side sheet sits beside it.</div>
+            <div {...stylex.props(typescale.bodyLarge, s.main)}>
+              Page content. The standard side sheet sits beside it.
+            </div>
             {standardSide && (
               <SideSheet
                 headline="Details"

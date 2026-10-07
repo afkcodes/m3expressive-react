@@ -31,7 +31,8 @@ const fixture: FixtureModule = {
     ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [part, c, state = 'enabled'] = name.split('-') as [string, FabMenuColor, string?];
-      const forced: ForcedState | undefined = state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
+      const forced: ForcedState | undefined =
+        state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
       return [
         name,
         {
@@ -45,7 +46,9 @@ const fixture: FixtureModule = {
               </FabMenu>
             ) : part === 'item' ? (
               <ForceState state={forced} ripplePath={assets.itemRipple}>
-                <FabMenuItem color={c} icon={<StarsFilled />}>Label</FabMenuItem>
+                <FabMenuItem color={c} icon={<StarsFilled />}>
+                  Label
+                </FabMenuItem>
               </ForceState>
             ) : (
               <ForceState state={forced} ripplePath={assets.closeRipple}>

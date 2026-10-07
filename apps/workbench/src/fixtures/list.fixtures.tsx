@@ -41,7 +41,14 @@ type IconName = keyof typeof assets.icons;
 const Icon = ({ name }: { name: IconName }) => {
   const size = Number(name.split('-').pop());
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      fill="currentColor"
+      aria-hidden
+      style={{ display: 'block' }}
+    >
       <path d={assets.icons[name]} />
     </svg>
   );
@@ -58,7 +65,8 @@ const StarsFilled24 = () => (
     <path d={toggleIconAssets.selectedIcon} />
   </svg>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const box = (w: number, h: number, children: ReactNode) => (
   <div
     {...stylex.props(fxBox.onSurfaceVariant)}
@@ -125,8 +133,13 @@ function listComposition(name: string): ReactNode {
   const type = rest.slice(0, -1).join('-');
   // Only the kit's standard list words its fourth row "Secondary".
   const support = (i: number) =>
-    multi ? (i === 3 && type === 'standard' ? 'Secondary line text, lorem ipsum dolor' : 'Supporting line text, lorem ipsum dolor') : undefined;
-  const items = (from: number, render: (i: number) => ReactNode) => Array.from({ length: 6 - from }, (_, k) => render(k + from));
+    multi
+      ? i === 3 && type === 'standard'
+        ? 'Secondary line text, lorem ipsum dolor'
+        : 'Supporting line text, lorem ipsum dolor'
+      : undefined;
+  const items = (from: number, render: (i: number) => ReactNode) =>
+    Array.from({ length: 6 - from }, (_, k) => render(k + from));
   if (type === 'standard' || type === 'segmented-filled') {
     return (
       <List type={type === 'standard' ? 'standard' : 'segmented'} aria-label="List">
@@ -264,7 +277,9 @@ function baselineItem(name: string): ReactNode {
       lines={n}
       overline={flags[0] === 'o' ? 'Overline' : undefined}
       supportingText={
-        flags[1] === 's' || (n > 1 && flags[0] !== 'o') ? 'Supporting line text lorem ipsum dolor sit amet, consectetur.' : undefined
+        flags[1] === 's' || (n > 1 && flags[0] !== 'o')
+          ? 'Supporting line text lorem ipsum dolor sit amet, consectetur.'
+          : undefined
       }
       supportingMaxLines={n === 2 ? 1 : undefined}
       leading={lead[leading]}
@@ -287,7 +302,9 @@ function render(name: string): ReactNode {
         overline="Overline"
         // The kit's Top-aligned · Enabled frame has a stray "Ω" typed into its demo text.
         supportingText={
-          top && state === 'enabled' && !selected ? 'SuppΩorting line text, lorem ipsum dolor' : 'Supporting line text, lorem ipsum dolor'
+          top && state === 'enabled' && !selected
+            ? 'SuppΩorting line text, lorem ipsum dolor'
+            : 'Supporting line text, lorem ipsum dolor'
         }
         supportingMaxLines={top ? undefined : 1}
         leading={<Icon name={selected ? 'stars_filled-20' : 'stars-20'} />}
@@ -347,7 +364,9 @@ function render(name: string): ReactNode {
       indent: null,
       image: <ListItemImage src={placeholder700} imageSx={fxBox.kitPlaceholder} selected />,
       video: <ListItemVideo src={placeholder350} imageSx={fxBox.kitPlaceholder} />,
-      avatar: <Avatar size={40} src={placeholder700} alt="" sx={fxBox.kitPlaceholderBg} imageSx={fxBox.kitPlaceholder} />,
+      avatar: (
+        <Avatar size={40} src={placeholder700} alt="" sx={fxBox.kitPlaceholderBg} imageSx={fxBox.kitPlaceholder} />
+      ),
       'icon-button': (
         <IconButton variant="filled" aria-label="Favourite">
           <StarsFilled24 />
@@ -493,7 +512,12 @@ function LiveDrag() {
           </ListItem>
         ))}
       </List>
-      <button type="button" data-toggle-drag onClick={() => setDragged((v) => !v)} style={{ position: 'absolute', left: -9999 }}>
+      <button
+        type="button"
+        data-toggle-drag
+        onClick={() => setDragged((v) => !v)}
+        style={{ position: 'absolute', left: -9999 }}
+      >
         Drag
       </button>
     </div>

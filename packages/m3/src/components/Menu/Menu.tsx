@@ -1,4 +1,15 @@
-import { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState, type ReactElement, type ReactNode, type RefObject } from 'react';
+import {
+  Children,
+  createContext,
+  isValidElement,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
@@ -99,7 +110,12 @@ const s = stylex.create({
   },
   // Figma draws the menu's level-3 shadow with its 3px spread only when the menu is one group.
   groupSolo: { '::before': { boxShadow: elevation.level3 } },
-  groupInactive: { borderTopLeftRadius: 8, borderTopRightRadius: 8, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
+  groupInactive: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
   groupStandard: { backgroundColor: color.surfaceContainerLow },
   groupVibrant: { backgroundColor: color.tertiaryContainer },
   // Kit "Label-basic": a 26px text box 6px from the top with its 20px line centred (line at y 9).
@@ -264,15 +280,21 @@ const surfaceStyles = (variant: MenuVariant, width?: number) => [
 export function MenuSurface({ variant = 'standard', density = 0, width, children, sx }: MenuSurfaceProps) {
   return (
     <MenuContext value={{ variant, density, live: false }}>
-      <div {...stylex.props(surfaceStyles(variant, width), sx)}>
-        {grouped(variant, children)}
-      </div>
+      <div {...stylex.props(surfaceStyles(variant, width), sx)}>{grouped(variant, children)}</div>
     </MenuContext>
   );
 }
 
 /** Menu styling context without a container: lay out menu parts in a custom surface. */
-export function MenuScope({ variant = 'standard', density = 0, children }: { variant?: MenuVariant; density?: MenuDensity; children: ReactNode }) {
+export function MenuScope({
+  variant = 'standard',
+  density = 0,
+  children,
+}: {
+  variant?: MenuVariant;
+  density?: MenuDensity;
+  children: ReactNode;
+}) {
   return <MenuContext value={{ variant, density, live: false }}>{children}</MenuContext>;
 }
 
@@ -346,7 +368,15 @@ export interface MenuRadioGroupProps extends MenuGroupProps {
 /** Single-choice options (`MenuRadioItem`); renders as a menu group. */
 export function MenuRadioGroup({ value, defaultValue, onValueChange, label, children, sx }: MenuRadioGroupProps) {
   const { variant, live, labelEl, props } = useGroup(label, sx);
-  if (!live) return variant === 'baseline' ? <>{children}</> : <div role="group" {...props}>{labelEl}{children}</div>;
+  if (!live)
+    return variant === 'baseline' ? (
+      <>{children}</>
+    ) : (
+      <div role="group" {...props}>
+        {labelEl}
+        {children}
+      </div>
+    );
   return (
     <BaseMenu.RadioGroup
       value={value}
@@ -394,7 +424,13 @@ interface ItemVisualProps extends Omit<MenuItemProps, 'onClick' | 'closeOnClick'
 }
 
 /** The leading slot: `leading`, swapped for / expanded into `selectedLeading` while selected. */
-function leadingSlot(leading: ReactNode, selectedLeading: ReactNode, selected: boolean, iconStyles: StyleXStyles, size: number) {
+function leadingSlot(
+  leading: ReactNode,
+  selectedLeading: ReactNode,
+  selected: boolean,
+  iconStyles: StyleXStyles,
+  size: number,
+) {
   if (selectedLeading == null) return leading != null ? <span {...stylex.props(iconStyles)}>{leading}</span> : null;
   if (leading != null) return <span {...stylex.props(iconStyles)}>{selected ? selectedLeading : leading}</span>;
   return (
@@ -404,7 +440,20 @@ function leadingSlot(leading: ReactNode, selectedLeading: ReactNode, selected: b
   );
 }
 
-function useItemVisual({ children, leading, selectedLeading, trailing, trailingText, supportingText, selected = false, disabled = false, active = false, sx, variant, density }: ItemVisualProps) {
+function useItemVisual({
+  children,
+  leading,
+  selectedLeading,
+  trailing,
+  trailingText,
+  supportingText,
+  selected = false,
+  disabled = false,
+  active = false,
+  sx,
+  variant,
+  density,
+}: ItemVisualProps) {
   const forced = useForcedState();
   const interactive = !disabled;
   const forcedStyles = [
@@ -462,7 +511,11 @@ function useItemVisual({ children, leading, selectedLeading, trailing, trailingT
       {leadingSlot(leading, selectedLeading, selected, [s.icon, onContainer && s.iconInherit, disabled && s.dim], 20)}
       <span {...stylex.props(s.text, disabled && s.dim)}>
         <span {...stylex.props(typescale.labelLarge, s.label)}>{children}</span>
-        {supportingText != null && <span {...stylex.props(typescale.bodySmall, s.supporting, onContainer && s.iconInherit)}>{supportingText}</span>}
+        {supportingText != null && (
+          <span {...stylex.props(typescale.bodySmall, s.supporting, onContainer && s.iconInherit)}>
+            {supportingText}
+          </span>
+        )}
       </span>
       {(trailing != null || trailingText != null) && (
         <span {...stylex.props(s.trailing, onContainer && s.iconInherit, disabled && s.dim)}>
@@ -497,7 +550,13 @@ export interface MenuCheckboxItemProps extends Omit<MenuItemProps, 'selected' | 
 }
 
 /** A toggleable item: checked items take the selected look (Compose CheckableDropdownMenuItem). */
-export function MenuCheckboxItem({ checked, defaultChecked = false, onCheckedChange, closeOnClick = false, ...props }: MenuCheckboxItemProps) {
+export function MenuCheckboxItem({
+  checked,
+  defaultChecked = false,
+  onCheckedChange,
+  closeOnClick = false,
+  ...props
+}: MenuCheckboxItemProps) {
   const ctx = useContext(MenuContext);
   const [inner, setInner] = useState(defaultChecked);
   const on = checked ?? inner;
@@ -509,7 +568,13 @@ export function MenuCheckboxItem({ checked, defaultChecked = false, onCheckedCha
   };
   if (ctx.live) {
     return (
-      <BaseMenu.CheckboxItem checked={on} onCheckedChange={set} disabled={props.disabled} closeOnClick={closeOnClick} {...common}>
+      <BaseMenu.CheckboxItem
+        checked={on}
+        onCheckedChange={set}
+        disabled={props.disabled}
+        closeOnClick={closeOnClick}
+        {...common}
+      >
         {body}
       </BaseMenu.CheckboxItem>
     );
@@ -538,15 +603,14 @@ export function MenuRadioItem({ value, checked = false, closeOnClick = false, ..
 }
 
 /** Renders an item's visuals onto a host element (Base UI render props, or a static row). */
-function ItemShell({ htmlProps, ...props }: Omit<MenuItemProps, 'onClick' | 'closeOnClick'> & { htmlProps?: React.HTMLAttributes<HTMLElement> }) {
+function ItemShell({
+  htmlProps,
+  ...props
+}: Omit<MenuItemProps, 'onClick' | 'closeOnClick'> & { htmlProps?: React.HTMLAttributes<HTMLElement> }) {
   const ctx = useContext(MenuContext);
   const { rootProps, body } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
   return (
-    <div
-      {...htmlProps}
-      {...rootProps}
-      data-ripple-host={props.disabled ? undefined : ''}
-    >
+    <div {...htmlProps} {...rootProps} data-ripple-host={props.disabled ? undefined : ''}>
       {body}
     </div>
   );
@@ -577,7 +641,10 @@ function pivot(anchorStart: number, anchorEnd: number, menuStart: number, menuEn
  * Written to the popup as `--m3x-menu-origin` (Base UI's own `--transform-origin` is the aligned
  * edge offset by the side gap).
  */
-function useComposeOrigin(): { anchor: RefObject<HTMLElement | null>; positionerRef: (el: HTMLDivElement | null) => void } {
+function useComposeOrigin(): {
+  anchor: RefObject<HTMLElement | null>;
+  positionerRef: (el: HTMLDivElement | null) => void;
+} {
   const anchor = useRef<HTMLElement | null>(null);
   const [positioner, setPositioner] = useState<HTMLDivElement | null>(null);
   useLayoutEffect(() => {
@@ -588,7 +655,10 @@ function useComposeOrigin(): { anchor: RefObject<HTMLElement | null>; positioner
       const a = anchor.current.getBoundingClientRect();
       // The positioner isn't scaled: its box is the menu's laid-out bounds.
       const m = positioner.getBoundingClientRect();
-      popup.style.setProperty('--m3x-menu-origin', `${pivot(a.left, a.right, m.left, m.right)}px ${pivot(a.top, a.bottom, m.top, m.bottom)}px`);
+      popup.style.setProperty(
+        '--m3x-menu-origin',
+        `${pivot(a.left, a.right, m.left, m.right)}px ${pivot(a.top, a.bottom, m.top, m.bottom)}px`,
+      );
     };
     update();
     const observer = new MutationObserver(update);
@@ -633,10 +703,21 @@ export function Menu({
   const portalContainer = usePortalContainer();
   const origin = useComposeOrigin();
   return (
-    <BaseMenu.Root open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange ? (o) => onOpenChange(o) : undefined} modal={modal}>
+    <BaseMenu.Root
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange ? (o) => onOpenChange(o) : undefined}
+      modal={modal}
+    >
       <BaseMenu.Trigger ref={origin.anchor as React.Ref<HTMLButtonElement>} render={trigger} />
       <BaseMenu.Portal container={portalContainer}>
-        <BaseMenu.Positioner ref={origin.positionerRef} side={side} align={align} sideOffset={sideOffset} alignOffset={alignOffset}>
+        <BaseMenu.Positioner
+          ref={origin.positionerRef}
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          alignOffset={alignOffset}
+        >
           <BaseMenu.Popup {...stylex.props(surfaceStyles(variant, width), s.popupMotion, sx)}>
             <MenuContext value={{ variant, density, live: true }}>{grouped(variant, children)}</MenuContext>
           </BaseMenu.Popup>
@@ -667,7 +748,12 @@ export function Submenu({ items, width, ...item }: SubmenuProps) {
   }
   return (
     <BaseMenu.SubmenuRoot>
-      <BaseMenu.SubmenuTrigger ref={origin.anchor} disabled={item.disabled} {...rootProps} data-ripple-host={item.disabled ? undefined : ''}>
+      <BaseMenu.SubmenuTrigger
+        ref={origin.anchor}
+        disabled={item.disabled}
+        {...rootProps}
+        data-ripple-host={item.disabled ? undefined : ''}
+      >
         {body}
       </BaseMenu.SubmenuTrigger>
       <BaseMenu.Portal container={portalContainer}>

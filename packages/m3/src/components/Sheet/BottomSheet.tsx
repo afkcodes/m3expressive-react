@@ -8,7 +8,15 @@ import { motion } from '../../tokens/motion.stylex.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { computeAnchorTarget, closestAnchor, MAX_FLING_VELOCITY, PointerVelocityTracker, pointerSlop, suppressNextClick, TOUCH_SLOP } from '../../motion/gesture.ts';
+import {
+  computeAnchorTarget,
+  closestAnchor,
+  MAX_FLING_VELOCITY,
+  PointerVelocityTracker,
+  pointerSlop,
+  suppressNextClick,
+  TOUCH_SLOP,
+} from '../../motion/gesture.ts';
 import { scrim } from './scrim.ts';
 
 /*
@@ -74,8 +82,14 @@ const s = stylex.create({
     pointerEvents: 'none',
     translate: { default: '0 0', ':is([data-starting-style], [data-ending-style])': '0 100%' },
     transitionProperty: 'translate',
-    transitionDuration: { default: motion.defaultSpatialDuration, ':is([data-ending-style])': motion.fastEffectsDuration },
-    transitionTimingFunction: { default: motion.defaultSpatialEasing, ':is([data-ending-style])': motion.fastEffectsEasing },
+    transitionDuration: {
+      default: motion.defaultSpatialDuration,
+      ':is([data-ending-style])': motion.fastEffectsDuration,
+    },
+    transitionTimingFunction: {
+      default: motion.defaultSpatialEasing,
+      ':is([data-ending-style])': motion.fastEffectsEasing,
+    },
     // The surface continued below the sheet: the show spring overshoots (~1.5% of the travel on
     // expressive default spatial) and a fling settles past Expanded, which would open a gap.
     '::after': {
@@ -114,7 +128,17 @@ export interface BottomSheetProps {
 
 /** The bottom sheet surface (standard sheets sit in the layout; see `ModalBottomSheet`). */
 export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function BottomSheet(
-  { modal = false, dragHandle = true, handleLabel = 'Close sheet', onHandleActivate, onHandlePointerDown, onSurfacePointerDown, contentRef, children, sx },
+  {
+    modal = false,
+    dragHandle = true,
+    handleLabel = 'Close sheet',
+    onHandleActivate,
+    onHandlePointerDown,
+    onSurfacePointerDown,
+    contentRef,
+    children,
+    sx,
+  },
   ref,
 ) {
   return (
@@ -122,7 +146,12 @@ export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function
       {dragHandle && (
         <div data-sheet-header="" onPointerDown={onHandlePointerDown} {...stylex.props(s.header)}>
           {onHandleActivate ? (
-            <button type="button" aria-label={handleLabel} onClick={onHandleActivate} {...stylex.props(s.handleButton, s.handle)} />
+            <button
+              type="button"
+              aria-label={handleLabel}
+              onClick={onHandleActivate}
+              {...stylex.props(s.handleButton, s.handle)}
+            />
           ) : (
             <span aria-hidden {...stylex.props(s.handle)} />
           )}
@@ -158,7 +187,14 @@ interface Drag {
 }
 
 /** A modal bottom sheet: scrim, focus trap, Escape / scrim / handle / drag to dismiss. */
-export function ModalBottomSheet({ open, onOpenChange, dragHandle = true, 'aria-label': ariaLabel, children, sx }: ModalBottomSheetProps) {
+export function ModalBottomSheet({
+  open,
+  onOpenChange,
+  dragHandle = true,
+  'aria-label': ariaLabel,
+  children,
+  sx,
+}: ModalBottomSheetProps) {
   const portal = usePortalContainer();
   const popup = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
@@ -238,7 +274,14 @@ export function ModalBottomSheet({ open, onOpenChange, dragHandle = true, 'aria-
       done();
       return;
     }
-    settle.current = animateSpring({ spring: settleSpec, from: offset.current, to: target, velocity: v, onUpdate: place, onComplete: done });
+    settle.current = animateSpring({
+      spring: settleSpec,
+      from: offset.current,
+      to: target,
+      velocity: v,
+      onUpdate: place,
+      onComplete: done,
+    });
   };
 
   // Mouse / pen anywhere on the sheet, touch on the handle (touch on the content: below).

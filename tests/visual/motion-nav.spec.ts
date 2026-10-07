@@ -73,7 +73,9 @@ test.describe('list motion', () => {
     expect(mid).not.toBe(after);
   });
 
-  test('dragged: one state layer at 16%, the ripple stays mounted, z-index held while the shadow leaves', async ({ page }) => {
+  test('dragged: one state layer at 16%, the ripple stays mounted, z-index held while the shadow leaves', async ({
+    page,
+  }) => {
     const node = await open(page, '/fixture/list/live-drag');
     const item = node.getByRole('button', { name: /Label text 2/ });
     const toggle = page.locator('[data-toggle-drag]');
@@ -85,7 +87,11 @@ test.describe('list motion', () => {
     await toggle.evaluate((b) => (b as HTMLButtonElement).click());
     await expect.poll(() => item.evaluate((el) => getComputedStyle(el).zIndex)).toBe('1');
     expect(await layers.count(), 'same layer / ripple nodes while dragged').toBe(before);
-    expect(await item.evaluate((el) => (window as unknown as { __layer: Element }).__layer === el.querySelector(':scope > span[aria-hidden]'))).toBe(true);
+    expect(
+      await item.evaluate(
+        (el) => (window as unknown as { __layer: Element }).__layer === el.querySelector(':scope > span[aria-hidden]'),
+      ),
+    ).toBe(true);
     await page.waitForTimeout(SETTLE);
     expect(await layers.first().evaluate((el) => getComputedStyle(el).opacity)).toBe('0.16');
     // Un-drag: the shadow animates out on fast spatial and the item stays lifted until it has.
@@ -93,7 +99,10 @@ test.describe('list motion', () => {
     const t0 = Date.now();
     const samples: { t: number; z: string; layer: string }[] = [];
     while (Date.now() - t0 < 700) {
-      const [z, layer] = await item.evaluate((el) => [getComputedStyle(el).zIndex, getComputedStyle(el.querySelector(':scope > span[aria-hidden]')!).opacity]);
+      const [z, layer] = await item.evaluate((el) => [
+        getComputedStyle(el).zIndex,
+        getComputedStyle(el.querySelector(':scope > span[aria-hidden]')!).opacity,
+      ]);
       samples.push({ t: Date.now() - t0, z: z, layer: layer });
       await page.waitForTimeout(20);
     }
@@ -107,7 +116,9 @@ test.describe('list motion', () => {
     expect(await layers.count()).toBe(before);
   });
 
-  test('expandable: the panel springs on fast spatial and its items slide down anchored to its bottom', async ({ page }) => {
+  test('expandable: the panel springs on fast spatial and its items slide down anchored to its bottom', async ({
+    page,
+  }) => {
     const node = await open(page, '/fixture/list/live-accordion');
     await node.getByRole('button', { name: 'Expand' }).click();
     const ul = node.locator('ul');
@@ -128,17 +139,21 @@ test.describe('list motion', () => {
     }
     const mid = samples.filter((s) => s.panelH > 4 && s.panelH < 100);
     expect(mid.length, 'caught the panel mid-open').toBeGreaterThan(0);
-    for (const s of mid) expect(Math.abs(s.gap), `list bottom on the panel bottom (h ${s.panelH})`).toBeLessThanOrEqual(1);
+    for (const s of mid)
+      expect(Math.abs(s.gap), `list bottom on the panel bottom (h ${s.panelH})`).toBeLessThanOrEqual(1);
   });
 
-  test('swipe: release follows velocity (125px/s) and the 56px positional threshold, settles on a 300ms tween', async ({ page }) => {
+  test('swipe: release follows velocity (125px/s) and the 56px positional threshold, settles on a 300ms tween', async ({
+    page,
+  }) => {
     const node = await open(page, '/fixture/list/live-swipe');
     const state = page.locator('[data-state]');
     const item = node.locator('div[style*="translateX"]');
-    const offset = () => item.evaluate((el) => {
-      const m = /translateX\((-?[\d.]+)px\)/.exec((el as HTMLElement).style.transform);
-      return m ? Math.abs(Number(m[1])) : 0;
-    });
+    const offset = () =>
+      item.evaluate((el) => {
+        const m = /translateX\((-?[\d.]+)px\)/.exec((el as HTMLElement).style.transform);
+        return m ? Math.abs(Number(m[1])) : 0;
+      });
     // Pointer events dispatched in-page at exact intervals (velocity under test, not CDP latency):
     // down at `from`, an 8px slop step, then `steps` moves to `to` every `stepMs`, then up after
     // `holdMs` (> 40ms = the pointer stopped).
@@ -148,7 +163,17 @@ test.describe('list motion', () => {
           const r = el.getBoundingClientRect();
           const y = r.top + r.height / 2;
           const fire = (type: string, x: number) =>
-            el.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 7, pointerType: 'touch', isPrimary: true, button: 0, clientX: r.left + x, clientY: y }));
+            el.dispatchEvent(
+              new PointerEvent(type, {
+                bubbles: true,
+                pointerId: 7,
+                pointerType: 'touch',
+                isPrimary: true,
+                button: 0,
+                clientX: r.left + x,
+                clientY: y,
+              }),
+            );
           const spin = (until: number) => {
             while (performance.now() < until);
           };
@@ -228,7 +253,12 @@ async function sampleFrames<T>(el: Locator, read: string, ms: number, act?: stri
  * start time is fitted (it falls between two frames), then every moving frame must sit within 2%
  * of the travel (+1px rounding) of the spring.
  */
-function expectSpring(frames: { t: number; v: number }[], from: number, to: number, spring: { dampingRatio: number; stiffness: number }) {
+function expectSpring(
+  frames: { t: number; v: number }[],
+  from: number,
+  to: number,
+  spring: { dampingRatio: number; stiffness: number },
+) {
   const start = frames.findIndex((f) => Math.abs(f.v - from) > 0.5);
   expect(start, 'the value moves').toBeGreaterThan(0);
   const moving = frames.slice(start, start + 20);
@@ -236,27 +266,37 @@ function expectSpring(frames: { t: number; v: number }[], from: number, to: numb
   const hi = frames[start]!.t;
   let best = { err: Infinity, t0: lo };
   for (let t0 = lo - 20; t0 <= hi; t0 += 0.25) {
-    const err = Math.max(...moving.map((f) => Math.abs(f.v - stepSpring(spring, { value: from, velocity: 0 }, to, f.t - t0).value)));
+    const err = Math.max(
+      ...moving.map((f) => Math.abs(f.v - stepSpring(spring, { value: from, velocity: 0 }, to, f.t - t0).value)),
+    );
     if (err < best.err) best = { err, t0 };
   }
-  expect(best.err, `max deviation from the spring (start fitted at ${best.t0.toFixed(1)}ms)`).toBeLessThan(Math.abs(to - from) * 0.02 + 1);
+  expect(best.err, `max deviation from the spring (start fitted at ${best.t0.toFixed(1)}ms)`).toBeLessThan(
+    Math.abs(to - from) * 0.02 + 1,
+  );
 }
 
 // ── Menu ──────────────────────────────────────────────────────────────────────────────────────
 test.describe('menu motion', () => {
   /** Compose calculateTransformOrigin from live rects (px from the menu's top-left). */
   const composeOrigin = (anchor: Locator, menu: Locator) =>
-    Promise.all([anchor.boundingBox(), menu.evaluate((el) => {
-      const r = el.parentElement!.getBoundingClientRect();
-      return { x: r.x, y: r.y, width: r.width, height: r.height };
-    })]).then(([a, m]) => {
+    Promise.all([
+      anchor.boundingBox(),
+      menu.evaluate((el) => {
+        const r = el.parentElement!.getBoundingClientRect();
+        return { x: r.x, y: r.y, width: r.width, height: r.height };
+      }),
+    ]).then(([a, m]) => {
       const axis = (a0: number, a1: number, m0: number, m1: number) =>
         m0 >= a1 ? 0 : m1 <= a0 ? m1 - m0 : (Math.max(a0, m0) + Math.min(a1, m1)) / 2 - m0;
       return [axis(a!.x, a!.x + a!.width, m.x, m.x + m.width), axis(a!.y, a!.y + a!.height, m.y, m.y + m.height)];
     });
-  const originOf = (menu: Locator) => menu.evaluate((el) => getComputedStyle(el).transformOrigin.split(' ').map(parseFloat));
+  const originOf = (menu: Locator) =>
+    menu.evaluate((el) => getComputedStyle(el).transformOrigin.split(' ').map(parseFloat));
 
-  test('popup scales from the centre of its overlap with the anchor (Menu.kt calculateTransformOrigin)', async ({ page }) => {
+  test('popup scales from the centre of its overlap with the anchor (Menu.kt calculateTransformOrigin)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/menu/live');
     const trigger = page.getByRole('button', { name: 'Options' });
     await trigger.click();
@@ -271,7 +311,9 @@ test.describe('menu motion', () => {
     expect(await transitionOf(menu, 'scale')).toMatchObject({ duration: FAST_SPATIAL });
     expect(await transitionOf(menu, 'opacity')).toMatchObject({ duration: FAST_EFFECTS });
     // Base UI's own origin is the aligned edge offset by the side gap — not what Compose uses.
-    const baseUi = await menu.evaluate((el) => getComputedStyle(el.parentElement!).getPropertyValue('--transform-origin').trim());
+    const baseUi = await menu.evaluate((el) =>
+      getComputedStyle(el.parentElement!).getPropertyValue('--transform-origin').trim(),
+    );
     expect(baseUi).not.toBe(`${expected[0]}px 0px`);
   });
 
@@ -291,7 +333,9 @@ test.describe('menu motion', () => {
     expect(got[1]).toBeGreaterThan(0);
   });
 
-  test('selectedLeading expands in on fast spatial and fades on fast effects (Menu.kt AnimatedVisibility)', async ({ page }) => {
+  test('selectedLeading expands in on fast spatial and fades on fast effects (Menu.kt AnimatedVisibility)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/menu/live-motion');
     await page.getByRole('button', { name: 'More' }).click();
     const item = page.getByRole('menuitemcheckbox', { name: 'Word wrap' });
@@ -299,7 +343,8 @@ test.describe('menu motion', () => {
     await page.waitForTimeout(SETTLE);
     // check svg → its 20px icon box → the animated slot
     const slot = item.locator('svg').first().locator('xpath=../..');
-    const box = () => slot.evaluate((el) => ({ w: el.getBoundingClientRect().width, o: Number(getComputedStyle(el).opacity) }));
+    const box = () =>
+      slot.evaluate((el) => ({ w: el.getBoundingClientRect().width, o: Number(getComputedStyle(el).opacity) }));
     expect(await box()).toEqual({ w: 0, o: 0 });
     expect(await transitionOf(slot, 'width')).toMatchObject({ duration: FAST_SPATIAL });
     expect(await transitionOf(slot, 'opacity')).toMatchObject({ duration: FAST_EFFECTS });
@@ -333,18 +378,27 @@ test.describe('tabs motion', () => {
       return Math.min(Math.max(0, el.scrollWidth - visible), Math.max(0, centred));
     });
 
-  test('the indicator springs to the new tab on default spatial (not snapped by the resize observer)', async ({ page }) => {
+  test('the indicator springs to the new tab on default spatial (not snapped by the resize observer)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/tabs/live');
     const list = page.getByRole('tablist');
     const indicatorX = `(el) => [...el.querySelectorAll(':scope > span[aria-hidden]')].at(-1).getBoundingClientRect().x - el.getBoundingClientRect().x`;
     const from = (await sampleFrames<number>(list, indicatorX, 10))[0]!.v;
-    const frames = await sampleFrames<number>(list, indicatorX, 700, `(el) => el.querySelectorAll('[role=tab]')[2].click()`);
+    const frames = await sampleFrames<number>(
+      list,
+      indicatorX,
+      700,
+      `(el) => el.querySelectorAll('[role=tab]')[2].click()`,
+    );
     const to = frames.at(-1)!.v;
     expect(to).toBeGreaterThan(from + 100);
     expectSpring(frames, from, to, motionSchemes.expressive['default-spatial']);
   });
 
-  test('scrollable row centres the selected tab on the default spatial spring, also on first layout', async ({ page }) => {
+  test('scrollable row centres the selected tab on the default spatial spring, also on first layout', async ({
+    page,
+  }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/fixture/tabs/live-scroll');
     const list = page.getByRole('tablist');
@@ -352,7 +406,10 @@ test.describe('tabs motion', () => {
     const first = await sampleFrames<number>(list, '(el) => el.scrollLeft', 700);
     const target0 = await centredOffset(list);
     expect(target0).toBeGreaterThan(0);
-    expect(first.some((f) => f.v > 0 && f.v < target0 - 1), 'animated').toBe(true);
+    expect(
+      first.some((f) => f.v > 0 && f.v < target0 - 1),
+      'animated',
+    ).toBe(true);
     expect(first.at(-1)!.v).toBeCloseTo(target0, 0);
     // Both edge paddings are scrollable (layoutWidth = 2 × 52 + tabs).
     const ends = await list.evaluate((el) => {
@@ -362,7 +419,12 @@ test.describe('tabs motion', () => {
     expect(ends).toBe(52);
     // A new selection: sampled scroll follows a default-spatial spring from rest.
     const from = target0;
-    const frames = await sampleFrames<number>(list, '(el) => el.scrollLeft', 700, `(el) => [...el.querySelectorAll('[role=tab]')][6].click()`);
+    const frames = await sampleFrames<number>(
+      list,
+      '(el) => el.scrollLeft',
+      700,
+      `(el) => [...el.querySelectorAll('[role=tab]')][6].click()`,
+    );
     await expect(page.getByRole('tab', { name: 'Section 7' })).toHaveAttribute('aria-selected', 'true');
     const to = await centredOffset(list);
     expect(to).not.toBe(from);
@@ -380,15 +442,21 @@ async function expectKit(page: Page, el: Locator, component: string, variant: st
   const m = JSON.parse(readFileSync(join(REFS_DIR, `${component}/manifest.json`), 'utf8')) as Manifest;
   const v = m.variants[variant]!;
   const ref: Buffer = readFileSync(join(REFS_DIR, component, `${variant}.png`));
-  const r = compareImages(ref, await captureRegion(page, el, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${variant} (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  const r = compareImages(ref, await captureRegion(page, el, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${variant} (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+  });
   expect.soft(r.diffPixels, variant).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────────────────────
 test.describe('navigation motion', () => {
-
-  test('rail collapse ⇄ expand: one default-spatial progress morphs width, items and labels; rest frames are the kit', async ({ page }) => {
+  test('rail collapse ⇄ expand: one default-spatial progress morphs width, items and labels; rest frames are the kit', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 1000 });
     await open(page, '/fixture/navigation/live-rail');
     const nav = page.getByRole('navigation');
@@ -413,7 +481,12 @@ test.describe('navigation motion', () => {
     // The collapsed label width only matters under halfway while collapsing (not sampled below).
     const metrics = { topWidth: 30, topHeight: 16, startWidth: labelStart, startHeight: 20 };
     const spring = motionSchemes.expressive['default-spatial'];
-    expectSpring(expand.map((f) => ({ t: f.t, v: f.v.w })), 96, 220, spring);
+    expectSpring(
+      expand.map((f) => ({ t: f.t, v: f.v.w })),
+      96,
+      220,
+      spring,
+    );
     expect(Math.max(...expand.map((f) => f.v.w)), 'the rail overshoots 220 (spatial spring)').toBeGreaterThan(220.5);
     const mid = expand.filter((f) => f.v.w > 97 && f.v.w < 219);
     expect(mid.length).toBeGreaterThan(5);
@@ -425,30 +498,43 @@ test.describe('navigation motion', () => {
       expect(Math.abs(v.iw - g.width), `item width at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
       expect(Math.abs(v.ih - g.height), `item height at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
       expect(v.lo).toBeCloseTo(Math.min(1, 4 * (p - 0.5) ** 2), 2);
-      if (p >= 0.5) expect(Math.abs(v.lx - (68 - 20 * (1 - p)) * p), `label x at p ${p.toFixed(2)}`).toBeLessThanOrEqual(0.6);
+      if (p >= 0.5)
+        expect(Math.abs(v.lx - (68 - 20 * (1 - p)) * p), `label x at p ${p.toFixed(2)}`).toBeLessThanOrEqual(0.6);
     }
     // Collapse: the label keeps the expanded style until halfway, then jumps under the icon.
     const collapse = await sampleFrames<F>(nav, read, 700, menu);
     await page.mouse.move(600, 900);
     await page.waitForTimeout(SETTLE);
     await expectKit(page, nav, 'navigation', 'nrail-top-4');
-    expectSpring(collapse.map((f) => ({ t: f.t, v: f.v.w })), 220, 96, spring);
+    expectSpring(
+      collapse.map((f) => ({ t: f.t, v: f.v.w })),
+      220,
+      96,
+      spring,
+    );
     for (const { v } of collapse.filter((f) => f.v.w > 97 && f.v.w < 219)) {
       const p = (v.w - 96) / 124;
       expect(v.fs).toBe(p < 0.5 ? 12 : 14);
-      expect(Math.abs(v.ih - railItemGeometry(p, false, metrics).height), `item height at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(v.ih - railItemGeometry(p, false, metrics).height),
+        `item height at p ${p.toFixed(2)}`,
+      ).toBeLessThanOrEqual(1);
       if (p >= 0.5) expect(Math.abs(v.lx - 68 * p), `label x at p ${p.toFixed(2)}`).toBeLessThanOrEqual(0.6);
     }
   });
 
-  test('indicator alpha and width share one progress: rail from its start edge, bar from its centre', async ({ page }) => {
+  test('indicator alpha and width share one progress: rail from its start edge, bar from its centre', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 1000 });
     await open(page, '/fixture/navigation/live-rail');
     const items = page.getByRole('navigation').getByRole('button', { name: 'Label' });
     const fill = items.nth(2).locator('span[aria-hidden]').first();
     expect(await transitionOf(fill, 'width')).toMatchObject({ duration: DEFAULT_SPATIAL });
     expect(await transitionOf(fill, 'opacity')).toMatchObject({ duration: DEFAULT_SPATIAL });
-    const pillLeft = await items.nth(2).evaluate((el) => (el.querySelector('span') as HTMLElement).getBoundingClientRect().x);
+    const pillLeft = await items
+      .nth(2)
+      .evaluate((el) => (el.querySelector('span') as HTMLElement).getBoundingClientRect().x);
     const frames = await sampleFrames<{ x: number; w: number; o: number }>(
       fill,
       '(el) => { const r = el.getBoundingClientRect(); return { x: r.x, w: r.width, o: Number(getComputedStyle(el).opacity) }; }',
@@ -482,7 +568,9 @@ test.describe('navigation motion', () => {
     }
   });
 
-  test('bar icon / label colours switch instantly; rail labels fade on default effects (NavigationItem.kt)', async ({ page }) => {
+  test('bar icon / label colours switch instantly; rail labels fade on default effects (NavigationItem.kt)', async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 1000 });
     await open(page, '/fixture/navigation/live');
     const barItem = page.getByRole('navigation').getByRole('button').nth(1);
@@ -493,10 +581,17 @@ test.describe('navigation motion', () => {
     const railItem = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(1);
     // The label inherits the item's colour, which fades (and keeps fading across the rail morph).
     expect(await transitionOf(railItem, 'color')).toMatchObject({ duration: DEFAULT_EFFECTS });
-    expect(await railItem.getByText('Label').evaluate((el) => getComputedStyle(el).color)).toBe(await railItem.evaluate((el) => getComputedStyle(el).color));
+    expect(await railItem.getByText('Label').evaluate((el) => getComputedStyle(el).color)).toBe(
+      await railItem.evaluate((el) => getComputedStyle(el).color),
+    );
     expect(await transitionOf(railItem.locator('svg').locator('xpath=..'), 'color')).toBeNull();
     // The icon has its own colour in both states (deselecting doesn't inherit a fading one).
-    const icon = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(0).locator('svg').locator('xpath=..');
+    const icon = page
+      .getByRole('navigation')
+      .getByRole('button', { name: 'Label' })
+      .nth(0)
+      .locator('svg')
+      .locator('xpath=..');
     const selectedColor = await icon.evaluate((el) => getComputedStyle(el).color);
     await railItem.click();
     expect(await icon.evaluate((el) => getComputedStyle(el).color)).not.toBe(selectedColor);
@@ -533,7 +628,9 @@ test.describe('app bar motion', () => {
     };
   }`;
 
-  test('medium bar: the scroll collapses the bar first — content and title ride its edge (exitUntilCollapsed)', async ({ page }) => {
+  test('medium bar: the scroll collapses the bar first — content and title ride its edge (exitUntilCollapsed)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/app-bar/live');
     const scroll = page.locator('[data-scroll]');
     const header = page.locator('header');
@@ -563,7 +660,9 @@ test.describe('app bar motion', () => {
     expect(last.gap).toBeCloseTo(rest.gap, 0);
   });
 
-  test('medium bar: stopping under halfway snaps open on the default effects spring (settleAppBar)', async ({ page }) => {
+  test('medium bar: stopping under halfway snaps open on the default effects spring (settleAppBar)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/app-bar/live');
     const scroll = page.locator('[data-scroll]');
     const frames = await sampleFrames<Bar>(scroll, READ, 900, '(el) => el.scrollTo({ top: 18, behavior: "instant" })');
@@ -578,7 +677,9 @@ test.describe('app bar motion', () => {
     expectSpring(settle, 18, 0, motionSchemes.expressive['default-effects']);
   });
 
-  test('bottom bar hides with the scroll, returns on any scroll back, snaps on fast spatial (exitAlways)', async ({ page }) => {
+  test('bottom bar hides with the scroll, returns on any scroll back, snaps on fast spatial (exitAlways)', async ({
+    page,
+  }) => {
     await open(page, '/fixture/app-bar/live-bottom');
     const scroll = page.locator('[data-scroll]');
     const bar = page.getByRole('toolbar').locator('xpath=..');
@@ -598,7 +699,9 @@ test.describe('app bar motion', () => {
     // Any scroll back shows it again by the same amount.
     await page.mouse.wheel(0, -20);
     await expect.poll(height, { timeout: 3000 }).toBe(0);
-    const tops = await page.getByRole('toolbar').evaluate((el) => el.getBoundingClientRect().top - el.parentElement!.getBoundingClientRect().top);
+    const tops = await page
+      .getByRole('toolbar')
+      .evaluate((el) => el.getBoundingClientRect().top - el.parentElement!.getBoundingClientRect().top);
     expect(tops).toBe(0);
   });
 });

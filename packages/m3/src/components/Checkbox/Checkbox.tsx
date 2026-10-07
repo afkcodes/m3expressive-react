@@ -111,7 +111,11 @@ const s = stylex.create({
   path: { transitionProperty: 'd' },
   pathCheck: { d: `path("${CHECK}")` },
   pathDash: { d: `path("${DASH}")` },
-  pathMorph: { transitionDuration: motion.defaultSpatialDuration, transitionTimingFunction: motion.defaultSpatialEasing, transitionDelay: '0s' },
+  pathMorph: {
+    transitionDuration: motion.defaultSpatialDuration,
+    transitionTimingFunction: motion.defaultSpatialEasing,
+    transitionDelay: '0s',
+  },
   pathSnap: { transitionDuration: '0s', transitionDelay: '0s' },
   pathSnapLate: { transitionDuration: '0s', transitionDelay: '100ms' },
 });
@@ -153,15 +157,23 @@ const glyphFill = stylex.create({
   off: { fill: 'transparent' },
 });
 
-export interface CheckboxProps
-  extends Omit<BaseCheckbox.Root.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface CheckboxProps extends Omit<BaseCheckbox.Root.Props, 'className' | 'style' | 'render' | 'children'> {
   /** Error styling (also sets aria-invalid). */
   error?: boolean;
   sx?: StyleXStyles;
 }
 
 export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox(
-  { checked: checkedProp, defaultChecked = false, onCheckedChange, indeterminate = false, disabled = false, error = false, sx, ...rest },
+  {
+    checked: checkedProp,
+    defaultChecked = false,
+    onCheckedChange,
+    indeterminate = false,
+    disabled = false,
+    error = false,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const [inner, setInner] = useState(defaultChecked);
@@ -181,8 +193,16 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
   const pathSpec = visual === 'off' ? s.pathSnapLate : from.visual === 'off' ? s.pathSnap : s.pathMorph;
 
   const boxStyle = disabled
-    ? on ? filled.disabled : outline.disabled
-    : on ? (error ? filled.error : filled.normal) : error ? outline.error : outline.normal;
+    ? on
+      ? filled.disabled
+      : outline.disabled
+    : on
+      ? error
+        ? filled.error
+        : filled.normal
+      : error
+        ? outline.error
+        : outline.normal;
 
   return (
     <BaseCheckbox.Root
@@ -215,7 +235,12 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
         <StateLayer />
         <span
           data-part="box"
-          {...stylex.props(s.box, boxStyle, !on && !disabled && !error && interactingForced && outline.normalInteracting, colourSnap ? s.snap : on ? s.boxIn : s.boxOut)}
+          {...stylex.props(
+            s.box,
+            boxStyle,
+            !on && !disabled && !error && interactingForced && outline.normalInteracting,
+            colourSnap ? s.snap : on ? s.boxIn : s.boxOut,
+          )}
         />
         <svg
           viewBox="0 0 24 24"
@@ -229,7 +254,10 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
           )}
         >
           {/* The attribute keeps engines without CSS `d` (Safari) right; CSS `d` makes it morph. */}
-          <path d={indeterminate ? DASH : CHECK} {...stylex.props(s.path, indeterminate ? s.pathDash : s.pathCheck, pathSpec)} />
+          <path
+            d={indeterminate ? DASH : CHECK}
+            {...stylex.props(s.path, indeterminate ? s.pathDash : s.pathCheck, pathSpec)}
+          />
         </svg>
         {/* Kit: the ripple is the top layer of the state layer, over the box and glyph. */}
         <Ripple disabled={disabled} above />

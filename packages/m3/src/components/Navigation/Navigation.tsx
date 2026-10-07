@@ -1,4 +1,13 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type MouseEventHandler, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
@@ -26,7 +35,12 @@ interface NavContextValue {
   /** Rail collapsing / expanding: the items' iconPositionProgress (0 collapsed … 1 expanded). */
   morph?: { p: number; toExpanded: boolean } | null;
 }
-const NavContext = createContext<NavContextValue>({ layout: 'vertical', value: undefined, showLabels: true, fill: false });
+const NavContext = createContext<NavContextValue>({
+  layout: 'vertical',
+  value: undefined,
+  showLabels: true,
+  fill: false,
+});
 
 /*
  * Figma kit, "Navigation" page (Navigation bar / rail building blocks; Compose ShortNavigationBar,
@@ -67,7 +81,14 @@ const s = stylex.create({
   // ── vertical ──
   // Pills are centred with a transform (50cqw − 50%): items are often fractional-width (412 / 4)
   // and Chrome snaps layout offsets to whole px, transforms keep Figma's exact position.
-  vertical: { flexDirection: 'column', alignItems: 'center', rowGap: 4, paddingBlock: 6, minWidth: 0, containerType: 'inline-size' },
+  vertical: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    rowGap: 4,
+    paddingBlock: 6,
+    minWidth: 0,
+    containerType: 'inline-size',
+  },
   centreX: { alignSelf: 'flex-start', transform: 'translateX(calc(50cqw - 50%))' },
   verticalNoLabel: { paddingBlock: 4 },
   fill: { flexGrow: 1, flexBasis: 0 },
@@ -122,7 +143,14 @@ const s = stylex.create({
   badgeLarge: { position: 'absolute', display: 'flex', left: 28, top: 2 },
   badgeLargeTall: { top: 14 },
   // ── horizontal (wide bar) ──
-  horizontal: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 64, minWidth: 0, containerType: 'inline-size' },
+  horizontal: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 64,
+    minWidth: 0,
+    containerType: 'inline-size',
+  },
   hPill: {
     position: 'relative',
     isolation: 'isolate',
@@ -196,7 +224,12 @@ const s = stylex.create({
   // be, as the kit's 6-item rail does); when that would reach the header they stay where a
   // top-aligned rail puts them. Measured, then applied as a transform (layout stays top-aligned).
   railMiddleShift: (px: number) => ({ transform: `translateY(${px}px)` }),
-  section: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: { default: 0, ':not(:first-child)': 12 } },
+  section: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginTop: { default: 0, ':not(:first-child)': 12 },
+  },
   sectionHeaderMorph: { marginInlineStart: 20 },
   sectionHeader: {
     display: 'flex',
@@ -210,7 +243,13 @@ const s = stylex.create({
   },
   // ── rail morph (item parts placed per frame) ──
   mItem: (width: number, height: number) => ({ width, height, alignSelf: 'flex-start', flexShrink: 0 }),
-  mBox: (x: number, y: number, width: number, height: number) => ({ position: 'absolute', left: x, top: y, width, height }),
+  mBox: (x: number, y: number, width: number, height: number) => ({
+    position: 'absolute',
+    left: x,
+    top: y,
+    width,
+    height,
+  }),
   mAt: (x: number, y: number) => ({ position: 'absolute', left: x, top: y }),
   mLabel: (alpha: number) => ({ whiteSpace: 'nowrap', opacity: alpha }),
   mRound: { borderRadius: 9999, isolation: 'isolate' },
@@ -274,22 +313,34 @@ export function NavigationItem({
     // Collapsing / expanding rail: Compose AnimatedNavigationItem geometry for this frame.
     const box = metrics?.box ?? null;
     const g = box ? railItemGeometry(morph.p, morph.toExpanded, box) : null;
-    rootStyles = [s.item, g && s.mItem(g.width, g.height), selected && (morph.toExpanded ? s.railHSelected : s.selected)];
+    rootStyles = [
+      s.item,
+      g && s.mItem(g.width, g.height),
+      selected && (morph.toExpanded ? s.railHSelected : s.selected),
+    ];
     body = (
       <>
         {metrics?.measurers}
         {g && (
           <>
-            <span aria-hidden {...stylex.props(s.mBox(g.indicator.x, g.indicator.y, g.indicator.width, g.indicator.height), s.mRound)}>
+            <span
+              aria-hidden
+              {...stylex.props(s.mBox(g.indicator.x, g.indicator.y, g.indicator.width, g.indicator.height), s.mRound)}
+            >
               {fill}
             </span>
-            <span aria-hidden {...stylex.props(s.mBox(g.ripple.x, g.ripple.y, g.ripple.width, g.ripple.height), s.mRound)}>
+            <span
+              aria-hidden
+              {...stylex.props(s.mBox(g.ripple.x, g.ripple.y, g.ripple.width, g.ripple.height), s.mRound)}
+            >
               <StateLayer />
             </span>
             <span {...stylex.props(s.mAt(g.icon.x, g.icon.y))}>
               {iconEl}
               {badge != null && (badgeSize === 'small' || g.label.style === 'top') && (
-                <span {...stylex.props(badgeSize === 'small' ? s.mAt(18, 0) : s.mAt(12, -2), s.railHBadgeLarge)}>{badge}</span>
+                <span {...stylex.props(badgeSize === 'small' ? s.mAt(18, 0) : s.mAt(12, -2), s.railHBadgeLarge)}>
+                  {badge}
+                </span>
               )}
             </span>
             <span
@@ -301,7 +352,9 @@ export function NavigationItem({
             >
               {label}
               {badge != null && badgeSize === 'large' && g.label.style === 'start' && (
-                <span {...stylex.props(s.mAt(box!.startWidth + 8, (box!.startHeight - 16) / 2), s.railHBadgeLarge)}>{badge}</span>
+                <span {...stylex.props(s.mAt(box!.startWidth + 8, (box!.startHeight - 16) / 2), s.railHBadgeLarge)}>
+                  {badge}
+                </span>
               )}
             </span>
           </>
@@ -310,7 +363,13 @@ export function NavigationItem({
     );
   } else if (ctx.layout === 'vertical') {
     const tall = !showLabel;
-    rootStyles = [s.item, s.vertical, tall && s.verticalNoLabel, ctx.fill ? s.fill : s.railWidth, selected && s.selected];
+    rootStyles = [
+      s.item,
+      s.vertical,
+      tall && s.verticalNoLabel,
+      ctx.fill ? s.fill : s.railWidth,
+      selected && s.selected,
+    ];
     body = (
       <>
         <span {...stylex.props(s.pill, tall && s.pillTall, s.centreX)}>
@@ -318,7 +377,15 @@ export function NavigationItem({
           <StateLayer />
           {iconEl}
           {badge != null && (
-            <span {...stylex.props(badgeSize === 'small' ? [s.badgeSmall, tall && s.badgeSmallTall] : [s.badgeLarge, tall && s.badgeLargeTall])}>{badge}</span>
+            <span
+              {...stylex.props(
+                badgeSize === 'small'
+                  ? [s.badgeSmall, tall && s.badgeSmallTall]
+                  : [s.badgeLarge, tall && s.badgeLargeTall],
+              )}
+            >
+              {badge}
+            </span>
           )}
         </span>
         {showLabel && <span {...stylex.props(typescale.labelMedium, s.label, textCentred.trimTracking)}>{label}</span>}
@@ -349,7 +416,14 @@ export function NavigationItem({
     );
   }
   const props = {
-    ...stylex.props(rootStyles, rail && s.labelMotion, !disabled && stateLayerHost.hostPressLayer, disabled && s.itemDisabled, forcedLayer, sx),
+    ...stylex.props(
+      rootStyles,
+      rail && s.labelMotion,
+      !disabled && stateLayerHost.hostPressLayer,
+      disabled && s.itemDisabled,
+      forcedLayer,
+      sx,
+    ),
     'aria-current': selected ? ('page' as const) : undefined,
     onClick: (e: React.MouseEvent<HTMLElement>) => {
       if (disabled) return;
@@ -376,7 +450,10 @@ export function NavigationItem({
  * measures the label with the style of the moment, and the kit's rest layouts size it the same
  * way (collapsed: centred without its trailing tracking; expanded: a hug box).
  */
-function useRailLabelMetrics(active: boolean, label: ReactNode): { box: RailLabelMetrics | null; measurers: ReactNode } | null {
+function useRailLabelMetrics(
+  active: boolean,
+  label: ReactNode,
+): { box: RailLabelMetrics | null; measurers: ReactNode } | null {
   const top = useRef<HTMLSpanElement>(null);
   const start = useRef<HTMLSpanElement>(null);
   const [box, setBox] = useState<RailLabelMetrics | null>(null);
@@ -402,7 +479,15 @@ function useRailLabelMetrics(active: boolean, label: ReactNode): { box: RailLabe
 }
 
 /** Static item styling context (items outside a bar / rail fill their flex container). */
-export function NavigationScope({ layout = 'vertical', showLabels = true, children }: { layout?: NavigationItemLayout; showLabels?: boolean; children: ReactNode }) {
+export function NavigationScope({
+  layout = 'vertical',
+  showLabels = true,
+  children,
+}: {
+  layout?: NavigationItemLayout;
+  showLabels?: boolean;
+  children: ReactNode;
+}) {
   return <NavContext value={{ layout, value: undefined, showLabels, fill: true }}>{children}</NavContext>;
 }
 
@@ -419,13 +504,25 @@ export interface NavigationBarProps {
 }
 
 /** Bottom navigation bar (Compose ShortNavigationBar): 64px, Surface Container. */
-export function NavigationBar({ value, onValueChange, itemLayout = 'vertical', children, 'aria-label': ariaLabel, sx }: NavigationBarProps) {
+export function NavigationBar({
+  value,
+  onValueChange,
+  itemLayout = 'vertical',
+  children,
+  'aria-label': ariaLabel,
+  sx,
+}: NavigationBarProps) {
   const count = Array.isArray(children) ? children.length : 1;
   // Kit: horizontal-item bars inset their items 160 / 120 / 80 / 40px for 3 / 4 / 5 / 6 items.
   const inset = itemLayout === 'horizontal' ? Math.max(0, 280 - 40 * count) : 0;
   return (
-    <nav aria-label={ariaLabel} {...stylex.props(s.bar, itemLayout === 'horizontal' && [s.barHorizontal, s.barInset(inset)], sx)}>
-      <NavContext value={{ layout: itemLayout, value, onSelect: onValueChange, showLabels: true, fill: true }}>{children}</NavContext>
+    <nav
+      aria-label={ariaLabel}
+      {...stylex.props(s.bar, itemLayout === 'horizontal' && [s.barHorizontal, s.barInset(inset)], sx)}
+    >
+      <NavContext value={{ layout: itemLayout, value, onSelect: onValueChange, showLabels: true, fill: true }}>
+        {children}
+      </NavContext>
     </nav>
   );
 }
@@ -498,15 +595,36 @@ export function NavigationRail({
       )}
     >
       {header != null && (
-        <div ref={headerRef} {...stylex.props(s.railHeader, expanded && s.railHeaderExpanded, morph && (expanded ? s.railHeaderMorphExpanded : s.railHeaderMorphCollapsed))}>
+        <div
+          ref={headerRef}
+          {...stylex.props(
+            s.railHeader,
+            expanded && s.railHeaderExpanded,
+            morph && (expanded ? s.railHeaderMorphExpanded : s.railHeaderMorphCollapsed),
+          )}
+        >
           {header}
         </div>
       )}
       <div
         ref={items}
-        {...stylex.props(s.railItems, expanded && s.railItemsExpanded, morph && s.railItemsMorph(railItemSpacing(p)), middle && shift !== 0 && s.railMiddleShift(shift))}
+        {...stylex.props(
+          s.railItems,
+          expanded && s.railItemsExpanded,
+          morph && s.railItemsMorph(railItemSpacing(p)),
+          middle && shift !== 0 && s.railMiddleShift(shift),
+        )}
       >
-        <NavContext value={{ layout: expanded ? 'rail-horizontal' : 'vertical', value, onSelect: onValueChange, showLabels, fill: false, morph }}>
+        <NavContext
+          value={{
+            layout: expanded ? 'rail-horizontal' : 'vertical',
+            value,
+            onSelect: onValueChange,
+            showLabels,
+            fill: false,
+            morph,
+          }}
+        >
           {children}
         </NavContext>
       </div>
@@ -571,7 +689,9 @@ export function NavigationRailSection({ label, children }: NavigationRailSection
   const { morph } = useContext(NavContext);
   return (
     <div role="group" {...stylex.props(s.section)}>
-      {label != null && <p {...stylex.props(typescale.labelLarge, s.sectionHeader, morph && s.sectionHeaderMorph)}>{label}</p>}
+      {label != null && (
+        <p {...stylex.props(typescale.labelLarge, s.sectionHeader, morph && s.sectionHeaderMorph)}>{label}</p>
+      )}
       {children}
     </div>
   );

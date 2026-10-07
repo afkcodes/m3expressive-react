@@ -16,11 +16,41 @@ import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/navigation/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
-  frame: { display: 'flex', height: 560, borderRadius: 16, overflow: 'hidden', backgroundColor: color.surfaceContainerLow },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
+  frame: {
+    display: 'flex',
+    height: 560,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: color.surfaceContainerLow,
+  },
   content: { flexGrow: 1, padding: 24, color: color.onSurfaceVariant },
-  phone: { display: 'flex', flexDirection: 'column', width: 412, height: 320, borderRadius: 16, overflow: 'hidden', backgroundColor: color.surfaceContainerLow },
+  phone: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 412,
+    height: 320,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: color.surfaceContainerLow,
+  },
   muted: { color: color.onSurfaceVariant },
 });
 
@@ -79,7 +109,8 @@ export function NavigationPlayground() {
             <input type="checkbox" checked={floating} onChange={(e) => setFloating(e.target.checked)} /> floating
           </label>
           <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14 }}>
-            <input type="checkbox" checked={horizontal} onChange={(e) => setHorizontal(e.target.checked)} /> horizontal bar items
+            <input type="checkbox" checked={horizontal} onChange={(e) => setHorizontal(e.target.checked)} /> horizontal
+            bar items
           </label>
         </section>
         <div {...stylex.props(s.frame)}>
@@ -91,7 +122,12 @@ export function NavigationPlayground() {
             aria-label="Main"
             header={
               <>
-                <IconButton size="medium" shape="square" aria-label={expanded ? 'Collapse' : 'Expand'} onClick={() => setExpanded((v) => !v)}>
+                <IconButton
+                  size="medium"
+                  shape="square"
+                  aria-label={expanded ? 'Collapse' : 'Expand'}
+                  onClick={() => setExpanded((v) => !v)}
+                >
                   <Icon name="menu-24" />
                 </IconButton>
                 {expanded ? (
@@ -112,15 +148,19 @@ export function NavigationPlayground() {
             <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '0 0 8px' }}>
               {DESTINATIONS[railValue as number]}
             </h2>
-            The menu button toggles the rail: it widens to 220px while every item morphs on the same
-            default spatial spring — the label hops beside the icon halfway, fading through 4(p − ½)².
-            A newly selected indicator grows (and fades in) from its start edge in the rail, from its
-            centre in the bar.
+            The menu button toggles the rail: it widens to 220px while every item morphs on the same default spatial
+            spring — the label hops beside the icon halfway, fading through 4(p − ½)². A newly selected indicator grows
+            (and fades in) from its start edge in the rail, from its centre in the bar.
           </div>
         </div>
         <div {...stylex.props(s.phone)}>
           <div {...stylex.props(s.content)}>{DESTINATIONS[barValue as number]}</div>
-          <NavigationBar value={barValue} onValueChange={setBarValue} itemLayout={horizontal ? 'horizontal' : 'vertical'} aria-label="Bottom">
+          <NavigationBar
+            value={barValue}
+            onValueChange={setBarValue}
+            itemLayout={horizontal ? 'horizontal' : 'vertical'}
+            aria-label="Bottom"
+          >
             {DESTINATIONS.slice(0, horizontal ? 3 : 4).map((t, i) => item(i, t))}
           </NavigationBar>
         </div>

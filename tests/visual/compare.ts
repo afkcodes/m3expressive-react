@@ -73,8 +73,7 @@ function localRange(d: Buffer, w: number, h: number, x: number, y: number) {
   return hi - lo;
 }
 
-const isEdge = (d: Buffer, w: number, h: number, x: number, y: number) =>
-  localRange(d, w, h, x, y) >= EDGE_MIN_RANGE;
+const isEdge = (d: Buffer, w: number, h: number, x: number, y: number) => localRange(d, w, h, x, y) >= EDGE_MIN_RANGE;
 
 /**
  * Any visible edge (local contrast ≥ 16 in both images): coverage differences up to 24/255 are

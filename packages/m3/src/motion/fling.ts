@@ -51,14 +51,20 @@ function flingPosition(time: number) {
   return dInf + (t - tInf) * ((dSup - dInf) / (tSup - tInf));
 }
 
-const splineDeceleration = (velocity: number) => Math.log((INFLECTION * Math.abs(velocity)) / (SCROLL_FRICTION * PHYSICAL_COEFFICIENT));
+const splineDeceleration = (velocity: number) =>
+  Math.log((INFLECTION * Math.abs(velocity)) / (SCROLL_FRICTION * PHYSICAL_COEFFICIENT));
 
 /** A fling from `velocity` (px/s): its distance (signed), duration (ms) and position at a time. */
 export function splineFling(velocity: number) {
   if (velocity === 0) return { distance: 0, duration: 0, position: () => 0 };
   const l = splineDeceleration(velocity);
   const decelMinusOne = DECELERATION_RATE - 1;
-  const distance = SCROLL_FRICTION * PHYSICAL_COEFFICIENT * Math.exp((DECELERATION_RATE / decelMinusOne) * l) * Math.sign(velocity);
+  const distance =
+    SCROLL_FRICTION * PHYSICAL_COEFFICIENT * Math.exp((DECELERATION_RATE / decelMinusOne) * l) * Math.sign(velocity);
   const duration = Math.trunc(1000 * Math.exp(l / decelMinusOne));
-  return { distance, duration, position: (ms: number) => distance * flingPosition(duration > 0 ? Math.trunc(ms) / duration : 1) };
+  return {
+    distance,
+    duration,
+    position: (ms: number) => distance * flingPosition(duration > 0 ? Math.trunc(ms) / duration : 1),
+  };
 }

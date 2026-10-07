@@ -63,9 +63,16 @@ export function MonthPager({ month, children, onSwipe, instant = false }: MonthP
     if (!el) return null;
     const main = el.querySelector<HTMLElement>(':scope > [role="grid"]');
     const copy = el.querySelector<HTMLElement>(':scope > [data-month-copy] > [role="grid"]');
-    const rows = (g: HTMLElement | null) => (g ? [...g.querySelectorAll<HTMLElement>(':scope > [role="row"]')].slice(1) : []);
+    const rows = (g: HTMLElement | null) =>
+      g ? [...g.querySelectorAll<HTMLElement>(':scope > [role="row"]')].slice(1) : [];
     const firstRow = main?.querySelector<HTMLElement>(':scope > [role="row"]');
-    return { main: rows(main), copy: rows(copy), copyHeader: copy?.querySelector<HTMLElement>(':scope > [role="row"]'), width: firstRow?.offsetWidth ?? 0, left: firstRow?.offsetLeft ?? 0 };
+    return {
+      main: rows(main),
+      copy: rows(copy),
+      copyHeader: copy?.querySelector<HTMLElement>(':scope > [role="row"]'),
+      width: firstRow?.offsetWidth ?? 0,
+      left: firstRow?.offsetLeft ?? 0,
+    };
   };
   const apply = (dx: number, side: 1 | -1) => {
     const p = parts();

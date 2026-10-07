@@ -125,8 +125,14 @@ const closeColors = stylex.create({
 /** [closed, open] container and content colours of the toggle, for the per-frame Oklab mix. */
 const TOGGLE_COLORS: Record<FabMenuColor, { container: [string, string]; content: [string, string] }> = {
   primary: { container: [color.primaryContainer, color.primary], content: [color.onPrimaryContainer, color.onPrimary] },
-  secondary: { container: [color.secondaryContainer, color.secondary], content: [color.onSecondaryContainer, color.onSecondary] },
-  tertiary: { container: [color.tertiaryContainer, color.tertiary], content: [color.onTertiaryContainer, color.onTertiary] },
+  secondary: {
+    container: [color.secondaryContainer, color.secondary],
+    content: [color.onSecondaryContainer, color.onSecondary],
+  },
+  tertiary: {
+    container: [color.tertiaryContainer, color.tertiary],
+    content: [color.onTertiaryContainer, color.onTertiary],
+  },
 };
 
 interface FabMenuContextValue {
@@ -205,7 +211,10 @@ export function FabMenu({
     const items = Array.from(listRef.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
     const i = items.indexOf(document.activeElement as HTMLElement);
     // From the close button: Up enters at the nearest (last) item, Down at the first.
-    const next = i === -1 ? items[e.key === 'ArrowUp' ? items.length - 1 : 0] : items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length];
+    const next =
+      i === -1
+        ? items[e.key === 'ArrowUp' ? items.length - 1 : 0]
+        : items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length];
     next?.focus();
     e.preventDefault();
   };
@@ -221,7 +230,14 @@ export function FabMenu({
           {items.map((child, index) => (
             <FabMenuContext
               key={child.key ?? index}
-              value={{ color: menuColor, close, index, animated: true, visible: index >= items.length - count, onShown }}
+              value={{
+                color: menuColor,
+                close,
+                index,
+                animated: true,
+                visible: index >= items.length - count,
+                onShown,
+              }}
             >
               {child}
             </FabMenuContext>
@@ -404,7 +420,12 @@ const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function
       {/* The FAB draws its pressed ripple over the icon, the close button under it (kit layer order). */}
       <Ripple above={!open} />
       {showClose ? (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...stylex.props(s.icon, s.icon20, morphing && s.iconMorph)}>
+        <svg
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden
+          {...stylex.props(s.icon, s.icon20, morphing && s.iconMorph)}
+        >
           <path d={CLOSE} />
         </svg>
       ) : (
@@ -455,7 +476,14 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
         if (!keepOpen && !e.defaultPrevented) ctx.close();
       }}
       {...rest}
-      {...stylex.props(s.button, s.item, itemColors[colorProp ?? ctx.color], stateLayerHost.host, ...forcedStyles(forced), sx)}
+      {...stylex.props(
+        s.button,
+        s.item,
+        itemColors[colorProp ?? ctx.color],
+        stateLayerHost.host,
+        ...forcedStyles(forced),
+        sx,
+      )}
     >
       <StateLayer />
       <Ripple />
@@ -494,7 +522,8 @@ function useItemReveal(el: { current: HTMLElement | null }, ctx: FabMenuContextV
     const styles = node.style;
     const resting = !S.wAnim && !S.aAnim;
     if (resting && S.w === 1 && S.a === 1) {
-      for (const p of ['opacity', 'visibility', 'clip-path', 'margin-inline-start', 'padding-inline-start']) styles.removeProperty(p);
+      for (const p of ['opacity', 'visibility', 'clip-path', 'margin-inline-start', 'padding-inline-start'])
+        styles.removeProperty(p);
       return;
     }
     styles.opacity = String(S.a);
@@ -536,7 +565,8 @@ function useItemReveal(el: { current: HTMLElement | null }, ctx: FabMenuContextV
     }
     const target = ctx.visible ? 1 : 0;
     // Natural width: measured while no overshoot styles are applied.
-    if (node && !S.wAnim && Math.round(S.natural * Math.max(S.w, 0)) <= S.natural) S.natural = node.getBoundingClientRect().width;
+    if (node && !S.wAnim && Math.round(S.natural * Math.max(S.w, 0)) <= S.natural)
+      S.natural = node.getBoundingClientRect().width;
     const run = (key: 'w' | 'a', animKey: 'wAnim' | 'aAnim', spring: typeof widthSpring) => {
       if (!spring) {
         S[animKey]?.stop();

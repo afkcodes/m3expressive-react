@@ -22,7 +22,13 @@ const s = stylex.create({
   headerText: { display: 'flex', flexDirection: 'column', rowGap: 4, flexGrow: 1, minWidth: 0 },
   onSurface: { color: color.onSurface, margin: 0 },
   onSurfaceVariant: { color: color.onSurfaceVariant, margin: 0 },
-  media: { position: 'relative', isolation: 'isolate', flexShrink: 0, backgroundColor: color.surfaceContainerHigh, overflow: 'hidden' },
+  media: {
+    position: 'relative',
+    isolation: 'isolate',
+    flexShrink: 0,
+    backgroundColor: color.surfaceContainerHigh,
+    overflow: 'hidden',
+  },
   mediaImg: { display: 'block', width: '100%', height: '100%' },
   content: { display: 'flex', flexDirection: 'column', rowGap: 32, padding: 16 },
   headline: { display: 'flex', flexDirection: 'column' },
@@ -114,11 +120,12 @@ export const CardHeadline = forwardRef<HTMLDivElement, CardHeadlineProps>(functi
   );
 });
 
-export const CardText = forwardRef<HTMLParagraphElement, Omit<HTMLAttributes<HTMLParagraphElement>, 'className' | 'style'> & { sx?: StyleXStyles }>(
-  function CardText({ sx, ...rest }, ref) {
-    return <p ref={ref} {...rest} {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant, sx)} />;
-  },
-);
+export const CardText = forwardRef<
+  HTMLParagraphElement,
+  Omit<HTMLAttributes<HTMLParagraphElement>, 'className' | 'style'> & { sx?: StyleXStyles }
+>(function CardText({ sx, ...rest }, ref) {
+  return <p ref={ref} {...rest} {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant, sx)} />;
+});
 
 export const CardActions = forwardRef<HTMLDivElement, DivProps>(function CardActions({ sx, ...rest }, ref) {
   return <div ref={ref} {...rest} {...stylex.props(s.actions, sx)} />;

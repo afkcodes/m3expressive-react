@@ -70,12 +70,25 @@ const s = stylex.create({
   centre: { display: 'flex', alignItems: 'center', flexGrow: 1, minWidth: 0, height: '100%' },
   centreCentered: { justifyContent: 'center' },
   // Centred titles centre across the whole bar (Compose CenterAlignedTopAppBar), not between icons.
-  centredTitle: { position: 'absolute', left: 56, right: 56, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' },
+  centredTitle: {
+    position: 'absolute',
+    left: 56,
+    right: 56,
+    top: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+  },
   trailing: { display: 'flex', alignItems: 'center', flexShrink: 0, marginInlineStart: 'auto' },
   big: { paddingInline: 16, paddingTop: 8, paddingBottom: 12, flexShrink: 0 },
   // Compose: the bottom row clips (from y 64, below the 64px top row) with the title anchored to its
   // bottom, so the title rides up with the bar's edge as it collapses.
-  bigRide: (collapsed: number) => ({ transform: `translateY(${-collapsed}px)`, clipPath: `inset(${8 + collapsed}px 0 0 0)` }),
+  bigRide: (collapsed: number) => ({
+    transform: `translateY(${-collapsed}px)`,
+    clipPath: `inset(${8 + collapsed}px 0 0 0)`,
+  }),
   fade: (o: number) => ({ opacity: o }),
   height: (px: number) => ({ height: px }),
   // ── title block ──
@@ -83,8 +96,22 @@ const s = stylex.create({
   titleCentered: { alignItems: 'center', textAlign: 'center' },
   titleMediumGap: { rowGap: 4 },
   titleLargeGap: { rowGap: 8 },
-  headline: { margin: 0, color: color.onSurface, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' },
-  subtitle: { margin: 0, color: color.onSurfaceVariant, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' },
+  headline: {
+    margin: 0,
+    color: color.onSurface,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '100%',
+  },
+  subtitle: {
+    margin: 0,
+    color: color.onSurfaceVariant,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '100%',
+  },
   // ── bottom app bar ──
   bottom: {
     display: 'flex',
@@ -103,11 +130,23 @@ const s = stylex.create({
   bottomFab: { marginInlineStart: 'auto', display: 'flex' },
 });
 
-const HEADLINE = { small: typescale.titleLarge, medium: typescale.headlineMedium, large: typescale.displaySmall } as const;
+const HEADLINE = {
+  small: typescale.titleLarge,
+  medium: typescale.headlineMedium,
+  large: typescale.displaySmall,
+} as const;
 const SUBTITLE = { small: typescale.labelMedium, medium: typescale.labelLarge, large: typescale.titleMedium } as const;
 const EXPANDED = { small: 64, medium: 112, large: 120 } as const;
-const LEGACY_HEADLINE = { small: legacyLeading.shift(22, 28), medium: legacyLeading.shift(28, 36), large: legacyLeading.shift(36, 44) } as const;
-const LEGACY_SUBTITLE = { small: legacyLeading.shift(12, 16), medium: legacyLeading.shift(14, 20), large: legacyLeading.shift(16, 24) } as const;
+const LEGACY_HEADLINE = {
+  small: legacyLeading.shift(22, 28),
+  medium: legacyLeading.shift(28, 36),
+  large: legacyLeading.shift(36, 44),
+} as const;
+const LEGACY_SUBTITLE = {
+  small: legacyLeading.shift(12, 16),
+  medium: legacyLeading.shift(14, 20),
+  large: legacyLeading.shift(16, 24),
+} as const;
 // Measured on the kit layers: the small title sits 1px above Figma's legacy baseline and the large
 // subtitle 1px below it (every other title / subtitle lands exactly on it).
 const nudge = stylex.create({ up: { transform: 'translateY(-1px)' }, down: { transform: 'translateY(1px)' } });
@@ -123,10 +162,24 @@ export interface AppBarTitleProps {
 /** An app bar's title (and optional subtitle), sized per bar (kit "Text Small / Medium / Large"). */
 export function AppBarTitle({ size = 'small', centered = false, children, subtitle, sx }: AppBarTitleProps) {
   return (
-    <div {...stylex.props(s.title, centered && s.titleCentered, size === 'medium' && s.titleMediumGap, size === 'large' && s.titleLargeGap, sx)}>
+    <div
+      {...stylex.props(
+        s.title,
+        centered && s.titleCentered,
+        size === 'medium' && s.titleMediumGap,
+        size === 'large' && s.titleLargeGap,
+        sx,
+      )}
+    >
       {/* The kit's app bar text layers use Figma's legacy line height (glyphs sit higher). */}
-      <h1 {...stylex.props(HEADLINE[size], s.headline, LEGACY_HEADLINE[size], size === 'small' && nudge.up)}>{children}</h1>
-      {subtitle != null && <p {...stylex.props(SUBTITLE[size], s.subtitle, LEGACY_SUBTITLE[size], size === 'large' && nudge.down)}>{subtitle}</p>}
+      <h1 {...stylex.props(HEADLINE[size], s.headline, LEGACY_HEADLINE[size], size === 'small' && nudge.up)}>
+        {children}
+      </h1>
+      {subtitle != null && (
+        <p {...stylex.props(SUBTITLE[size], s.subtitle, LEGACY_SUBTITLE[size], size === 'large' && nudge.down)}>
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
@@ -168,7 +221,11 @@ export interface AppBarScrollOptions {
 }
 
 /** Scroll position → { overlapped, collapsedFraction } for a bar of `size` over `target`. */
-export function useAppBarScroll(target: RefObject<HTMLElement | null> | undefined, size: TopAppBarSize, { exitUntilCollapsed = false }: AppBarScrollOptions = {}) {
+export function useAppBarScroll(
+  target: RefObject<HTMLElement | null> | undefined,
+  size: TopAppBarSize,
+  { exitUntilCollapsed = false }: AppBarScrollOptions = {},
+) {
   const [state, setState] = useState({ overlapped: false, fraction: 0 });
   // TopAppBarDefaults.snapAnimationSpec = MotionSchemeKeyTokens.DefaultEffects.
   const snapSpring = useSpringToken('default-effects');
@@ -312,11 +369,11 @@ export function TopAppBar({
       <header {...stylex.props(s.bar, scrolled && s.scrolled, sx)}>
         <div {...stylex.props(s.row, search != null && s.rowSearch)}>
           {navigationIcon != null && (
-          <span {...stylex.props(s.slot)}>
-            {/* The navigation icon is On Surface; actions keep On Surface Variant. */}
-            <StandardIconTintContext value="on-surface">{navigationIcon}</StandardIconTintContext>
-          </span>
-        )}
+            <span {...stylex.props(s.slot)}>
+              {/* The navigation icon is On Surface; actions keep On Surface Variant. */}
+              <StandardIconTintContext value="on-surface">{navigationIcon}</StandardIconTintContext>
+            </span>
+          )}
           {search != null ? (
             <span {...stylex.props(s.centre)}>{search}</span>
           ) : content != null ? (
@@ -348,7 +405,13 @@ export function TopAppBar({
   const driven = fractionProp != null || scrollTarget != null;
   const mix = Math.round(fastOutLinearIn(fraction) * 1000) / 10;
   const container =
-    driven && scrolledProp == null ? (mix <= 0 ? s.containerFlat : mix >= 100 ? s.containerFull : s.containerMix(mix)) : scrolledProp && s.scrolled;
+    driven && scrolledProp == null
+      ? mix <= 0
+        ? s.containerFlat
+        : mix >= 100
+          ? s.containerFull
+          : s.containerMix(mix)
+      : scrolledProp && s.scrolled;
   return (
     <header {...stylex.props(s.bar, container, driven ? s.height(height) : null, sx)}>
       <div {...stylex.props(s.row, s.rowTwoRows)}>
@@ -363,7 +426,10 @@ export function TopAppBar({
         </span>
         {actions != null && <span {...stylex.props(s.trailing)}>{actions}</span>}
       </div>
-      <div {...stylex.props(s.big, s.fade(1 - fraction), collapsed > 0 && s.bigRide(collapsed))} aria-hidden={fraction >= 0.5}>
+      <div
+        {...stylex.props(s.big, s.fade(1 - fraction), collapsed > 0 && s.bigRide(collapsed))}
+        aria-hidden={fraction >= 0.5}
+      >
         <AppBarTitle size={size} centered={centered} subtitle={subtitle}>
           {title}
         </AppBarTitle>
@@ -425,7 +491,14 @@ function useBottomBarOffset(target: RefObject<HTMLElement | null> | undefined) {
         set(to);
         return;
       }
-      settle = animateSpring({ spring, from: offsetRef.current, to, precision: 0.01, onUpdate: set, onComplete: () => (settle = null) });
+      settle = animateSpring({
+        spring,
+        from: offsetRef.current,
+        to,
+        precision: 0.01,
+        onUpdate: set,
+        onComplete: () => (settle = null),
+      });
     };
     const takeOver = () => {
       settle?.stop();

@@ -7,7 +7,14 @@ import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { scrim } from './scrim.ts';
-import { MAX_FLING_VELOCITY, MIN_FLING_VELOCITY, PointerVelocityTracker, suppressNextClick, TOUCH_SLOP, tween } from '../../motion/gesture.ts';
+import {
+  MAX_FLING_VELOCITY,
+  MIN_FLING_VELOCITY,
+  PointerVelocityTracker,
+  suppressNextClick,
+  TOUCH_SLOP,
+  tween,
+} from '../../motion/gesture.ts';
 
 /*
  * Figma kit, "Sheets" page (Side Sheet set 53198:27851).
@@ -50,7 +57,13 @@ const s = stylex.create({
   modal: { backgroundColor: color.surfaceContainerLow, borderRadius: 16, overflow: 'hidden' },
   // The kit's divider instance runs 1px past the sheet's bottom edge.
   edge: { position: 'absolute', insetInlineStart: 0, top: 0, bottom: -1 },
-  header: { display: 'flex', alignItems: 'flex-start', flexShrink: 0, paddingBlock: '12px 16px', paddingInline: '24px 12px' },
+  header: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    flexShrink: 0,
+    paddingBlock: '12px 16px',
+    paddingInline: '24px 12px',
+  },
   headerNav: { paddingInlineStart: 4 },
   headline: { flexGrow: 1, minWidth: 0, margin: 0, paddingTop: 12, color: color.onSurfaceVariant },
   slot: { display: 'flex', flexShrink: 0 },
@@ -262,11 +275,19 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
         if (hide) onOpenChange(false);
         else reset();
       };
-      const left = (inward: number) => (g.right ? g.parentWidth - g.innerMargin - g.childWidth + inward : g.innerMargin - inward);
+      const left = (inward: number) =>
+        g.right ? g.parentWidth - g.innerMargin - g.childWidth + inward : g.innerMargin - inward;
       const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ? 0
         : computeSettleDuration(left(to) - left(offset.current), vx, vy, g.range, g.parentWidth);
-      settling.current = tween({ from: offset.current, to, duration, easing: quinticOut, onUpdate: (v) => place(v, g.right), onComplete: finish });
+      settling.current = tween({
+        from: offset.current,
+        to,
+        duration,
+        easing: quinticOut,
+        onUpdate: (v) => place(v, g.right),
+        onComplete: finish,
+      });
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -332,7 +353,9 @@ function shouldHideOnRelease(
   const left = expanded - inward;
   if (vx > 0) return false;
   if (Math.abs(left + vx * HIDE_FRICTION) > HIDE_THRESHOLD) {
-    return (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left + g.childWidth < (expanded - hidden) / 2;
+    return (
+      (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left + g.childWidth < (expanded - hidden) / 2
+    );
   }
   if (vx === 0 || !mostlyHorizontal) return Math.abs(left - expanded) >= Math.abs(left - hidden);
   return true;

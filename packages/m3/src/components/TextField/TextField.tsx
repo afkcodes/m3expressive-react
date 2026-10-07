@@ -1,4 +1,13 @@
-import { forwardRef, useEffect, useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode, type RefObject } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Field } from '@base-ui/react/field';
@@ -35,7 +44,14 @@ const spatialSpatialEffects = {
 const mix = (c: string, pct: number) => `color-mix(in srgb, ${c} ${pct}%, transparent)`;
 
 const s = stylex.create({
-  root: { display: 'inline-flex', flexDirection: 'column', width: 210, flexShrink: 0, boxSizing: 'border-box', textAlign: 'start' },
+  root: {
+    display: 'inline-flex',
+    flexDirection: 'column',
+    width: 210,
+    flexShrink: 0,
+    boxSizing: 'border-box',
+    textAlign: 'start',
+  },
   container: {
     position: 'relative',
     display: 'flex',
@@ -112,7 +128,10 @@ const s = stylex.create({
   // Compose `placeholderOpacity`: SlowEffects for UnfocusedEmpty → Focused and
   // UnfocusedNotEmpty → UnfocusedEmpty, FastEffects otherwise.
   placeholderSlow: {
-    '::placeholder': { transitionDuration: motion.slowEffectsDuration, transitionTimingFunction: motion.slowEffectsEasing },
+    '::placeholder': {
+      transitionDuration: motion.slowEffectsDuration,
+      transitionTimingFunction: motion.slowEffectsEasing,
+    },
   },
   inputError: { caretColor: color.error },
   inputDisabled: { color: mix(color.onSurface, 38), '::placeholder': { color: mix(color.onSurface, 38) } },
@@ -133,9 +152,16 @@ const s = stylex.create({
   labelFloatFilled: { top: 8 },
   // The floating outlined label carries the notch fill (transparent by default; the outline itself
   // is cut by the fieldset legend). 4px padding = the kit's notch frame (label + 4px each side).
-  labelFloatOutlined: (dx: number) => ({ top: -8, left: dx - 4, paddingInline: 4, backgroundColor: textFieldVars.notchColor }),
+  labelFloatOutlined: (dx: number) => ({
+    top: -8,
+    left: dx - 4,
+    paddingInline: 4,
+    backgroundColor: textFieldVars.notchColor,
+  }),
   cOnSurfaceVariant: { color: color.onSurfaceVariant },
-  cIdleOutlined: { color: { default: color.onSurfaceVariant, [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface } },
+  cIdleOutlined: {
+    color: { default: color.onSurfaceVariant, [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface },
+  },
   cOnSurface: { color: color.onSurface },
   cPrimary: { color: color.primary },
   cError: { color: color.error },
@@ -150,7 +176,12 @@ const s = stylex.create({
   },
   indicatorW: (w: number) => ({ top: 56 - w, height: w }),
   bgOnSurfaceVariant: { backgroundColor: color.onSurfaceVariant },
-  bgIdle: { backgroundColor: { default: color.onSurfaceVariant, [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface } },
+  bgIdle: {
+    backgroundColor: {
+      default: color.onSurfaceVariant,
+      [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface,
+    },
+  },
   bgOnSurface: { backgroundColor: color.onSurface },
   bgPrimary: { backgroundColor: color.primary },
   bgError: { backgroundColor: color.error },
@@ -173,9 +204,18 @@ const s = stylex.create({
     ...spatialSpatialEffects,
   },
   outlineW: (w: number, notchX: number) => ({ borderWidth: w, paddingInlineStart: notchX - w }),
-  outlineCentered: { inset: 'auto', top: 0, left: 0, width: 'calc(100% + 1px)', height: 'calc(100% + 1px)', transform: 'translate(-0.5px, -0.5px)' },
+  outlineCentered: {
+    inset: 'auto',
+    top: 0,
+    left: 0,
+    width: 'calc(100% + 1px)',
+    height: 'calc(100% + 1px)',
+    transform: 'translate(-0.5px, -0.5px)',
+  },
   bOutline: { borderColor: color.outline },
-  bIdle: { borderColor: { default: color.outline, [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface } },
+  bIdle: {
+    borderColor: { default: color.outline, [stylex.when.ancestor(':hover', textFieldMarker)]: color.onSurface },
+  },
   bOnSurface: { borderColor: color.onSurface },
   bPrimary: { borderColor: color.primary },
   bError: { borderColor: color.error },
@@ -305,8 +345,10 @@ function useLabelFloat(
 
 type InputPhase = 'focused' | 'unfocusedEmpty' | 'unfocusedNotEmpty';
 
-export interface TextFieldProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'size' | 'style' | 'className'> {
+export interface TextFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'defaultValue' | 'onChange' | 'size' | 'style' | 'className'
+> {
   variant?: TextFieldVariant;
   label?: string;
   value?: string;
@@ -455,7 +497,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             )}
           />
           {showCaret && (
-            <span aria-hidden style={{ position: 'absolute', left: 0, top: label && !outlined ? 24 : 16, display: 'flex' }}>
+            <span
+              aria-hidden
+              style={{ position: 'absolute', left: 0, top: label && !outlined ? 24 : 16, display: 'flex' }}
+            >
               <span {...stylex.props(typescale.bodyLarge, textBox.hug, s.caretMirror)}>{value}</span>
               <span
                 {...stylex.props(s.caret, error ? s.bgError : s.bgPrimary)}
@@ -490,13 +535,27 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           />
         )}
         {outlined &&
-          (disabled ? [s.bDisabledInner, s.bDisabledCenter] : [{ error: s.bError, primary: s.bPrimary, onSurface: s.bOnSurface, idle: s.bIdle }[lineColor]]).map(
-            (border, i) => (
-              <fieldset key={i} aria-hidden {...stylex.props(s.outline, s.outlineW(disabled ? 1 : w, notchX + (i === 1 ? 0.5 : 0)), i === 1 && s.outlineCentered, border)}>
-                <legend {...stylex.props(typescale.bodySmall, s.legend, s.legendH(disabled ? 1 : w), floated && s.legendOpen)}>{label}</legend>
-              </fieldset>
-            ),
-          )}
+          (disabled
+            ? [s.bDisabledInner, s.bDisabledCenter]
+            : [{ error: s.bError, primary: s.bPrimary, onSurface: s.bOnSurface, idle: s.bIdle }[lineColor]]
+          ).map((border, i) => (
+            <fieldset
+              key={i}
+              aria-hidden
+              {...stylex.props(
+                s.outline,
+                s.outlineW(disabled ? 1 : w, notchX + (i === 1 ? 0.5 : 0)),
+                i === 1 && s.outlineCentered,
+                border,
+              )}
+            >
+              <legend
+                {...stylex.props(typescale.bodySmall, s.legend, s.legendH(disabled ? 1 : w), floated && s.legendOpen)}
+              >
+                {label}
+              </legend>
+            </fieldset>
+          ))}
       </div>
       {supporting != null && (
         <Field.Description

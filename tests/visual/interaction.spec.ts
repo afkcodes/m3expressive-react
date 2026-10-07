@@ -31,7 +31,10 @@ function check(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `${name}.actual.png`), shot);
   writeFileSync(join(OUT, `${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -40,7 +43,11 @@ for (const style of ['outlined', 'elevated', 'filled'] as const) {
     test('rest', async ({ page }) => {
       const node = await open(page, style);
       await page.waitForTimeout(SETTLE);
-      const { r, allowed } = check(`${style}-rest`, `${style}-enabled`, await captureRegion(page, node, cards.variants[`${style}-enabled`]!.renderBounds!));
+      const { r, allowed } = check(
+        `${style}-rest`,
+        `${style}-enabled`,
+        await captureRegion(page, node, cards.variants[`${style}-enabled`]!.renderBounds!),
+      );
       expect(r.diffPixels).toBeLessThanOrEqual(allowed);
     });
 
@@ -49,7 +56,11 @@ for (const style of ['outlined', 'elevated', 'filled'] as const) {
       const b = (await node.boundingBox())!;
       await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
       await page.waitForTimeout(SETTLE);
-      const { r, allowed } = check(`${style}-hover`, `${style}-hovered`, await captureRegion(page, node, cards.variants[`${style}-hovered`]!.renderBounds!));
+      const { r, allowed } = check(
+        `${style}-hover`,
+        `${style}-hovered`,
+        await captureRegion(page, node, cards.variants[`${style}-hovered`]!.renderBounds!),
+      );
       expect(r.diffPixels).toBeLessThanOrEqual(allowed);
     });
 
@@ -62,14 +73,24 @@ for (const style of ['outlined', 'elevated', 'filled'] as const) {
       // Focus indicator = the kit's hidden "Focus indicator" layer: 3px secondary ring, 2px out, radius 14.
       const ring = await card.evaluate((e) => {
         const cs = getComputedStyle(e);
-        return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor, radius: cs.borderTopLeftRadius };
+        return {
+          style: cs.outlineStyle,
+          width: cs.outlineWidth,
+          offset: cs.outlineOffset,
+          color: cs.outlineColor,
+          radius: cs.borderTopLeftRadius,
+        };
       });
       expect(ring).toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)', radius: '12px' });
       // The kit's Focused variant hides its indicator; with the ring's geometry verified above,
       // hide the live ring and compare everything else pixel for pixel.
       await page.addStyleTag({ content: '[data-fixture-node] > div { outline-style: none !important }' });
       await page.waitForTimeout(50);
-      const { r, allowed } = check(`${style}-focus`, `${style}-focused`, await captureRegion(page, node, cards.variants[`${style}-focused`]!.renderBounds!));
+      const { r, allowed } = check(
+        `${style}-focus`,
+        `${style}-focused`,
+        await captureRegion(page, node, cards.variants[`${style}-focused`]!.renderBounds!),
+      );
       expect(r.diffPixels).toBeLessThanOrEqual(allowed);
     });
 
@@ -97,7 +118,10 @@ function checkCheckbox(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `checkbox-${name}.actual.png`), shot);
   writeFileSync(join(OUT, `checkbox-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -127,11 +151,16 @@ test.describe('checkbox (live)', () => {
       await page.mouse.move(0, 0);
       await page.keyboard.press('Tab');
       await page.waitForTimeout(SETTLE);
-      const ring = await node.locator('[role=checkbox] > span').first().evaluate((e) => {
-        const cs = getComputedStyle(e);
-        return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
-      });
-      expect.soft(ring, 'focus ring = kit Focus indicator (44px circle, 3px secondary)').toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
+      const ring = await node
+        .locator('[role=checkbox] > span')
+        .first()
+        .evaluate((e) => {
+          const cs = getComputedStyle(e);
+          return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
+        });
+      expect
+        .soft(ring, 'focus ring = kit Focus indicator (44px circle, 3px secondary)')
+        .toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
       await page.addStyleTag({ content: '[role=checkbox] > span { outline-style: none !important }' });
       await page.waitForTimeout(50);
       res = checkCheckbox(`${kind}-focus`, `${kind}-focused`, await captureRegion(page, node, rb));
@@ -162,7 +191,10 @@ function checkToggle(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `toggle-${name}.actual.png`), shot);
   writeFileSync(join(OUT, `toggle-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -183,13 +215,21 @@ for (const variant of ['filled', 'elevated', 'outlined', 'tonal'] as const) {
       const node = await openToggle(page);
       const btn = node.locator('button');
       await page.waitForTimeout(SETTLE);
-      let res = checkToggle(`${variant}-rest`, ref('unselected', 'enabled'), await captureRegion(page, node, rb(ref('unselected', 'enabled'))));
+      let res = checkToggle(
+        `${variant}-rest`,
+        ref('unselected', 'enabled'),
+        await captureRegion(page, node, rb(ref('unselected', 'enabled'))),
+      );
       expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
 
       const b = (await btn.boundingBox())!;
       await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
       await page.waitForTimeout(SETTLE);
-      res = checkToggle(`${variant}-hover`, ref('unselected', 'hovered'), await captureRegion(page, node, rb(ref('unselected', 'hovered'))));
+      res = checkToggle(
+        `${variant}-hover`,
+        ref('unselected', 'hovered'),
+        await captureRegion(page, node, rb(ref('unselected', 'hovered'))),
+      );
       expect.soft(res.r.diffPixels, 'hover').toBeLessThanOrEqual(res.allowed);
 
       await expect(btn).toHaveAttribute('aria-pressed', 'false');
@@ -197,12 +237,18 @@ for (const variant of ['filled', 'elevated', 'outlined', 'tonal'] as const) {
       await page.waitForTimeout(SETTLE);
       // Held: corners morph to the pressed radius (medium 12).
       const container = btn.locator('> span').first();
-      expect.soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius').toBe('12px');
+      expect
+        .soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius')
+        .toBe('12px');
       await page.mouse.up();
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
       await page.waitForTimeout(SETTLE);
       // Pointer still over it → kit "Selected / Hovered" (shape swapped to square).
-      res = checkToggle(`${variant}-selected-hover`, ref('selected', 'hovered'), await captureRegion(page, node, rb(ref('selected', 'hovered'))));
+      res = checkToggle(
+        `${variant}-selected-hover`,
+        ref('selected', 'hovered'),
+        await captureRegion(page, node, rb(ref('selected', 'hovered'))),
+      );
       expect.soft(res.r.diffPixels, 'selected hover').toBeLessThanOrEqual(res.allowed);
 
       await page.mouse.move(0, 0);
@@ -215,10 +261,16 @@ for (const variant of ['filled', 'elevated', 'outlined', 'tonal'] as const) {
         const cs = getComputedStyle(e);
         return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
       });
-      expect.soft(ring, 'focus ring').toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
+      expect
+        .soft(ring, 'focus ring')
+        .toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
       await page.addStyleTag({ content: '[data-fixture-node] button > span { outline-style: none !important }' });
       await page.waitForTimeout(50);
-      res = checkToggle(`${variant}-selected-focus`, ref('selected', 'focused'), await captureRegion(page, node, rb(ref('selected', 'focused'))));
+      res = checkToggle(
+        `${variant}-selected-focus`,
+        ref('selected', 'focused'),
+        await captureRegion(page, node, rb(ref('selected', 'focused'))),
+      );
       expect.soft(res.r.diffPixels, 'selected focus').toBeLessThanOrEqual(res.allowed);
 
       await page.keyboard.press('Space');
@@ -237,7 +289,10 @@ function checkToggleIcon(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `toggle-icon-${name}.actual.png`), shot);
   writeFileSync(join(OUT, `toggle-icon-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -253,23 +308,37 @@ for (const variant of ['filled', 'tonal', 'outlined', 'standard'] as const) {
       await expect(node).toBeVisible();
       const btn = node.locator('button');
       await page.waitForTimeout(SETTLE);
-      let res = checkToggleIcon(`${variant}-rest`, ref('unselected', 'enabled'), await captureRegion(page, node, rb(ref('unselected', 'enabled'))));
+      let res = checkToggleIcon(
+        `${variant}-rest`,
+        ref('unselected', 'enabled'),
+        await captureRegion(page, node, rb(ref('unselected', 'enabled'))),
+      );
       expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
 
       const b = (await btn.boundingBox())!;
       await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
       await page.waitForTimeout(SETTLE);
-      res = checkToggleIcon(`${variant}-hover`, ref('unselected', 'hovered'), await captureRegion(page, node, rb(ref('unselected', 'hovered'))));
+      res = checkToggleIcon(
+        `${variant}-hover`,
+        ref('unselected', 'hovered'),
+        await captureRegion(page, node, rb(ref('unselected', 'hovered'))),
+      );
       expect.soft(res.r.diffPixels, 'hover').toBeLessThanOrEqual(res.allowed);
 
       await page.mouse.down();
       await page.waitForTimeout(SETTLE);
       const container = btn.locator('> span').first();
-      expect.soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius').toBe('12px');
+      expect
+        .soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius')
+        .toBe('12px');
       await page.mouse.up();
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
       await page.waitForTimeout(SETTLE);
-      res = checkToggleIcon(`${variant}-selected-hover`, ref('selected', 'hovered'), await captureRegion(page, node, rb(ref('selected', 'hovered'))));
+      res = checkToggleIcon(
+        `${variant}-selected-hover`,
+        ref('selected', 'hovered'),
+        await captureRegion(page, node, rb(ref('selected', 'hovered'))),
+      );
       expect.soft(res.r.diffPixels, 'selected hover').toBeLessThanOrEqual(res.allowed);
 
       await page.mouse.move(0, 0);
@@ -282,10 +351,16 @@ for (const variant of ['filled', 'tonal', 'outlined', 'standard'] as const) {
         const cs = getComputedStyle(e);
         return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
       });
-      expect.soft(ring, 'focus ring').toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
+      expect
+        .soft(ring, 'focus ring')
+        .toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
       await page.addStyleTag({ content: '[data-fixture-node] button > span { outline-style: none !important }' });
       await page.waitForTimeout(50);
-      res = checkToggleIcon(`${variant}-selected-focus`, ref('selected', 'focused'), await captureRegion(page, node, rb(ref('selected', 'focused'))));
+      res = checkToggleIcon(
+        `${variant}-selected-focus`,
+        ref('selected', 'focused'),
+        await captureRegion(page, node, rb(ref('selected', 'focused'))),
+      );
       expect.soft(res.r.diffPixels, 'selected focus').toBeLessThanOrEqual(res.allowed);
     });
   });
@@ -301,7 +376,10 @@ function checkSplit(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `split-${name}.actual.png`), shot);
   writeFileSync(join(OUT, `split-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -318,19 +396,31 @@ for (const variant of ['filled', 'tonal', 'outlined', 'elevated'] as const) {
       await expect(node).toBeVisible();
       const [lead, trail] = [node.locator('button').nth(0), node.locator('button').nth(1)];
       await page.waitForTimeout(SETTLE);
-      let res = checkSplit(`${variant}-rest`, ref('enabled', 'enabled'), await captureRegion(page, node, rb(ref('enabled', 'enabled'))));
+      let res = checkSplit(
+        `${variant}-rest`,
+        ref('enabled', 'enabled'),
+        await captureRegion(page, node, rb(ref('enabled', 'enabled'))),
+      );
       expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
 
       const lb = (await lead.boundingBox())!;
       await page.mouse.move(lb.x + lb.width / 2, lb.y + lb.height / 2);
       await page.waitForTimeout(SETTLE);
-      res = checkSplit(`${variant}-lead-hover`, ref('hovered', 'enabled'), await captureRegion(page, node, rb(ref('hovered', 'enabled'))));
+      res = checkSplit(
+        `${variant}-lead-hover`,
+        ref('hovered', 'enabled'),
+        await captureRegion(page, node, rb(ref('hovered', 'enabled'))),
+      );
       expect.soft(res.r.diffPixels, 'leading hover (inner corners grow)').toBeLessThanOrEqual(res.allowed);
 
       const tb = (await trail.boundingBox())!;
       await page.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2);
       await page.waitForTimeout(SETTLE);
-      res = checkSplit(`${variant}-trail-hover`, ref('enabled', 'hovered'), await captureRegion(page, node, rb(ref('enabled', 'hovered'))));
+      res = checkSplit(
+        `${variant}-trail-hover`,
+        ref('enabled', 'hovered'),
+        await captureRegion(page, node, rb(ref('enabled', 'hovered'))),
+      );
       expect.soft(res.r.diffPixels, 'trailing hover').toBeLessThanOrEqual(res.allowed);
 
       await expect(trail).toHaveAttribute('aria-expanded', 'false');
@@ -339,8 +429,14 @@ for (const variant of ['filled', 'tonal', 'outlined', 'elevated'] as const) {
       await page.mouse.move(0, 0);
       await trail.evaluate((e) => e.blur());
       await page.waitForTimeout(SETTLE);
-      res = checkSplit(`${variant}-expanded`, ref('enabled', 'selected'), await captureRegion(page, node, rb(ref('enabled', 'selected'))));
-      expect.soft(res.r.diffPixels, 'expanded = kit Selected (round, centred up-chevron, 10% layer)').toBeLessThanOrEqual(res.allowed);
+      res = checkSplit(
+        `${variant}-expanded`,
+        ref('enabled', 'selected'),
+        await captureRegion(page, node, rb(ref('enabled', 'selected'))),
+      );
+      expect
+        .soft(res.r.diffPixels, 'expanded = kit Selected (round, centred up-chevron, 10% layer)')
+        .toBeLessThanOrEqual(res.allowed);
 
       await trail.click();
       await expect(trail).toHaveAttribute('aria-expanded', 'false');
@@ -349,9 +445,15 @@ for (const variant of ['filled', 'tonal', 'outlined', 'elevated'] as const) {
       await page.keyboard.press('Tab');
       await page.waitForTimeout(SETTLE);
       await expect(lead).toBeFocused();
-      await page.addStyleTag({ content: '[data-fixture-node] button > span:last-child { outline-style: none !important }' });
+      await page.addStyleTag({
+        content: '[data-fixture-node] button > span:last-child { outline-style: none !important }',
+      });
       await page.waitForTimeout(50);
-      res = checkSplit(`${variant}-lead-focus`, ref('focused', 'enabled'), await captureRegion(page, node, rb(ref('focused', 'enabled'))));
+      res = checkSplit(
+        `${variant}-lead-focus`,
+        ref('focused', 'enabled'),
+        await captureRegion(page, node, rb(ref('focused', 'enabled'))),
+      );
       expect.soft(res.r.diffPixels, 'leading focus (ring only, no layer)').toBeLessThanOrEqual(res.allowed);
     });
   });
@@ -367,7 +469,10 @@ function checkFab(name: string, refName: string, shot: Buffer) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `fab-${name}.actual.png`), shot);
   writeFileSync(join(OUT, `fab-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   return { r, allowed: v.allowedDiffPixels ?? 0 };
 }
 
@@ -425,7 +530,10 @@ test('fab menu (live): open, render, keyboard, escape', async ({ page }) => {
   const ref: Buffer = readFileSync(join(REFS_DIR, 'fab-menu', 'menu-primary.png'));
   const shot = await captureRegion(page, node, v.renderBounds!);
   const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   expect.soft(r.diffPixels, 'open menu = kit FAB menu').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
   await page.keyboard.press('ArrowUp');
@@ -448,8 +556,13 @@ test('connected button group (live): select, keyboard, hover morph', async ({ pa
   await page.waitForTimeout(SETTLE);
   const v = groups.variants['connected-round-medium']!;
   const ref: Buffer = readFileSync(join(REFS_DIR, 'button-group', 'connected-round-medium.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   expect.soft(r.diffPixels, 'rest = kit connected group').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
   const items = node.locator('button');
@@ -459,10 +572,15 @@ test('connected button group (live): select, keyboard, hover morph', async ({ pa
   // Selected → pill; the previously selected first segment returns to round outer / 8px inner.
   await page.mouse.move(0, 0);
   await page.waitForTimeout(SETTLE);
-  const radii = (i: number) => items.nth(i).locator('> span').first().evaluate((e) => {
-    const cs = getComputedStyle(e);
-    return [cs.borderStartStartRadius, cs.borderStartEndRadius].join(' ');
-  });
+  const radii = (i: number) =>
+    items
+      .nth(i)
+      .locator('> span')
+      .first()
+      .evaluate((e) => {
+        const cs = getComputedStyle(e);
+        return [cs.borderStartStartRadius, cs.borderStartEndRadius].join(' ');
+      });
   expect.soft(await radii(1), 'selected = pill').toBe('28px 28px');
   expect.soft(await radii(0), 'first, unselected').toBe('28px 8px');
 
@@ -486,8 +604,13 @@ test('segmented button (live): select, check, keyboard', async ({ page }) => {
   await page.waitForTimeout(SETTLE);
   const v = segs.variants['set-3-d0']!;
   const ref: Buffer = readFileSync(join(REFS_DIR, 'segmented-button', 'set-3-d0.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   expect.soft(r.diffPixels, 'rest = kit set').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   const items = node.locator('button');
   await items.nth(2).click();
@@ -538,7 +661,10 @@ test('radio (live): hover, select, arrows', async ({ page }) => {
   const ref: Buffer = readFileSync(join(REFS_DIR, 'radio', 'unselected-hovered.png'));
   const shot = await captureRegion(page, items.nth(1), v.renderBounds!);
   const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   expect.soft(r.diffPixels, 'hover = kit').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   await items.nth(1).click();
   await expect(items.nth(1)).toHaveAttribute('aria-checked', 'true');
@@ -558,8 +684,12 @@ test('switch (live): hover, toggle, keyboard', async ({ page }) => {
   const check = async (name: string) => {
     const v = sw.variants[name]!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'switch', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test
+      .info()
+      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
     expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   };
   await page.waitForTimeout(SETTLE);
@@ -592,8 +722,13 @@ test('chips (live): hover, select, remove', async ({ page }) => {
   await page.waitForTimeout(SETTLE);
   const v = chips.variants['filter-out-icon-hovered-f-f']!;
   const ref: Buffer = readFileSync(join(REFS_DIR, 'chips', 'filter-out-icon-hovered-f-f.png'));
-  const r = compareImages(ref, await captureRegion(page, filter, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster` });
+  const r = compareImages(ref, await captureRegion(page, filter, v.renderBounds!), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
+  });
   expect.soft(r.diffPixels, 'hover = kit').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   await filter.click();
   await expect(filter).toHaveAttribute('aria-pressed', 'true');
@@ -602,7 +737,9 @@ test('chips (live): hover, select, remove', async ({ page }) => {
   await page.waitForTimeout(SETTLE);
   const sel = chips.variants['filter-out-icon-enabled-t-f']!;
   const ref2: Buffer = readFileSync(join(REFS_DIR, 'chips', 'filter-out-icon-enabled-t-f.png'));
-  const r2 = compareImages(ref2, await captureRegion(page, filter, sel.renderBounds!), { background: hexToRgb(sel.background ?? '#FFFFFF') });
+  const r2 = compareImages(ref2, await captureRegion(page, filter, sel.renderBounds!), {
+    background: hexToRgb(sel.background ?? '#FFFFFF'),
+  });
   expect.soft(r2.diffPixels, 'selected = kit (check replaces icon)').toBeLessThanOrEqual(sel.allowedDiffPixels ?? 0);
   await node.getByRole('button', { name: 'Remove' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-removed', '1');
@@ -622,9 +759,16 @@ test('tooltip (live): plain on hover, rich on hover', async ({ page }) => {
   // be compared here (static parity covers pixels); check the surface's geometry and colours.
   const surface = plain.locator('xpath=..');
   const box = (await surface.boundingBox())!;
-  expect.soft([box.width, box.height], 'kit size 104×24').toEqual([tips.variants['plain-single']!.size[0], tips.variants['plain-single']!.size[1]]);
-  const look = await surface.evaluate((e) => { const cs = getComputedStyle(e); return [cs.backgroundColor, cs.color, cs.borderTopLeftRadius]; });
-  expect.soft(look, 'inverse surface / inverse on surface / 4px').toEqual(['rgb(50, 47, 53)', 'rgb(245, 239, 247)', '4px']);
+  expect
+    .soft([box.width, box.height], 'kit size 104×24')
+    .toEqual([tips.variants['plain-single']!.size[0], tips.variants['plain-single']!.size[1]]);
+  const look = await surface.evaluate((e) => {
+    const cs = getComputedStyle(e);
+    return [cs.backgroundColor, cs.color, cs.borderTopLeftRadius];
+  });
+  expect
+    .soft(look, 'inverse surface / inverse on surface / 4px')
+    .toEqual(['rgb(50, 47, 53)', 'rgb(245, 239, 247)', '4px']);
   await page.mouse.move(0, 0);
   await page.getByRole('button', { name: 'Details' }).hover();
   await expect(page.getByText('Supporting line text lorem ipsum dolor sit amet, consectetur')).toBeVisible();
@@ -648,8 +792,12 @@ test.describe('progress (live)', () => {
   const check = async (page: Page, target: ReturnType<Page['locator']>, name: string) => {
     const v = prog.variants[name]!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, target, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, target, v.renderBounds!), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test
+      .info()
+      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
     expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   };
   /** ProgressAnimationSpec (no bounce, stiffness 50) settles in ≈1.3 s. */
@@ -668,7 +816,13 @@ test.describe('progress (live)', () => {
       const start = prog.variants[`${kind}-flat-4-${from}`]!;
       const startRef: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${from}.png`));
       await expect
-        .poll(async () => compareImages(startRef, await captureRegion(page, node, start.renderBounds!), { background: hexToRgb(start.background ?? '#FFFFFF') }).diffPixels, { timeout: 8000 })
+        .poll(
+          async () =>
+            compareImages(startRef, await captureRegion(page, node, start.renderBounds!), {
+              background: hexToRgb(start.background ?? '#FFFFFF'),
+            }).diffPixels,
+          { timeout: 8000 },
+        )
         .toBeLessThanOrEqual(start.allowedDiffPixels ?? 0);
       await check(page, node, `${kind}-flat-4-${from}`);
       await page.getByRole('button', { name: `${to}%` }).click();
@@ -676,12 +830,19 @@ test.describe('progress (live)', () => {
       await page.waitForTimeout(250);
       const mid = await captureRegion(page, node, prog.variants[`${kind}-flat-4-${to}`]!.renderBounds!);
       const ref: Buffer = readFileSync(join(REFS_DIR, 'progress', `${kind}-flat-4-${to}.png`));
-      expect.soft(compareImages(ref, mid, { background: [247, 242, 250] }).diffPixels, 'mid-spring frame differs from the target').toBeGreaterThan(0);
+      expect
+        .soft(
+          compareImages(ref, mid, { background: [247, 242, 250] }).diffPixels,
+          'mid-spring frame differs from the target',
+        )
+        .toBeGreaterThan(0);
       // The spring is frame-driven: under parallel load it can take longer than SPRING_SETTLE, so
       // poll until it lands, then run the regular parity check.
       const target = prog.variants[`${kind}-flat-4-${to}`]!;
       const settled = async () =>
-        compareImages(ref, await captureRegion(page, node, target.renderBounds!), { background: hexToRgb(target.background ?? '#FFFFFF') }).diffPixels;
+        compareImages(ref, await captureRegion(page, node, target.renderBounds!), {
+          background: hexToRgb(target.background ?? '#FFFFFF'),
+        }).diffPixels;
       await page.waitForTimeout(SPRING_SETTLE);
       await expect.poll(settled, { timeout: 8000 }).toBeLessThanOrEqual(target.allowedDiffPixels ?? 0);
       await check(page, node, `${kind}-flat-4-${to}`);
@@ -731,8 +892,12 @@ test('slider (live): rest, hover, press, drag, keyboard', async ({ page }) => {
   const check = async (name: string) => {
     const v = sl.variants[name]!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'slider', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test
+      .info()
+      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
     expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   };
   const volume = page.getByRole('slider', { name: 'Volume' });
@@ -778,8 +943,12 @@ test('text field (live): hover, focus floats the label, typing, blur', async ({ 
   const check = async (name: string) => {
     const v = tf.variants[name]!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'text-field', `${name}.png`));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test
+      .info()
+      .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
     expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
   };
   await check('filled-enabled-label-xx');
@@ -811,8 +980,12 @@ test.describe('list (live)', () => {
     const check = async (name: string) => {
       const v = ls.variants[name]!;
       const ref: Buffer = readFileSync(join(REFS_DIR, 'list', `${name}.png`));
-      const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-      test.info().annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+      const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
+        background: hexToRgb(v.background ?? '#FFFFFF'),
+      });
+      test
+        .info()
+        .annotations.push({ type: 'parity', description: `${name}: ${r.diffPixels} drift px · ${r.aaPixels} AA` });
       expect.soft(r.diffPixels, name).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
     };
     return { node, check, box: (await node.boundingBox())! };
@@ -911,8 +1084,13 @@ test.describe('menu (live)', () => {
     await expect(menu).toBeVisible();
     await page.mouse.move(0, 0);
     await page.waitForTimeout(SETTLE);
-    const r = compareImages(ref, await captureRegion(page, menu, v.renderBounds!), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `menu-std-2 (live popup): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, menu, v.renderBounds!), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test.info().annotations.push({
+      type: 'parity',
+      description: `menu-std-2 (live popup): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+    });
     expect.soft(r.diffPixels, 'menu-std-2').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
     // Arrow keys move through the items; Enter runs the highlighted one and closes the menu.
     await page.keyboard.press('ArrowDown');
@@ -970,8 +1148,13 @@ test.describe('tabs (live)', () => {
     const node = page.locator('[data-fixture-node]');
     const v = tb.variants['tabs-fixed-primary-label-only']!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'tabs', 'tabs-fixed-primary-label-only.png'));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `tabs-fixed-primary-label-only (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test.info().annotations.push({
+      type: 'parity',
+      description: `tabs-fixed-primary-label-only (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+    });
     expect.soft(r.diffPixels, 'tabs-fixed-primary-label-only').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
     const photos = page.getByRole('tab', { name: 'Photos' });
@@ -984,7 +1167,8 @@ test.describe('tabs (live)', () => {
       page.evaluate(() => {
         const ind = [...document.querySelectorAll('[role=tablist] > span[aria-hidden]')].at(-1) as HTMLElement;
         const label = document.querySelector('[role=tab][aria-selected=true] [data-tab-content]') as HTMLElement;
-        const a = ind.getBoundingClientRect(), b = label.getBoundingClientRect();
+        const a = ind.getBoundingClientRect(),
+          b = label.getBoundingClientRect();
         // Inset 2px each side of the label box (whole-pixel geometry: ±0.5px).
         return { inset: Math.abs(a.x - b.x - 2) <= 0.5 && Math.abs(b.width - a.width - 4) <= 1, h: a.height };
       });
@@ -1015,15 +1199,23 @@ test.describe('navigation (live)', () => {
     const node = page.locator('[data-fixture-node]');
     const v = nv.variants['nbar-v-4']!;
     const ref: Buffer = readFileSync(join(REFS_DIR, 'navigation', 'nbar-v-4.png'));
-    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
-    test.info().annotations.push({ type: 'parity', description: `nbar-v-4 (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+    const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+      background: hexToRgb(v.background ?? '#FFFFFF'),
+    });
+    test.info().annotations.push({
+      type: 'parity',
+      description: `nbar-v-4 (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+    });
     expect.soft(r.diffPixels, 'nbar-v-4').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
     const items = page.getByRole('navigation').getByRole('button');
     await expect(items).toHaveCount(4);
     await expect(items.nth(0)).toHaveAttribute('aria-current', 'page');
     // The selected fill is a separate layer growing from the pill's centre (Compose NavigationItem).
-    const fillWidth = (i: number) => items.nth(i).evaluate((el) => (el.querySelector('span > span[aria-hidden]') as HTMLElement).getBoundingClientRect().width);
+    const fillWidth = (i: number) =>
+      items
+        .nth(i)
+        .evaluate((el) => (el.querySelector('span > span[aria-hidden]') as HTMLElement).getBoundingClientRect().width);
     await items.nth(2).click();
     await expect(page.locator('[data-value]')).toHaveText('2');
     await expect(items.nth(2)).toHaveAttribute('aria-current', 'page');
@@ -1051,8 +1243,13 @@ test('app bar (live): medium bar matches the kit, collapses to 64px with the scr
   const header = page.locator('header');
   const v = ab.variants['appbar-medium-flat']!;
   const ref: Buffer = readFileSync(join(REFS_DIR, 'app-bar', 'appbar-medium-flat.png'));
-  const r = compareImages(ref, await captureRegion(page, header, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `appbar-medium-flat (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  const r = compareImages(ref, await captureRegion(page, header, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `appbar-medium-flat (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+  });
   expect.soft(r.diffPixels, 'appbar-medium-flat').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
   const height = () => header.evaluate((el) => el.getBoundingClientRect().height);
@@ -1077,7 +1274,9 @@ test('app bar (live): medium bar matches the kit, collapses to 64px with the scr
   await expect.poll(height).toBe(112);
 });
 
-test('search (live): the bar matches the kit, opens the docked view, filters, closes back to the bar', async ({ page }) => {
+test('search (live): the bar matches the kit, opens the docked view, filters, closes back to the bar', async ({
+  page,
+}) => {
   const sm = JSON.parse(readFileSync(join(REFS_DIR, 'search/manifest.json'), 'utf8')) as Manifest;
   await page.goto('/fixture/search/live');
   await page.evaluate(() => document.fonts.ready);
@@ -1088,7 +1287,10 @@ test('search (live): the bar matches the kit, opens the docked view, filters, cl
   const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
     background: hexToRgb(v.background ?? '#FFFFFF'),
   });
-  test.info().annotations.push({ type: 'parity', description: `bar-enabled-plain (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `bar-enabled-plain (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+  });
   expect.soft(r.diffPixels, 'bar-enabled-plain').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
   // Keyboard: the menu button, then the bar's own trigger (a real button, not a wrapper around the icons).
@@ -1125,7 +1327,9 @@ test('search (live): the bar matches the kit, opens the docked view, filters, cl
   await expect(trigger).toBeFocused();
 });
 
-test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses into a growing FAB', async ({ page }) => {
+test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses into a growing FAB', async ({
+  page,
+}) => {
   const tm = JSON.parse(readFileSync(join(REFS_DIR, 'toolbar/manifest.json'), 'utf8')) as Manifest;
   await page.goto('/fixture/toolbar/live');
   await page.evaluate(() => document.fonts.ready);
@@ -1133,8 +1337,13 @@ test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses i
   const node = page.locator('[data-fixture-node]');
   const v = tm.variants['ex-fab-share']!;
   const ref: Buffer = readFileSync(join(REFS_DIR, 'toolbar', 'ex-fab-share.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({ type: 'parity', description: `ex-fab-share (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), {
+    background: hexToRgb(v.background ?? '#FFFFFF'),
+  });
+  test.info().annotations.push({
+    type: 'parity',
+    description: `ex-fab-share (live): ${r.diffPixels} drift px · ${r.aaPixels} AA`,
+  });
   expect.soft(r.diffPixels, 'ex-fab-share').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
 
   // One tab stop; arrows move within the toolbar (wrapping), Home / End jump; Tab leaves to the FAB.
@@ -1166,7 +1375,11 @@ test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses i
   // Collapse (FastSpatial): the toolbar shrinks to nothing towards the FAB, which grows to 80px in
   // place; the layout keeps its width.
   const fab = page.getByRole('button', { name: 'Add' });
-  const rect = (l: typeof fab) => l.evaluate((el) => { const b = el.getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height), Math.round(b.right)]; });
+  const rect = (l: typeof fab) =>
+    l.evaluate((el) => {
+      const b = el.getBoundingClientRect();
+      return [Math.round(b.width), Math.round(b.height), Math.round(b.right)];
+    });
   const shell = toolbar.locator('xpath=..');
   const start = await rect(fab);
   expect(start.slice(0, 2)).toEqual([56, 56]);
@@ -1180,18 +1393,27 @@ test('toolbar (live): matches the kit, arrow keys rove one tab stop, collapses i
   await expect.poll(async () => (await rect(fab)).slice(0, 2)).toEqual([56, 56]);
 });
 
-test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle / drag; side sheet traps focus', async ({ page }) => {
+test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle / drag; side sheet traps focus', async ({
+  page,
+}) => {
   await page.goto('/fixture/sheets/live');
   await page.evaluate(() => document.fonts.ready);
   const openBottom = page.getByRole('button', { name: 'Open bottom sheet' });
   const sheet = page.getByRole('dialog', { name: 'Share' });
-  const ty = () => sheet.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform === 'none' ? undefined : getComputedStyle(el).transform).m42 + parseFloat(getComputedStyle(el).translate.split(' ')[1] ?? '0'));
+  const ty = () =>
+    sheet.evaluate(
+      (el) =>
+        new DOMMatrix(getComputedStyle(el).transform === 'none' ? undefined : getComputedStyle(el).transform).m42 +
+        parseFloat(getComputedStyle(el).translate.split(' ')[1] ?? '0'),
+    );
 
   // Opens from below on the default spatial spring and settles at rest; the scrim is 32% Scrim.
   await openBottom.click();
   await expect(sheet).toBeVisible();
   await expect.poll(ty).toBe(0);
-  const scrimBg = await page.locator('[data-m3-portal] [role="presentation"][data-open]').evaluate((el) => getComputedStyle(el).backgroundColor);
+  const scrimBg = await page
+    .locator('[data-m3-portal] [role="presentation"][data-open]')
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(scrimBg).toMatch(/rgba?\(0, 0, 0, 0\.32\)|color\(srgb 0 0 0 \/ 0\.32\)/);
   await page.keyboard.press('Escape');
   await expect(sheet).toHaveCount(0);
@@ -1232,7 +1454,9 @@ test('sheets (live): modal bottom sheet slides in, dismisses by Escape / handle 
   await expect(openSide).toBeFocused();
 });
 
-test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Escape / scrim close it', async ({ page }) => {
+test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Escape / scrim close it', async ({
+  page,
+}) => {
   const dm = JSON.parse(readFileSync(join(REFS_DIR, 'dialogs/manifest.json'), 'utf8')) as Manifest;
   await page.goto('/fixture/dialogs/live');
   await page.evaluate(() => document.fonts.ready);
@@ -1244,7 +1468,9 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
   await open.click();
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAccessibleDescription(/critical information/);
-  await expect.poll(() => dialog.evaluate((el) => [getComputedStyle(el).scale, getComputedStyle(el).opacity].join(' '))).toBe('1 1');
+  await expect
+    .poll(() => dialog.evaluate((el) => [getComputedStyle(el).scale, getComputedStyle(el).opacity].join(' ')))
+    .toBe('1 1');
   // Same surface as the kit's basic dialog with icon (pixels: the static parity suite).
   const surface = dialog.locator('> div');
   const v = dm.variants['basic-icon']!;
@@ -1271,20 +1497,28 @@ test('dialog (live): opens with the M3 fade-scale, matches the kit, actions / Es
   await expect(dialog).toHaveCount(0);
 });
 
-test('carousel (live): items resize through the keylines as it scrolls; keys and scrolling settle on an item', async ({ page }) => {
+test('carousel (live): items resize through the keylines as it scrolls; keys and scrolling settle on an item', async ({
+  page,
+}) => {
   await page.goto('/fixture/carousel/live');
   await page.evaluate(() => document.fonts.ready);
   const carousel = page.getByRole('region', { name: 'Photos' });
   const slides = carousel.locator('[aria-roledescription="slide"]');
   const geo = async () => {
     const base = (await carousel.boundingBox())!;
-    return Promise.all([0, 1, 2].map(async (i) => {
-      const b = (await slides.nth(i).boundingBox())!;
-      return [Math.round(b.x - base.x), Math.round(b.width)];
-    }));
+    return Promise.all(
+      [0, 1, 2].map(async (i) => {
+        const b = (await slides.nth(i).boundingBox())!;
+        return [Math.round(b.x - base.x), Math.round(b.width)];
+      }),
+    );
   };
   // Rest: large / medium / small (Compose multi-browse for 380px, 188px preferred).
-  expect(await geo()).toEqual([[16, 188], [212, 122], [342, 54]]);
+  expect(await geo()).toEqual([
+    [16, 188],
+    [212, 122],
+    [342, 54],
+  ]);
 
   // Part way: the medium item grows towards large while the large one shrinks, edges pinned
   // (read in the same frame as the scroll, before the settle spring moves it).
@@ -1312,7 +1546,11 @@ test('carousel (live): items resize through the keylines as it scrolls; keys and
   await page.keyboard.press('ArrowLeft');
   await page.keyboard.press('ArrowLeft');
   await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(0);
-  expect(await geo()).toEqual([[16, 188], [212, 122], [342, 54]]);
+  expect(await geo()).toEqual([
+    [16, 188],
+    [212, 122],
+    [342, 54],
+  ]);
   await expect(slides.first()).toHaveAttribute('aria-label', '1 of 8');
 });
 

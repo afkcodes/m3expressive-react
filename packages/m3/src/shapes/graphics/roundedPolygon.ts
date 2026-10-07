@@ -185,8 +185,8 @@ export class RoundedPolygon {
     const height = bounds[3]! - bounds[1]!;
     const side = Math.max(width, height);
     // Center the shape if bounds are not a square
-    const offsetX = (side - width) / 2 - bounds[0]! /* left */;
-    const offsetY = (side - height) / 2 - bounds[1]! /* top */;
+    const offsetX = (side - width) / 2 - bounds[0]!; /* left */
+    const offsetY = (side - height) / 2 - bounds[1]!; /* top */
     return this.transformed((x, y) => [(x + offsetX) / side, (y + offsetY) / side]);
   }
 
@@ -377,8 +377,7 @@ export class RoundedPolygon {
     // first is how much we can use of expectedRoundCut, second how much of expectedCut
     const cutAdjusts: Array<readonly [number, number]> = [];
     for (let ix = 0; ix < n; ix++) {
-      const expectedRoundCut =
-        roundedCorners[ix]!.expectedRoundCut + roundedCorners[(ix + 1) % n]!.expectedRoundCut;
+      const expectedRoundCut = roundedCorners[ix]!.expectedRoundCut + roundedCorners[(ix + 1) % n]!.expectedRoundCut;
       const expectedCut = roundedCorners[ix]!.expectedCut + roundedCorners[(ix + 1) % n]!.expectedCut;
       const vtxX = vertices[ix * 2]!;
       const vtxY = vertices[ix * 2 + 1]!;
@@ -430,7 +429,12 @@ export class RoundedPolygon {
       const nextCornerFirst = corners[(i + 1) % n]![0]!;
       tempFeatures.push(
         new Edge([
-          Cubic.straightLine(cornerLast.anchor1X, cornerLast.anchor1Y, nextCornerFirst.anchor0X, nextCornerFirst.anchor0Y),
+          Cubic.straightLine(
+            cornerLast.anchor1X,
+            cornerLast.anchor1Y,
+            nextCornerFirst.anchor0X,
+            nextCornerFirst.anchor0Y,
+          ),
         ]),
       );
     }
@@ -571,8 +575,7 @@ class RoundedCorner {
       // How much we need to cut, as measured on a side, to get the required radius
       // calculating where the rounding circle hits the edge
       // This uses the identity of tan(A/2) = sinA/(1 + cosA), where tan(A/2) = radius/cut
-      this.expectedRoundCut =
-        this.sinAngle > 1e-3 ? (this.cornerRadius * (this.cosAngle + 1)) / this.sinAngle : 0;
+      this.expectedRoundCut = this.sinAngle > 1e-3 ? (this.cornerRadius * (this.cosAngle + 1)) / this.sinAngle : 0;
     } else {
       // One (or both) of the sides is empty, not much we can do.
       this.d1 = new Point(0, 0);
@@ -661,9 +664,7 @@ class RoundedCorner {
     if (allowedCut > this.expectedCut) {
       return this.smoothing;
     } else if (allowedCut > this.expectedRoundCut) {
-      return (
-        (this.smoothing * (allowedCut - this.expectedRoundCut)) / (this.expectedCut - this.expectedRoundCut)
-      );
+      return (this.smoothing * (allowedCut - this.expectedRoundCut)) / (this.expectedCut - this.expectedRoundCut);
     } else {
       return 0;
     }
@@ -711,9 +712,7 @@ class RoundedCorner {
       actualSmoothingValues,
     );
     // The flanking curve ends on the circle
-    const curveEnd = circleCenter.plus(
-      directionVector(p.x - circleCenter.x, p.y - circleCenter.y).times(actualR),
-    );
+    const curveEnd = circleCenter.plus(directionVector(p.x - circleCenter.x, p.y - circleCenter.y).times(actualR));
     // The anchor on the circle segment side is in the intersection between the tangent to the
     // circle in the circle/flanking curve boundary and the linear segment.
     const circleTangent = curveEnd.minus(circleCenter).rotate90();

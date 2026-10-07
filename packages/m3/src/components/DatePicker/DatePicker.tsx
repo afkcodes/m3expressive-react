@@ -67,7 +67,14 @@ const s = stylex.create({
     // Figma strokes don't take layout space: the rule is an inset shadow.
     boxShadow: `inset 0 -1px 0 ${color.outlineVariant}`,
   },
-  headerText: { display: 'flex', flexDirection: 'column', rowGap: 36, flexGrow: 1, minWidth: 0, alignSelf: 'flex-start' },
+  headerText: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: 36,
+    flexGrow: 1,
+    minWidth: 0,
+    alignSelf: 'flex-start',
+  },
   // The kit's label box is 16px tall with a 20px line: the text overflows it downwards.
   supporting: { height: 16, margin: 0, color: color.onSurfaceVariant },
   headline: { margin: 0, color: color.onSurface, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
@@ -96,8 +103,20 @@ const s = stylex.create({
     overflow: 'hidden',
     backgroundColor: color.surfaceContainerHigh,
   },
-  years: { height: 280, flexShrink: 0, overflowY: 'auto', scrollbarWidth: 'none', '::-webkit-scrollbar': { display: 'none' } },
-  yearGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', columnGap: 8, paddingBlock: 8, paddingInline: 24 },
+  years: {
+    height: 280,
+    flexShrink: 0,
+    overflowY: 'auto',
+    scrollbarWidth: 'none',
+    '::-webkit-scrollbar': { display: 'none' },
+  },
+  yearGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    columnGap: 8,
+    paddingBlock: 8,
+    paddingInline: 24,
+  },
   actions: {
     display: 'flex',
     alignItems: 'center',
@@ -173,7 +192,9 @@ export function DatePicker({
 }: DatePickerProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
   const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
-  const [innerMonth, setInnerMonth] = useState(() => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1));
+  const [innerMonth, setInnerMonth] = useState(
+    () => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+  );
   const month = monthProp ? new Date(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
   const setMonth = (m: Date) => {
     if (!monthProp) setInnerMonth(m);
@@ -229,7 +250,9 @@ export function DatePicker({
     size(0);
     box.style.opacity = String(alphaFrom);
     // expandVertically / shrinkVertically: default effects; fadeIn default effects (from 60%), fadeOut fast effects.
-    running.push(animateSpring({ spring: defaultEffects, from: 0, to: 1, precision: 0.001, onUpdate: size, onComplete: finish }));
+    running.push(
+      animateSpring({ spring: defaultEffects, from: 0, to: 1, precision: 0.001, onUpdate: size, onComplete: finish }),
+    );
     running.push(
       animateSpring({
         spring: entering ? defaultEffects : fastEffects,
@@ -288,7 +311,10 @@ export function DatePicker({
           </PickerMenuButton>
           {view === 'day' && (
             <div {...stylex.props(s.controls)}>
-              <IconButton aria-label={labels.previous ?? 'Previous month'} onClick={() => setMonth(addMonths(month, -1))}>
+              <IconButton
+                aria-label={labels.previous ?? 'Previous month'}
+                onClick={() => setMonth(addMonths(month, -1))}
+              >
                 <Glyph d={ICONS.prev} />
               </IconButton>
               <IconButton aria-label={labels.next ?? 'Next month'} onClick={() => setMonth(addMonths(month, 1))}>
@@ -315,7 +341,11 @@ export function DatePicker({
             </MonthPager>
           )}
           {phase !== 'day' && (
-            <div ref={yearsBox} inert={view !== 'year' || undefined} {...stylex.props(phase !== 'year' && s.yearsOverlay)}>
+            <div
+              ref={yearsBox}
+              inert={view !== 'year' || undefined}
+              {...stylex.props(phase !== 'year' && s.yearsOverlay)}
+            >
               <div ref={yearsRef} {...stylex.props(s.years)}>
                 <div role="listbox" aria-label="Year" {...stylex.props(s.yearGrid)}>
                   {Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i).map((y) => (
@@ -387,7 +417,11 @@ const PARALLAX = -48;
  * clip. Only the bodies move — the headers and actions switch at once (Compose keeps its header
  * outside the transition; the kit's two headers differ).
  */
-function useModeTransition(wrap: RefObject<HTMLDivElement | null>, leaving: 'picker' | 'input' | null, onDone: () => void) {
+function useModeTransition(
+  wrap: RefObject<HTMLDivElement | null>,
+  leaving: 'picker' | 'input' | null,
+  onDone: () => void,
+) {
   const spatial = useSpringToken('default-spatial');
   const defaultEffects = useSpringToken('default-effects');
   const fastEffects = useSpringToken('fast-effects');
@@ -408,7 +442,11 @@ function useModeTransition(wrap: RefObject<HTMLDivElement | null>, leaving: 'pic
     const [w0, h0, w1, h1] = [outSlot.offsetWidth, outSlot.offsetHeight, inSlot.offsetWidth, inSlot.offsetHeight];
     const bg = getComputedStyle(inPanel).backgroundColor;
     // One surface for both: the panels go transparent over the clipping wrapper.
-    Object.assign(w.style, { overflow: 'hidden', borderRadius: getComputedStyle(inPanel).borderTopLeftRadius, backgroundColor: bg });
+    Object.assign(w.style, {
+      overflow: 'hidden',
+      borderRadius: getComputedStyle(inPanel).borderTopLeftRadius,
+      backgroundColor: bg,
+    });
     for (const p of [outPanel, inPanel]) p.style.backgroundColor = 'transparent';
     for (const part of ['header', 'actions']) {
       const el = q(outPanel, part);
@@ -434,7 +472,12 @@ function useModeTransition(wrap: RefObject<HTMLDivElement | null>, leaving: 'pic
       }
       done.current();
     };
-    const run = (spec: Parameters<typeof animateSpring>[0]['spring'] | null, from: number, to: number, onUpdate: (v: number) => void) => {
+    const run = (
+      spec: Parameters<typeof animateSpring>[0]['spring'] | null,
+      from: number,
+      to: number,
+      onUpdate: (v: number) => void,
+    ) => {
       if (!spec) {
         onUpdate(to);
         return;
@@ -502,7 +545,12 @@ export function ModalDatePicker({ open, onOpenChange, value, onChange, onClear, 
   const shows = (m: 'picker' | 'input') => mode === m || leaving === m;
   const slot = (m: 'picker' | 'input', panel: ReactNode) =>
     shows(m) && (
-      <div key={m} data-mode-slot={m} inert={leaving === m || undefined} {...stylex.props(leaving === m && modeStyles.leaving)}>
+      <div
+        key={m}
+        data-mode-slot={m}
+        inert={leaving === m || undefined}
+        {...stylex.props(leaving === m && modeStyles.leaving)}
+      >
         {panel}
       </div>
     );

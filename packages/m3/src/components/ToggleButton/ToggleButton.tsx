@@ -7,7 +7,15 @@ import { elevation } from '../../tokens/elevation.stylex.ts';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from '../Button/ButtonFrame.tsx';
-import { base, containerMotion, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import {
+  base,
+  containerMotion,
+  elevatedShadow,
+  sizes,
+  strokeWidths,
+  type ButtonShape,
+  type ButtonSize,
+} from '../Button/buttonStyles.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext } from '../Toolbar/context.ts';
 
@@ -77,8 +85,7 @@ const selected = stylex.create({
   tonal: { backgroundColor: color.secondary, color: color.onSecondary },
 });
 
-export interface ToggleButtonProps
-  extends Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface ToggleButtonProps extends Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children'> {
   variant?: ToggleButtonVariant;
   size?: ButtonSize;
   /** Shape when unselected; selecting swaps to the other shape. */
@@ -148,12 +155,22 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
         container={[
           // Selection / press morph on FastSpatial (Compose ToggleButton); a shadow that changes with
           // the interaction (toolbar lift, XL elevated) tweens like Compose animateElevation.
-          !isDisabled && (tool || (variant === 'elevated' && size === 'xlarge')) ? containerMotion.spatialElevated : containerMotion.spatial,
-          tool ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool] : isSelected ? selected[variant] : unselected[variant],
+          !isDisabled && (tool || (variant === 'elevated' && size === 'xlarge'))
+            ? containerMotion.spatialElevated
+            : containerMotion.spatial,
+          tool
+            ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool]
+            : isSelected
+              ? selected[variant]
+              : unselected[variant],
           tool && !isDisabled && inToolbar.lift,
           tool && !isDisabled && forced.state === 'hovered' && inToolbar.lifted,
           variant === 'elevated' && !isDisabled && elevatedShadow[size],
-          variant === 'elevated' && !isDisabled && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,
+          variant === 'elevated' &&
+            !isDisabled &&
+            size === 'xlarge' &&
+            !!forced.state &&
+            elevatedShadow.xlargeInteracting,
           variant === 'outlined' && base.stroke,
           variant === 'outlined' && strokeWidths[size],
           variant === 'outlined' && strokeMotion.outlined,

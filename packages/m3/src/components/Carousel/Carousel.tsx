@@ -1,11 +1,29 @@
-import { Children, forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import {
+  Children,
+  forwardRef,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
 import { splineFling } from '../../motion/fling.ts';
-import { heroKeylineList, itemPlacement, maxScrollOffset, multiBrowseKeylineList, Strategy, uncontainedKeylineList } from './keylines.ts';
+import {
+  heroKeylineList,
+  itemPlacement,
+  maxScrollOffset,
+  multiBrowseKeylineList,
+  Strategy,
+  uncontainedKeylineList,
+} from './keylines.ts';
 
 /*
  * Figma kit, "Carousel" page (Carousel set 53912:27480, full screen 54577:26060, building blocks).
@@ -68,7 +86,15 @@ const s = stylex.create({
     willChange: 'transform, width',
   },
   // Multi-aspect: a plain scrolling row.
-  row: { display: 'flex', columnGap: 8, height: '100%', boxSizing: 'border-box', paddingBlock: 8, paddingInline: 16, width: 'max-content' },
+  row: {
+    display: 'flex',
+    columnGap: 8,
+    height: '100%',
+    boxSizing: 'border-box',
+    paddingBlock: 8,
+    paddingInline: 16,
+    width: 'max-content',
+  },
   rowItem: {
     position: 'relative',
     flexShrink: 0,
@@ -175,7 +201,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   const snapTargets = useMemo(
     () =>
       strategy
-        ? Array.from({ length: count }, (_, i) => Math.min(max, Math.max(0, i * pitch - strategy.snapPositionOffset(i, count))))
+        ? Array.from({ length: count }, (_, i) =>
+            Math.min(max, Math.max(0, i * pitch - strategy.snapPositionOffset(i, count))),
+          )
         : [],
     [strategy, count, max, pitch],
   );
@@ -222,7 +250,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       const el = viewport.current;
       if (!el || snapTargets.length === 0) return;
       const from = el.scrollLeft;
-      const to = target ?? snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
+      const to =
+        target ??
+        snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
       stop();
       if (Math.abs(to - from) < 0.5) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -389,7 +419,8 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     tabIndex: 0,
     onKeyDown,
   } as const;
-  const slide = (i: number) => ({ role: 'group', 'aria-roledescription': 'slide', 'aria-label': `${i + 1} of ${count}` }) as const;
+  const slide = (i: number) =>
+    ({ role: 'group', 'aria-roledescription': 'slide', 'aria-label': `${i + 1} of ${count}` }) as const;
 
   if (layout === 'full-screen') {
     return (
@@ -421,7 +452,12 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
 
   const trackWidth = available + max + padStart + padEnd;
   return (
-    <div {...common} onPointerDown={onPointerDown} onDragStart={(e) => e.preventDefault()} {...stylex.props(s.viewport, layout !== 'uncontained' && s.ownDrag, s.clip(padStart, padEnd), sx)}>
+    <div
+      {...common}
+      onPointerDown={onPointerDown}
+      onDragStart={(e) => e.preventDefault()}
+      {...stylex.props(s.viewport, layout !== 'uncontained' && s.ownDrag, s.clip(padStart, padEnd), sx)}
+    >
       <div style={{ width: trackWidth }} {...stylex.props(s.track)}>
         {strategy &&
           items.map((child, i) => (

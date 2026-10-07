@@ -98,7 +98,14 @@ const s = stylex.create({
   },
   itemSelected: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 8%, transparent)` },
   check: { width: 24, height: 24, flexShrink: 0, color: color.onSurfaceVariant },
-  thumb: { position: 'absolute', right: 4.4, width: 8.8, borderRadius: 4.4, backgroundColor: color.outline, pointerEvents: 'none' },
+  thumb: {
+    position: 'absolute',
+    right: 4.4,
+    width: 8.8,
+    borderRadius: 4.4,
+    backgroundColor: color.outline,
+    pointerEvents: 'none',
+  },
   field: { display: 'flex', flexDirection: 'column', rowGap: 7, alignItems: 'flex-start' },
   notch: { [textFieldVars.notchColor]: color.surface },
   fieldWidth: (w: number) => ({ width: w }),
@@ -205,10 +212,13 @@ export function DockedCalendar({
 }: DockedCalendarProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
   const monthShort = fmt?.monthShort ?? ((d: Date) => new Intl.DateTimeFormat(locale, { month: 'short' }).format(d));
-  const monthLong = fmt?.monthLong ?? ((m: number) => new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2001, m, 1)));
+  const monthLong =
+    fmt?.monthLong ?? ((m: number) => new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2001, m, 1)));
   const yearLabel = fmt?.year ?? ((y: number) => String(y));
   const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
-  const [innerMonth, setInnerMonth] = useState(() => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1));
+  const [innerMonth, setInnerMonth] = useState(
+    () => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+  );
   const month = monthProp ? new Date(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
   const setMonth = (m: Date) => {
     if (!monthProp) setInnerMonth(m);
@@ -239,7 +249,11 @@ export function DockedCalendar({
         {label}
       </PickerMenuButton>
     ) : (
-      <PickerMenuButton open={view === unit} onClick={() => setView(view === unit ? 'day' : unit)} aria-label={`${label}, select ${unit}`}>
+      <PickerMenuButton
+        open={view === unit}
+        onClick={() => setView(view === unit ? 'day' : unit)}
+        aria-label={`${label}, select ${unit}`}
+      >
         {label}
       </PickerMenuButton>
     );
@@ -318,7 +332,10 @@ export function DockedCalendar({
   );
 }
 
-export interface DockedDatePickerProps extends Omit<DockedCalendarProps, 'onCancel' | 'onConfirm' | 'onChange' | 'value'> {
+export interface DockedDatePickerProps extends Omit<
+  DockedCalendarProps,
+  'onCancel' | 'onConfirm' | 'onChange' | 'value'
+> {
   value: Date | null;
   onChange: (date: Date | null) => void;
   label?: string;

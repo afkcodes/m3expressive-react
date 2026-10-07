@@ -58,7 +58,8 @@ function App() {
   if (page === 'demo' && (component === 'theme' || component === 'dynamic-color')) return <ThemePlayground />;
   if (page === 'demo' && (component === 'date-picker' || component === 'date-pickers')) return <DatePickerPlayground />;
   if (page === 'demo' && (component === 'time-picker' || component === 'time-pickers')) return <TimePickerPlayground />;
-  if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch')) return <CheckboxPlayground />;
+  if (page === 'demo' && (component === 'checkbox' || component === 'radio' || component === 'switch'))
+    return <CheckboxPlayground />;
   return <Gallery />;
 }
 

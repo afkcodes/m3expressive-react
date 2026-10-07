@@ -102,11 +102,8 @@ export class FeatureSerializer {
     const tagRegex = /[a-zA-Z]/g;
     tagRegex.lastIndex = tagsSearchStart;
     const tags = tagRegex.exec(serializedFeatures);
-    require(
-      tags !== null,
-      () =>
-        `Could not find any feature tags. Please mark all cubic bezier curve points belonging to a feature with one of {${FEATURE_TAG_ARRAY.join(', ')}} for V1, e.g. 'n1,1,2,2,3,3,4,4' for an edge (n) with anchor 0 (1,1), control 0 (2,2), control 1 (3,3) and anchor 1 (4,4).`,
-    );
+    require(tags !== null, () =>
+      `Could not find any feature tags. Please mark all cubic bezier curve points belonging to a feature with one of {${FEATURE_TAG_ARRAY.join(', ')}} for V1, e.g. 'n1,1,2,2,3,3,4,4' for an edge (n) with anchor 0 (1,1), control 0 (2,2), control 1 (3,3) and anchor 1 (4,4).`);
 
     let currentMatch: RegExpExecArray | null = tags;
     let featureStart: number;

@@ -41,7 +41,12 @@ const s = stylex.create({
     // No clip: the pressed layer's 8px corners reach past the pill's 16px ones (kit Pressed).
     cursor: 'pointer',
     color: color.onSurfaceVariant,
-    backgroundColor: { default: color.surface, ':hover': 'transparent', ':focus-visible': 'transparent', ':active': 'transparent' },
+    backgroundColor: {
+      default: color.surface,
+      ':hover': 'transparent',
+      ':focus-visible': 'transparent',
+      ':active': 'transparent',
+    },
     outlineStyle: 'none',
     [interaction.layerColor]: color.onSurfaceVariant,
     transitionProperty: 'background-color',
@@ -49,7 +54,12 @@ const s = stylex.create({
     transitionTimingFunction: motion.defaultEffectsEasing,
   },
   expanded: {
-    backgroundColor: { default: color.surfaceContainer, ':hover': 'transparent', ':focus-visible': 'transparent', ':active': 'transparent' },
+    backgroundColor: {
+      default: color.surfaceContainer,
+      ':hover': 'transparent',
+      ':focus-visible': 'transparent',
+      ':active': 'transparent',
+    },
   },
   unfilled: { backgroundColor: 'transparent' },
   layerBox: {
@@ -111,40 +121,49 @@ export interface AccordionButtonProps {
 }
 
 /** The kit's accordion toggle (used by ExpandableListItem; exported for custom headers). */
-export const AccordionButton = forwardRef<HTMLButtonElement, AccordionButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  function AccordionButton({ expanded, forcedState, ...rest }, ref) {
-    const first = useRef(expanded);
-    const toggled = first.current !== expanded;
-    return (
-      <button
-        ref={ref}
-        type="button"
-        aria-expanded={expanded}
-        data-ripple-host=""
-        {...rest}
-        {...stylex.props(stylex.defaultMarker(), s.button, expanded && s.expanded, forcedState != null && s.unfilled)}
+export const AccordionButton = forwardRef<
+  HTMLButtonElement,
+  AccordionButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
+>(function AccordionButton({ expanded, forcedState, ...rest }, ref) {
+  const first = useRef(expanded);
+  const toggled = first.current !== expanded;
+  return (
+    <button
+      ref={ref}
+      type="button"
+      aria-expanded={expanded}
+      data-ripple-host=""
+      {...rest}
+      {...stylex.props(stylex.defaultMarker(), s.button, expanded && s.expanded, forcedState != null && s.unfilled)}
+    >
+      <span
+        aria-hidden
+        {...stylex.props(
+          stateLayerHost.host,
+          // after host: the layer box is absolutely placed 4px from the top
+          s.layerBox,
+          forcedState === 'hovered' && stateLayerHost.forceHover,
+          forcedState === 'focused' && stateLayerHost.forceFocus,
+          forcedState === 'pressed' && [stateLayerHost.forceHover, s.layerPressed],
+        )}
       >
-        <span
-          aria-hidden
-          {...stylex.props(
-            stateLayerHost.host,
-            // after host: the layer box is absolutely placed 4px from the top
-            s.layerBox,
-            forcedState === 'hovered' && stateLayerHost.forceHover,
-            forcedState === 'focused' && stateLayerHost.forceFocus,
-            forcedState === 'pressed' && [stateLayerHost.forceHover, s.layerPressed],
-          )}
-        >
-          <StateLayer />
-          <Ripple />
-        </span>
-        <svg key={String(expanded)} width={20} height={20} viewBox="0 0 20 20" fill="currentColor" aria-hidden {...stylex.props(s.chevron, toggled && s.chevronFlip)}>
-          <path d={expanded ? CHEVRON_UP : CHEVRON_DOWN} />
-        </svg>
-      </button>
-    );
-  },
-);
+        <StateLayer />
+        <Ripple />
+      </span>
+      <svg
+        key={String(expanded)}
+        width={20}
+        height={20}
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden
+        {...stylex.props(s.chevron, toggled && s.chevronFlip)}
+      >
+        <path d={expanded ? CHEVRON_UP : CHEVRON_DOWN} />
+      </svg>
+    </button>
+  );
+});
 
 export interface ExpandableListItemProps extends Omit<ListItemProps, 'trailing' | 'onClick' | 'href' | 'selected'> {
   expanded?: boolean;
@@ -156,7 +175,14 @@ export interface ExpandableListItemProps extends Omit<ListItemProps, 'trailing' 
 }
 
 /** List item with an accordion toggle that reveals nested items (kit "Expandable" list). */
-export function ExpandableListItem({ expanded, defaultExpanded = false, onExpandedChange, items, sx, ...item }: ExpandableListItemProps) {
+export function ExpandableListItem({
+  expanded,
+  defaultExpanded = false,
+  onExpandedChange,
+  items,
+  sx,
+  ...item
+}: ExpandableListItemProps) {
   const forced = useForcedState();
   const list = useContext(ListContext);
   const [inner, setInner] = useState(defaultExpanded);
@@ -171,13 +197,19 @@ export function ExpandableListItem({ expanded, defaultExpanded = false, onExpand
       sx={[open && s.headerOpen, sx]}
       trailing={
         <Collapsible.Trigger
-          render={<AccordionButton expanded={open} forcedState={forced.state} aria-label={open ? 'Collapse' : 'Expand'} />}
+          render={
+            <AccordionButton expanded={open} forcedState={forced.state} aria-label={open ? 'Collapse' : 'Expand'} />
+          }
         />
       }
     />
   );
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen} render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}>
+    <Collapsible.Root
+      open={open}
+      onOpenChange={setOpen}
+      render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}
+    >
       <ListContext value={{ ...list, inList: false }}>{header}</ListContext>
       <Collapsible.Panel {...stylex.props(expandPanelMarker, s.panel)}>
         <ListContext value={{ ...list, inList: true }}>

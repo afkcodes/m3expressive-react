@@ -18,7 +18,9 @@ function fail(message: string): never {
 /** kotlin.test `assertEquals(expected, actual, absoluteTolerance, message)` for floats. */
 export function assertEqualsTol(expected: number, actual: number, absoluteTolerance: number, message?: string): void {
   if (!(Math.abs(expected - actual) <= absoluteTolerance)) {
-    fail(`${message ? `${message}. ` : ''}Expected <${expected}>, actual <${actual}>, should differ no more than <${absoluteTolerance}>.`);
+    fail(
+      `${message ? `${message}. ` : ''}Expected <${expected}>, actual <${actual}>, should differ no more than <${absoluteTolerance}>.`,
+    );
   }
 }
 

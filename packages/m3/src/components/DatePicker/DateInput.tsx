@@ -153,7 +153,9 @@ export function DateInputPanel({
         <div data-dp-header="" {...stylex.props(s.header)}>
           <p {...stylex.props(typescale.labelLarge, s.supporting)}>{supportingText}</p>
           <div {...stylex.props(s.headlineRow, range && s.headlineRowRange)}>
-            <p {...stylex.props(typescale.headlineLarge, s.headline)}>{headline ?? (range ? 'Enter dates' : 'Enter date')}</p>
+            <p {...stylex.props(typescale.headlineLarge, s.headline)}>
+              {headline ?? (range ? 'Enter dates' : 'Enter date')}
+            </p>
             {onModeToggle && (
               <IconButton aria-label={labels.mode ?? 'Switch to calendar'} width="wide" onClick={onModeToggle}>
                 <Glyph d={DATE_PICKER_ICONS.today} />

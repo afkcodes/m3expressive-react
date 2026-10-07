@@ -5,7 +5,14 @@ import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { CIRCULAR, circularFrame, circularShapes, type CircularFrame, type ProgressThickness, type ProgressType } from './geometry.ts';
+import {
+  CIRCULAR,
+  circularFrame,
+  circularShapes,
+  type CircularFrame,
+  type ProgressThickness,
+  type ProgressType,
+} from './geometry.ts';
 import {
   PROGRESS_SPRING,
   circularIndeterminate,
@@ -100,7 +107,12 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
   const g = circularShapes(type, t, frame, spin, phase, amp);
 
   return (
-    <Progress.Root ref={ref} value={indeterminate ? null : p * 100} {...aria} {...stylex.props(s.root, s.size(size), sx)}>
+    <Progress.Root
+      ref={ref}
+      value={indeterminate ? null : p * 100}
+      {...aria}
+      {...stylex.props(s.root, s.size(size), sx)}
+    >
       <svg width={size} height={size} {...stylex.props(s.svg)} aria-hidden>
         {g.track && <path d={g.track} strokeWidth={t} {...stylex.props(s.track)} />}
         {g.active && <path d={g.active} strokeWidth={t} {...stylex.props(s.active)} />}

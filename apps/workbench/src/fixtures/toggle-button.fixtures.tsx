@@ -21,7 +21,12 @@ const fixture: FixtureModule = {
       `${variant}-live`,
       {
         render: () => (
-          <ToggleButton variant={variant} size="medium" icon={<Icon d={assets.icon} />} selectedIcon={<Icon d={assets.selectedIcon} />}>
+          <ToggleButton
+            variant={variant}
+            size="medium"
+            icon={<Icon d={assets.icon} />}
+            selectedIcon={<Icon d={assets.selectedIcon} />}
+          >
             Label
           </ToggleButton>
         ),
@@ -41,7 +46,13 @@ const fixture: FixtureModule = {
       },
     ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
-      const [variant, selection, shape, size, state] = name.split('-') as [ToggleButtonVariant, 'selected' | 'unselected', ButtonShape, ButtonSize, string];
+      const [variant, selection, shape, size, state] = name.split('-') as [
+        ToggleButtonVariant,
+        'selected' | 'unselected',
+        ButtonShape,
+        ButtonSize,
+        string,
+      ];
       const forced: ForcedState | undefined =
         state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
       const ripplePath = assets.ripple[selection][size][shape];

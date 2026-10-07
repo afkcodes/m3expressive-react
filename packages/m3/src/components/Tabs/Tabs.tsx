@@ -38,7 +38,13 @@ const s = stylex.create({
   // minWidth 0: as a grid / flex item the row must not grow to its tabs (scrollable rows scroll).
   row: { display: 'flex', flexDirection: 'column', boxSizing: 'border-box', width: '100%', minWidth: 0 },
   // The list carries the Surface (panels below keep their own background).
-  list: { position: 'relative', display: 'flex', alignItems: 'stretch', outlineStyle: 'none', backgroundColor: color.surface },
+  list: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'stretch',
+    outlineStyle: 'none',
+    backgroundColor: color.surface,
+  },
   listScrollable: {
     overflowX: 'auto',
     overflowY: 'hidden',
@@ -67,7 +73,12 @@ const s = stylex.create({
     userSelect: 'none',
     overflow: 'hidden',
     fontFamily: 'inherit',
-    color: { default: color.onSurfaceVariant, ':hover': color.onSurface, ':focus-visible': color.onSurface, ':active': color.onSurface },
+    color: {
+      default: color.onSurfaceVariant,
+      ':hover': color.onSurface,
+      ':focus-visible': color.onSurface,
+      ':active': color.onSurface,
+    },
     [interaction.layerColor]: color.onSurface,
     [interaction.rippleColor]: color.onSurface,
     // Deselect fades out on fast effects (Compose TabTransition).
@@ -117,9 +128,24 @@ const s = stylex.create({
     backgroundColor: color.primary,
   },
   // Above the ripple: the kit's secondary indicator sits outside the tab's state layer.
-  staticSecondary: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, zIndex: 2, backgroundColor: color.primary },
+  staticSecondary: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 2,
+    zIndex: 2,
+    backgroundColor: color.primary,
+  },
   // Live indicator: placed by JS (content box for primary, tab box for secondary), sprung.
-  indicator: { position: 'absolute', left: 0, bottom: 0, pointerEvents: 'none', backgroundColor: color.primary, zIndex: 1 },
+  indicator: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    pointerEvents: 'none',
+    backgroundColor: color.primary,
+    zIndex: 1,
+  },
   indicatorPrimary: { height: 3, borderTopLeftRadius: 3, borderTopRightRadius: 3 },
   indicatorSecondary: { height: 2 },
   geometry: (x: number, w: number) => ({ transform: `translateX(${x}px)`, width: w }),
@@ -140,7 +166,13 @@ export interface TabProps {
   sx?: StyleXStyles;
 }
 
-function TabBody({ label, icon, badge, variant, inRow }: Pick<TabProps, 'label' | 'icon' | 'badge'> & { variant: TabsVariant; inRow: boolean }) {
+function TabBody({
+  label,
+  icon,
+  badge,
+  variant,
+  inRow,
+}: Pick<TabProps, 'label' | 'icon' | 'badge'> & { variant: TabsVariant; inRow: boolean }) {
   const stacked = icon != null && label != null && variant === 'primary';
   return (
     <>
@@ -149,7 +181,11 @@ function TabBody({ label, icon, badge, variant, inRow }: Pick<TabProps, 'label' 
       <Ripple above />
       <span
         data-tab-content=""
-        {...stylex.props(s.content, stacked ? s.contentStacked : s.contentInline, inRow && (label == null ? s.rowShiftOne : s.rowShiftHalf))}
+        {...stylex.props(
+          s.content,
+          stacked ? s.contentStacked : s.contentInline,
+          inRow && (label == null ? s.rowShiftOne : s.rowShiftHalf),
+        )}
       >
         {icon != null && (
           <span {...stylex.props(s.icon)}>
@@ -187,7 +223,9 @@ export function Tab({ value, label, icon, badge, disabled = false, selected = fa
     return (
       <div role="tab" aria-selected={selected} data-ripple-host="" {...style(selected)}>
         <TabBody label={label} icon={icon} badge={badge} variant={variant} inRow={false} />
-        {selected && <span aria-hidden {...stylex.props(variant === 'primary' ? s.staticPrimary : s.staticSecondary)} />}
+        {selected && (
+          <span aria-hidden {...stylex.props(variant === 'primary' ? s.staticPrimary : s.staticSecondary)} />
+        )}
       </div>
     );
   }
@@ -261,7 +299,19 @@ export function Tabs({
   );
 }
 
-function TabList({ variant, scrollable, current, ariaLabel, children }: { variant: TabsVariant; scrollable: boolean; current: unknown; ariaLabel?: string; children: ReactNode }) {
+function TabList({
+  variant,
+  scrollable,
+  current,
+  ariaLabel,
+  children,
+}: {
+  variant: TabsVariant;
+  scrollable: boolean;
+  current: unknown;
+  ariaLabel?: string;
+  children: ReactNode;
+}) {
   const list = useRef<HTMLDivElement>(null);
   const spring = useSpringToken('default-spatial');
   const reduced = useReducedMotion();
@@ -332,7 +382,13 @@ function TabList({ variant, scrollable, current, ariaLabel, children }: { varian
         el.scrollLeft = to;
         return;
       }
-      anims.current.scroll = animateSpring({ spring, from: el.scrollLeft, to, precision: 0.01, onUpdate: (v) => (el.scrollLeft = v) });
+      anims.current.scroll = animateSpring({
+        spring,
+        from: el.scrollLeft,
+        to,
+        precision: 0.01,
+        onUpdate: (v) => (el.scrollLeft = v),
+      });
     };
     place(true);
     // The first layout waits for web fonts: tab widths (and so the centred offset) depend on them.
@@ -361,7 +417,16 @@ function TabList({ variant, scrollable, current, ariaLabel, children }: { varian
   return (
     <BaseTabs.List ref={list} aria-label={ariaLabel} {...stylex.props(s.list, scrollable && s.listScrollable)}>
       {children}
-      {geo && <span aria-hidden {...stylex.props(s.indicator, variant === 'primary' ? s.indicatorPrimary : s.indicatorSecondary, s.geometry(geo.x, geo.w))} />}
+      {geo && (
+        <span
+          aria-hidden
+          {...stylex.props(
+            s.indicator,
+            variant === 'primary' ? s.indicatorPrimary : s.indicatorSecondary,
+            s.geometry(geo.x, geo.w),
+          )}
+        />
+      )}
     </BaseTabs.List>
   );
 }

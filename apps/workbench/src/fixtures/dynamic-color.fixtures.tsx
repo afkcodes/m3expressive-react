@@ -13,7 +13,10 @@ function Seeded({ mode }: { mode: ColorSchemeMode }) {
   const colors = schemeFromSeed(SEED, { variant: 'tonal-spot' });
   return (
     <M3Provider colorScheme={mode} colors={colors}>
-      <div data-expected-primary={mode === 'dark' ? colors.primary.dark : colors.primary.light} data-expected-surface={mode === 'dark' ? colors.surface.dark : colors.surface.light}>
+      <div
+        data-expected-primary={mode === 'dark' ? colors.primary.dark : colors.primary.light}
+        data-expected-surface={mode === 'dark' ? colors.surface.dark : colors.surface.light}
+      >
         <Button>Seeded</Button>
       </div>
     </M3Provider>
@@ -39,7 +42,11 @@ function FromImage() {
   return (
     <M3Provider colorScheme="light" colors={colors}>
       <canvas ref={canvas} width={120} height={60} />
-      <output data-status={seeds.status} data-seeds={seeds.colors.join(',')} data-expected-primary={colors?.primary.light ?? ''}>
+      <output
+        data-status={seeds.status}
+        data-seeds={seeds.colors.join(',')}
+        data-expected-primary={colors?.primary.light ?? ''}
+      >
         <Button>From image</Button>
       </output>
     </M3Provider>

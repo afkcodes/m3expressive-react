@@ -13,7 +13,10 @@ const Stars = () => (
 const fixture: FixtureModule = {
   component: 'tooltip',
   variants: {
-    'plain-single': { node: manifest.variants['plain-single'].node, render: () => <PlainTooltipSurface>Supporting text</PlainTooltipSurface> },
+    'plain-single': {
+      node: manifest.variants['plain-single'].node,
+      render: () => <PlainTooltipSurface>Supporting text</PlainTooltipSurface>,
+    },
     rich: {
       node: manifest.variants.rich.node,
       render: () => (
@@ -34,12 +37,23 @@ const fixture: FixtureModule = {
       render: () => (
         <div style={{ padding: 60, display: 'flex', gap: 24 }}>
           <Tooltip content="Supporting text" delay={0}>
-            <IconButton aria-label="Favourite"><Stars /></IconButton>
+            <IconButton aria-label="Favourite">
+              <Stars />
+            </IconButton>
           </Tooltip>
-          <RichTooltip trigger={<Button variant="text">Details</Button>} subhead="Title" actions={<Button variant="text">Action</Button>}>
+          <RichTooltip
+            trigger={<Button variant="text">Details</Button>}
+            subhead="Title"
+            actions={<Button variant="text">Action</Button>}
+          >
             Supporting line text lorem ipsum dolor sit amet, consectetur
           </RichTooltip>
-          <RichTooltip persistent trigger={<Button variant="text">Pinned</Button>} subhead="Pinned" actions={<Button variant="text">Action</Button>}>
+          <RichTooltip
+            persistent
+            trigger={<Button variant="text">Pinned</Button>}
+            subhead="Pinned"
+            actions={<Button variant="text">Action</Button>}
+          >
             Persistent rich tooltip
           </RichTooltip>
         </div>

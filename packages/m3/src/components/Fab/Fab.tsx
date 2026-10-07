@@ -1,4 +1,13 @@
-import { forwardRef, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -17,7 +26,8 @@ import { useSpringToken } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ToolbarFabContext } from '../Toolbar/context.ts';
 
-export type FabColor = 'primary' | 'secondary' | 'tertiary' | 'primary-container' | 'secondary-container' | 'tertiary-container';
+export type FabColor =
+  'primary' | 'secondary' | 'tertiary' | 'primary-container' | 'secondary-container' | 'tertiary-container';
 export type FabSize = 'default' | 'medium' | 'large';
 export type ExtendedFabSize = 'small' | 'medium' | 'large';
 
@@ -37,7 +47,10 @@ const FAB: Record<FabSize, { box: number; r: number; icon: number }> = {
   medium: { box: 80, r: 20, icon: 28 },
   large: { box: 96, r: 28, icon: 36 },
 };
-const EXT: Record<ExtendedFabSize, { h: number; r: number; icon: number; padBlock: number; padInline: number; gap: number }> = {
+const EXT: Record<
+  ExtendedFabSize,
+  { h: number; r: number; icon: number; padBlock: number; padInline: number; gap: number }
+> = {
   small: { h: 56, r: 16, icon: 24, padBlock: 16, padInline: 16, gap: 8 },
   medium: { h: 80, r: 20, icon: 28, padBlock: 26, padInline: 26, gap: 12 },
   large: { h: 96, r: 28, icon: 36, padBlock: 30, padInline: 28, gap: 16 },
@@ -90,7 +103,10 @@ const s = stylex.create({
     transitionProperty: 'box-shadow, width, height',
     transitionDuration: {
       default: `${tween.elevationOutDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
-      ':hover': { default: null, '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}` },
+      ':hover': {
+        default: null,
+        '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+      },
       ':focus-visible': {
         default: `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
         '@media (hover: hover)': `${tween.elevationInDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
@@ -102,7 +118,10 @@ const s = stylex.create({
     },
     transitionTimingFunction: {
       default: `${tween.elevationOutEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
-      ':hover': { default: null, '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}` },
+      ':hover': {
+        default: null,
+        '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
+      },
       ':focus-visible': {
         default: `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
         '@media (hover: hover)': `${tween.elevationInEasing}, ${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}`,
@@ -214,7 +233,16 @@ export interface ExtendedFabProps extends BaseProps {
 }
 
 export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(function ExtendedFab(
-  { size = 'small', color: fabColor = 'primary-container', elevated = true, expanded = true, icon, children, sx, ...rest },
+  {
+    size = 'small',
+    color: fabColor = 'primary-container',
+    elevated = true,
+    expanded = true,
+    icon,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const e = EXT[size];
@@ -234,7 +262,11 @@ export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(funct
       ref={setRoot}
       data-ripple-host=""
       {...rest}
-      {...stylex.props(...useFabRoot(fabColor, elevated, sx), dyn.box(null, e.h, e.r), dyn.pad(e.padBlock, e.padInline, e.gap))}
+      {...stylex.props(
+        ...useFabRoot(fabColor, elevated, sx),
+        dyn.box(null, e.h, e.r),
+        dyn.pad(e.padBlock, e.padInline, e.gap),
+      )}
     >
       <StateLayer />
       {icon != null && <span {...stylex.props(s.icon, dyn.icon(e.icon))}>{icon}</span>}

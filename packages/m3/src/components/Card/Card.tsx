@@ -133,13 +133,25 @@ export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'classNa
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
-  { variant = 'filled', orientation = 'vertical', interactive, dragged = false, onClick, onKeyDown, children, sx, ...rest },
+  {
+    variant = 'filled',
+    orientation = 'vertical',
+    interactive,
+    dragged = false,
+    onClick,
+    onKeyDown,
+    children,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const force = useForcedState();
   const isInteractive = interactive ?? onClick !== undefined;
   const visualState = dragged ? 'dragged' : force.state;
-  const key = visualState ? (`${variant}${visualState[0]!.toUpperCase()}${visualState.slice(1)}` as keyof typeof forced) : null;
+  const key = visualState
+    ? (`${variant}${visualState[0]!.toUpperCase()}${visualState.slice(1)}` as keyof typeof forced)
+    : null;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(e);

@@ -217,7 +217,10 @@ export function TimePicker({
   );
 }
 
-export interface TimeInputProps extends Omit<TimePickerProps, 'orientation' | 'selection' | 'onSelectionChange' | 'autoSwitchToMinute'> {
+export interface TimeInputProps extends Omit<
+  TimePickerProps,
+  'orientation' | 'selection' | 'onSelectionChange' | 'autoSwitchToMinute'
+> {
   autoFocus?: boolean;
 }
 
@@ -341,7 +344,10 @@ export function ModalTimePicker({ open, onOpenChange, value, onChange, ...picker
     <BaseDialog.Root open={open} onOpenChange={(next) => onOpenChange(next)}>
       <BaseDialog.Portal container={portal}>
         <BaseDialog.Backdrop {...stylex.props(scrim.backdrop)} />
-        <BaseDialog.Popup aria-label={mode === 'dial' ? 'Select time' : 'Enter time'} {...stylex.props(s.popup, dialogMotion.fadeScale)}>
+        <BaseDialog.Popup
+          aria-label={mode === 'dial' ? 'Select time' : 'Enter time'}
+          {...stylex.props(s.popup, dialogMotion.fadeScale)}
+        >
           {mode === 'dial' ? (
             <TimePicker
               {...picker}

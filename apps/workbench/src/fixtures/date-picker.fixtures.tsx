@@ -26,7 +26,8 @@ import manifest from '../../../../figma/date-picker/manifest.json';
 import assets from '../../../../figma/date-picker/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
 
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const DAY_KIND: Record<string, CalendarDayKind> = {
   default: 'default',
   today: 'today',
@@ -69,7 +70,14 @@ function docked(view: DockedView): ReactNode {
           trailingIcon={
             <ForceState state="pressed" ripplePath={(assets.ripples as Record<string, string>)['docked-trailing']}>
               <IconButton aria-label="Open calendar">
-                <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ display: 'block' }}>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden
+                  style={{ display: 'block' }}
+                >
                   <path d={DATE_PICKER_ICONS.today} />
                 </svg>
               </IconButton>
@@ -94,7 +102,9 @@ function docked(view: DockedView): ReactNode {
 
 // The kit's range months are July / August 2025 laid out, labelled one month on.
 const nextMonthLabel = (d: Date) =>
-  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(d.getFullYear(), d.getMonth() + 1, 1));
+  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
+    new Date(d.getFullYear(), d.getMonth() + 1, 1),
+  );
 
 function render(name: string): ReactNode {
   if (name === 'modal-range') {
@@ -152,7 +162,11 @@ function render(name: string): ReactNode {
   );
   if (p[0] === 'day')
     return wrap(
-      <CalendarDay label={p[1] === 'null' ? undefined : '00'} kind={DAY_KIND[p.slice(1, -1).join('-')]} disabled={st === 'disabled'} />,
+      <CalendarDay
+        label={p[1] === 'null' ? undefined : '00'}
+        kind={DAY_KIND[p.slice(1, -1).join('-')]}
+        disabled={st === 'disabled'}
+      />,
     );
   if (p[0] === 'year') return wrap(<YearChip year="2025" selected={p[1] === 'sel'} disabled={st === 'disabled'} />);
   if (p[0] === 'menu') return wrap(<PickerMenuButton disabled={st === 'disabled'}>Label</PickerMenuButton>);
@@ -179,7 +193,13 @@ function LivePickers() {
       <output data-range>{`${iso(range.start)}..${iso(range.end)}`}</output>
       <output data-docked>{iso(docked)}</output>
       <DockedDatePicker value={docked} onChange={setDocked} today={new Date(2025, 6, 5)} />
-      <ModalDatePicker open={open} onOpenChange={setOpen} value={date} onChange={setDate} today={new Date(2025, 6, 5)} />
+      <ModalDatePicker
+        open={open}
+        onOpenChange={setOpen}
+        value={date}
+        onChange={setDate}
+        today={new Date(2025, 6, 5)}
+      />
       <ModalDateRangePicker
         open={rangeOpen}
         onOpenChange={setRangeOpen}
@@ -200,7 +220,12 @@ const fixture: FixtureModule = {
       const [w, h] = v.size as [number, number];
       return [
         name,
-        { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> },
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
       ];
     }),
   ]),

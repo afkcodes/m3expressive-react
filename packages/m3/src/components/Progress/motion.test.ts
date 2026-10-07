@@ -18,7 +18,8 @@ import {
 describe('indeterminate motion (Compose material3 keyframes)', () => {
   it('circular: continuous rotation and sweep across 6s cycles; sweep spans 10%–87%', () => {
     let prev = circularIndeterminate(0);
-    let lo = 1, hi = 0;
+    let lo = 1,
+      hi = 0;
     for (let ms = 1; ms <= 12000; ms++) {
       const cur = circularIndeterminate(ms);
       const d = ((((cur.rotation - prev.rotation) % 360) + 540) % 360) - 180;
@@ -40,7 +41,10 @@ describe('indeterminate motion (Compose material3 keyframes)', () => {
   });
 
   it('linear: line windows and continuity', () => {
-    expect(linearIndeterminate(0)).toEqual([[0, 0], [0, 0]]);
+    expect(linearIndeterminate(0)).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
     const [l1, l2] = linearIndeterminate(1000);
     expect(l1![1]).toBe(1);
     expect(l2![0]).toBeGreaterThan(0);

@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type ReactElement, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
@@ -59,7 +67,14 @@ const s = stylex.create({
     boxShadow: elevation.level2,
   },
   plainText: { display: 'block' },
-  richContent: { display: 'flex', flexDirection: 'column', rowGap: 4, paddingTop: 12, paddingInline: 16, paddingBottom: 4 },
+  richContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: 4,
+    paddingTop: 12,
+    paddingInline: 16,
+    paddingBottom: 4,
+  },
   text: { margin: 0, color: color.onSurfaceVariant },
   actions: { display: 'flex', alignItems: 'center', columnGap: 8, height: 40, paddingInline: 4 },
   popup: {
@@ -154,7 +169,11 @@ function useTooltipBehaviour(persistent: boolean) {
   const onOpenChange = (next: boolean, details: ChangeDetails) => {
     // Compose's hover Enter / Exit react to mouse pointers only: the compatibility mouse events
     // that follow a touch (or a long press whose click was swallowed) neither show nor hide it.
-    if (details.reason === 'trigger-hover' && (press.current.pointerType === 'touch' || press.current.pointerType === 'pen')) return;
+    if (
+      details.reason === 'trigger-hover' &&
+      (press.current.pointerType === 'touch' || press.current.pointerType === 'pen')
+    )
+      return;
     if (next) {
       setOpen(true);
       return;

@@ -15,7 +15,14 @@ interface Foundations {
   fontTheme: { font: Record<'Brand' | 'Plain', string>; weight: Record<string, string> };
   typescale: Record<
     string,
-    { font: 'Brand' | 'Plain'; size: number; lineHeight: number; tracking: number; weight: string; weightEmphasized: string }
+    {
+      font: 'Brand' | 'Plain';
+      size: number;
+      lineHeight: number;
+      tracking: number;
+      weight: string;
+      weightEmphasized: string;
+    }
   >;
   shape: Record<string, number>;
   elevation: Record<string, Array<{ x: number; y: number; blur: number; spread: number; alpha: number }>>;
@@ -152,7 +159,9 @@ ${Object.entries(f.elevation)
    * way (e.g. the Focused card) render these.
    */
 ${Object.entries(f.elevation)
-  .map(([level, shadows]) => `  level${level}NoSpread: '${shadows.map((x) => shadow({ ...x, spread: 0 })).join(', ')}',`)
+  .map(
+    ([level, shadows]) => `  level${level}NoSpread: '${shadows.map((x) => shadow({ ...x, spread: 0 })).join(', ')}',`,
+  )
   .join('\n')}
 });
 `;

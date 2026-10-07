@@ -33,7 +33,8 @@ async function seek(page: Page, selector: string, property: string, times: numbe
   return page.evaluate(
     ({ selector, property, times, read }) => {
       const el = document.querySelector(selector)!;
-      const anim = el.getAnimations().find((a) => (a as CSSTransition).transitionProperty === property) as CSSTransition | undefined;
+      const anim = el.getAnimations().find((a) => (a as CSSTransition).transitionProperty === property) as
+        CSSTransition | undefined;
       if (!anim) return null;
       anim.pause();
       const timing = anim.effect!.getComputedTiming();
@@ -51,11 +52,24 @@ async function seek(page: Page, selector: string, property: string, times: numbe
 const transitionOf = (page: Page, selector: string) =>
   page.evaluate((selector) => {
     const cs = getComputedStyle(document.querySelector(selector)!);
-    return { property: cs.transitionProperty, duration: cs.transitionDuration, delay: cs.transitionDelay, easing: cs.transitionTimingFunction };
+    return {
+      property: cs.transitionProperty,
+      duration: cs.transitionDuration,
+      delay: cs.transitionDelay,
+      easing: cs.transitionTimingFunction,
+    };
   }, selector);
 
 const transitions = (page: Page, selector: string) =>
-  page.evaluate((selector) => document.querySelector(selector)!.getAnimations().map((a) => (a as CSSTransition).transitionProperty).filter(Boolean), selector);
+  page.evaluate(
+    (selector) =>
+      document
+        .querySelector(selector)!
+        .getAnimations()
+        .map((a) => (a as CSSTransition).transitionProperty)
+        .filter(Boolean),
+    selector,
+  );
 
 // ── Checkbox: Checkbox.kt CheckboxImpl + colorAnimationSpecForState ─────────────────────────
 test.describe('checkbox motion', () => {
@@ -81,7 +95,9 @@ test.describe('checkbox motion', () => {
     const r = (await seek(page, GLYPH, 'clip-path', times, 'getComputedStyle(el).clipPath'))!;
     expect(r.duration, 'checkDrawFraction: DefaultSpatial').toBe(435);
     times.forEach((ms, i) => {
-      expect.soft(Math.min(drawn(r.out[i]!), 1.2), `drawn at ${ms}ms`).toBeCloseTo(Math.min(progress(spring['default-spatial'], ms), 1.2), 2);
+      expect
+        .soft(Math.min(drawn(r.out[i]!), 1.2), `drawn at ${ms}ms`)
+        .toBeCloseTo(Math.min(progress(spring['default-spatial'], ms), 1.2), 2);
     });
   });
 
@@ -133,12 +149,16 @@ test.describe('checkbox motion', () => {
 
 // ── Radio: RadioButton.kt RadioButtonImpl ───────────────────────────────────────────────────
 test.describe('radio motion', () => {
-  test('dot radius springs on FastSpatial, drawn at r − 1dp and never below 0; colour on DefaultEffects', async ({ page }) => {
+  test('dot radius springs on FastSpatial, drawn at r − 1dp and never below 0; colour on DefaultEffects', async ({
+    page,
+  }) => {
     await open(page, 'radio', 'live');
     const glyph = await transitionOf(page, '[role=radio] svg');
     expect([glyph.property, glyph.duration], 'radio colour: DefaultEffects').toEqual(['color', '0.231s']);
     expect(glyph.easing).toContain('linear(');
-    await page.evaluate(() => document.querySelectorAll('[role=radio]').forEach((r, i) => r.setAttribute('data-i', String(i))));
+    await page.evaluate(() =>
+      document.querySelectorAll('[role=radio]').forEach((r, i) => r.setAttribute('data-i', String(i))),
+    );
     await page.getByRole('radio').nth(1).click();
     const leaving = '[role=radio][data-i="0"] svg path:nth-of-type(2)';
     const entering = '[role=radio][data-i="1"] svg path:nth-of-type(2)';
@@ -156,7 +176,9 @@ test.describe('radio motion', () => {
       const [vIn, sIn] = inn.out[i]!.split(' ').map(Number) as [number, number];
       expect.soft(vOut, `leaving p at ${ms}ms`).toBeCloseTo(pOut, 2);
       expect.soft(vIn, `entering p at ${ms}ms`).toBeCloseTo(pIn, 2);
-      expect.soft(sOut, `leaving scale at ${ms}ms = max(0, (6p − 1)/5)`).toBeCloseTo(Math.max(0, (6 * pOut - 1) / 5), 2);
+      expect
+        .soft(sOut, `leaving scale at ${ms}ms = max(0, (6p − 1)/5)`)
+        .toBeCloseTo(Math.max(0, (6 * pOut - 1) / 5), 2);
       expect.soft(sIn, `entering scale at ${ms}ms`).toBeCloseTo(Math.max(0, (6 * pIn - 1) / 5), 2);
       if (vOut < 0) {
         sawOvershoot = true;
@@ -173,7 +195,9 @@ test.describe('radio motion', () => {
 });
 
 // ── Switch: Switch.kt ThumbNode (SnapSpec while pressed) + SwitchImpl (no colour animation) ──
-test('switch motion: press snaps into the 28px handle, release springs on FastSpatial; colours snap', async ({ page }) => {
+test('switch motion: press snaps into the 28px handle, release springs on FastSpatial; colours snap', async ({
+  page,
+}) => {
   const node = await open(page, 'switch', 'live');
   const sw = node.getByRole('switch');
   const handle = '[role=switch] > span > span:last-child';
@@ -182,7 +206,13 @@ test('switch motion: press snaps into the 28px handle, release springs on FastSp
   const b = (await sw.boundingBox())!;
   await page.mouse.move(b.x + 16, b.y + 16);
   await page.mouse.down();
-  const pressed = await page.evaluate((sel) => ({ w: getComputedStyle(document.querySelector(sel)!).width, anims: document.querySelector(sel)!.getAnimations().length }), handle);
+  const pressed = await page.evaluate(
+    (sel) => ({
+      w: getComputedStyle(document.querySelector(sel)!).width,
+      anims: document.querySelector(sel)!.getAnimations().length,
+    }),
+    handle,
+  );
   expect(pressed, 'SnapSpec: 28px at once, nothing animating').toEqual({ w: '28px', anims: 0 });
   await page.mouse.up();
   await expect(sw).toHaveAttribute('aria-checked', 'true');
@@ -204,15 +234,24 @@ test.describe('chips motion', () => {
     const elevated = node.locator('button').nth(1);
     await elevated.evaluate((e) => e.setAttribute('data-probe', ''));
     let t = await transitionOf(page, '[data-probe]');
-    expect([t.property, t.duration, t.easing], 'rest: outgoing 120ms cubic(0.4, 0, 0.6, 1)').toEqual(['box-shadow', '0.12s', 'cubic-bezier(0.4, 0, 0.6, 1)']);
+    expect([t.property, t.duration, t.easing], 'rest: outgoing 120ms cubic(0.4, 0, 0.6, 1)').toEqual([
+      'box-shadow',
+      '0.12s',
+      'cubic-bezier(0.4, 0, 0.6, 1)',
+    ]);
     await elevated.hover();
     t = await transitionOf(page, '[data-probe]');
-    expect([t.duration, t.easing], 'hover: incoming 120ms FastOutSlowIn').toEqual(['0.12s', 'cubic-bezier(0.4, 0, 0.2, 1)']);
+    expect([t.duration, t.easing], 'hover: incoming 120ms FastOutSlowIn').toEqual([
+      '0.12s',
+      'cubic-bezier(0.4, 0, 0.2, 1)',
+    ]);
     await open(page, 'chips', 'filter-el-label-disabled-f-f');
     expect((await transitionOf(page, '[data-fixture-node] button')).duration, 'disabled snaps').toBe('0s');
   });
 
-  test('icon-less filter chip: the check expands from the start (FastSpatial) and fades (DefaultEffects); widths stay the kit\'s', async ({ page }) => {
+  test("icon-less filter chip: the check expands from the start (FastSpatial) and fades (DefaultEffects); widths stay the kit's", async ({
+    page,
+  }) => {
     const node = await open(page, 'chips', 'filter-live');
     const chip = node.locator('button').nth(0);
     await chip.evaluate((e) => e.setAttribute('data-probe', ''));
@@ -224,7 +263,9 @@ test.describe('chips motion', () => {
     const times = [40, 80, 120, 200];
     const w = (await seek(page, slot, 'width', times, 'parseFloat(getComputedStyle(el).width)'))!;
     expect(w.duration, 'expandHorizontally: FastSpatial').toBe(369);
-    times.forEach((ms, i) => expect.soft(Number(w.out[i]), `slot width at ${ms}ms`).toBeCloseTo(18 * progress(spring['fast-spatial'], ms), 1));
+    times.forEach((ms, i) =>
+      expect.soft(Number(w.out[i]), `slot width at ${ms}ms`).toBeCloseTo(18 * progress(spring['fast-spatial'], ms), 1),
+    );
     expect(Math.max(...w.out.map(Number)), 'the IntSize spring overshoots').toBeGreaterThan(18);
     const o = (await seek(page, slot, 'opacity', [0], 'getComputedStyle(el).opacity'))!;
     expect(o.duration, 'fadeIn: DefaultEffects').toBe(231);
@@ -246,13 +287,17 @@ test.describe('tooltip motion and behaviour', () => {
   const plainText = 'Supporting text';
   const richText = 'Supporting line text lorem ipsum dolor sit amet, consectetur';
 
-  test('mouse: shows on enter with no delay, scales about its centre; rich dismisses on exit unless persistent; one at a time', async ({ page }) => {
+  test('mouse: shows on enter with no delay, scales about its centre; rich dismisses on exit unless persistent; one at a time', async ({
+    page,
+  }) => {
     await open(page, 'tooltip', 'live');
     await page.getByRole('button', { name: 'Favourite' }).hover();
     // Compose: PointerEventType.Enter → show(). Mounted on the next frame, no 500ms delay.
     await expect(page.getByText(plainText, { exact: true })).toBeVisible({ timeout: 100 });
     const popup = await page.evaluate(() => {
-      const el = [...document.querySelectorAll<HTMLElement>('[data-side]')].find((e) => e.textContent === 'Supporting text' && getComputedStyle(e).transitionProperty.includes('scale'))!;
+      const el = [...document.querySelectorAll<HTMLElement>('[data-side]')].find(
+        (e) => e.textContent === 'Supporting text' && getComputedStyle(e).transitionProperty.includes('scale'),
+      )!;
       return { origin: getComputedStyle(el).transformOrigin, w: el.offsetWidth, h: el.offsetHeight };
     });
     expect(popup.origin, 'graphicsLayer default origin: centre').toBe(`${popup.w / 2}px ${popup.h / 2}px`);
@@ -275,7 +320,10 @@ test.describe('tooltip motion and behaviour', () => {
   test.describe('touch', () => {
     test.use({ hasTouch: true });
 
-    test('long press (400ms) shows; the press click is consumed; dismisses 1500ms after showing', async ({ page, context }) => {
+    test('long press (400ms) shows; the press click is consumed; dismisses 1500ms after showing', async ({
+      page,
+      context,
+    }) => {
       await open(page, 'tooltip', 'live');
       const fav = page.getByRole('button', { name: 'Favourite' });
       const b = (await fav.boundingBox())!;
@@ -284,7 +332,9 @@ test.describe('tooltip motion and behaviour', () => {
         const w = window as unknown as { __log: string[]; __open?: boolean };
         w.__log = [];
         const t0 = performance.now();
-        document.querySelector('[aria-label=Favourite]')!.addEventListener('click', () => w.__log.push(`click ${Math.round(performance.now() - t0)}`));
+        document
+          .querySelector('[aria-label=Favourite]')!
+          .addEventListener('click', () => w.__log.push(`click ${Math.round(performance.now() - t0)}`));
         new MutationObserver(() => {
           const open = [...document.querySelectorAll('[data-side]')].some((e) => e.textContent === 'Supporting text');
           if (open !== !!w.__open) {
@@ -302,7 +352,10 @@ test.describe('tooltip motion and behaviour', () => {
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       await page.waitForTimeout(2300);
       const log = await page.evaluate(() => (window as unknown as { __log: string[] }).__log);
-      expect(log.some((l) => l.startsWith('click')), `long press consumes the click (${log.join(', ')})`).toBe(false);
+      expect(
+        log.some((l) => l.startsWith('click')),
+        `long press consumes the click (${log.join(', ')})`,
+      ).toBe(false);
       const shown = Number(log.find((l) => l.startsWith('shown'))!.split(' ')[1]);
       const hidden = Number(log.find((l) => l.startsWith('hidden'))!.split(' ')[1]);
       // Removed after TooltipDuration + the exit (FastSpatial 369ms).
@@ -314,9 +367,12 @@ test.describe('tooltip motion and behaviour', () => {
 
 // ── Snackbar: SnackbarHost.kt (FadeInFadeOutWithScale, SnackbarHostState, toMillis) ─────────
 test.describe('snackbar motion and queue', () => {
-  const root = (text: string) => `xpath=//*[text()="${text}"]/ancestor::*[@data-base-ui-toast or parent::*[@role="region"]][1]`;
+  const root = (text: string) =>
+    `xpath=//*[text()="${text}"]/ancestor::*[@data-base-ui-toast or parent::*[@role="region"]][1]`;
 
-  test('enter: scale 0.8 → 1 on FastSpatial + fade on FastEffects; FIFO; short = 4s; replacement crossfades above', async ({ page }) => {
+  test('enter: scale 0.8 → 1 on FastSpatial + fade on FastEffects; FIFO; short = 4s; replacement crossfades above', async ({
+    page,
+  }) => {
     test.setTimeout(30_000);
     await open(page, 'snackbar', 'queue-live');
     await page.click('[data-show=first]');
@@ -329,7 +385,11 @@ test.describe('snackbar motion and queue', () => {
       return {
         origin: cs.transformOrigin,
         size: [el.getBoundingClientRect().width, el.getBoundingClientRect().height],
-        timing: Object.fromEntries(el.getAnimations().map((a) => [(a as CSSTransition).transitionProperty, a.effect!.getComputedTiming().duration])),
+        timing: Object.fromEntries(
+          el
+            .getAnimations()
+            .map((a) => [(a as CSSTransition).transitionProperty, a.effect!.getComputedTiming().duration]),
+        ),
       };
     });
     expect(enter.timing, 'alpha FastEffects, scale FastSpatial').toEqual({ opacity: 150, scale: 369 });
@@ -339,7 +399,12 @@ test.describe('snackbar motion and queue', () => {
     expect.soft(elapsed, 'SnackbarDuration.Short = 4000ms').toBeGreaterThan(3700);
     expect.soft(elapsed).toBeLessThan(4700);
     const both = await page.evaluate(() =>
-      [...document.querySelectorAll('[role=region] > *')].map((e) => ({ text: e.textContent, ending: e.hasAttribute('data-ending-style'), z: getComputedStyle(e).zIndex, area: getComputedStyle(e).gridArea })),
+      [...document.querySelectorAll('[role=region] > *')].map((e) => ({
+        text: e.textContent,
+        ending: e.hasAttribute('data-ending-style'),
+        z: getComputedStyle(e).zIndex,
+        area: getComputedStyle(e).gridArea,
+      })),
     );
     const leaving = both.find((x) => x.text?.startsWith('First'));
     const current = both.find((x) => x.text?.startsWith('Second'))!;
@@ -359,8 +424,18 @@ test.describe('snackbar motion and queue', () => {
     await expect(page.getByText('Connection lost'), 'not Short: Indefinite with an action').toBeVisible();
     const exit = page.locator(root('Connection lost'));
     await page.getByRole('button', { name: 'Retry' }).click();
-    const timing = await exit.evaluate((el) => ({ ending: el.hasAttribute('data-ending-style'), t: Object.fromEntries(el.getAnimations().map((a) => [(a as CSSTransition).transitionProperty, a.effect!.getComputedTiming().duration])) }));
-    expect(timing, 'performAction dismisses: alpha FastEffects + scale FastSpatial').toEqual({ ending: true, t: { opacity: 150, scale: 369 } });
+    const timing = await exit.evaluate((el) => ({
+      ending: el.hasAttribute('data-ending-style'),
+      t: Object.fromEntries(
+        el
+          .getAnimations()
+          .map((a) => [(a as CSSTransition).transitionProperty, a.effect!.getComputedTiming().duration]),
+      ),
+    }));
+    expect(timing, 'performAction dismisses: alpha FastEffects + scale FastSpatial').toEqual({
+      ending: true,
+      t: { opacity: 150, scale: 369 },
+    });
     await expect(page.getByText('Connection lost')).toHaveCount(0);
     await page.click('[data-show=close]');
     await expect(page.getByText('Closable message')).toBeVisible();

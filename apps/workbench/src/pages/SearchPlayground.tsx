@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Avatar, IconButton, ListItem, M3Provider, SearchBar, SearchView, typescale, type ColorSchemeMode } from '@m3x/react';
+import {
+  Avatar,
+  IconButton,
+  ListItem,
+  M3Provider,
+  SearchBar,
+  SearchView,
+  typescale,
+  type ColorSchemeMode,
+} from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { searchViewVars } from '@m3x/react/components/Search/searchView.stylex';
 import assets from '../../../../figma/search/assets.json';
@@ -170,7 +179,7 @@ export function SearchPlayground() {
                 {t}
               </ListItem>
             ))}
-            </SearchView>
+          </SearchView>
         </div>
       </main>
     </M3Provider>

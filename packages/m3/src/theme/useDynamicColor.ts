@@ -22,7 +22,10 @@ const IDLE: ImageSeedState = { colors: [], status: 'idle', error: null };
  * `useDynamicScheme` (or offer them all, like Android's wallpaper colour options).
  * A stale extraction (source changed meanwhile) is discarded.
  */
-export function useSeedColorsFromImage(source: ImageSeedSource | null | undefined, options: ImageSeedOptions = {}): ImageSeedState {
+export function useSeedColorsFromImage(
+  source: ImageSeedSource | null | undefined,
+  options: ImageSeedOptions = {},
+): ImageSeedState {
   const { count, maxArea } = options;
   const [state, setState] = useState<ImageSeedState>(IDLE);
   useEffect(() => {
@@ -35,7 +38,8 @@ export function useSeedColorsFromImage(source: ImageSeedSource | null | undefine
     seedColorsFromImage(source, { count, maxArea }).then(
       (colors) => current && setState({ colors, status: 'ready', error: null }),
       (error: unknown) =>
-        current && setState({ colors: [], status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
+        current &&
+        setState({ colors: [], status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
     );
     return () => {
       current = false;
@@ -51,7 +55,10 @@ export function useSeedColorsFromImage(source: ImageSeedSource | null | undefine
  *
  * @example const colors = useDynamicScheme('#006A6A', { variant: 'expressive' }); <M3Provider colors={colors}>
  */
-export function useDynamicScheme(seed: string | null | undefined, options: DynamicSchemeOptions = {}): DynamicColorScheme | undefined {
+export function useDynamicScheme(
+  seed: string | null | undefined,
+  options: DynamicSchemeOptions = {},
+): DynamicColorScheme | undefined {
   const { variant, contrast, specVersion } = options;
   return useMemo(() => {
     if (seed == null) return undefined;

@@ -23,15 +23,11 @@ export class MeasuredPolygon implements Iterable<MeasuredCubic> {
     cubics: readonly Cubic[],
     outlineProgress: readonly number[],
   ) {
-    require(
-      outlineProgress.length === cubics.length + 1,
-      () => 'Outline progress size is expected to be the cubics size + 1',
-    );
+    require(outlineProgress.length === cubics.length + 1, () =>
+      'Outline progress size is expected to be the cubics size + 1');
     require(outlineProgress[0] === 0, () => 'First outline progress value is expected to be zero');
-    require(
-      outlineProgress[outlineProgress.length - 1] === 1,
-      () => 'Last outline progress value is expected to be one',
-    );
+    require(outlineProgress[outlineProgress.length - 1] === 1, () =>
+      'Last outline progress value is expected to be one');
     this.measurer = measurer;
     this.features = features;
 
@@ -228,10 +224,8 @@ export class MeasuredCubic {
   constructor(measurer: Measurer, cubic: Cubic, startOutlineProgress: number, endOutlineProgress: number) {
     this.measurer = measurer;
     this.cubic = cubic;
-    require(
-      endOutlineProgress >= startOutlineProgress,
-      () => 'endOutlineProgress is expected to be equal or greater than startOutlineProgress',
-    );
+    require(endOutlineProgress >= startOutlineProgress, () =>
+      'endOutlineProgress is expected to be equal or greater than startOutlineProgress');
     this.measuredSize = measurer.measureCubic(cubic);
     this._startOutlineProgress = startOutlineProgress;
     this._endOutlineProgress = endOutlineProgress;
@@ -249,10 +243,8 @@ export class MeasuredCubic {
     startOutlineProgress: number = this._startOutlineProgress,
     endOutlineProgress: number = this._endOutlineProgress,
   ): void {
-    require(
-      endOutlineProgress >= startOutlineProgress,
-      () => 'endOutlineProgress is expected to be equal or greater than startOutlineProgress',
-    );
+    require(endOutlineProgress >= startOutlineProgress, () =>
+      'endOutlineProgress is expected to be equal or greater than startOutlineProgress');
     this._startOutlineProgress = startOutlineProgress;
     this._endOutlineProgress = endOutlineProgress;
   }

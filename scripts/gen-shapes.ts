@@ -47,7 +47,9 @@ const camel = (s: string) => s.replace(/-(\w)/g, (_, c: string) => c.toUpperCase
 
 export function render(svg: string, manifest: Manifest): string {
   const rows: string[] = [];
-  for (const [key, v] of Object.entries(manifest.variants) as Array<[string, Manifest['variants'][string] & { figmaName?: string }]>) {
+  for (const [key, v] of Object.entries(manifest.variants) as Array<
+    [string, Manifest['variants'][string] & { figmaName?: string }]
+  >) {
     const id = v.figmaName!;
     const group = svg.match(new RegExp(`<g id="${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}">([\\s\\S]*?)</g>`));
     if (!group) throw new Error(`group ${id} not found in SVG`);

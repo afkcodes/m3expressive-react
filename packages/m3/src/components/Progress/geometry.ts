@@ -151,7 +151,9 @@ export function linearShapes(s: LinearSpec): LinearShapes {
  *   - wavy (internal_LinearWavyProgressModifiers `updateDrawPaths`): min(head − cap, 4).
  */
 export function determinateTrackSpace(type: ProgressType, t: ProgressThickness, head: number) {
-  return type === 'wave' ? Math.min(Math.max(0, head - t / 2), TRACK_ACTIVE_SPACE) : Math.min(head, TRACK_ACTIVE_SPACE + t) - t;
+  return type === 'wave'
+    ? Math.min(Math.max(0, head - t / 2), TRACK_ACTIVE_SPACE)
+    : Math.min(head, TRACK_ACTIVE_SPACE + t) - t;
 }
 
 /** Determinate active frame: L = p·(W − 8) flat, p·(W − 4) wavy (the kit's two formulas). */
@@ -174,11 +176,29 @@ export function linearDeterminate(width: number, t: ProgressThickness, value: nu
 export const CIRCULAR = {
   flat: {
     4: { size: 40, start: 5, trackEnd: 340, ends: [5, 55, 85, 175, 295, 365], tracks: [30, 80, 110, 200, 320, 340] },
-    8: { size: 44, start: 10, trackEnd: 330, ends: [10, 35, 90, 165, 285, 370], tracks: [50, 75, 130, 205, 327.5, 330] },
+    8: {
+      size: 44,
+      start: 10,
+      trackEnd: 330,
+      ends: [10, 35, 90, 165, 285, 370],
+      tracks: [50, 75, 130, 205, 327.5, 330],
+    },
   },
   wave: {
-    4: { size: 48, start: 7.6, trackEnd: 345, ends: [7.6, 62.46, 102.57, 184.18, 302.53, 367.6], tracks: [30.2, 85, 125, 204.92, 325.09, 345] },
-    8: { size: 52, start: 7.6, trackEnd: 335, ends: [7.6, 62.46, 102.57, 184.18, 302.53, 367.6], tracks: [40.2, 95, 135, 215, 334.38, 335] },
+    4: {
+      size: 48,
+      start: 7.6,
+      trackEnd: 345,
+      ends: [7.6, 62.46, 102.57, 184.18, 302.53, 367.6],
+      tracks: [30.2, 85, 125, 204.92, 325.09, 345],
+    },
+    8: {
+      size: 52,
+      start: 7.6,
+      trackEnd: 335,
+      ends: [7.6, 62.46, 102.57, 184.18, 302.53, 367.6],
+      tracks: [40.2, 95, 135, 215, 334.38, 335],
+    },
   },
 } as const;
 const SAMPLES = [0, 0.1, 0.3, 0.5, 0.8, 1];
@@ -226,10 +246,18 @@ export function circularFrame(type: ProgressType, t: ProgressThickness, value: n
   const trackStart = Math.max(keyframe(k.tracks, value), end + minGap);
   const open = gapOpening(type, t, end - k.start);
   if (open >= 1) return { start: k.start, end, trackStart, trackEnd: k.trackEnd };
-  return { start: k.start, end, trackStart: end + (trackStart - end) * open, trackEnd: k.start + 360 - (k.start + 360 - k.trackEnd) * open };
+  return {
+    start: k.start,
+    end,
+    trackStart: end + (trackStart - end) * open,
+    trackEnd: k.start + 360 - (k.start + 360 - k.trackEnd) * open,
+  };
 }
 
-const polar = (r: number, deg: number, c: number): [number, number] => [c + r * Math.sin(rad(deg)), c - r * Math.cos(rad(deg))];
+const polar = (r: number, deg: number, c: number): [number, number] => [
+  c + r * Math.sin(rad(deg)),
+  c - r * Math.cos(rad(deg)),
+];
 
 /** Arc of radius r from a0 to a1 (degrees, clockwise from top), centred at (c, c). */
 export function arcPath(r: number, a0: number, a1: number, c: number): string {
@@ -262,8 +290,10 @@ function starPrims(phase: number): Prim[] {
     V.push([r * Math.sin(a), -r * Math.cos(a)]);
   }
   const corners = V.map((P, k) => {
-    const A = V[(k + n - 1) % n]!, B = V[(k + 1) % n]!;
-    const u = norm([A[0] - P[0], A[1] - P[1]]), w = norm([B[0] - P[0], B[1] - P[1]]);
+    const A = V[(k + n - 1) % n]!,
+      B = V[(k + 1) % n]!;
+    const u = norm([A[0] - P[0], A[1] - P[1]]),
+      w = norm([B[0] - P[0], B[1] - P[1]]);
     const th = Math.acos(Math.max(-1, Math.min(1, u[0] * w[0] + u[1] * w[1])));
     const tl = STAR.rho / Math.tan(th / 2);
     const bis = norm([u[0] + w[0], u[1] + w[1]]);
@@ -284,7 +314,7 @@ function norm(v: [number, number]): [number, number] {
   const l = Math.hypot(v[0], v[1]);
   return [v[0] / l, v[1] / l];
 }
-const angleOf = (p: [number, number]) => (((Math.atan2(p[0], -p[1]) * 180) / Math.PI) % 360 + 360) % 360;
+const angleOf = (p: [number, number]) => ((((Math.atan2(p[0], -p[1]) * 180) / Math.PI) % 360) + 360) % 360;
 
 /** Crest radius of the star (where the flat track ring sits). */
 export const STAR_CREST = (() => {
@@ -356,7 +386,8 @@ export function blendedStarPath(a0: number, a1: number, phase: number, c: number
 export function starPath(a0: number, a1: number, phase: number, c: number): string {
   const prims = starPrims(phase);
   const P = (q: [number, number]) => `${f(q[0] + c)} ${f(q[1] + c)}`;
-  const seg = (p: Prim, to: [number, number]) => (p.kind === 'line' ? `L${P(to)}` : `A${p.r} ${p.r} 0 0 ${p.cw ? 1 : 0} ${P(to)}`);
+  const seg = (p: Prim, to: [number, number]) =>
+    p.kind === 'line' ? `L${P(to)}` : `A${p.r} ${p.r} 0 0 ${p.cw ? 1 : 0} ${P(to)}`;
   if (a1 - a0 >= 360 - 1e-6) {
     let d = `M${P(prims[prims.length - 1]!.b)}`;
     for (const p of prims) d += seg(p, p.b);
@@ -423,6 +454,9 @@ export function circularShapes(
       : type === 'wave' && amp > 0
         ? blendedStarPath(a0, full ? a0 + 360 : a1, phase, c, amp)
         : arcPath(trackR, a0, full ? a0 + 360 : a1, c);
-  const track = !full && frame.trackEnd - frame.trackStart > 1e-3 ? arcPath(trackR, frame.trackStart + rotation, frame.trackEnd + rotation, c) : null;
+  const track =
+    !full && frame.trackEnd - frame.trackStart > 1e-3
+      ? arcPath(trackR, frame.trackStart + rotation, frame.trackEnd + rotation, c)
+      : null;
   return { size, c, active, track };
 }

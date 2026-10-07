@@ -18,7 +18,8 @@ export function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
       if (Math.abs(d) < 1e-6) break;
       t -= e / d;
     }
-    let lo = 0, hi = 1;
+    let lo = 0,
+      hi = 1;
     t = x;
     while (hi - lo > 1e-6) {
       if (bx(t) < x) lo = t;
@@ -253,7 +254,8 @@ const LINES = [
 /** [tail, head] fractions of the track width for both lines at time `ms` (equal = not visible). */
 export function linearIndeterminate(ms: number): [number, number][] {
   const t = ms % LINEAR_CYCLE;
-  const at = ([delay, dur]: readonly [number, number]) => (t <= delay ? 0 : t >= delay + dur ? 1 : emphasizedAccelerate((t - delay) / dur));
+  const at = ([delay, dur]: readonly [number, number]) =>
+    t <= delay ? 0 : t >= delay + dur ? 1 : emphasizedAccelerate((t - delay) / dur);
   return LINES.map((l) => [at(l.tail), at(l.head)] as [number, number]);
 }
 

@@ -5,7 +5,18 @@ import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { ButtonGroupContext, GROUP_BOX_ATTR } from '../ButtonGroup/context.ts';
-import { base, containerSizes, disabled, gaps, iconSizes, labelRole, PAD_INLINE, radii, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
+import {
+  base,
+  containerSizes,
+  disabled,
+  gaps,
+  iconSizes,
+  labelRole,
+  PAD_INLINE,
+  radii,
+  type ButtonShape,
+  type ButtonSize,
+} from './buttonStyles.ts';
 
 /** Inner structure shared by Button and ToggleButton: container → state layer → icon + label. */
 export function ButtonFrame({

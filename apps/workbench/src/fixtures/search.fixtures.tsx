@@ -28,7 +28,8 @@ const Btn = ({ icon, label }: { icon: IconName; label: string }) => (
     <Icon name={icon} />
   </IconButton>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 const results = [0, 1, 2].map((i) => (
   <ListItem
@@ -106,7 +107,9 @@ function LiveSearch() {
     setOpen(false);
     setQ('');
   };
-  const items = ['Savings account', 'Business card', 'Payments', 'Statements'].filter((t) => t.toLowerCase().includes(q.toLowerCase()));
+  const items = ['Savings account', 'Business card', 'Payments', 'Statements'].filter((t) =>
+    t.toLowerCase().includes(q.toLowerCase()),
+  );
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <SearchBar
@@ -200,7 +203,9 @@ const fixture: FixtureModule = {
           node: v.node,
           width: w,
           height: h,
-          render: () => <div style={{ width: w, height: h, display: 'flex', flexDirection: 'column' }}>{render(name)}</div>,
+          render: () => (
+            <div style={{ width: w, height: h, display: 'flex', flexDirection: 'column' }}>{render(name)}</div>
+          ),
         },
       ];
     }),

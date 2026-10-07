@@ -39,7 +39,13 @@ const s = stylex.create({
     color: color.onSurface,
     backgroundColor: color.surfaceContainerHigh,
   },
-  header: { flexShrink: 0, height: 132, boxSizing: 'border-box', paddingTop: 12, boxShadow: `inset 0 -1px 0 ${color.outlineVariant}` },
+  header: {
+    flexShrink: 0,
+    height: 132,
+    boxSizing: 'border-box',
+    paddingTop: 12,
+    boxShadow: `inset 0 -1px 0 ${color.outlineVariant}`,
+  },
   bar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 48, paddingInlineEnd: 12 },
   title: {
     display: 'flex',
@@ -50,7 +56,15 @@ const s = stylex.create({
     paddingInline: '64px 12px',
     paddingBottom: 12,
   },
-  titleText: { display: 'flex', flexDirection: 'column', rowGap: 8, flexGrow: 1, minWidth: 0, alignSelf: 'flex-start', paddingBottom: 4 },
+  titleText: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: 8,
+    flexGrow: 1,
+    minWidth: 0,
+    alignSelf: 'flex-start',
+    paddingBottom: 4,
+  },
   label: { margin: 0, color: color.onSurfaceVariant },
   range: { margin: 0, color: color.onSurface, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   weekdays: { display: 'flex', flexShrink: 0, paddingInline: 12 },
@@ -153,7 +167,8 @@ export function DateRangePicker({
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
   const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
   const short = useMemo(() => new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }), [locale]);
-  const rangeText = fmt?.range ?? ((r: DateRange) => (r.start ? `${short.format(r.start)} – ${r.end ? short.format(r.end) : ''}` : ''));
+  const rangeText =
+    fmt?.range ?? ((r: DateRange) => (r.start ? `${short.format(r.start)} – ${r.end ? short.format(r.end) : ''}` : ''));
   const base = firstMonth ?? value.start ?? today;
   const months = Array.from({ length: monthCount }, (_, i) => new Date(base.getFullYear(), base.getMonth() + i, 1));
   const scroller = useRef<HTMLDivElement>(null);
@@ -161,7 +176,9 @@ export function DateRangePicker({
   useLayoutEffect(() => {
     // Open on the start's month when it isn't the first listed.
     if (scrolled || !scroller.current || !value.start) return;
-    const el = scroller.current.querySelector<HTMLElement>(`[data-month="${value.start.getFullYear()}-${value.start.getMonth()}"]`);
+    const el = scroller.current.querySelector<HTMLElement>(
+      `[data-month="${value.start.getFullYear()}-${value.start.getMonth()}"]`,
+    );
     if (el && el.offsetTop > 0) scroller.current.scrollTop = el.offsetTop;
     setScrolled(true);
   }, [scrolled, value.start]);
@@ -261,7 +278,14 @@ export interface ModalDateRangePickerProps extends Omit<
 }
 
 /** The full-screen range picker in a dialog; Save / OK commit, close / Cancel / Escape discard. */
-export function ModalDateRangePicker({ open, onOpenChange, value, onChange, onClear, ...picker }: ModalDateRangePickerProps) {
+export function ModalDateRangePicker({
+  open,
+  onOpenChange,
+  value,
+  onChange,
+  onClear,
+  ...picker
+}: ModalDateRangePickerProps) {
   const portal = usePortalContainer();
   const [draft, setDraft] = useState<DateRange>(value);
   useLayoutEffect(() => {

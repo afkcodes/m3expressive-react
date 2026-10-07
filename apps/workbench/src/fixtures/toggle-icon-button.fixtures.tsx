@@ -1,4 +1,10 @@
-import { ToggleIconButton, type ButtonShape, type ButtonSize, type IconButtonVariant, type IconButtonWidth } from '@m3x/react';
+import {
+  ToggleIconButton,
+  type ButtonShape,
+  type ButtonSize,
+  type IconButtonVariant,
+  type IconButtonWidth,
+} from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toggle-icon-button/manifest.json';
 import assets from '../../../../figma/toggle-icon-button/assets.json';
@@ -13,7 +19,10 @@ function Icon({ d }: { d: string }) {
   );
 }
 
-type Ripples = Record<'selected' | 'unselected', Record<ButtonSize, Record<IconButtonWidth, Record<ButtonShape, string | null>>>>;
+type Ripples = Record<
+  'selected' | 'unselected',
+  Record<ButtonSize, Record<IconButtonWidth, Record<ButtonShape, string | null>>>
+>;
 
 const fixture: FixtureModule = {
   component: 'toggle-icon-button',
@@ -23,14 +32,26 @@ const fixture: FixtureModule = {
       `${variant}-live`,
       {
         render: () => (
-          <ToggleIconButton aria-label={variant} variant={variant} size="medium" selectedIcon={<Icon d={assets.selectedIcon} />}>
+          <ToggleIconButton
+            aria-label={variant}
+            variant={variant}
+            size="medium"
+            selectedIcon={<Icon d={assets.selectedIcon} />}
+          >
             <Icon d={assets.icon} />
           </ToggleIconButton>
         ),
       },
     ]),
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
-      const [variant, selection, shape, size, width, state] = name.split('-') as [IconButtonVariant, 'selected' | 'unselected', ButtonShape, ButtonSize, IconButtonWidth, string];
+      const [variant, selection, shape, size, width, state] = name.split('-') as [
+        IconButtonVariant,
+        'selected' | 'unselected',
+        ButtonShape,
+        ButtonSize,
+        IconButtonWidth,
+        string,
+      ];
       const forced: ForcedState | undefined =
         state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
       const ripplePath = (assets.ripple as Ripples)[selection][size][width][shape] ?? undefined;

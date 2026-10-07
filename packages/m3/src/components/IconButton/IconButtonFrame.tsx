@@ -54,7 +54,12 @@ export const base = stylex.create({
   // container's (the kit's grouped XS icon buttons are 40px wide).
   touch48Overlay: {
     height: 48,
-    '::before': { content: '""', position: 'absolute', insetBlock: 0, insetInline: 'min(0px, calc((100% - 48px) / 2))' },
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      insetBlock: 0,
+      insetInline: 'min(0px, calc((100% - 48px) / 2))',
+    },
   },
   container: {
     position: 'relative',
@@ -109,10 +114,12 @@ export const strokeWidths = stylex.create({
   thick: { '::after': { borderWidth: 2 } },
 });
 
-
 export const disabled = stylex.create({
   // Kit: filled/tonal get an on-surface 10% container; standard/outlined stay transparent (outline kept).
-  filledContainer: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)`, color: color.onSurface },
+  filledContainer: {
+    backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)`,
+    color: color.onSurface,
+  },
   clearContainer: { backgroundColor: 'transparent', color: color.onSurface },
   content: { opacity: state.disabledContentOpacity },
 });

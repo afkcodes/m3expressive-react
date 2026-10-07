@@ -85,7 +85,14 @@ const s = stylex.create({
   dotEndH: { insetInlineEnd: 4 },
   dotStartV: { bottom: 4 },
   dotEndV: { top: 4 },
-  tick: { position: 'absolute', width: 4, height: 4, borderRadius: '50%', pointerEvents: 'none', transform: 'translate(-50%, -50%)' },
+  tick: {
+    position: 'absolute',
+    width: 4,
+    height: 4,
+    borderRadius: '50%',
+    pointerEvents: 'none',
+    transform: 'translate(-50%, -50%)',
+  },
   tickAt: (main: string, cross: string) => ({ insetInlineStart: main, top: cross }),
   tickAtV: (main: string, cross: string) => ({ bottom: main, left: cross, transform: 'translate(-50%, 50%)' }),
   tickOnActive: { backgroundColor: color.secondaryContainer },
@@ -106,7 +113,10 @@ const s = stylex.create({
       ':is([data-dragging])': { default: state.pressedOpacity, '@media (hover: hover)': state.pressedOpacity },
     },
     // Compose StateLayer: a drag fades in over 45 ms (linear).
-    [interaction.layerDuration]: { default: '15ms', ':is([data-dragging])': { default: '45ms', '@media (hover: hover)': '45ms' } },
+    [interaction.layerDuration]: {
+      default: '15ms',
+      ':is([data-dragging])': { default: '45ms', '@media (hover: hover)': '45ms' },
+    },
     // 48px touch / hover target around the 4px bar.
     '::after': { content: '""', position: 'absolute', inset: '-4px -22px' },
   },
@@ -227,23 +237,102 @@ function SliderImpl({
   const hwVar = (i: number) => (i === 0 ? sliderVars.hw0 : sliderVars.hw1);
 
   // Track spans as [start, end, size] CSS lengths along the main axis.
-  type Span = { start: string | null; end: string | null; size: string; role: 'active' | 'inactive'; startR: number; endR: number; dotStart?: boolean; dotEnd?: boolean };
+  type Span = {
+    start: string | null;
+    end: string | null;
+    size: string;
+    role: 'active' | 'inactive';
+    startR: number;
+    endR: number;
+    dotStart?: boolean;
+    dotEnd?: boolean;
+  };
   const hw = (i: number) => `${hwVar(i)} / 2`;
   const spans: Span[] = [];
   if (mode === 'standard') {
-    spans.push({ start: '0px', end: null, size: `calc(${T(p[0]!)} - ${hw(0)})`, role: 'active', startR: r, endR: INNER_R });
-    spans.push({ start: null, end: '0px', size: `calc(${T(1 - p[0]!)} - ${hw(0)})`, role: 'inactive', startR: INNER_R, endR: r, dotEnd: true });
+    spans.push({
+      start: '0px',
+      end: null,
+      size: `calc(${T(p[0]!)} - ${hw(0)})`,
+      role: 'active',
+      startR: r,
+      endR: INNER_R,
+    });
+    spans.push({
+      start: null,
+      end: '0px',
+      size: `calc(${T(1 - p[0]!)} - ${hw(0)})`,
+      role: 'inactive',
+      startR: INNER_R,
+      endR: r,
+      dotEnd: true,
+    });
   } else if (mode === 'centered') {
     const q = p[0]!;
-    spans.push({ start: '0px', end: null, size: `min(calc(${T(q)} - ${hw(0)}), calc(50% - 2px))`, role: 'inactive', startR: r, endR: INNER_R, dotStart: true });
-    if (q < 0.5) spans.push({ start: `calc(12px + ${T(q)} + ${hw(0)})`, end: null, size: `calc(50% - 14px - ${T(q)} - ${hw(0)})`, role: 'active', startR: INNER_R, endR: INNER_R });
-    if (q > 0.5) spans.push({ start: 'calc(50% + 2px)', end: null, size: `calc(${T(q)} - ${hw(0)} - 50% - 2px)`, role: 'active', startR: INNER_R, endR: INNER_R });
-    spans.push({ start: null, end: '0px', size: `min(calc(${T(1 - q)} - ${hw(0)}), calc(50% - 2px))`, role: 'inactive', startR: INNER_R, endR: r, dotEnd: true });
+    spans.push({
+      start: '0px',
+      end: null,
+      size: `min(calc(${T(q)} - ${hw(0)}), calc(50% - 2px))`,
+      role: 'inactive',
+      startR: r,
+      endR: INNER_R,
+      dotStart: true,
+    });
+    if (q < 0.5)
+      spans.push({
+        start: `calc(12px + ${T(q)} + ${hw(0)})`,
+        end: null,
+        size: `calc(50% - 14px - ${T(q)} - ${hw(0)})`,
+        role: 'active',
+        startR: INNER_R,
+        endR: INNER_R,
+      });
+    if (q > 0.5)
+      spans.push({
+        start: 'calc(50% + 2px)',
+        end: null,
+        size: `calc(${T(q)} - ${hw(0)} - 50% - 2px)`,
+        role: 'active',
+        startR: INNER_R,
+        endR: INNER_R,
+      });
+    spans.push({
+      start: null,
+      end: '0px',
+      size: `min(calc(${T(1 - q)} - ${hw(0)}), calc(50% - 2px))`,
+      role: 'inactive',
+      startR: INNER_R,
+      endR: r,
+      dotEnd: true,
+    });
   } else {
     const [a, b] = [p[0]!, p[1]!];
-    spans.push({ start: '0px', end: null, size: `calc(${T(a)} - ${hw(0)})`, role: 'inactive', startR: r, endR: INNER_R, dotStart: true });
-    spans.push({ start: `calc(12px + ${T(a)} + ${hw(0)})`, end: null, size: `calc(${T(b - a)} - ${hw(0)} - ${hw(1)} - 12px)`, role: 'active', startR: INNER_R, endR: INNER_R });
-    spans.push({ start: null, end: '0px', size: `calc(${T(1 - b)} - ${hw(1)})`, role: 'inactive', startR: INNER_R, endR: r, dotEnd: true });
+    spans.push({
+      start: '0px',
+      end: null,
+      size: `calc(${T(a)} - ${hw(0)})`,
+      role: 'inactive',
+      startR: r,
+      endR: INNER_R,
+      dotStart: true,
+    });
+    spans.push({
+      start: `calc(12px + ${T(a)} + ${hw(0)})`,
+      end: null,
+      size: `calc(${T(b - a)} - ${hw(0)} - ${hw(1)} - 12px)`,
+      role: 'active',
+      startR: INNER_R,
+      endR: INNER_R,
+    });
+    spans.push({
+      start: null,
+      end: '0px',
+      size: `calc(${T(1 - b)} - ${hw(1)})`,
+      role: 'inactive',
+      startR: INNER_R,
+      endR: r,
+      dotEnd: true,
+    });
   }
 
   // Discrete stop indicators (hidden in the kit's variants; M3: on-active / on-inactive colours).
@@ -303,11 +392,23 @@ function SliderImpl({
             H ? s.trackH(off, th) : s.trackV(off, th),
             H ? s.spanH(sp.start, sp.end, sp.size) : s.spanV(sp.start, sp.end, sp.size),
             H ? s.radiusH(sp.startR, sp.endR) : s.radiusV(sp.startR, sp.endR),
-            sp.role === 'active' ? (disabled ? s.activeDisabled : s.active) : disabled ? s.inactiveDisabled : s.inactive,
+            sp.role === 'active'
+              ? disabled
+                ? s.activeDisabled
+                : s.active
+              : disabled
+                ? s.inactiveDisabled
+                : s.inactive,
           )}
         >
-          {sp.dotStart && <span {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotStartH : s.dotStartV, disabled && s.dotDisabled)} />}
-          {sp.dotEnd && <span {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotEndH : s.dotEndV, disabled && s.dotDisabled)} />}
+          {sp.dotStart && (
+            <span
+              {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotStartH : s.dotStartV, disabled && s.dotDisabled)}
+            />
+          )}
+          {sp.dotEnd && (
+            <span {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotEndH : s.dotEndV, disabled && s.dotDisabled)} />
+          )}
         </span>
       ))}
       {tickEls}
@@ -357,7 +458,13 @@ function SliderImpl({
 function useControllable<V>(value: V | undefined, defaultValue: V, onChange?: (v: V) => void) {
   const [inner, setInner] = useState(defaultValue);
   const current = value ?? inner;
-  return [current, (v: V) => { if (value === undefined) setInner(v); onChange?.(v); }] as const;
+  return [
+    current,
+    (v: V) => {
+      if (value === undefined) setInner(v);
+      onChange?.(v);
+    },
+  ] as const;
 }
 
 /** Standard or centered slider (Base UI Slider underneath: keyboard, pointer, form, RTL). */

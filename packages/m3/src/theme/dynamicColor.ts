@@ -153,7 +153,9 @@ async function loadImage(source: string): Promise<HTMLImageElement> {
   return img;
 }
 
-async function toDrawable(source: ImageSeedSource): Promise<{ image: CanvasImageSource; width: number; height: number; close?: () => void }> {
+async function toDrawable(
+  source: ImageSeedSource,
+): Promise<{ image: CanvasImageSource; width: number; height: number; close?: () => void }> {
   if (typeof source === 'string') {
     const img = await loadImage(source);
     return { image: img, width: img.naturalWidth, height: img.naturalHeight };
@@ -185,7 +187,9 @@ export async function seedColorsFromImage(source: ImageSeedSource, options: Imag
     const w = Math.max(1, Math.round(width * scale));
     const h = Math.max(1, Math.round(height * scale));
     const canvas =
-      typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(w, h) : Object.assign(document.createElement('canvas'), { width: w, height: h });
+      typeof OffscreenCanvas !== 'undefined'
+        ? new OffscreenCanvas(w, h)
+        : Object.assign(document.createElement('canvas'), { width: w, height: h });
     const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) throw new Error('Canvas 2D is not available.');
     context.drawImage(image, 0, 0, w, h);

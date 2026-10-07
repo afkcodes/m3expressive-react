@@ -1,5 +1,16 @@
 import { useState, type ReactNode } from 'react';
-import { Badge, ExtendedFab, Fab, IconButton, NavigationBar, NavigationItem, NavigationRail, NavigationRailSection, NavigationScope, type NavigationItemLayout } from '@m3x/react';
+import {
+  Badge,
+  ExtendedFab,
+  Fab,
+  IconButton,
+  NavigationBar,
+  NavigationItem,
+  NavigationRail,
+  NavigationRailSection,
+  NavigationScope,
+  type NavigationItemLayout,
+} from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/navigation/manifest.json';
 import assets from '../../../../figma/navigation/assets.json';
@@ -11,11 +22,19 @@ const Icon = ({ name }: { name: IconName }) => (
     <path d={assets.icons[name]} />
   </svg>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const badgeFor = (b: string) => (b === 'small' ? <Badge /> : b === 'large' ? <Badge>3</Badge> : undefined);
 
 const item = (i: number, extra: Partial<React.ComponentProps<typeof NavigationItem>> = {}) => (
-  <NavigationItem key={i} value={i} icon={<Icon name="stars-24" />} selectedIcon={<Icon name="stars_filled-24" />} label="Label" {...extra} />
+  <NavigationItem
+    key={i}
+    value={i}
+    icon={<Icon name="stars-24" />}
+    selectedIcon={<Icon name="stars_filled-24" />}
+    label="Label"
+    {...extra}
+  />
 );
 
 function render(name: string): ReactNode {
@@ -70,8 +89,12 @@ function render(name: string): ReactNode {
         // The kit's 6-item expanded rail demonstrates sections (clipped at the rail's 800px).
         [
           <NavigationRailSection key="s1">{[0, 1, 2, 3, 4].map((i) => item(i))}</NavigationRailSection>,
-          <NavigationRailSection key="s2" label="Section Header">{[5, 6, 7, 8].map((i) => item(i))}</NavigationRailSection>,
-          <NavigationRailSection key="s3" label="Section Header">{[9, 10, 11, 12].map((i) => item(i))}</NavigationRailSection>,
+          <NavigationRailSection key="s2" label="Section Header">
+            {[5, 6, 7, 8].map((i) => item(i))}
+          </NavigationRailSection>,
+          <NavigationRailSection key="s3" label="Section Header">
+            {[9, 10, 11, 12].map((i) => item(i))}
+          </NavigationRailSection>,
         ]
       ) : expanded ? (
         <NavigationRailSection>{Array.from({ length: n }, (_, i) => item(i))}</NavigationRailSection>
@@ -141,7 +164,15 @@ const fixture: FixtureModule = {
     ['live-rail', { width: 280, height: 800, render: () => <LiveRail /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
-      return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> }];
+      return [
+        name,
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
+      ];
     }),
   ]),
 };

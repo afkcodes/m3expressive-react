@@ -41,7 +41,10 @@ const s = stylex.create({
     [interaction.layerOpacity]: {
       default: '0',
       ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity },
-      ':has([data-search-trigger]:focus-visible)': { default: state.focusOpacity, '@media (hover: hover)': state.focusOpacity },
+      ':has([data-search-trigger]:focus-visible)': {
+        default: state.focusOpacity,
+        '@media (hover: hover)': state.focusOpacity,
+      },
     },
     [interaction.layerDuration]: {
       default: '15ms',
@@ -87,9 +90,23 @@ const s = stylex.create({
   inputWrap: { position: 'relative', display: 'flex', alignItems: 'center', flexGrow: 1, minWidth: 0 },
   // The kit's static caret (visual tests only; live inputs use the native caret): 1px, 16px tall,
   // 1px after the text, centred on that x (a half-pixel stroke — transform, layout snaps).
-  caretBox: { position: 'absolute', left: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', pointerEvents: 'none' },
+  caretBox: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    pointerEvents: 'none',
+  },
   caretMirror: { visibility: 'hidden', whiteSpace: 'pre' },
-  caret: { width: 1, height: 16, marginInlineStart: 1, backgroundColor: color.primary, transform: 'translateX(-0.5px)' },
+  caret: {
+    width: 1,
+    height: 16,
+    marginInlineStart: 1,
+    backgroundColor: color.primary,
+    transform: 'translateX(-0.5px)',
+  },
 });
 
 export interface SearchBarProps {

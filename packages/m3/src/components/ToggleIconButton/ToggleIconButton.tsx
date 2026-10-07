@@ -52,8 +52,10 @@ const selected = stylex.create({
   standard: { backgroundColor: 'transparent', color: color.primary },
 });
 
-export interface ToggleIconButtonProps
-  extends Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'aria-label'> {
+export interface ToggleIconButtonProps extends Omit<
+  BaseToggle.Props,
+  'className' | 'style' | 'render' | 'children' | 'aria-label'
+> {
   /** Accessible name — required, the button has no visible text. */
   'aria-label': string;
   variant?: IconButtonVariant;
@@ -127,7 +129,11 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
         isDisabled={isDisabled}
         focusRing={!!forced.focusRing}
         container={[
-          tool ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool] : isSelected ? selected[variant] : unselected[variant],
+          tool
+            ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool]
+            : isSelected
+              ? selected[variant]
+              : unselected[variant],
           stroked && base.stroke,
           stroked && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
           isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),

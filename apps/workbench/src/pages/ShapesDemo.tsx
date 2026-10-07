@@ -20,7 +20,9 @@ export function ShapesDemo() {
   return (
     <M3Provider colorScheme="light" motionScheme={scheme}>
       <main style={{ padding: 32, fontFamily: 'Roboto, system-ui', display: 'grid', gap: 24 }}>
-        <p style={{ margin: 0 }}><a href="/">← all</a></p>
+        <p style={{ margin: 0 }}>
+          <a href="/">← all</a>
+        </p>
         <h1 style={{ fontWeight: 500, margin: 0 }}>Shape morphing</h1>
         <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
           <MorphingShape shape={shape} size={240} spring="default-spatial" />
@@ -28,22 +30,35 @@ export function ShapesDemo() {
             <Button variant={auto ? 'filled' : 'tonal'} onClick={() => setAuto((a) => !a)}>
               {auto ? 'Stop cycle' : 'Loading-indicator cycle'}
             </Button>
-            <Button variant="outlined" onClick={() => setScheme((s) => (s === 'expressive' ? 'standard' : 'expressive'))}>
+            <Button
+              variant="outlined"
+              onClick={() => setScheme((s) => (s === 'expressive' ? 'standard' : 'expressive'))}
+            >
               {`Motion: ${scheme}`}
             </Button>
             <code>{shape}</code>
           </div>
         </div>
         <p style={{ margin: 0, opacity: 0.7 }}>
-          Click any shape. Interrupting a morph restarts from the current outline. At rest the exact Figma path is drawn.
+          Click any shape. Interrupting a morph restarts from the current outline. At rest the exact Figma path is
+          drawn.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 72px)', gap: 8 }}>
           {names.map((n) => (
             <button
               key={n}
               title={n}
-              onClick={() => { setAuto(false); setShape(n); }}
-              style={{ border: n === shape ? '2px solid #6750A4' : '1px solid #CAC4D0', borderRadius: 12, background: '#FEF7FF', padding: 6, cursor: 'pointer' }}
+              onClick={() => {
+                setAuto(false);
+                setShape(n);
+              }}
+              style={{
+                border: n === shape ? '2px solid #6750A4' : '1px solid #CAC4D0',
+                borderRadius: 12,
+                background: '#FEF7FF',
+                padding: 6,
+                cursor: 'pointer',
+              }}
             >
               <Shape shape={n} size={56} />
             </button>

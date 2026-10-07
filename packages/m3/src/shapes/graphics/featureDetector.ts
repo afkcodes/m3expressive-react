@@ -101,9 +101,7 @@ export function smoothesIntoIsh(cubic: Cubic, next: Cubic): boolean {
  */
 export function alignsIshWith(cubic: Cubic, next: Cubic): boolean {
   return (
-    (straightIsh(cubic) && straightIsh(next) && smoothesIntoIsh(cubic, next)) ||
-    cubic.zeroLength() ||
-    next.zeroLength()
+    (straightIsh(cubic) && straightIsh(next) && smoothesIntoIsh(cubic, next)) || cubic.zeroLength() || next.zeroLength()
   );
 }
 

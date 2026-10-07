@@ -1,4 +1,14 @@
-import { Children, createContext, forwardRef, isValidElement, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  Children,
+  createContext,
+  forwardRef,
+  isValidElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
@@ -94,7 +104,10 @@ const s = stylex.create({
   ringForced: { outlineStyle: 'solid' },
   unselected: { backgroundColor: 'transparent', color: color.onSurface },
   selected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
-  disabled: { color: color.onSurface, '::after': { borderColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` } },
+  disabled: {
+    color: color.onSurface,
+    '::after': { borderColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
+  },
   disabledSelected: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
   content: { position: 'relative', display: 'inline-flex', alignItems: 'center', columnGap: 8 },
   contentDisabled: { opacity: state.disabledContentOpacity },
@@ -196,7 +209,10 @@ export function SegmentedButton({
   );
 }
 
-export interface SegmentedButtonItemProps extends Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'value'> {
+export interface SegmentedButtonItemProps extends Omit<
+  BaseToggle.Props,
+  'className' | 'style' | 'render' | 'children' | 'value'
+> {
   value: string;
   /** 18px icon (use currentColor). */
   icon?: ReactNode;
@@ -209,7 +225,17 @@ export interface SegmentedButtonItemProps extends Omit<BaseToggle.Props, 'classN
 }
 
 export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButtonItemProps>(function SegmentedButtonItem(
-  { value, icon, children, position: positionProp = 'only', selected: selectedProp = false, density: densityProp = 0, disabled, sx, ...rest },
+  {
+    value,
+    icon,
+    children,
+    position: positionProp = 'only',
+    selected: selectedProp = false,
+    density: densityProp = 0,
+    disabled,
+    sx,
+    ...rest
+  },
   ref,
 ) {
   const group = useContext(SegmentedContext);

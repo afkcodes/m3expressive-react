@@ -28,7 +28,14 @@ export interface MorphingShapeProps extends Omit<SVGProps<SVGSVGElement>, 'style
  * path; while moving, frames come from the AndroidX Morph between Figma-derived polygons.
  * Interruptions restart from the current in-between outline (no jump). Reduced motion: instant.
  */
-export function MorphingShape({ shape, size = 48, spring = 'default-spatial', sx, label, ...rest }: MorphingShapeProps) {
+export function MorphingShape({
+  shape,
+  size = 48,
+  spring = 'default-spatial',
+  sx,
+  label,
+  ...rest
+}: MorphingShapeProps) {
   const pathRef = useRef<SVGPathElement>(null);
   const current = useRef<{ morph: Morph | null; progress: number; target: ShapeName; anim: SpringAnimation | null }>({
     morph: null,
@@ -98,4 +105,3 @@ export function MorphingShape({ shape, size = 48, spring = 'default-spatial', sx
     </svg>
   );
 }
-

@@ -167,7 +167,8 @@ export function SearchView({
       res.style.opacity = String(st.c);
       res.style.visibility = st.dropdown || st.slideSpring ? '' : 'hidden';
       const list = res.firstElementChild as HTMLElement | null;
-      if (list) list.style.transform = st.slide === 1 ? '' : `translateY(${(-res.offsetHeight / 2) * (1 - st.slide)}px)`;
+      if (list)
+        list.style.transform = st.slide === 1 ? '' : `translateY(${(-res.offsetHeight / 2) * (1 - st.slide)}px)`;
     }
   };
   const clear = () => {

@@ -53,7 +53,10 @@ const s = stylex.create({
       ':focus-visible': { default: state.focusOpacity, '@media (hover: hover)': state.focusOpacity },
       ':active': { default: state.pressedOpacity, '@media (hover: hover)': state.pressedOpacity },
     },
-    [interaction.layerDuration]: { default: '15ms', ':focus-visible': { default: '45ms', '@media (hover: hover)': '45ms' } },
+    [interaction.layerDuration]: {
+      default: '15ms',
+      ':focus-visible': { default: '45ms', '@media (hover: hover)': '45ms' },
+    },
   },
   // Above the neighbouring days' range bands (a range's start / end circle stays whole).
   circle: {
@@ -93,7 +96,10 @@ const s = stylex.create({
   selectedText: { color: color.onPrimary },
   rangeText: { color: color.onSecondaryContainer, [interaction.layerColor]: color.onSurface },
   // Outside the month: On Surface Variant 38% (the docked picker; its own hover / focus variants).
-  outside: { color: `color-mix(in srgb, ${color.onSurfaceVariant} 38%, transparent)`, [interaction.layerColor]: color.onSurface },
+  outside: {
+    color: `color-mix(in srgb, ${color.onSurfaceVariant} 38%, transparent)`,
+    [interaction.layerColor]: color.onSurface,
+  },
   outsideActive: { color: color.onSurfaceVariant },
   dim: { opacity: state.disabledContentOpacity },
   // Year

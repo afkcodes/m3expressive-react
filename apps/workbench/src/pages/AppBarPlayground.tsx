@@ -1,13 +1,50 @@
 import { useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Avatar, BottomAppBar, Fab, IconButton, M3Provider, TopAppBar, typescale, type ColorSchemeMode, type TopAppBarSize } from '@m3x/react';
+import {
+  Avatar,
+  BottomAppBar,
+  Fab,
+  IconButton,
+  M3Provider,
+  TopAppBar,
+  typescale,
+  type ColorSchemeMode,
+  type TopAppBarSize,
+} from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/app-bar/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
-  phone: { display: 'flex', flexDirection: 'column', width: 412, height: 560, borderRadius: 16, overflow: 'hidden', backgroundColor: color.surface, outlineWidth: 1, outlineStyle: 'solid', outlineColor: color.outlineVariant },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
+  phone: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 412,
+    height: 560,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: color.surface,
+    outlineWidth: 1,
+    outlineStyle: 'solid',
+    outlineColor: color.outlineVariant,
+  },
   scroll: { flexGrow: 1, overflowY: 'auto' },
   row: { paddingBlock: 12, paddingInline: 16, color: color.onSurfaceVariant },
   muted: { color: color.onSurfaceVariant },
@@ -75,7 +112,9 @@ export function AppBarPlayground() {
             navigationIcon={<Btn icon="menu-24" label="Menu" />}
             actions={
               size === 'centered' ? (
-                <span style={{ display: 'flex', width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}>
+                <span
+                  style={{ display: 'flex', width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}
+                >
                   <Avatar size={32}>A</Avatar>
                 </span>
               ) : (
@@ -87,7 +126,9 @@ export function AppBarPlayground() {
           <div ref={ref} {...stylex.props(s.scroll)}>
             {Array.from({ length: 30 }, (_, i) => (
               <div key={i} {...stylex.props(typescale.bodyLarge, s.row)}>
-                Message {i + 1} — scroll to see the bar take Surface Container (small) or collapse with the content (medium / large: stopping half-way snaps it open or shut); the bottom bar hides as you scroll down and returns on any scroll up.
+                Message {i + 1} — scroll to see the bar take Surface Container (small) or collapse with the content
+                (medium / large: stopping half-way snaps it open or shut); the bottom bar hides as you scroll down and
+                returns on any scroll up.
               </div>
             ))}
           </div>

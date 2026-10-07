@@ -7,14 +7,38 @@ import brandLogo from '../../../../figma/chips/assets/brand-logo.svg';
 import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Taxi = () => (
-  <svg viewBox="0 0 18 18" width="18" height="18" fill="currentColor" aria-hidden style={{ display: 'block', flexShrink: 0 }}>
+  <svg
+    viewBox="0 0 18 18"
+    width="18"
+    height="18"
+    fill="currentColor"
+    aria-hidden
+    style={{ display: 'block', flexShrink: 0 }}
+  >
     <path d={assets.taxi} />
   </svg>
 );
 const Brand = () => <img src={brandLogo} width={18} height={18} alt="" style={{ display: 'block', flexShrink: 0 }} />;
-const g = stylex.create({ scroll: { width: 360, height: 48, overflow: 'hidden' }, wrap: { width: 360, height: 96, overflow: 'hidden', alignContent: 'flex-start' } });
-const STATE: Record<string, string> = { enabled: 'enabled', hovered: 'hovered', focused: 'focused', pressed: 'pressed', dragged: 'dragged', disabled: 'disabled', ena: 'enabled', hov: 'hovered', foc: 'focused', pre: 'pressed', dra: 'dragged', dis: 'disabled' };
-const forcedOf = (st: string): ForcedState | undefined => (st === 'hovered' || st === 'focused' || st === 'pressed' ? st : undefined);
+const g = stylex.create({
+  scroll: { width: 360, height: 48, overflow: 'hidden' },
+  wrap: { width: 360, height: 96, overflow: 'hidden', alignContent: 'flex-start' },
+});
+const STATE: Record<string, string> = {
+  enabled: 'enabled',
+  hovered: 'hovered',
+  focused: 'focused',
+  pressed: 'pressed',
+  dragged: 'dragged',
+  disabled: 'disabled',
+  ena: 'enabled',
+  hov: 'hovered',
+  foc: 'focused',
+  pre: 'pressed',
+  dra: 'dragged',
+  dis: 'disabled',
+};
+const forcedOf = (st: string): ForcedState | undefined =>
+  st === 'hovered' || st === 'focused' || st === 'pressed' ? st : undefined;
 
 /** Figma "Chips": assist / filter / input / suggestion variants and chip groups. */
 const fixture: FixtureModule = {
@@ -52,7 +76,12 @@ const fixture: FixtureModule = {
         const state = STATE[st]!;
         render = () => (
           <ForceState state={forcedOf(state)}>
-            <AssistChip elevated={style === 'el'} dragged={state === 'dragged'} disabled={state === 'disabled'} icon={cfg === 'icon' ? <Taxi /> : cfg === 'brand' ? <Brand /> : undefined}>
+            <AssistChip
+              elevated={style === 'el'}
+              dragged={state === 'dragged'}
+              disabled={state === 'disabled'}
+              icon={cfg === 'icon' ? <Taxi /> : cfg === 'brand' ? <Brand /> : undefined}
+            >
               Label
             </AssistChip>
           </ForceState>
@@ -62,7 +91,14 @@ const fixture: FixtureModule = {
         const state = STATE[st]!;
         render = () => (
           <ForceState state={forcedOf(state)}>
-            <FilterChip elevated={style === 'el'} selected={sel === 't'} trailingIcon={trailing === 't'} dragged={state === 'dragged'} disabled={state === 'disabled'} icon={cfg === 'icon' ? <Taxi /> : undefined}>
+            <FilterChip
+              elevated={style === 'el'}
+              selected={sel === 't'}
+              trailingIcon={trailing === 't'}
+              dragged={state === 'dragged'}
+              disabled={state === 'disabled'}
+              icon={cfg === 'icon' ? <Taxi /> : undefined}
+            >
               Label
             </FilterChip>
           </ForceState>
@@ -88,7 +124,13 @@ const fixture: FixtureModule = {
         const state = STATE[st]!;
         render = () => (
           <ForceState state={forcedOf(state)}>
-            <SuggestionChip elevated={style === 'el'} selected={sel === 't'} dragged={state === 'dragged'} disabled={state === 'disabled'} icon={icon === 't' ? <Taxi /> : undefined}>
+            <SuggestionChip
+              elevated={style === 'el'}
+              selected={sel === 't'}
+              dragged={state === 'dragged'}
+              disabled={state === 'disabled'}
+              icon={icon === 't' ? <Taxi /> : undefined}
+            >
               Label
             </SuggestionChip>
           </ForceState>
@@ -96,10 +138,18 @@ const fixture: FixtureModule = {
       } else {
         const [, type, layout] = p as [string, string, string];
         const wrap = layout.startsWith('multiple');
-        const Chip = type.startsWith('input') ? InputChip : type.startsWith('assist') ? AssistChip : type.startsWith('filter') ? FilterChip : SuggestionChip;
+        const Chip = type.startsWith('input')
+          ? InputChip
+          : type.startsWith('assist')
+            ? AssistChip
+            : type.startsWith('filter')
+              ? FilterChip
+              : SuggestionChip;
         render = () => (
           <ChipGroup layout={wrap ? 'wrap' : 'scroll'} sx={wrap ? g.wrap : g.scroll}>
-            {Array.from({ length: 9 }, (_, i) => <Chip key={i}>Label</Chip>)}
+            {Array.from({ length: 9 }, (_, i) => (
+              <Chip key={i}>Label</Chip>
+            ))}
           </ChipGroup>
         );
       }

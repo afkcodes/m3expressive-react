@@ -22,7 +22,12 @@ function Live() {
     <div style={{ position: 'relative' }}>
       <TextField label="Label" supportingText="Supporting text" value={v} onValueChange={setV} />
       <div style={{ position: 'absolute', top: 140, display: 'grid', gap: 24 }}>
-        <TextField variant="outlined" label="Email" supportingText="We never share it" leadingIcon={<Icon name="search" />} />
+        <TextField
+          variant="outlined"
+          label="Email"
+          supportingText="We never share it"
+          leadingIcon={<Icon name="search" />}
+        />
         <TextField variant="outlined" label="Name" placeholder="Jane Doe" />
         <output data-value>{v}</output>
       </div>
@@ -35,7 +40,12 @@ const fixture: FixtureModule = {
   variants: Object.fromEntries([
     ['live', { width: 210, height: 56, padding: 64, render: () => <Live /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
-      const [style, st, config, icons] = name.split('-') as [TextFieldVariant, string, 'label' | 'input' | 'placeholder', string];
+      const [style, st, config, icons] = name.split('-') as [
+        TextFieldVariant,
+        string,
+        'label' | 'input' | 'placeholder',
+        string,
+      ];
       const error = st === 'error';
       // The kit draws Error + input text focused (3px, caret); Error + label / placeholder resting.
       const forced: ForcedState | undefined =

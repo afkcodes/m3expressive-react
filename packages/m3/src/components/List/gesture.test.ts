@@ -9,7 +9,14 @@ describe('VelocityTracker1D (Compose Lsq2)', () => {
   });
   test('a decelerating drag: slope of the quadratic at the newest sample', () => {
     const t = new VelocityTracker1D();
-    for (const [ms, x] of [[0, 92], [4, 100], [8, 110], [23.7, 120], [41.4, 130]] as const) t.add(10125 + ms, x);
+    for (const [ms, x] of [
+      [0, 92],
+      [4, 100],
+      [8, 110],
+      [23.7, 120],
+      [41.4, 130],
+    ] as const)
+      t.add(10125 + ms, x);
     // numpy.polyfit(t − 41.4, x, 2) → slope 0.042638 px/ms.
     expect(t.velocity()).toBeCloseTo(42.638, 2);
   });

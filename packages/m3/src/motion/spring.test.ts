@@ -100,7 +100,9 @@ describe('estimateDurationMs (Compose SpringEstimation port)', () => {
     // LoadingIndicator: spring(0.6, 200, visibilityThreshold 0.1), progress 0 → 1.
     const ms = estimateDurationMs({ dampingRatio: 0.6, stiffness: 200 }, -1 / 0.1, 0);
     expect(ms).toBe(297);
-    expect(stepSpring({ dampingRatio: 0.6, stiffness: 200 }, { value: 0, velocity: 0 }, 1, ms).value).toBeGreaterThan(1.09);
+    expect(stepSpring({ dampingRatio: 0.6, stiffness: 200 }, { value: 0, velocity: 0 }, 1, ms).value).toBeGreaterThan(
+      1.09,
+    );
   });
   it('handles critically and over-damped springs and a spring already at rest', () => {
     expect(estimateDurationMs({ dampingRatio: 1, stiffness: 1600 }, -100, 0)).toBe(165);

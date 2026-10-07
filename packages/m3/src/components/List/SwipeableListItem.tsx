@@ -41,10 +41,26 @@ const SETTLE_MS = 300;
 
 const s = stylex.create({
   // No text selection: a horizontal drag swipes rather than selecting the label.
-  root: { position: 'relative', overflow: 'hidden', touchAction: 'pan-y', userSelect: 'none', listStyle: 'none', margin: 0, padding: 0 },
+  root: {
+    position: 'relative',
+    overflow: 'hidden',
+    touchAction: 'pan-y',
+    userSelect: 'none',
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+  },
   item: { position: 'relative', willChange: 'transform' },
   itemSurface: { backgroundColor: color.surface },
-  actions: { position: 'absolute', top: 0, bottom: 0, right: 0, display: 'flex', columnGap: GAP, alignItems: 'stretch' },
+  actions: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    display: 'flex',
+    columnGap: GAP,
+    alignItems: 'stretch',
+  },
   action: {
     display: 'flex',
     alignItems: 'center',
@@ -139,7 +155,15 @@ export interface SwipeActionsProps {
 }
 
 /** The reveal row behind a swiped item (kit "Reveal element"); a pure function of the offset. */
-export function SwipeActions({ actions, swipeAction, offset, mode, revealed = false, onAction, sx }: SwipeActionsProps) {
+export function SwipeActions({
+  actions,
+  swipeAction,
+  offset,
+  mode,
+  revealed = false,
+  onAction,
+  sx,
+}: SwipeActionsProps) {
   const n = actions.length;
   const widths = swipeLayout(n, offset, mode);
   const shown = mode === 'action' && swipeAction ? [...actions.slice(0, -1), swipeAction] : actions;
@@ -175,7 +199,14 @@ export interface SwipeableListItemProps extends ListItemProps {
   sx?: StyleXStyles;
 }
 
-export function SwipeableListItem({ actions, swipeAction, revealState, onRevealStateChange, sx, ...item }: SwipeableListItemProps) {
+export function SwipeableListItem({
+  actions,
+  swipeAction,
+  revealState,
+  onRevealStateChange,
+  sx,
+  ...item
+}: SwipeableListItemProps) {
   const list = useContext(ListContext);
   const reduced = useReducedMotion();
   const n = actions.length;

@@ -13,7 +13,14 @@ export type DividerInset = 'none' | 'start' | 'middle';
  */
 const s = stylex.create({
   horizontal: { display: 'flex', flexDirection: 'column', boxSizing: 'border-box', width: '100%', flexShrink: 0 },
-  vertical: { display: 'flex', flexDirection: 'column', boxSizing: 'border-box', width: 1, alignSelf: 'stretch', flexShrink: 0 },
+  vertical: {
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+    width: 1,
+    alignSelf: 'stretch',
+    flexShrink: 0,
+  },
   line: { backgroundColor: color.outlineVariant, flexShrink: 0 },
   lineH: { height: 1 },
   lineV: { width: 1, flexGrow: 1 },
@@ -44,9 +51,13 @@ export function Divider({ orientation = 'horizontal', inset = 'none', subheader,
         subheader != null && h
           ? s.withSub
           : inset === 'start'
-            ? h ? s.insetStartH : s.insetStartV
+            ? h
+              ? s.insetStartH
+              : s.insetStartV
             : inset === 'middle'
-              ? h ? s.insetMiddleH : s.insetMiddleV
+              ? h
+                ? s.insetMiddleH
+                : s.insetMiddleV
               : null,
         sx,
       )}

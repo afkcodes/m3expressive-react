@@ -37,7 +37,14 @@ const s = stylex.create({
     backgroundColor: color.surfaceContainerHigh,
     borderRadius: 28,
   },
-  header: { display: 'flex', flexDirection: 'column', rowGap: 16, flexShrink: 0, paddingBlock: '24px 0', paddingInline: 24 },
+  header: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: 16,
+    flexShrink: 0,
+    paddingBlock: '24px 0',
+    paddingInline: 24,
+  },
   headerWithContent: { paddingBottom: 24 },
   icon: { display: 'flex', justifyContent: 'center', color: color.secondary },
   headline: { margin: 0, color: color.onSurface },
@@ -124,7 +131,11 @@ export function Dialog({ open, onOpenChange, role = 'dialog', ...surface }: Dial
   const portal = usePortalContainer();
   const id = useId();
   return (
-    <BaseDialog.Root open={open} onOpenChange={(next) => onOpenChange(next)} disablePointerDismissal={role === 'alertdialog'}>
+    <BaseDialog.Root
+      open={open}
+      onOpenChange={(next) => onOpenChange(next)}
+      disablePointerDismissal={role === 'alertdialog'}
+    >
       <BaseDialog.Portal container={portal}>
         <BaseDialog.Backdrop {...stylex.props(scrim.backdrop)} />
         <BaseDialog.Popup

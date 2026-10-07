@@ -27,7 +27,9 @@ const handAngle = (dial: Locator) =>
   });
 
 test.describe('time picker', () => {
-  test('a drag moves the hand with the pointer and springs to the value on release; taps pick 5-minute steps', async ({ page }) => {
+  test('a drag moves the hand with the pointer and springs to the value on release; taps pick 5-minute steps', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
@@ -36,7 +38,8 @@ test.describe('time picker', () => {
     const dial = dialog.getByRole('slider', { name: 'Minute' });
     await expect.poll(() => handAngle(dial)).toBeCloseTo(0, 1);
     const b = (await dial.boundingBox())!;
-    const at = (deg: number, r = 90) => [b.x + 128 + r * Math.sin((deg * Math.PI) / 180), b.y + 128 - r * Math.cos((deg * Math.PI) / 180)] as const;
+    const at = (deg: number, r = 90) =>
+      [b.x + 128 + r * Math.sin((deg * Math.PI) / 180), b.y + 128 - r * Math.cos((deg * Math.PI) / 180)] as const;
 
     // Drag: no spring between the pointer and the hand (Compose rotateTo → anim.snapTo).
     await page.mouse.move(...at(10));
@@ -80,7 +83,9 @@ test.describe('time picker', () => {
         el.addEventListener('pointerup', () => (w.__t.up = performance.now()), { once: true, capture: true });
       });
     const switchDelay = async () => {
-      await expect.poll(() => page.evaluate(() => (window as unknown as { __t: { sw?: number } }).__t.sw ?? null)).not.toBeNull();
+      await expect
+        .poll(() => page.evaluate(() => (window as unknown as { __t: { sw?: number } }).__t.sw ?? null))
+        .not.toBeNull();
       const t = await page.evaluate(() => (window as unknown as { __t: { up: number; sw: number } }).__t);
       return t.sw - t.up;
     };
@@ -113,12 +118,16 @@ test.describe('time picker', () => {
     await expect.poll(async () => (await rings()).map((r) => r.opacity)).toEqual(['0', '1']);
     expect((await rings())[0]!.duration).toBe('0.231s');
     // The selector boxes don't animate their colours (Compose: no animation).
-    expect(await dialog.getByRole('button', { name: /^Hour/ }).evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+    expect(
+      await dialog.getByRole('button', { name: /^Hour/ }).evaluate((e) => getComputedStyle(e).transitionDuration),
+    ).toBe('0s');
   });
 });
 
 test.describe('dialog', () => {
-  test('MDC fade-scale: 400ms emphasized decelerate in (scale 0.8 → 1), 150ms emphasized accelerate out', async ({ page }) => {
+  test('MDC fade-scale: 400ms emphasized decelerate in (scale 0.8 → 1), 150ms emphasized accelerate out', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/dialogs/live');
     await page.getByRole('button', { name: 'Open dialog' }).click();
     const popup = page.getByRole('dialog', { name: 'Basic dialog title' });
@@ -126,7 +135,12 @@ test.describe('dialog', () => {
     const style = () =>
       popup.evaluate((el) => {
         const cs = getComputedStyle(el);
-        return { scale: cs.scale, opacity: Number(cs.opacity), easing: cs.transitionTimingFunction, duration: cs.transitionDuration };
+        return {
+          scale: cs.scale,
+          opacity: Number(cs.opacity),
+          easing: cs.transitionTimingFunction,
+          duration: cs.transitionDuration,
+        };
       });
     const mid = await style();
     expect(mid.easing).toBe('cubic-bezier(0.1, 0.7, 0.1, 1)');
@@ -149,7 +163,10 @@ test.describe('dialog', () => {
     await openFixture(page, '/fixture/dialogs/live');
     await page.getByRole('button', { name: 'Open dialog' }).click();
     const popup = page.getByRole('dialog', { name: 'Basic dialog title' });
-    const first = await popup.evaluate((el) => ({ scale: getComputedStyle(el).scale, opacity: Number(getComputedStyle(el).opacity) }));
+    const first = await popup.evaluate((el) => ({
+      scale: getComputedStyle(el).scale,
+      opacity: Number(getComputedStyle(el).opacity),
+    }));
     expect(first.scale).toBe('1');
     expect(first.opacity).toBeLessThan(1);
     await expect.poll(() => popup.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
@@ -176,7 +193,18 @@ async function synthDrag(page: Page, x: number, y: number, points: [dx: number, 
       const target = document.elementFromPoint(x, y)!;
       const fire = (type: string, cx: number, cy: number) =>
         target.dispatchEvent(
-          new PointerEvent(type, { bubbles: true, cancelable: true, composed: true, pointerId: 7, pointerType: 'mouse', isPrimary: true, button: 0, buttons: type === 'pointerup' ? 0 : 1, clientX: cx, clientY: cy }),
+          new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            pointerId: 7,
+            pointerType: 'mouse',
+            isPrimary: true,
+            button: 0,
+            buttons: type === 'pointerup' ? 0 : 1,
+            clientX: cx,
+            clientY: cy,
+          }),
         );
       const busy = (ms: number) => {
         const t = performance.now();
@@ -197,15 +225,36 @@ async function synthDrag(page: Page, x: number, y: number, points: [dx: number, 
 
 /** A quick drag: `n` moves of dx / n px, `ms` apart, released while moving. */
 async function flick(page: Page, x: number, y: number, dx: number, dy = 0, n = 4, ms = 8) {
-  await synthDrag(page, x, y, Array.from({ length: n }, (_, i) => [(dx * (i + 1)) / n, (dy * (i + 1)) / n, ms] as [number, number, number]));
+  await synthDrag(
+    page,
+    x,
+    y,
+    Array.from({ length: n }, (_, i) => [(dx * (i + 1)) / n, (dy * (i + 1)) / n, ms] as [number, number, number]),
+  );
 }
 
 /** A slow, steady drag (`step` px every 16ms ≈ step × 60 px/s), released while moving. */
-async function slowRelease(page: Page, x: number, y: number, dx: number, dy: number, step = 1, from: [number, number] = [0, 0]) {
+async function slowRelease(
+  page: Page,
+  x: number,
+  y: number,
+  dx: number,
+  dy: number,
+  step = 1,
+  from: [number, number] = [0, 0],
+) {
   const n = Math.max(Math.abs(dx), Math.abs(dy)) / step;
   await synthDrag(page, x, y, [
-    ...(from[0] || from[1] ? ([[from[0], from[1], 16], [from[0], from[1], 60]] as [number, number, number][]) : []),
-    ...Array.from({ length: n }, (_, i) => [from[0] + (dx * (i + 1)) / n, from[1] + (dy * (i + 1)) / n, 16] as [number, number, number]),
+    ...(from[0] || from[1]
+      ? ([
+          [from[0], from[1], 16],
+          [from[0], from[1], 60],
+        ] as [number, number, number][])
+      : []),
+    ...Array.from(
+      { length: n },
+      (_, i) => [from[0] + (dx * (i + 1)) / n, from[1] + (dy * (i + 1)) / n, 16] as [number, number, number],
+    ),
   ]);
 }
 
@@ -221,7 +270,9 @@ test.describe('modal bottom sheet', () => {
     return { sheet, x: hb.x + hb.width / 2, y: hb.y + 2, height: (await sheet.boundingBox())!.height };
   }
 
-  test('shows on the default spatial spring: the overshoot lifts it and the surface continues below', async ({ page }) => {
+  test('shows on the default spatial spring: the overshoot lifts it and the surface continues below', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Share' });
@@ -241,7 +292,13 @@ test.describe('modal bottom sheet', () => {
     expect(Math.min(...ys)).toBeLessThan(-1);
     const after = await sheet.evaluate((el) => {
       const cs = getComputedStyle(el, '::after');
-      return { content: cs.content, top: cs.top, height: cs.height, bg: cs.backgroundColor, h: (el as HTMLElement).offsetHeight };
+      return {
+        content: cs.content,
+        top: cs.top,
+        height: cs.height,
+        bg: cs.backgroundColor,
+        h: (el as HTMLElement).offsetHeight,
+      };
     });
     expect(after.content).toBe('""');
     expect(after.top).toBe(`${after.h}px`);
@@ -371,11 +428,16 @@ test.describe('modal bottom sheet (touch)', () => {
 });
 
 test.describe('modal side sheet', () => {
-  test('enters from the end edge by the window width over 275ms on the emphasized path; RTL enters from the left', async ({ page }) => {
+  test('enters from the end edge by the window width over 275ms on the emphasized path; RTL enters from the left', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/sheets/live');
     await page.getByRole('button', { name: 'Open side sheet' }).click();
     const side = page.getByRole('dialog', { name: 'Filters' });
-    const style = await side.evaluate((el) => ({ d: getComputedStyle(el).transitionDuration, e: getComputedStyle(el).transitionTimingFunction }));
+    const style = await side.evaluate((el) => ({
+      d: getComputedStyle(el).transitionDuration,
+      e: getComputedStyle(el).transitionTimingFunction,
+    }));
     expect(style.d).toBe('0.275s');
     expect(style.e).toMatch(/^linear\(0( 0%)?, 0\.0005 0\.83%.*0\.9994 92\.97%, 1( 100%)?\)$/);
     const vw = await page.evaluate(() => innerWidth);
@@ -394,7 +456,9 @@ test.describe('modal side sheet', () => {
     expect((await side.boundingBox())!.x).toBe(16);
   });
 
-  test('drags to dismiss (SideSheetBehavior: half way or a 500px/s swipe), otherwise settles back', async ({ page }) => {
+  test('drags to dismiss (SideSheetBehavior: half way or a 500px/s swipe), otherwise settles back', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/sheets/live');
     const open = async () => {
       await page.getByRole('button', { name: 'Open side sheet' }).click();
@@ -452,10 +516,15 @@ function sampleFrames<T>(page: Page, ms: number, read: string): Promise<{ t: num
 }
 
 test.describe('search', () => {
-  test('full screen: the input grows from the collapsed bar, the surface fades in with progress, results after 50ms', async ({ page }) => {
+  test('full screen: the input grows from the collapsed bar, the surface fades in with progress, results after 50ms', async ({
+    page,
+  }) => {
     await openFixture(page, '/fixture/search/live-full');
     const node = page.locator('[data-fixture-node]');
-    const collapsed = (await node.getByRole('button', { name: 'Hinted search text' }).locator('xpath=ancestor::div[1]').boundingBox())!;
+    const collapsed = (await node
+      .getByRole('button', { name: 'Hinted search text' })
+      .locator('xpath=ancestor::div[1]')
+      .boundingBox())!;
     const read = `(() => {
       const view = document.querySelector('[data-fixture-node] [role="search"]');
       if (!view) return null;
@@ -513,7 +582,9 @@ test.describe('search', () => {
 });
 
 test.describe('toolbar', () => {
-  test('scroll collapse: 40px down collapses, 40px back up from the turn expands (floatingToolbarVerticalNestedScroll)', async ({ page }) => {
+  test('scroll collapse: 40px down collapses, 40px back up from the turn expands (floatingToolbarVerticalNestedScroll)', async ({
+    page,
+  }) => {
     await openFixture(page, '/demo/toolbar');
     const scroller = page.getByText('Row 1 —').locator('xpath=..');
     const collapsed = page.getByLabel('collapsed');
@@ -537,7 +608,9 @@ test.describe('toolbar', () => {
     await expect(collapsed).toBeChecked();
   });
 
-  test('exit always: the toolbar follows the scroll 1:1 and settles in / out at half way on default effects', async ({ page }) => {
+  test('exit always: the toolbar follows the scroll 1:1 and settles in / out at half way on default effects', async ({
+    page,
+  }) => {
     await openFixture(page, '/demo/toolbar');
     await page.getByLabel('on scroll').selectOption('exit');
     const scroller = page.getByText('Row 1 —').locator('xpath=..');
@@ -545,7 +618,11 @@ test.describe('toolbar', () => {
     const ty = () => bar.evaluate((el) => el.getBoundingClientRect().top);
     const rest = await ty();
     // Out of the phone: its bottom edge minus the toolbar's top (64px bar, 16px from the edge).
-    const limit = Math.round((await scroller.locator('xpath=..').boundingBox())!.y + (await scroller.locator('xpath=..').boundingBox())!.height - rest);
+    const limit = Math.round(
+      (await scroller.locator('xpath=..').boundingBox())!.y +
+        (await scroller.locator('xpath=..').boundingBox())!.height -
+        rest,
+    );
     expect(limit).toBe(80);
     // 1:1 with the scroll, read in the same frame.
     const moved = await scroller.evaluate(
@@ -553,7 +630,11 @@ test.describe('toolbar', () => {
         new Promise<number>((resolve) => {
           const bar = document.querySelector('[role="toolbar"]')!;
           const before = bar.getBoundingClientRect().top;
-          el.addEventListener('scroll', () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)), { once: true });
+          el.addEventListener(
+            'scroll',
+            () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)),
+            { once: true },
+          );
           el.scrollTop = 30;
         }),
     );
@@ -569,14 +650,20 @@ test.describe('toolbar', () => {
         new Promise<number>((resolve) => {
           const bar = document.querySelector('[role="toolbar"]')!;
           const before = bar.getBoundingClientRect().top;
-          el.addEventListener('scroll', () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)), { once: true });
+          el.addEventListener(
+            'scroll',
+            () => requestAnimationFrame(() => resolve(bar.getBoundingClientRect().top - before)),
+            { once: true },
+          );
           el.scrollTop = 70;
         }),
     );
     expect(Math.round(back)).toBe(-10);
   });
 
-  test('collapsing pins trailing content to its start, expanding to its end (Compose shrinkTowards / expandFrom)', async ({ page }) => {
+  test('collapsing pins trailing content to its start, expanding to its end (Compose shrinkTowards / expandFrom)', async ({
+    page,
+  }) => {
     await openFixture(page, '/demo/toolbar');
     await page.getByLabel('FAB').uncheck();
     const more = page.getByRole('button', { name: 'More' });
@@ -601,7 +688,9 @@ test.describe('carousel', () => {
     return { carousel, scroll, x: b.x + 300, y: b.y + b.height / 2 };
   }
 
-  test('single advance: a slow release snaps by the dragged fraction (half an item / 56dp), a fling moves one item at most', async ({ page }) => {
+  test('single advance: a slow release snaps by the dragged fraction (half an item / 56dp), a fling moves one item at most', async ({
+    page,
+  }) => {
     const { scroll, x, y } = await setup(page);
     // Drag and rest before releasing (no velocity).
     const dragTo = async (dx: number) => {
@@ -725,7 +814,9 @@ test.describe('date picker', () => {
     await expect(dialog.getByText('Thu, Jul 17')).toBeVisible();
   });
 
-  test('the year list expands over the calendar from 60% alpha, anchored at its bottom, and shrinks back', async ({ page }) => {
+  test('the year list expands over the calendar from 60% alpha, anchored at its bottom, and shrinks back', async ({
+    page,
+  }) => {
     const dialog = await openPicker(page);
     const read = `(() => {
       const list = document.querySelector('[role="dialog"] [role="listbox"]');
@@ -751,22 +842,41 @@ test.describe('date picker', () => {
     expect(frames.some((f) => f.v!.cal && f.v!.pos === 'absolute')).toBe(true);
     await expect(dialog.getByRole('listbox')).toHaveCount(0);
     // The arrow flips without animation (Compose rotates it instantly).
-    expect(await dialog.getByRole('button', { name: /select year/ }).locator('svg').evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+    expect(
+      await dialog
+        .getByRole('button', { name: /select year/ })
+        .locator('svg')
+        .evaluate((e) => getComputedStyle(e).transitionDuration),
+    ).toBe('0s');
   });
 
-  test('selection colours animate on default effects (day container on selection, content, years)', async ({ page }) => {
+  test('selection colours animate on default effects (day container on selection, content, years)', async ({
+    page,
+  }) => {
     const dialog = await openPicker(page);
     const day = dialog.getByRole('button', { name: 'July 9, 2025' });
     await day.click();
     const circle = day.locator('> span').nth(0);
-    expect(await circle.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('background-color 0.231s');
-    expect(await day.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('color 0.231s');
+    expect(
+      await circle.evaluate((e) =>
+        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
+      ),
+    ).toBe('background-color 0.231s');
+    expect(
+      await day.evaluate((e) =>
+        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
+      ),
+    ).toBe('color 0.231s');
     // Deselected: the container snaps (no transition on the unselected state).
     await dialog.getByRole('button', { name: 'July 10, 2025' }).click();
     expect(await circle.evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
     await dialog.getByRole('button', { name: /select year/ }).click();
     const year = dialog.getByRole('button', { name: '2025', exact: true });
-    expect(await year.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('color, background-color 0.231s');
+    expect(
+      await year.evaluate((e) =>
+        [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),
+      ),
+    ).toBe('color, background-color 0.231s');
   });
 
   test('picker ⇄ input: bodies slide and fade, the size animates on default spatial', async ({ page }) => {

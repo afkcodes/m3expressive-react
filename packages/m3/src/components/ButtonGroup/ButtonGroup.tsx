@@ -24,7 +24,17 @@ import { useForcedState } from '../../testing/ForceState.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import type { SpringParams } from '../../motion/spring.ts';
-import { base, containerMotion, containerSizes, disabled, gaps, iconSizes, labelRole, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import {
+  base,
+  containerMotion,
+  containerSizes,
+  disabled,
+  gaps,
+  iconSizes,
+  labelRole,
+  type ButtonShape,
+  type ButtonSize,
+} from '../Button/buttonStyles.ts';
 import { ButtonGroupContext, GROUP_BOX_ATTR } from './context.ts';
 
 /*
@@ -78,7 +88,14 @@ const s = stylex.create({
   // XS/S segments are 32/40px; the group is the 48px touch row, and each segment's hit area
   // extends to it without affecting layout.
   touch: {
-    '::before': { content: '""', position: 'absolute', insetInline: 0, top: '50%', height: 48, transform: 'translateY(-50%)' },
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      insetInline: 0,
+      top: '50%',
+      height: 48,
+      transform: 'translateY(-50%)',
+    },
   },
   container: { width: '100%' },
 });
@@ -137,7 +154,14 @@ const segment = stylex.create({
   // segments are always pills, so a pill radius matches the container).
   disabledSelectedContent: {
     position: 'static',
-    '::before': { content: '""', position: 'absolute', inset: 0, zIndex: -1, borderRadius: 9999, backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      zIndex: -1,
+      borderRadius: 9999,
+      backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)`,
+    },
   },
 });
 
@@ -185,7 +209,9 @@ interface PressState {
 }
 
 function boxOf(item: Element): HTMLElement | null {
-  return item.matches(`[${GROUP_BOX_ATTR}]`) ? (item as HTMLElement) : item.querySelector<HTMLElement>(`[${GROUP_BOX_ATTR}]`);
+  return item.matches(`[${GROUP_BOX_ATTR}]`)
+    ? (item as HTMLElement)
+    : item.querySelector<HTMLElement>(`[${GROUP_BOX_ATTR}]`);
 }
 
 function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: SpringParams | null) {
@@ -425,8 +451,10 @@ export function ConnectedButtonGroup({
   );
 }
 
-export interface ConnectedButtonGroupItemProps
-  extends Omit<BaseToggle.Props, 'className' | 'style' | 'render' | 'children' | 'value'> {
+export interface ConnectedButtonGroupItemProps extends Omit<
+  BaseToggle.Props,
+  'className' | 'style' | 'render' | 'children' | 'value'
+> {
   value: string;
   /** Standalone use only (inside a group the group decides): size, and whether it's selected. */
   size?: ButtonSize;
@@ -438,77 +466,107 @@ export interface ConnectedButtonGroupItemProps
   sx?: StyleXStyles;
 }
 
-export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedButtonGroupItemProps>(function ConnectedButtonGroupItem(
-  { value, size: sizeProp = 'small', selected: selectedProp = false, icon, selectedIcon, children, disabled: disabledProp, sx, ...rest },
-  ref,
-) {
-  const group = useContext(ConnectedContext);
-  const ctx = group ?? { size: sizeProp, shape: 'square' as ButtonShape, selected: selectedProp ? [value] : [], index: 0, count: 1 };
-  const { size, shape, index, count } = ctx;
-  const forced = useForcedState();
-  const isSelected = ctx.selected.includes(value);
-  const isDisabled = !!disabledProp;
-  const [restR, activeR] = RADII[size].map((r) => `${r}px`) as [string, string];
-  const full = `${H[size] / 2}px`;
-  const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
-  const first = index === 0;
-  const last = index === count - 1;
-  const round = shape === 'round';
-  // Outer corners (fully round in a "round" group) never morph; everything else follows the segment state.
-  const outerStart = first && round;
-  const outerEnd = last && round;
-  const corner = isSelected ? full : isDisabled || interacting ? (interacting ? activeR : restR) : null;
+export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedButtonGroupItemProps>(
+  function ConnectedButtonGroupItem(
+    {
+      value,
+      size: sizeProp = 'small',
+      selected: selectedProp = false,
+      icon,
+      selectedIcon,
+      children,
+      disabled: disabledProp,
+      sx,
+      ...rest
+    },
+    ref,
+  ) {
+    const group = useContext(ConnectedContext);
+    const ctx = group ?? {
+      size: sizeProp,
+      shape: 'square' as ButtonShape,
+      selected: selectedProp ? [value] : [],
+      index: 0,
+      count: 1,
+    };
+    const { size, shape, index, count } = ctx;
+    const forced = useForcedState();
+    const isSelected = ctx.selected.includes(value);
+    const isDisabled = !!disabledProp;
+    const [restR, activeR] = RADII[size].map((r) => `${r}px`) as [string, string];
+    const full = `${H[size] / 2}px`;
+    const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
+    const first = index === 0;
+    const last = index === count - 1;
+    const round = shape === 'round';
+    // Outer corners (fully round in a "round" group) never morph; everything else follows the segment state.
+    const outerStart = first && round;
+    const outerEnd = last && round;
+    const corner = isSelected ? full : isDisabled || interacting ? (interacting ? activeR : restR) : null;
 
-  const fixedOrLive = (fixed: string | null, k: 'ss' | 'se' | 'es' | 'ee') =>
-    fixed ? corners[k](fixed) : corners[`${k}Live`](restR, activeR);
-  const startFixed = outerStart ? full : corner;
-  const endFixed = outerEnd ? full : corner;
-  const radiusStyles = [fixedOrLive(startFixed, 'ss'), fixedOrLive(endFixed, 'se'), fixedOrLive(startFixed, 'es'), fixedOrLive(endFixed, 'ee')];
+    const fixedOrLive = (fixed: string | null, k: 'ss' | 'se' | 'es' | 'ee') =>
+      fixed ? corners[k](fixed) : corners[`${k}Live`](restR, activeR);
+    const startFixed = outerStart ? full : corner;
+    const endFixed = outerEnd ? full : corner;
+    const radiusStyles = [
+      fixedOrLive(startFixed, 'ss'),
+      fixedOrLive(endFixed, 'se'),
+      fixedOrLive(startFixed, 'es'),
+      fixedOrLive(endFixed, 'ee'),
+    ];
 
-  return (
-    <BaseToggle
-      ref={ref}
-      value={value}
-      {...(group ? {} : { pressed: isSelected })}
-      disabled={disabledProp}
-      data-ripple-host=""
-      {...rest}
-      {...stylex.props(
-        base.root,
-        s.item,
-        (size === 'xsmall' || size === 'small') && s.touch,
-        stateLayerHost.host,
-        isDisabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forceHover,
-        stylex.defaultMarker(),
-        sx,
-      )}
-    >
-      <span
+    return (
+      <BaseToggle
+        ref={ref}
+        value={value}
+        {...(group ? {} : { pressed: isSelected })}
+        disabled={disabledProp}
+        data-ripple-host=""
+        {...rest}
         {...stylex.props(
-          base.container,
-          // Connected segments are ToggleButtons with connected shapes: corners morph on FastSpatial.
-          containerMotion.spatial,
-          containerSizes[size],
-          s.container,
-          dyn.height(H[size]),
-          ...radiusStyles,
-          isSelected ? segment.selected : segment.unselected,
-          isDisabled && disabled.container,
-          forced.focusRing && base.ringForced,
+          base.root,
+          s.item,
+          (size === 'xsmall' || size === 'small') && s.touch,
+          stateLayerHost.host,
+          isDisabled && stateLayerHost.disabled,
+          forced.state === 'hovered' && stateLayerHost.forceHover,
+          forced.state === 'focused' && stateLayerHost.forceFocus,
+          forced.state === 'pressed' && stateLayerHost.forceHover,
+          stylex.defaultMarker(),
+          sx,
         )}
       >
-        <StateLayer />
-        <Ripple disabled={isDisabled} />
-        <span {...stylex.props(base.content, gaps[size], isDisabled && disabled.content, isDisabled && isSelected && segment.disabledSelectedContent)}>
-          {(isSelected ? (selectedIcon ?? icon) : icon) != null && (
-            <span {...stylex.props(base.icon, iconSizes[size])}>{isSelected ? (selectedIcon ?? icon) : icon}</span>
+        <span
+          {...stylex.props(
+            base.container,
+            // Connected segments are ToggleButtons with connected shapes: corners morph on FastSpatial.
+            containerMotion.spatial,
+            containerSizes[size],
+            s.container,
+            dyn.height(H[size]),
+            ...radiusStyles,
+            isSelected ? segment.selected : segment.unselected,
+            isDisabled && disabled.container,
+            forced.focusRing && base.ringForced,
           )}
-          {children != null && <span {...stylex.props(labelRole[size], textBox.hug, base.label)}>{children}</span>}
+        >
+          <StateLayer />
+          <Ripple disabled={isDisabled} />
+          <span
+            {...stylex.props(
+              base.content,
+              gaps[size],
+              isDisabled && disabled.content,
+              isDisabled && isSelected && segment.disabledSelectedContent,
+            )}
+          >
+            {(isSelected ? (selectedIcon ?? icon) : icon) != null && (
+              <span {...stylex.props(base.icon, iconSizes[size])}>{isSelected ? (selectedIcon ?? icon) : icon}</span>
+            )}
+            {children != null && <span {...stylex.props(labelRole[size], textBox.hug, base.label)}>{children}</span>}
+          </span>
         </span>
-      </span>
-    </BaseToggle>
-  );
-});
+      </BaseToggle>
+    );
+  },
+);

@@ -21,7 +21,10 @@ const fixture: FixtureModule = {
   variants: Object.fromEntries(
     Object.entries(manifest.variants).map(([name, v]) => [
       name,
-      { node: v.node, render: () => <p {...stylex.props(typescale[roleOf(v.style)], textBox.hug, s.text)}>{v.text}</p> },
+      {
+        node: v.node,
+        render: () => <p {...stylex.props(typescale[roleOf(v.style)], textBox.hug, s.text)}>{v.text}</p>,
+      },
     ]),
   ),
 };

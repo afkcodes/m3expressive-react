@@ -99,10 +99,8 @@ export function validateProgress(p: readonly number[]): void {
   for (let i = 0; i < p.length; i++) {
     const curr = p[i]!;
     require(curr >= 0 && curr < 1, () => 'FloatMapping - Progress outside of range: ' + p.join(', '));
-    require(
-      progressDistance(curr, prev) > DistanceEpsilon,
-      () => 'FloatMapping - Progress repeats a value: ' + p.join(', '),
-    );
+    require(progressDistance(curr, prev) > DistanceEpsilon, () =>
+      'FloatMapping - Progress repeats a value: ' + p.join(', '));
     if (curr < prev) {
       wraps++;
       require(wraps <= 1, () => 'FloatMapping - Progress wraps more than once: ' + p.join(', '));

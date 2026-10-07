@@ -132,7 +132,8 @@ export class PointerVelocityTracker {
   }
 
   move(e: PointerEvent | { timeStamp: number; clientX: number; clientY: number }) {
-    const coalesced = 'getCoalescedEvents' in e && typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : [];
+    const coalesced =
+      'getCoalescedEvents' in e && typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : [];
     if (coalesced.length > 1) for (const c of coalesced) this.add(c.timeStamp, c.clientX, c.clientY);
     else this.add(e.timeStamp, e.clientX, e.clientY);
     this.lastEventTime = e.timeStamp;

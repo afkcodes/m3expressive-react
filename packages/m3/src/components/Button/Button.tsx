@@ -6,7 +6,15 @@ import { color } from '../../tokens/color.stylex.ts';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from './ButtonFrame.tsx';
-import { base, containerMotion, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
+import {
+  base,
+  containerMotion,
+  elevatedShadow,
+  sizes,
+  strokeWidths,
+  type ButtonShape,
+  type ButtonSize,
+} from './buttonStyles.ts';
 
 export type ButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated' | 'text';
 export type { ButtonShape, ButtonSize };
@@ -19,8 +27,7 @@ const variants = stylex.create({
   text: { backgroundColor: 'transparent', color: color.primary },
 });
 
-export interface ButtonProps
-  extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface ButtonProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   shape?: ButtonShape;
@@ -64,10 +71,16 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
         icon={icon}
         container={[
           // Shape morph on DefaultEffects (Compose: no bounce); XL elevated also tweens its shadow.
-          variant === 'elevated' && !isDisabled && size === 'xlarge' ? containerMotion.effectsElevated : containerMotion.effects,
+          variant === 'elevated' && !isDisabled && size === 'xlarge'
+            ? containerMotion.effectsElevated
+            : containerMotion.effects,
           variants[variant],
           variant === 'elevated' && !isDisabled && elevatedShadow[size],
-          variant === 'elevated' && !isDisabled && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,
+          variant === 'elevated' &&
+            !isDisabled &&
+            size === 'xlarge' &&
+            !!forced.state &&
+            elevatedShadow.xlargeInteracting,
           variant === 'outlined' && base.stroke,
           variant === 'outlined' && strokeWidths[size],
         ]}
@@ -77,4 +90,3 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
     </BaseButton>
   );
 });
-

@@ -10,7 +10,8 @@ const fixture: FixtureModule = {
     ['live', { render: () => <Switch aria-label="Wi-Fi" /> }],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [on, kind, state] = name.split('-') as ['on' | 'off', 'plain' | 'icon', string];
-      const forced = state === 'hovered' || state === 'focused' || state === 'pressed' ? (state as ForcedState) : undefined;
+      const forced =
+        state === 'hovered' || state === 'focused' || state === 'pressed' ? (state as ForcedState) : undefined;
       return [
         name,
         {

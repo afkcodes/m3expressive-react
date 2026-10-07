@@ -5,8 +5,24 @@ import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/tabs/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
   demo: { display: 'grid', gap: 8, maxWidth: 480 },
   content: { padding: 16, color: color.onSurfaceVariant },
   muted: { color: color.onSurfaceVariant },
@@ -78,7 +94,8 @@ export function TabsPlayground() {
             aria-label="Media"
             panels={MEDIA.map((m, i) => (
               <TabPanel key={i} value={i} sx={s.content}>
-                {m.label} — the indicator springs (default spatial) to the selected tab; colour fades in on default effects.
+                {m.label} — the indicator springs (default spatial) to the selected tab; colour fades in on default
+                effects.
               </TabPanel>
             ))}
           >

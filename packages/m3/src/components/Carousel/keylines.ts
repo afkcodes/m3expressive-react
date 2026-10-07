@@ -31,7 +31,8 @@ export interface Arrangement {
 const itemCountOf = (a: Arrangement) => a.largeCount + a.mediumCount + a.smallCount;
 
 function isValid(a: Arrangement): boolean {
-  if (a.largeCount > 0 && a.smallCount > 0 && a.mediumCount > 0) return a.largeSize > a.mediumSize && a.mediumSize > a.smallSize;
+  if (a.largeCount > 0 && a.smallCount > 0 && a.mediumCount > 0)
+    return a.largeSize > a.mediumSize && a.mediumSize > a.smallSize;
   if (a.largeCount > 0 && a.smallCount > 0) return a.largeSize > a.smallSize;
   return true;
 }
@@ -39,7 +40,13 @@ function isValid(a: Arrangement): boolean {
 const cost = (a: Arrangement, targetLargeSize: number) =>
   isValid(a) ? Math.abs(targetLargeSize - a.largeSize) * a.priority : Number.MAX_VALUE;
 
-function calculateLargeSize(availableSpace: number, smallCount: number, smallSize: number, mediumCount: number, largeCount: number) {
+function calculateLargeSize(
+  availableSpace: number,
+  smallCount: number,
+  smallSize: number,
+  mediumCount: number,
+  largeCount: number,
+) {
   return (availableSpace - (smallCount + mediumCount / 2) * smallSize) / (largeCount + mediumCount / 2);
 }
 
@@ -64,9 +71,16 @@ function fit(
   const total = arrangedLargeSize * largeCount + arrangedMediumSize * mediumCount + arrangedSmallSize * smallCount;
   const delta = availableSpaceWithoutSpacing - total;
   if (smallCount > 0 && delta > 0) arrangedSmallSize += Math.min(delta / smallCount, maxSmallSize - arrangedSmallSize);
-  else if (smallCount > 0 && delta < 0) arrangedSmallSize += Math.max(delta / smallCount, minSmallSize - arrangedSmallSize);
+  else if (smallCount > 0 && delta < 0)
+    arrangedSmallSize += Math.max(delta / smallCount, minSmallSize - arrangedSmallSize);
   arrangedSmallSize = smallCount > 0 ? arrangedSmallSize : 0;
-  arrangedLargeSize = calculateLargeSize(availableSpaceWithoutSpacing, smallCount, arrangedSmallSize, mediumCount, largeCount);
+  arrangedLargeSize = calculateLargeSize(
+    availableSpaceWithoutSpacing,
+    smallCount,
+    arrangedSmallSize,
+    mediumCount,
+    largeCount,
+  );
   arrangedMediumSize = (arrangedLargeSize + arrangedSmallSize) / 2;
   if (mediumCount > 0 && arrangedLargeSize !== largeSize) {
     const targetAdjustment = (largeSize - arrangedLargeSize) * largeCount;
@@ -290,7 +304,8 @@ class KeylineListScope {
     if (alignment === 'center') {
       const itemSpacingSplit = itemSpacing === 0 || focalItemCount % 2 === 0 ? 0 : itemSpacing / 2;
       const itemSpaceCounts = Math.trunc(focalItemCount / 2) * itemSpacing;
-      pivotOffset = carouselMainAxisSize / 2 - (this.focalItemSize / 2) * focalItemCount - itemSpacingSplit - itemSpaceCounts;
+      pivotOffset =
+        carouselMainAxisSize / 2 - (this.focalItemSize / 2) * focalItemCount - itemSpacingSplit - itemSpaceCounts;
     } else if (alignment === 'end') pivotOffset = carouselMainAxisSize - this.focalItemSize / 2;
     else pivotOffset = this.focalItemSize / 2;
     return new KeylineList(
@@ -309,7 +324,8 @@ class KeylineListScope {
 }
 
 const isCutoffLeft = (size: number, offset: number) => offset - size / 2 < 0 && offset + size / 2 > 0;
-const isCutoffRight = (size: number, offset: number, main: number) => offset - size / 2 < main && offset + size / 2 > main;
+const isCutoffRight = (size: number, offset: number, main: number) =>
+  offset - size / 2 < main && offset + size / 2 > main;
 
 function createKeylinesWithPivot(
   pivotIndex: number,
@@ -366,7 +382,9 @@ function createKeylinesWithPivot(
     const t = tmp[i]!;
     const tOffset = offset + t.size / 2;
     const tUnadjusted = unadjusted + itemMainAxisSize / 2;
-    const cutoff = isCutoffRight(t.size, tOffset, carouselMainAxisSize) ? tOffset + t.size / 2 - carouselMainAxisSize : 0;
+    const cutoff = isCutoffRight(t.size, tOffset, carouselMainAxisSize)
+      ? tOffset + t.size / 2 - carouselMainAxisSize
+      : 0;
     keylines.push({
       size: t.size,
       offset: tOffset,
@@ -466,7 +484,8 @@ export function multiBrowseKeylineList(
   const targetSmallSize = clamp(targetLargeSize / 3, minSmall, maxSmall);
   const targetMediumSize = (targetLargeSize + targetSmallSize) / 2;
   if (main < minSmall * 2) smallCounts = [0];
-  const minAvailableLargeSpace = main - targetMediumSize * Math.max(...mediumCounts) - maxSmall * Math.max(...smallCounts);
+  const minAvailableLargeSpace =
+    main - targetMediumSize * Math.max(...mediumCounts) - maxSmall * Math.max(...smallCounts);
   const minLargeCount = Math.max(1, Math.floor(minAvailableLargeSpace / targetLargeSize));
   const maxLargeCount = Math.ceil(main / targetLargeSize);
   const largeCounts = Array.from({ length: maxLargeCount - minLargeCount + 1 }, (_, i) => maxLargeCount - i);
@@ -586,13 +605,25 @@ function createShiftedKeylineListForContentPadding(
 ) {
   const nonAnchor = from.keylines.filter((k) => !k.isAnchor).length;
   const sizeReduction = contentPadding / nonAnchor;
-  const next = keylineListWithPivot(main, spacing, pivotIndex, pivot.offset - sizeReduction / 2 + contentPadding, (s) => {
-    for (const k of from.keylines) s.add(k.size - Math.abs(sizeReduction), k.isAnchor);
-  });
+  const next = keylineListWithPivot(
+    main,
+    spacing,
+    pivotIndex,
+    pivot.offset - sizeReduction / 2 + contentPadding,
+    (s) => {
+      for (const k of from.keylines) s.add(k.size - Math.abs(sizeReduction), k.isAnchor);
+    },
+  );
   return new KeylineList(next.keylines.map((k, i) => ({ ...k, unadjustedOffset: from.at(i).unadjustedOffset })));
 }
 
-function moveKeylineAndCreateShiftedKeylineList(from: KeylineList, srcIndex: number, dstIndex: number, main: number, spacing: number) {
+function moveKeylineAndCreateShiftedKeylineList(
+  from: KeylineList,
+  srcIndex: number,
+  dstIndex: number,
+  main: number,
+  spacing: number,
+) {
   const pivotDir = srcIndex > dstIndex ? 1 : -1;
   const pivotDelta = (from.at(srcIndex).size - from.at(srcIndex).cutoff + spacing) * pivotDir;
   const newPivotIndex = from.pivotIndex + pivotDir;
@@ -610,7 +641,9 @@ function getStartKeylineSteps(d: KeylineList, main: number, spacing: number, bef
   const steps = [d];
   if (d.isFirstFocalItemAtStartOfContainer()) {
     if (beforePadding !== 0)
-      steps.push(createShiftedKeylineListForContentPadding(d, main, spacing, beforePadding, d.firstFocal, d.firstFocalIndex));
+      steps.push(
+        createShiftedKeylineListForContentPadding(d, main, spacing, beforePadding, d.firstFocal, d.firstFocalIndex),
+      );
     return steps;
   }
   const startIndex = d.firstNonAnchorIndex;
@@ -646,7 +679,9 @@ function getEndKeylineSteps(d: KeylineList, main: number, spacing: number, after
   const steps = [d];
   if (d.isLastFocalItemAtEndOfContainer(main)) {
     if (afterPadding !== 0)
-      steps.push(createShiftedKeylineListForContentPadding(d, main, spacing, -afterPadding, d.lastFocal, d.lastFocalIndex));
+      steps.push(
+        createShiftedKeylineListForContentPadding(d, main, spacing, -afterPadding, d.lastFocal, d.lastFocalIndex),
+      );
     return steps;
   }
   const startIndex = d.lastFocalIndex;
@@ -660,7 +695,8 @@ function getEndKeylineSteps(d: KeylineList, main: number, spacing: number, after
     const prev = steps[steps.length - 1]!;
     const originalItemIndex = endIndex - i;
     let dstIndex = 0;
-    if (originalItemIndex < d.lastIndex) dstIndex = prev.lastIndexBeforeFocalRangeWithSize(d.at(originalItemIndex + 1).size) + 1;
+    if (originalItemIndex < d.lastIndex)
+      dstIndex = prev.lastIndexBeforeFocalRangeWithSize(d.at(originalItemIndex + 1).size) + 1;
     steps.push(moveKeylineAndCreateShiftedKeylineList(prev, d.lastNonAnchorIndex, dstIndex, main, spacing));
   }
   if (afterPadding !== 0) {
@@ -677,7 +713,11 @@ function getEndKeylineSteps(d: KeylineList, main: number, spacing: number, after
   return steps;
 }
 
-function getStepInterpolationPoints(totalShiftDistance: number, steps: KeylineList[], isShiftingLeft: boolean): number[] {
+function getStepInterpolationPoints(
+  totalShiftDistance: number,
+  steps: KeylineList[],
+  isShiftingLeft: boolean,
+): number[] {
   const points = [0];
   if (totalShiftDistance === 0 || steps.length === 0) return points;
   for (let i = 1; i < steps.length; i++) {
@@ -735,9 +775,13 @@ export class Strategy {
     const ss = this.startKeylineSteps;
     const es = this.endKeylineSteps;
     this.startShiftDistance =
-      ss.length === 0 ? 0 : Math.max(ss[ss.length - 1]!.first.unadjustedOffset - ss[0]!.first.unadjustedOffset, beforeContentPadding);
+      ss.length === 0
+        ? 0
+        : Math.max(ss[ss.length - 1]!.first.unadjustedOffset - ss[0]!.first.unadjustedOffset, beforeContentPadding);
     this.endShiftDistance =
-      es.length === 0 ? 0 : Math.max(es[0]!.last.unadjustedOffset - es[es.length - 1]!.last.unadjustedOffset, afterContentPadding);
+      es.length === 0
+        ? 0
+        : Math.max(es[0]!.last.unadjustedOffset - es[es.length - 1]!.last.unadjustedOffset, afterContentPadding);
     this.startShiftPoints = getStepInterpolationPoints(this.startShiftDistance, ss, true);
     this.endShiftPoints = getStepInterpolationPoints(this.endShiftDistance, es, false);
   }
@@ -755,7 +799,11 @@ export class Strategy {
     return [this.startShiftDistance, Math.max(0, maxScrollOffset - this.endShiftDistance)];
   }
 
-  getKeylineListForScrollOffset(scrollOffset: number, maxScrollOffset: number, roundToNearestStep = false): KeylineList {
+  getKeylineListForScrollOffset(
+    scrollOffset: number,
+    maxScrollOffset: number,
+    roundToNearestStep = false,
+  ): KeylineList {
     const positive = Math.max(0, scrollOffset);
     const startShiftOffset = this.startShiftDistance;
     const endShiftOffset = Math.max(0, maxScrollOffset - this.endShiftDistance);
@@ -768,7 +816,10 @@ export class Strategy {
       shiftPoints = this.endShiftPoints;
       steps = this.endKeylineSteps;
       if (endShiftOffset < 0.01 && this.startKeylineSteps.length === 2 && this.endKeylineSteps.length === 2) {
-        steps = [this.startKeylineSteps[this.startKeylineSteps.length - 1]!, this.endKeylineSteps[this.endKeylineSteps.length - 1]!];
+        steps = [
+          this.startKeylineSteps[this.startKeylineSteps.length - 1]!,
+          this.endKeylineSteps[this.endKeylineSteps.length - 1]!,
+        ];
       }
     }
     let fromStepIndex = 0;
@@ -816,7 +867,10 @@ export function itemPlacement(strategy: Strategy, index: number, scrollOffset: n
   const unadjustedCenter = index * withSpacing + size / 2 - scrollOffset;
   const before = keylines.getKeylineBefore(unadjustedCenter);
   const after = keylines.getKeylineAfter(unadjustedCenter);
-  const progress = before === after ? 1 : (unadjustedCenter - before.unadjustedOffset) / (after.unadjustedOffset - before.unadjustedOffset);
+  const progress =
+    before === after
+      ? 1
+      : (unadjustedCenter - before.unadjustedOffset) / (after.unadjustedOffset - before.unadjustedOffset);
   const k = lerpKeyline(before, after, progress);
   let translation = k.offset - unadjustedCenter;
   if (before === after) translation += (unadjustedCenter - k.unadjustedOffset) / k.size;

@@ -11,7 +11,16 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { base, containerMotion, disabled, gaps, iconSizes, labelRole, sizes, type ButtonSize } from '../Button/buttonStyles.ts';
+import {
+  base,
+  containerMotion,
+  disabled,
+  gaps,
+  iconSizes,
+  labelRole,
+  sizes,
+  type ButtonSize,
+} from '../Button/buttonStyles.ts';
 
 export type SplitButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';
 
@@ -63,7 +72,10 @@ const s = stylex.create({
   // Hover layer only: focus is shown by the ring alone (kit).
   part: {
     isolation: 'auto',
-    [interaction.layerOpacity]: { default: '0', ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity } },
+    [interaction.layerOpacity]: {
+      default: '0',
+      ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity },
+    },
   },
   stroke: { '::after': { borderWidth: 1 } },
   container: { flexShrink: 0 },
@@ -213,7 +225,12 @@ function containerStyles(variant: SplitButtonVariant, isDisabled: boolean) {
   ];
 }
 
-function rootStyles(size: ButtonSize, isDisabled: boolean, forced: ReturnType<typeof useForcedState>, sx?: StyleXStyles) {
+function rootStyles(
+  size: ButtonSize,
+  isDisabled: boolean,
+  forced: ReturnType<typeof useForcedState>,
+  sx?: StyleXStyles,
+) {
   return [
     base.root,
     sizes[size],
@@ -227,8 +244,10 @@ function rootStyles(size: ButtonSize, isDisabled: boolean, forced: ReturnType<ty
   ];
 }
 
-export interface SplitButtonLeadingProps
-  extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children' | 'disabled'> {
+export interface SplitButtonLeadingProps extends Omit<
+  BaseButton.Props,
+  'className' | 'style' | 'render' | 'children' | 'disabled'
+> {
   /** Leading icon (use currentColor), sized 20/20/24/32/40px. */
   icon?: ReactNode;
   children?: ReactNode;
@@ -242,13 +261,24 @@ export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadi
   const { variant, size, disabled: isDisabled, forced } = usePart();
   const outer = `${H[size] / 2}px`;
   const [restR, activeR] = INNER[size].map((r) => `${r}px`) as [string, string];
-  const staticInner = isDisabled || forced.state ? (forced.state === 'hovered' || forced.state === 'pressed' ? activeR : restR) : null;
-  const radii = staticInner ? dyn.radii(outer, staticInner, outer, staticInner) : dyn.leadingRadii(outer, restR, activeR);
+  const staticInner =
+    isDisabled || forced.state ? (forced.state === 'hovered' || forced.state === 'pressed' ? activeR : restR) : null;
+  const radii = staticInner
+    ? dyn.radii(outer, staticInner, outer, staticInner)
+    : dyn.leadingRadii(outer, restR, activeR);
   const [padStart, padEnd] = LEADING_PAD[size];
   const insetBlock = (48 - H[size]) / 2;
   return (
-    <BaseButton ref={ref} disabled={isDisabled} data-ripple-host="" {...rest} {...stylex.props(...rootStyles(size, isDisabled, forced, sx))}>
-      {variant === 'elevated' && !isDisabled && <span aria-hidden {...stylex.props(s.shadow, radii, dyn.inset(insetBlock > 0 ? insetBlock : 0))} />}
+    <BaseButton
+      ref={ref}
+      disabled={isDisabled}
+      data-ripple-host=""
+      {...rest}
+      {...stylex.props(...rootStyles(size, isDisabled, forced, sx))}
+    >
+      {variant === 'elevated' && !isDisabled && (
+        <span aria-hidden {...stylex.props(s.shadow, radii, dyn.inset(insetBlock > 0 ? insetBlock : 0))} />
+      )}
       <span
         {...stylex.props(
           base.container,
@@ -271,8 +301,10 @@ export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadi
   );
 });
 
-export interface SplitButtonTrailingProps
-  extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children' | 'disabled' | 'aria-label'> {
+export interface SplitButtonTrailingProps extends Omit<
+  BaseButton.Props,
+  'className' | 'style' | 'render' | 'children' | 'disabled' | 'aria-label'
+> {
   /** Accessible name — required (e.g. "More options"). */
   'aria-label': string;
   /** Menu open ("Selected" in the kit). Controlled. */
@@ -297,7 +329,12 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
   const radii = expanded
     ? dyn.radii(outer, outer, outer, outer)
     : isDisabled || forced.state
-      ? dyn.radii(forced.state === 'hovered' || pressedForced ? activeR : restR, outer, forced.state === 'hovered' || pressedForced ? activeR : restR, outer)
+      ? dyn.radii(
+          forced.state === 'hovered' || pressedForced ? activeR : restR,
+          outer,
+          forced.state === 'hovered' || pressedForced ? activeR : restR,
+          outer,
+        )
       : dyn.trailingRadii(outer, restR, activeR);
   const insetBlock = (48 - H[size]) / 2;
   const centre = expanded || pressedForced;
@@ -314,9 +351,14 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
         onExpandedChange?.(!expanded);
       }}
       {...rest}
-      {...stylex.props(...rootStyles(size, isDisabled, forced, sx), expanded && !isDisabled && stateLayerHost.forceFocus)}
+      {...stylex.props(
+        ...rootStyles(size, isDisabled, forced, sx),
+        expanded && !isDisabled && stateLayerHost.forceFocus,
+      )}
     >
-      {variant === 'elevated' && !isDisabled && <span aria-hidden {...stylex.props(s.shadow, radii, dyn.inset(insetBlock > 0 ? insetBlock : 0))} />}
+      {variant === 'elevated' && !isDisabled && (
+        <span aria-hidden {...stylex.props(s.shadow, radii, dyn.inset(insetBlock > 0 ? insetBlock : 0))} />
+      )}
       <span
         {...stylex.props(
           base.container,
@@ -336,7 +378,12 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
             height={CHEVRON[size]}
             fill="currentColor"
             aria-hidden
-            {...stylex.props(s.chevron, dyn.chevronShift(`${CHEVRON_SHIFT[size]}px`), centre && centred.chevron, isDisabled && disabled.content)}
+            {...stylex.props(
+              s.chevron,
+              dyn.chevronShift(`${CHEVRON_SHIFT[size]}px`),
+              centre && centred.chevron,
+              isDisabled && disabled.content,
+            )}
           >
             <path d={KEYBOARD_ARROW_DOWN} {...stylex.props(s.chevronPath, flip.live, centre && centred.path)} />
           </svg>

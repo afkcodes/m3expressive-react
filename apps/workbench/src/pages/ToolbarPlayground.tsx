@@ -50,15 +50,38 @@ const s = stylex.create({
   },
   scroll: { flexGrow: 1, overflowY: 'auto' },
   row: { paddingBlock: 12, paddingInline: 16, color: color.onSurfaceVariant },
-  floatH: { position: 'absolute', bottom: 16, left: 0, right: 0, display: 'flex', justifyContent: 'center', pointerEvents: 'none' },
-  floatV: { position: 'absolute', top: 0, bottom: 0, right: 16, display: 'flex', alignItems: 'center', pointerEvents: 'none' },
+  floatH: {
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+  },
+  floatV: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 16,
+    display: 'flex',
+    alignItems: 'center',
+    pointerEvents: 'none',
+  },
   hit: { pointerEvents: 'auto' },
   muted: { color: color.onSurfaceVariant },
 });
 
 type IconName = keyof typeof assets.icons;
 const Icon = ({ name, size = 24 }: { name: string; size?: 20 | 24 }) => (
-  <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
+  <svg
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
+    fill="currentColor"
+    aria-hidden
+    style={{ display: 'block' }}
+  >
     <path d={assets.icons[`${name}-${size}` as IconName]} />
   </svg>
 );
@@ -75,7 +98,11 @@ export function ToolbarPlayground() {
   const [expanded, setExpanded] = useState(true);
   const [view, setView] = useState('photos');
   const [behavior, setBehavior] = useState<'collapse' | 'exit'>('collapse');
-  const nestedScroll = useFloatingToolbarNestedScroll({ expanded, onExpand: () => setExpanded(true), onCollapse: () => setExpanded(false) });
+  const nestedScroll = useFloatingToolbarNestedScroll({
+    expanded,
+    onExpand: () => setExpanded(true),
+    onCollapse: () => setExpanded(false),
+  });
   const exitAlways = useFloatingToolbarExitAlways(type === 'floating-v' ? 'end' : 'bottom');
   const scrollRef = behavior === 'collapse' ? nestedScroll : exitAlways.scrollRef;
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
@@ -143,7 +170,11 @@ export function ToolbarPlayground() {
             ))}
           </div>
           {floating ? (
-            <div key={behavior} ref={behavior === 'exit' ? exitAlways.ref : undefined} {...stylex.props(type === 'floating-v' ? s.floatV : s.floatH)}>
+            <div
+              key={behavior}
+              ref={behavior === 'exit' ? exitAlways.ref : undefined}
+              {...stylex.props(type === 'floating-v' ? s.floatV : s.floatH)}
+            >
               <div {...stylex.props(s.hit)}>
                 <Toolbar
                   key={type}

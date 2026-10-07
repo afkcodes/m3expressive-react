@@ -11,7 +11,8 @@ const Icon = ({ name }: { name: IconName }) => (
     <path d={assets.icons[name]} />
   </svg>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 const ROW = [
   { label: 'Video', icon: 'videocam-24' },
@@ -30,7 +31,12 @@ function render(name: string): ReactNode {
     return (
       <TabScope variant={variant}>
         <ForceState state={asForced(p[3]!)} ripplePath={ripple}>
-          <Tab value="t" label={kind === 'i' ? undefined : 'Tab'} icon={kind === 'l' ? undefined : <Icon name="stars-24" />} selected={p[4] === 'sel'} />
+          <Tab
+            value="t"
+            label={kind === 'i' ? undefined : 'Tab'}
+            icon={kind === 'l' ? undefined : <Icon name="stars-24" />}
+            selected={p[4] === 'sel'}
+          />
         </ForceState>
       </TabScope>
     );
@@ -43,7 +49,12 @@ function render(name: string): ReactNode {
   return (
     <Tabs variant={variant} scrollable={scrollable} defaultValue={0} aria-label="Media">
       {items.map((t, i) => (
-        <Tab key={i} value={i} label={layout === 'icon-only' ? undefined : t.label} icon={layout === 'label-only' ? undefined : <Icon name={t.icon} />} />
+        <Tab
+          key={i}
+          value={i}
+          label={layout === 'icon-only' ? undefined : t.label}
+          icon={layout === 'label-only' ? undefined : <Icon name={t.icon} />}
+        />
       ))}
     </Tabs>
   );
@@ -95,7 +106,17 @@ const fixture: FixtureModule = {
     ['live-scroll', { width: 360, height: 48, render: () => <LiveScrollTabs /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
-      return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex', flexDirection: 'column' }}>{render(name)}</div> }];
+      return [
+        name,
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => (
+            <div style={{ width: w, height: h, display: 'flex', flexDirection: 'column' }}>{render(name)}</div>
+          ),
+        },
+      ];
     }),
   ]),
 };

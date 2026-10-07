@@ -39,7 +39,14 @@ const SHAPES: ButtonShape[] = ['round', 'square'];
 const ICON_VARIANTS: IconButtonVariant[] = ['filled', 'tonal', 'outlined', 'standard'];
 const WIDTHS: IconButtonWidth[] = ['narrow', 'default', 'wide'];
 const TOGGLE_VARIANTS: ToggleButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated'];
-const FAB_COLORS: FabColor[] = ['primary-container', 'secondary-container', 'tertiary-container', 'primary', 'secondary', 'tertiary'];
+const FAB_COLORS: FabColor[] = [
+  'primary-container',
+  'secondary-container',
+  'tertiary-container',
+  'primary',
+  'secondary',
+  'tertiary',
+];
 
 const s = stylex.create({
   page: {
@@ -116,9 +123,21 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function Select<T extends string>({ value, options, onChange }: { value: T; options: readonly T[]; onChange: (v: T) => void }) {
+function Select<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: readonly T[];
+  onChange: (v: T) => void;
+}) {
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value as T)} style={{ font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 }}>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as T)}
+      style={{ font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 }}
+    >
       {options.map((o) => (
         <option key={o} value={o}>
           {o}
@@ -154,26 +173,50 @@ export function ButtonPlayground() {
     <M3Provider colorScheme={scheme} contrast={contrast} motionScheme={motion}>
       <main {...stylex.props(s.page)}>
         <p style={{ margin: 0 }}>
-          <a href="/" style={{ color: 'inherit' }}>← all</a>
+          <a href="/" style={{ color: 'inherit' }}>
+            ← all
+          </a>
         </p>
-        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>Button playground</h1>
+        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>
+          Button playground
+        </h1>
         <p {...stylex.props(typescale.bodyMedium, s.muted)} style={{ margin: 0 }}>
-          Hover it, press and hold to see the shape morph and ripple, and use Tab to see the focus ring.
-          Everything here is the real component, not a picture.
+          Hover it, press and hold to see the shape morph and ripple, and use Tab to see the focus ring. Everything here
+          is the real component, not a picture.
         </p>
 
         <section {...stylex.props(s.panel)}>
-          <Field label="Variant"><Select value={variant} options={VARIANTS} onChange={setVariant} /></Field>
-          <Field label="Size"><Select value={size} options={SIZES} onChange={setSize} /></Field>
-          <Field label="Shape"><Select value={shape} options={SHAPES} onChange={setShape} /></Field>
-          <Field label="Label">
-            <input value={label} onChange={(e) => setLabel(e.target.value)} style={{ font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8, width: 140 }} />
+          <Field label="Variant">
+            <Select value={variant} options={VARIANTS} onChange={setVariant} />
           </Field>
-          <Field label="Icon"><input type="checkbox" checked={withIcon} onChange={(e) => setWithIcon(e.target.checked)} /></Field>
-          <Field label="Disabled"><input type="checkbox" checked={disabled} onChange={(e) => setDisabled(e.target.checked)} /></Field>
-          <Field label="Colour scheme"><Select value={scheme} options={['light', 'dark', 'system'] as const} onChange={setScheme} /></Field>
-          <Field label="Contrast"><Select value={contrast} options={['standard', 'medium', 'high'] as const} onChange={setContrast} /></Field>
-          <Field label="Motion"><Select value={motion} options={['expressive', 'standard'] as const} onChange={setMotion} /></Field>
+          <Field label="Size">
+            <Select value={size} options={SIZES} onChange={setSize} />
+          </Field>
+          <Field label="Shape">
+            <Select value={shape} options={SHAPES} onChange={setShape} />
+          </Field>
+          <Field label="Label">
+            <input
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              style={{ font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8, width: 140 }}
+            />
+          </Field>
+          <Field label="Icon">
+            <input type="checkbox" checked={withIcon} onChange={(e) => setWithIcon(e.target.checked)} />
+          </Field>
+          <Field label="Disabled">
+            <input type="checkbox" checked={disabled} onChange={(e) => setDisabled(e.target.checked)} />
+          </Field>
+          <Field label="Colour scheme">
+            <Select value={scheme} options={['light', 'dark', 'system'] as const} onChange={setScheme} />
+          </Field>
+          <Field label="Contrast">
+            <Select value={contrast} options={['standard', 'medium', 'high'] as const} onChange={setContrast} />
+          </Field>
+          <Field label="Motion">
+            <Select value={motion} options={['expressive', 'standard'] as const} onChange={setMotion} />
+          </Field>
         </section>
 
         <section {...stylex.props(s.stage)}>
@@ -192,16 +235,28 @@ export function ButtonPlayground() {
 
         <pre {...stylex.props(s.code)}>{snippet}</pre>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Icon buttons ({shape}, {size})</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Icon buttons ({shape}, {size})
+        </h2>
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'max-content repeat(3, max-content)' }}>
           <span />
           {WIDTHS.map((w) => (
-            <span key={w} {...stylex.props(typescale.labelMedium, s.muted)}>{w}</span>
+            <span key={w} {...stylex.props(typescale.labelMedium, s.muted)}>
+              {w}
+            </span>
           ))}
           {ICON_VARIANTS.map((v) => (
             <Row key={v} label={v}>
               {WIDTHS.map((w) => (
-                <IconButton key={w} aria-label={`${v} ${w}`} variant={v} size={size} width={w} shape={shape} disabled={disabled}>
+                <IconButton
+                  key={w}
+                  aria-label={`${v} ${w}`}
+                  variant={v}
+                  size={size}
+                  width={w}
+                  shape={shape}
+                  disabled={disabled}
+                >
                   <StarsFilled />
                 </IconButton>
               ))}
@@ -209,14 +264,23 @@ export function ButtonPlayground() {
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Toggle buttons ({shape} when off, {size}) — click to select</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Toggle buttons ({shape} when off, {size}) — click to select
+        </h2>
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'max-content repeat(2, max-content)' }}>
           <span />
           <span {...stylex.props(typescale.labelMedium, s.muted)}>button</span>
           <span {...stylex.props(typescale.labelMedium, s.muted)}>icon button (narrow · default · wide)</span>
           {TOGGLE_VARIANTS.map((v) => (
             <Row key={v} label={v}>
-              <ToggleButton variant={v} size={size} shape={shape} icon={<Stars />} selectedIcon={<Stars selected />} disabled={disabled}>
+              <ToggleButton
+                variant={v}
+                size={size}
+                shape={shape}
+                icon={<Stars />}
+                selectedIcon={<Stars selected />}
+                disabled={disabled}
+              >
                 {label || undefined}
               </ToggleButton>
               <span style={{ display: 'inline-flex', gap: 8 }}>
@@ -239,17 +303,23 @@ export function ButtonPlayground() {
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Split buttons ({size}) — hover each half, click the chevron</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Split buttons ({size}) — hover each half, click the chevron
+        </h2>
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'repeat(4, max-content)' }}>
           {TOGGLE_VARIANTS.map((v) => (
             <SplitButton key={v} variant={v} size={size} disabled={disabled}>
-              <SplitButtonLeading icon={withIcon ? <StarsFilled /> : undefined}>{label || undefined}</SplitButtonLeading>
+              <SplitButtonLeading icon={withIcon ? <StarsFilled /> : undefined}>
+                {label || undefined}
+              </SplitButtonLeading>
               <SplitButtonTrailing aria-label="More options" />
             </SplitButton>
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>FABs — hover lifts to level 4</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          FABs — hover lifts to level 4
+        </h2>
         <section {...stylex.props(s.panel)}>
           <Field label="Extended FABs expanded">
             <input type="checkbox" checked={fabExpanded} onChange={(e) => setFabExpanded(e.target.checked)} />
@@ -258,18 +328,35 @@ export function ButtonPlayground() {
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'max-content repeat(6, max-content)' }}>
           {FAB_COLORS.map((c) => (
             <Row key={c} label={c}>
-              <Fab aria-label={`${c} fab`} color={c}><StarsFilled /></Fab>
-              <Fab aria-label={`${c} medium fab`} color={c} size="medium"><StarsFilled /></Fab>
-              <Fab aria-label={`${c} large fab`} color={c} size="large"><StarsFilled /></Fab>
-              <ExtendedFab color={c} icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
-              <ExtendedFab color={c} size="medium" icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
-              <ExtendedFab color={c} size="large" icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
+              <Fab aria-label={`${c} fab`} color={c}>
+                <StarsFilled />
+              </Fab>
+              <Fab aria-label={`${c} medium fab`} color={c} size="medium">
+                <StarsFilled />
+              </Fab>
+              <Fab aria-label={`${c} large fab`} color={c} size="large">
+                <StarsFilled />
+              </Fab>
+              <ExtendedFab color={c} icon={<StarsFilled />} expanded={fabExpanded}>
+                {label || 'Label'}
+              </ExtendedFab>
+              <ExtendedFab color={c} size="medium" icon={<StarsFilled />} expanded={fabExpanded}>
+                {label || 'Label'}
+              </ExtendedFab>
+              <ExtendedFab color={c} size="large" icon={<StarsFilled />} expanded={fabExpanded}>
+                {label || 'Label'}
+              </ExtendedFab>
             </Row>
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>FAB menu — click to open, arrows to move, Esc to close</h2>
-        <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'repeat(3, max-content)', alignItems: 'end', minHeight: 300 }}>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          FAB menu — click to open, arrows to move, Esc to close
+        </h2>
+        <section
+          {...stylex.props(s.grid)}
+          style={{ gridTemplateColumns: 'repeat(3, max-content)', alignItems: 'end', minHeight: 300 }}
+        >
           {(['primary', 'secondary', 'tertiary'] as const).map((c) => (
             <FabMenu key={c} color={c} aria-label={`${c} actions`} icon={<StarsFilled />}>
               <FabMenuItem icon={<StarsFilled />}>First</FabMenuItem>
@@ -279,7 +366,9 @@ export function ButtonPlayground() {
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Button groups ({size}, {shape}) — press and hold a button in the standard groups to widen it</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Button groups ({size}, {shape}) — press and hold a button in the standard groups to widen it
+        </h2>
         <section {...stylex.props(s.stage)} style={{ minHeight: 0, padding: 24 }}>
           <ConnectedButtonGroup size={size} shape={shape} defaultValue={['day']} aria-label="Range" disabled={disabled}>
             {['day', 'week', 'month'].map((v) => (
@@ -297,14 +386,25 @@ export function ButtonPlayground() {
           </ButtonGroup>
           <ButtonGroup size={size}>
             {(['filled', 'tonal', 'outlined'] as const).map((v) => (
-              <ToggleIconButton key={v} aria-label={v} variant={v} size={size} width="wide" shape={shape} selectedIcon={<Stars selected />} disabled={disabled}>
+              <ToggleIconButton
+                key={v}
+                aria-label={v}
+                variant={v}
+                size={size}
+                width="wide"
+                shape={shape}
+                selectedIcon={<Stars selected />}
+                disabled={disabled}
+              >
                 <Stars />
               </ToggleIconButton>
             ))}
           </ButtonGroup>
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Segmented button (baseline)</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Segmented button (baseline)
+        </h2>
         <section {...stylex.props(s.stage)} style={{ minHeight: 0, padding: 24 }}>
           <SegmentedButton defaultValue={['week']} aria-label="Range" disabled={disabled}>
             {['day', 'week', 'month', 'year'].map((v) => (
@@ -315,16 +415,27 @@ export function ButtonPlayground() {
           </SegmentedButton>
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Every variant × size ({shape})</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
+          Every variant × size ({shape})
+        </h2>
         <section {...stylex.props(s.grid)}>
           <span />
           {SIZES.map((sz) => (
-            <span key={sz} {...stylex.props(typescale.labelMedium, s.muted)}>{sz}</span>
+            <span key={sz} {...stylex.props(typescale.labelMedium, s.muted)}>
+              {sz}
+            </span>
           ))}
           {VARIANTS.map((v) => (
             <Row key={v} label={v}>
               {SIZES.map((sz) => (
-                <Button key={sz} variant={v} size={sz} shape={shape} icon={withIcon ? <StarsFilled /> : undefined} disabled={disabled}>
+                <Button
+                  key={sz}
+                  variant={v}
+                  size={sz}
+                  shape={shape}
+                  icon={withIcon ? <StarsFilled /> : undefined}
+                  disabled={disabled}
+                >
                   {label || undefined}
                 </Button>
               ))}

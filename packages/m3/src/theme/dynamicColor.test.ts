@@ -1,6 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { argbFromHex, hexFromArgb, Hct, MaterialDynamicColors, SchemeTonalSpot } from '@material/material-color-utilities';
+import {
+  argbFromHex,
+  hexFromArgb,
+  Hct,
+  MaterialDynamicColors,
+  SchemeTonalSpot,
+} from '@material/material-color-utilities';
 import { COLOR_ROLES, schemeFromSeed, seedColorsFromPixels } from './dynamicColor.ts';
 
 const HEX6 = /^#[0-9A-F]{6}$/;
@@ -54,19 +60,36 @@ describe('seedColorsFromPixels', () => {
   };
 
   it('ranks the image colours best first', () => {
-    const seeds = seedColorsFromPixels(image([[200, 40, 40, 255, 700], [30, 60, 200, 255, 300]]));
+    const seeds = seedColorsFromPixels(
+      image([
+        [200, 40, 40, 255, 700],
+        [30, 60, 200, 255, 300],
+      ]),
+    );
     expect(seeds.length).toBeGreaterThanOrEqual(1);
     const top = Hct.fromInt(argbFromHex(seeds[0]!));
     expect(top.hue < 40 || top.hue > 340).toBe(true); // the dominant red
   });
 
   it('ignores translucent pixels and falls back to Google Blue when nothing is usable', () => {
-    expect(seedColorsFromPixels(image([[128, 128, 128, 255, 500], [255, 0, 0, 100, 500]]))).toEqual(['#4285F4']);
+    expect(
+      seedColorsFromPixels(
+        image([
+          [128, 128, 128, 255, 500],
+          [255, 0, 0, 100, 500],
+        ]),
+      ),
+    ).toEqual(['#4285F4']);
   });
 
   it('returns at most `count` candidates', () => {
     const seeds = seedColorsFromPixels(
-      image([[200, 40, 40, 255, 300], [30, 60, 200, 255, 300], [40, 170, 60, 255, 300], [230, 180, 20, 255, 300]]),
+      image([
+        [200, 40, 40, 255, 300],
+        [30, 60, 200, 255, 300],
+        [40, 170, 60, 255, 300],
+        [230, 180, 20, 255, 300],
+      ]),
       2,
     );
     expect(seeds.length).toBeLessThanOrEqual(2);

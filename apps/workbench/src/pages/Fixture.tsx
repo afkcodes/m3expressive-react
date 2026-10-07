@@ -9,7 +9,12 @@ export const FIXTURE_PADDING = 32;
 
 export function Fixture({ component, variant }: { component: string; variant: string }) {
   const v = fixtures[component]?.variants[variant];
-  if (!v) return <p>Unknown fixture {component}/{variant}</p>;
+  if (!v)
+    return (
+      <p>
+        Unknown fixture {component}/{variant}
+      </p>
+    );
   return (
     <M3Provider colorScheme={v.colorScheme ?? 'light'}>
       <div style={{ padding: v.padding ?? FIXTURE_PADDING, display: 'inline-block' }}>

@@ -35,9 +35,33 @@ import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/navigation/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
-  stage: { display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainerLow },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
+  stage: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 16,
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainerLow,
+  },
   muted: { color: color.onSurfaceVariant },
   swatches: { display: 'flex', flexWrap: 'wrap', gap: 8 },
   row: { display: 'flex', flexDirection: 'row', gap: 8 },
@@ -54,7 +78,17 @@ const s = stylex.create({
   },
   swatchOn: { borderColor: color.onSurface, boxShadow: `inset 0 0 0 2px ${color.surface}` },
   wallpapers: { display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' },
-  wallpaper: { width: 96, height: 64, borderRadius: 12, borderWidth: 2, borderStyle: 'solid', borderColor: 'transparent', cursor: 'pointer', padding: 0, overflow: 'hidden' },
+  wallpaper: {
+    width: 96,
+    height: 64,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderStyle: 'solid',
+    borderColor: 'transparent',
+    cursor: 'pointer',
+    padding: 0,
+    overflow: 'hidden',
+  },
   wallpaperOn: { borderColor: color.onSurface },
   drop: {
     display: 'grid',
@@ -80,14 +114,44 @@ const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius:
 /** Hard-coded seed presets (generic hues; the first is the M3 baseline seed). */
 const PRESETS = ['#6750A4', '#006A6A', '#B33B15', '#386A20', '#0061A4', '#6D5E0F', '#984061'];
 
-const VARIANTS: SchemeVariant[] = ['tonal-spot', 'neutral', 'vibrant', 'expressive', 'fidelity', 'content', 'rainbow', 'fruit-salad', 'monochrome'];
+const VARIANTS: SchemeVariant[] = [
+  'tonal-spot',
+  'neutral',
+  'vibrant',
+  'expressive',
+  'fidelity',
+  'content',
+  'rainbow',
+  'fruit-salad',
+  'monochrome',
+];
 
 /** Procedural "wallpapers" (canvas gradients) to seed from without shipping photos. */
 const WALLPAPERS: Record<string, Array<[number, string]>> = {
-  Sunset: [[0, '#2B1055'], [0.45, '#D53369'], [0.8, '#F2A65A'], [1, '#FFE29F']],
-  Forest: [[0, '#0B3D2E'], [0.5, '#2F6B3B'], [0.85, '#A7C957'], [1, '#F2E8CF']],
-  Ocean: [[0, '#03045E'], [0.4, '#0077B6'], [0.75, '#48CAE4'], [1, '#CAF0F8']],
-  Desert: [[0, '#5E3023'], [0.4, '#C08552'], [0.8, '#E9C46A'], [1, '#F4E9CD']],
+  Sunset: [
+    [0, '#2B1055'],
+    [0.45, '#D53369'],
+    [0.8, '#F2A65A'],
+    [1, '#FFE29F'],
+  ],
+  Forest: [
+    [0, '#0B3D2E'],
+    [0.5, '#2F6B3B'],
+    [0.85, '#A7C957'],
+    [1, '#F2E8CF'],
+  ],
+  Ocean: [
+    [0, '#03045E'],
+    [0.4, '#0077B6'],
+    [0.75, '#48CAE4'],
+    [1, '#CAF0F8'],
+  ],
+  Desert: [
+    [0, '#5E3023'],
+    [0.4, '#C08552'],
+    [0.8, '#E9C46A'],
+    [1, '#F4E9CD'],
+  ],
 };
 
 function paintWallpaper(canvas: HTMLCanvasElement, stops: Array<[number, string]>) {
@@ -104,13 +168,27 @@ function paintWallpaper(canvas: HTMLCanvasElement, stops: Array<[number, string]
   ctx.fill();
 }
 
-function Wallpaper({ name, selected, onPick }: { name: string; selected: boolean; onPick: (canvas: HTMLCanvasElement) => void }) {
+function Wallpaper({
+  name,
+  selected,
+  onPick,
+}: {
+  name: string;
+  selected: boolean;
+  onPick: (canvas: HTMLCanvasElement) => void;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (ref.current) paintWallpaper(ref.current, WALLPAPERS[name]!);
   }, [name]);
   return (
-    <button type="button" aria-label={`${name} wallpaper`} aria-pressed={selected} onClick={() => ref.current && onPick(ref.current)} {...stylex.props(s.wallpaper, selected && s.wallpaperOn)}>
+    <button
+      type="button"
+      aria-label={`${name} wallpaper`}
+      aria-pressed={selected}
+      onClick={() => ref.current && onPick(ref.current)}
+      {...stylex.props(s.wallpaper, selected && s.wallpaperOn)}
+    >
       <canvas ref={ref} width={192} height={128} style={{ display: 'block', width: '100%', height: '100%' }} />
     </button>
   );
@@ -132,9 +210,15 @@ function Preview() {
         <Button variant="outlined">Outlined</Button>
         <Button variant="elevated">Elevated</Button>
         <Button variant="text">Text</Button>
-        <IconButton aria-label="Favourite" variant="filled"><Icon name="stars-24" /></IconButton>
-        <Fab aria-label="Compose"><Icon name="stars_filled-24" /></Fab>
-        <Fab aria-label="Compose tertiary" color="tertiary-container"><Icon name="stars_filled-24" /></Fab>
+        <IconButton aria-label="Favourite" variant="filled">
+          <Icon name="stars-24" />
+        </IconButton>
+        <Fab aria-label="Compose">
+          <Icon name="stars_filled-24" />
+        </Fab>
+        <Fab aria-label="Compose tertiary" color="tertiary-container">
+          <Icon name="stars_filled-24" />
+        </Fab>
       </div>
       <div {...stylex.props(s.stage)}>
         <FilterChip defaultSelected>Selected</FilterChip>
@@ -176,7 +260,13 @@ function Preview() {
         <div style={{ width: 360 }}>
           <NavigationBar value={nav} onValueChange={(v) => setNav(v as number)} aria-label="Sections">
             {['Home', 'Activity', 'Saved'].map((t, i) => (
-              <NavigationItem key={t} value={i} icon={<Icon name="stars-24" />} selectedIcon={<Icon name="stars_filled-24" />} label={t} />
+              <NavigationItem
+                key={t}
+                value={i}
+                icon={<Icon name="stars-24" />}
+                selectedIcon={<Icon name="stars_filled-24" />}
+                label={t}
+              />
             ))}
           </NavigationBar>
         </div>
@@ -187,14 +277,23 @@ function Preview() {
 
 /** Every generated role, light and dark, with its hex. */
 function RoleTable({ colors }: { colors: ReturnType<typeof useDynamicScheme> }) {
-  if (!colors) return <p {...stylex.props(typescale.bodyMedium, s.muted)}>Baseline (Figma kit) colours — pick a seed to generate a scheme.</p>;
+  if (!colors)
+    return (
+      <p {...stylex.props(typescale.bodyMedium, s.muted)}>
+        Baseline (Figma kit) colours — pick a seed to generate a scheme.
+      </p>
+    );
   return (
     <div {...stylex.props(s.roles)}>
       {COLOR_ROLES.map((role) => (
         <div key={role} {...stylex.props(s.role)}>
           <span {...stylex.props(s.roleName)}>{role}</span>
           {(['light', 'dark'] as const).map((mode) => (
-            <span key={mode} {...stylex.props(s.roleChip)} style={{ backgroundColor: colors[role][mode], color: contrastText(colors[role][mode]) }}>
+            <span
+              key={mode}
+              {...stylex.props(s.roleChip)}
+              style={{ backgroundColor: colors[role][mode], color: contrastText(colors[role][mode]) }}
+            >
               {colors[role][mode]}
             </span>
           ))}
@@ -229,9 +328,12 @@ export function ThemePlayground() {
   }, [extracted.status, extracted.colors]);
 
   const preview = image?.preview;
-  useEffect(() => () => {
-    if (preview) URL.revokeObjectURL(preview);
-  }, [preview]);
+  useEffect(
+    () => () => {
+      if (preview) URL.revokeObjectURL(preview);
+    },
+    [preview],
+  );
 
   const pickFile = (file: File | undefined) => {
     if (!file || !file.type.startsWith('image/')) return;
@@ -247,13 +349,17 @@ export function ThemePlayground() {
     <M3Provider colorScheme={scheme} contrast={contrast} colors={colors}>
       <main {...stylex.props(s.page)}>
         <p style={{ margin: 0 }}>
-          <a href="/" style={{ color: 'inherit' }}>← all</a>
+          <a href="/" style={{ color: 'inherit' }}>
+            ← all
+          </a>
         </p>
-        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>Dynamic colour</h1>
+        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>
+          Dynamic colour
+        </h1>
         <p {...stylex.props(typescale.bodyMedium, s.muted)} style={{ margin: 0, maxWidth: 720 }}>
-          Every colour role is generated from one seed with Google&apos;s material-color-utilities — the system behind Android&apos;s
-          wallpaper colours. Seed from a colour, or from a picture: its colours are quantised and scored, and the best one seeds the
-          scheme.
+          Every colour role is generated from one seed with Google&apos;s material-color-utilities — the system behind
+          Android&apos;s wallpaper colours. Seed from a colour, or from a picture: its colours are quantised and scored,
+          and the best one seeds the scheme.
         </p>
 
         <section {...stylex.props(s.panel)}>
@@ -268,7 +374,9 @@ export function ThemePlayground() {
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span {...stylex.props(s.muted)}>variant</span>
             <select value={variant} onChange={(e) => setVariant(e.target.value as SchemeVariant)} style={field}>
-              {VARIANTS.map((v) => <option key={v}>{v}</option>)}
+              {VARIANTS.map((v) => (
+                <option key={v}>{v}</option>
+              ))}
             </select>
           </label>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
@@ -288,7 +396,9 @@ export function ThemePlayground() {
           </label>
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Seed colour</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
+          Seed colour
+        </h2>
         <section {...stylex.props(s.panel)}>
           <div {...stylex.props(s.swatches)} role="group" aria-label="Seed presets">
             {PRESETS.map((c) => (
@@ -318,18 +428,37 @@ export function ThemePlayground() {
               style={{ width: 56, height: 36, padding: 0, border: 0, background: 'none' }}
             />
           </label>
-          <Button variant="text" onClick={() => { setImage(null); setSeed(null); }}>Baseline colours</Button>
+          <Button
+            variant="text"
+            onClick={() => {
+              setImage(null);
+              setSeed(null);
+            }}
+          >
+            Baseline colours
+          </Button>
           <span {...stylex.props(typescale.labelLarge, s.muted)}>seed: {seed ?? 'none (Figma kit)'}</span>
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Seed from a picture</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
+          Seed from a picture
+        </h2>
         <section {...stylex.props(s.panel)}>
           <div {...stylex.props(s.wallpapers)}>
             {Object.keys(WALLPAPERS).map((name) => (
-              <Wallpaper key={name} name={name} selected={image?.label === name} onPick={(canvas) => setImage({ source: canvas, label: name })} />
+              <Wallpaper
+                key={name}
+                name={name}
+                selected={image?.label === name}
+                onPick={(canvas) => setImage({ source: canvas, label: name })}
+              />
             ))}
             {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- drag-and-drop is an extra; the file input is the accessible path */}
-            <label {...stylex.props(s.drop, typescale.labelMedium)} onDragOver={(e) => e.preventDefault()} onDrop={onDrop}>
+            <label
+              {...stylex.props(s.drop, typescale.labelMedium)}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={onDrop}
+            >
               <input type="file" accept="image/*" hidden onChange={(e) => pickFile(e.target.files?.[0])} />
               Upload or drop a picture
             </label>
@@ -338,21 +467,37 @@ export function ThemePlayground() {
           {image && (
             <div style={{ display: 'grid', gap: 6 }}>
               <span {...stylex.props(typescale.labelMedium, s.muted)}>
-                {extracted.status === 'loading' ? 'extracting…' : extracted.status === 'error' ? `couldn't read the image: ${extracted.error?.message}` : 'colours from the picture (best first)'}
+                {extracted.status === 'loading'
+                  ? 'extracting…'
+                  : extracted.status === 'error'
+                    ? `couldn't read the image: ${extracted.error?.message}`
+                    : 'colours from the picture (best first)'}
               </span>
               <div {...stylex.props(s.swatches)} role="group" aria-label="Seed colours from the picture">
                 {candidates.map((c) => (
-                  <button key={c} type="button" aria-label={`Seed ${c}`} aria-pressed={seed === c} onClick={() => setSeed(c)} style={{ backgroundColor: c }} {...stylex.props(s.swatch, seed === c && s.swatchOn)} />
+                  <button
+                    key={c}
+                    type="button"
+                    aria-label={`Seed ${c}`}
+                    aria-pressed={seed === c}
+                    onClick={() => setSeed(c)}
+                    style={{ backgroundColor: c }}
+                    {...stylex.props(s.swatch, seed === c && s.swatchOn)}
+                  />
                 ))}
               </div>
             </div>
           )}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Components</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
+          Components
+        </h2>
         <Preview />
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Generated roles</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
+          Generated roles
+        </h2>
         <RoleTable colors={colors} />
       </main>
     </M3Provider>

@@ -29,7 +29,8 @@ const w = stylex.create({ px: (px: number) => ({ width: px }) });
 const GROUP_W: Record<ButtonSize, number> = { xsmall: 259, small: 295, medium: 370, large: 598, xlarge: 790 };
 const DISABLED_W: Partial<Record<ButtonSize, number>> = { xsmall: 85, small: 97, medium: 122, large: 198 };
 
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 const fixture: FixtureModule = {
   component: 'button-group',
@@ -65,7 +66,13 @@ const fixture: FixtureModule = {
       const kind = parts[0];
       let render: () => React.ReactNode;
       if (kind === 'standard') {
-        const [, shape, size, color, type] = parts as [string, ButtonShape, ButtonSize, 'tonal' | 'outlined' | 'filled', 'icon' | 'label'];
+        const [, shape, size, color, type] = parts as [
+          string,
+          ButtonShape,
+          ButtonSize,
+          'tonal' | 'outlined' | 'filled',
+          'icon' | 'label',
+        ];
         render = () => (
           <ButtonGroup size={size}>
             {[0, 1, 2, 3].map((i) =>
@@ -94,7 +101,8 @@ const fixture: FixtureModule = {
         );
       } else {
         const [, size, sel, state] = parts as [string, ButtonSize, 'selected' | 'unselected', string];
-        const ripple = assets.segRipple[{ xsmall: 'xs', small: 's', medium: 'm', large: 'l', xlarge: 'xl' }[size] as 'xs'][sel];
+        const ripple =
+          assets.segRipple[{ xsmall: 'xs', small: 's', medium: 'm', large: 'l', xlarge: 'xl' }[size] as 'xs'][sel];
         const width = state === 'disabled' && sel === 'unselected' ? DISABLED_W[size] : undefined;
         render = () => (
           <ForceState state={asForced(state)} ripplePath={ripple}>

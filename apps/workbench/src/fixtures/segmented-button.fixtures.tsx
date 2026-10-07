@@ -11,7 +11,8 @@ const Stars = () => (
   </svg>
 );
 const w = stylex.create({ px: (px: number) => ({ width: px }) });
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 /** Figma "Segmented button": set-{segments}-d{density} and {start|middle|end}-{config}-{selected}-{state}. */
 const fixture: FixtureModule = {
@@ -23,7 +24,9 @@ const fixture: FixtureModule = {
         render: () => (
           <SegmentedButton defaultValue={['1']} aria-label="View" sx={w.px(310)}>
             {['1', '2', '3'].map((v) => (
-              <SegmentedButtonItem key={v} value={v}>Label</SegmentedButtonItem>
+              <SegmentedButtonItem key={v} value={v}>
+                Label
+              </SegmentedButtonItem>
             ))}
           </SegmentedButton>
         ),
@@ -70,14 +73,21 @@ const fixture: FixtureModule = {
             render: () => (
               <SegmentedButton density={density} value={['0']} sx={w.px(n * 104 - (n - 1))}>
                 {Array.from({ length: n }, (_, i) => (
-                  <SegmentedButtonItem key={i} value={String(i)}>Label</SegmentedButtonItem>
+                  <SegmentedButtonItem key={i} value={String(i)}>
+                    Label
+                  </SegmentedButtonItem>
                 ))}
               </SegmentedButton>
             ),
           },
         ];
       }
-      const [position, cfg, sel, state] = parts as ['start' | 'middle' | 'end', 'icon' | 'label' | 'labelicon', string, string];
+      const [position, cfg, sel, state] = parts as [
+        'start' | 'middle' | 'end',
+        'icon' | 'label' | 'labelicon',
+        string,
+        string,
+      ];
       return [
         name,
         {

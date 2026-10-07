@@ -25,7 +25,8 @@ const fx = stylex.create({
   over: { position: 'absolute', inset: 0 },
 });
 
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const noop = () => {};
 
 function hourCell(selected: boolean, st: string): ReactNode {
@@ -48,7 +49,8 @@ function hourCell(selected: boolean, st: string): ReactNode {
 function render(name: string): ReactNode {
   const p = name.split('-');
   if (p[0] === 'hour') return hourCell(p[1] === 'sel', p[2]!);
-  if (name === 'input-sel' || name === 'input-unsel') return <TimeSelector value="00" selected={name === 'input-sel'} />;
+  if (name === 'input-sel' || name === 'input-unsel')
+    return <TimeSelector value="00" selected={name === 'input-sel'} />;
   if (name === 'kbinput-sel' || name === 'kbinput-unsel') {
     const on = name === 'kbinput-sel';
     return (
@@ -60,7 +62,11 @@ function render(name: string): ReactNode {
   if (p[0] === 'period' || p[0] === 'periodh') {
     return (
       <ForceState state={asForced(p[2]!)}>
-        <PeriodSelector pm={p[1] === 'pm'} onChange={noop} orientation={p[0] === 'periodh' ? 'horizontal' : 'vertical'} />
+        <PeriodSelector
+          pm={p[1] === 'pm'}
+          onChange={noop}
+          orientation={p[0] === 'periodh' ? 'horizontal' : 'vertical'}
+        />
       </ForceState>
     );
   }
@@ -120,7 +126,12 @@ const fixture: FixtureModule = {
       const [w, h] = v.size as [number, number];
       return [
         name,
-        { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> },
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
       ];
     }),
   ]),

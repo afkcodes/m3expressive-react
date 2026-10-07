@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { Button, M3Provider, ModalTimePicker, TimePicker, typescale, type ColorSchemeMode, type Time } from '@m3x/react';
+import {
+  Button,
+  M3Provider,
+  ModalTimePicker,
+  TimePicker,
+  typescale,
+  type ColorSchemeMode,
+  type Time,
+} from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 
 const s = stylex.create({
@@ -68,7 +76,12 @@ export function TimePickerPlayground() {
           <Button onClick={() => setOpen(true)}>Open time picker</Button>
           <span {...stylex.props(typescale.bodyMedium, s.muted)}>dialog: {fmt(time, h24)}</span>
         </section>
-        <TimePicker value={inline} onChange={setInline} is24Hour={h24} orientation={horizontal ? 'horizontal' : 'vertical'} />
+        <TimePicker
+          value={inline}
+          onChange={setInline}
+          is24Hour={h24}
+          orientation={horizontal ? 'horizontal' : 'vertical'}
+        />
         <span {...stylex.props(typescale.bodyMedium, s.muted)}>inline: {fmt(inline, h24)}</span>
         <ModalTimePicker
           open={open}

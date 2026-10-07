@@ -73,7 +73,13 @@ const fixture: FixtureModule = {
   variants: Object.fromEntries(
     Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [layout, variant] = name.split('-') as ['stacked' | 'horizontal', CardVariant];
-      return [name, { node: v.node, render: () => (layout === 'stacked' ? <Stacked variant={variant} /> : <Horizontal variant={variant} />) }];
+      return [
+        name,
+        {
+          node: v.node,
+          render: () => (layout === 'stacked' ? <Stacked variant={variant} /> : <Horizontal variant={variant} />),
+        },
+      ];
     }),
   ),
 };

@@ -42,7 +42,9 @@ function render(name: string): ReactNode {
   const [kind, icon] = name.split('-') as [string, string];
   const withIcon = icon === 'icon' ? <Icon /> : undefined;
   if (kind === 'basic')
-    return <DialogSurface icon={withIcon} headline="Basic dialog title" supportingText={SUPPORTING} actions={actions} />;
+    return (
+      <DialogSurface icon={withIcon} headline="Basic dialog title" supportingText={SUPPORTING} actions={actions} />
+    );
   return (
     <DialogSurface
       icon={withIcon}
@@ -96,7 +98,12 @@ const fixture: FixtureModule = {
       const [w, h] = v.size as [number, number];
       return [
         name,
-        { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> },
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
       ];
     }),
   ]),

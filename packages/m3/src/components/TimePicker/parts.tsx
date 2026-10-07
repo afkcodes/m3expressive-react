@@ -1,4 +1,11 @@
-import { forwardRef, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -54,7 +61,14 @@ const s = stylex.create({
   selector24: { width: 116 },
   selectorOn: { color: color.onPrimaryContainer, backgroundColor: color.primaryContainer },
   centred: { width: '100%', textAlign: 'center' },
-  separator: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, flexShrink: 0, color: color.onSurface },
+  separator: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 24,
+    flexShrink: 0,
+    color: color.onSurface,
+  },
   // Keyboard field
   kbWrap: { display: 'flex', flexDirection: 'column', rowGap: 7, width: 96, flexShrink: 0 },
   kbField: {
@@ -68,7 +82,11 @@ const s = stylex.create({
     color: color.onSurface,
     backgroundColor: color.surfaceContainerHighest,
   },
-  kbFieldOn: { color: color.onPrimaryContainer, backgroundColor: color.primaryContainer, boxShadow: `inset 0 0 0 2px ${color.primary}` },
+  kbFieldOn: {
+    color: color.onPrimaryContainer,
+    backgroundColor: color.primaryContainer,
+    boxShadow: `inset 0 0 0 2px ${color.primary}`,
+  },
   // The input box is the 52px line box (a native input centres by font metrics, not line height).
   kbInput: {
     width: '100%',
@@ -158,7 +176,14 @@ const s = stylex.create({
     userSelect: 'none',
     outlineStyle: 'none',
   },
-  hand: { position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', color: color.primary, fill: color.primary },
+  hand: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    overflow: 'visible',
+    color: color.primary,
+    fill: color.primary,
+  },
   ring: {
     position: 'absolute',
     inset: 0,
@@ -188,7 +213,14 @@ const s = stylex.create({
   numStatic: { position: 'relative', display: 'block' },
   numSelected: { backgroundColor: color.primary },
   numLabel: { position: 'absolute', zIndex: 1, top: 12, left: '50%', transform: 'translateX(-50%)' },
-  selectorDot: { position: 'absolute', width: 48, height: 48, borderRadius: 24, backgroundColor: color.primary, pointerEvents: 'none' },
+  selectorDot: {
+    position: 'absolute',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: color.primary,
+    pointerEvents: 'none',
+  },
 });
 
 // ── Time selector (the dial picker's hour / minute boxes) ─────────────────────────────────────
@@ -303,7 +335,13 @@ export interface PeriodSelectorProps {
   labels?: { am?: string; pm?: string };
 }
 
-export function PeriodSelector({ pm, onChange, orientation = 'vertical', compact = false, labels = {} }: PeriodSelectorProps) {
+export function PeriodSelector({
+  pm,
+  onChange,
+  orientation = 'vertical',
+  compact = false,
+  labels = {},
+}: PeriodSelectorProps) {
   const forced = useForcedState();
   const h = orientation === 'horizontal';
   const half = (isPm: boolean, text: string) => {
@@ -413,7 +451,14 @@ export interface ClockFaceProps {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /** The dial: tap or drag to pick; arrows step the value. */
-export function ClockFace({ mode, value, is24Hour = false, onChange, onCommit, 'aria-label': ariaLabel }: ClockFaceProps) {
+export function ClockFace({
+  mode,
+  value,
+  is24Hour = false,
+  onChange,
+  onCommit,
+  'aria-label': ariaLabel,
+}: ClockFaceProps) {
   const face = useRef<HTMLDivElement>(null);
   const spring = useSpringToken('default-spatial');
   const inner = mode === 'hour' && is24Hour && (value === 0 || value > 12);
@@ -550,8 +595,19 @@ export function ClockFace({ mode, value, is24Hour = false, onChange, onCommit, '
   const isOn = (screen: 'hour' | 'minute', ring: 'outer' | 'inner', i: number) =>
     screen === mode && atRest && (ring === 'inner') === inner && (mode === 'minute' ? value === i * 5 : i === slot);
 
-  const cell = (screen: 'hour' | 'minute', ring: 'outer' | 'inner', i: number, label: string, pos: [number, number]) => (
-    <span key={`${ring}${i}`} aria-hidden {...stylex.props(s.num, isOn(screen, ring, i) && s.numOn)} style={{ left: pos[0], top: pos[1] }}>
+  const cell = (
+    screen: 'hour' | 'minute',
+    ring: 'outer' | 'inner',
+    i: number,
+    label: string,
+    pos: [number, number],
+  ) => (
+    <span
+      key={`${ring}${i}`}
+      aria-hidden
+      {...stylex.props(s.num, isOn(screen, ring, i) && s.numOn)}
+      style={{ left: pos[0], top: pos[1] }}
+    >
       <span {...stylex.props(typescale.bodyLarge, textBox.hug, s.numLabel)}>{label}</span>
     </span>
   );

@@ -138,8 +138,14 @@ describe('FeatureDetectorTest', () => {
       assertTrue(straightIsh(created));
       assertTrue(straightIsh(original));
 
-      assertPointsEqualish(new Point(created.anchor0X, created.anchor0Y), new Point(original.anchor0X, original.anchor0Y));
-      assertPointsEqualish(new Point(created.anchor1X, created.anchor1Y), new Point(original.anchor1X, original.anchor1Y));
+      assertPointsEqualish(
+        new Point(created.anchor0X, created.anchor0Y),
+        new Point(original.anchor0X, original.anchor0Y),
+      );
+      assertPointsEqualish(
+        new Point(created.anchor1X, created.anchor1Y),
+        new Point(original.anchor1X, original.anchor1Y),
+      );
     });
 
     // The order of the features can be different, as long as they describe the same shape

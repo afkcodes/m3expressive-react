@@ -68,8 +68,7 @@ export function stepSpring(
     const cos = Math.cos(dFdT);
     const sin = Math.sin(dFdT);
     displacement = e * (cosCoeff * cos + sinCoeff * sin);
-    velocity =
-      displacement * r + e * (-dampedFreq * cosCoeff * sin + dampedFreq * sinCoeff * cos);
+    velocity = displacement * r + e * (-dampedFreq * cosCoeff * sin + dampedFreq * sinCoeff * cos);
   }
 
   return { value: displacement + target, velocity };
@@ -89,11 +88,7 @@ export const SETTLE_THRESHOLD = 0.001;
  * Milliseconds until a 0→1 spring (with optional initial velocity, in
  * travel-units/s) stays within `threshold` of the target for good.
  */
-export function settleTimeMs(
-  spring: SpringParams,
-  initialVelocity = 0,
-  threshold = SETTLE_THRESHOLD,
-): number {
+export function settleTimeMs(spring: SpringParams, initialVelocity = 0, threshold = SETTLE_THRESHOLD): number {
   const limit = 10_000;
   let lastOutside = 0;
   for (let ms = 1; ms <= limit; ms++) {
@@ -122,11 +117,7 @@ export function sampleSpring(spring: SpringParams, durationMs: number, initialVe
  * Ramer–Douglas–Peucker so the polyline never deviates more than `tolerance`
  * from the true curve.
  */
-export function springToLinear(
-  spring: SpringParams,
-  durationMs = settleTimeMs(spring),
-  tolerance = 0.0005,
-): string {
+export function springToLinear(spring: SpringParams, durationMs = settleTimeMs(spring), tolerance = 0.0005): string {
   const pts = simplify(sampleSpring(spring, durationMs), tolerance);
   const fmt = (n: number, d: number) => {
     const s = n.toFixed(d).replace(/\.?0+$/, '');

@@ -66,7 +66,11 @@ for (const [name, v] of Object.entries(manifest.variants)) {
   const walk = (n: FigmaNode) => {
     for (const c of n.children ?? []) {
       const b = c.absoluteBoundingBox;
-      if (b) layers.push({ name: c.name, box: [round(b.x - origin.x), round(b.y - origin.y), round(b.width), round(b.height)] });
+      if (b)
+        layers.push({
+          name: c.name,
+          box: [round(b.x - origin.x), round(b.y - origin.y), round(b.width), round(b.height)],
+        });
       walk(c);
     }
   };

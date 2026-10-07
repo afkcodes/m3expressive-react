@@ -17,13 +17,26 @@ const TEXT: Record<string, string> = {
   'text-1-close': 'Single-line snackbar with close affordance',
   'text-1-noclose': 'Single-line snackbar',
 };
-const lines = (t: string): ReactNode => t.split('\n').map((l, i, a) => <Fragment key={i}>{l}{i < a.length - 1 && <br />}</Fragment>);
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const lines = (t: string): ReactNode =>
+  t.split('\n').map((l, i, a) => (
+    <Fragment key={i}>
+      {l}
+      {i < a.length - 1 && <br />}
+    </Fragment>
+  ));
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 function LiveDemo() {
   const snackbar = useSnackbar();
   return (
-    <Button onClick={() => snackbar.show('Message archived', { action: { label: 'Undo', onClick: () => document.body.setAttribute('data-undo', '1') } })}>
+    <Button
+      onClick={() =>
+        snackbar.show('Message archived', {
+          action: { label: 'Undo', onClick: () => document.body.setAttribute('data-undo', '1') },
+        })
+      }
+    >
       Archive
     </Button>
   );
@@ -34,10 +47,26 @@ function QueueDemo() {
   const snackbar = useSnackbar();
   return (
     <div style={{ display: 'flex', gap: 8 }}>
-      <button type="button" data-show="first" onClick={() => snackbar.show('First message')}>first</button>
-      <button type="button" data-show="second" onClick={() => snackbar.show('Second message')}>second</button>
-      <button type="button" data-show="action" onClick={() => snackbar.show('Connection lost', { action: { label: 'Retry' } })}>action</button>
-      <button type="button" data-show="close" onClick={() => snackbar.show('Closable message', { withClose: true, duration: 'long' })}>close</button>
+      <button type="button" data-show="first" onClick={() => snackbar.show('First message')}>
+        first
+      </button>
+      <button type="button" data-show="second" onClick={() => snackbar.show('Second message')}>
+        second
+      </button>
+      <button
+        type="button"
+        data-show="action"
+        onClick={() => snackbar.show('Connection lost', { action: { label: 'Retry' } })}
+      >
+        action
+      </button>
+      <button
+        type="button"
+        data-show="close"
+        onClick={() => snackbar.show('Closable message', { withClose: true, duration: 'long' })}
+      >
+        close
+      </button>
     </div>
   );
 }
@@ -45,8 +74,26 @@ function QueueDemo() {
 const fixture: FixtureModule = {
   component: 'snackbar',
   variants: Object.fromEntries([
-    ['live', { render: () => <SnackbarProvider timeout={60000}><LiveDemo /></SnackbarProvider> }],
-    ['queue-live', { render: () => <SnackbarProvider><QueueDemo /></SnackbarProvider> }],
+    [
+      'live',
+      {
+        render: () => (
+          <SnackbarProvider timeout={60000}>
+            <LiveDemo />
+          </SnackbarProvider>
+        ),
+      },
+    ],
+    [
+      'queue-live',
+      {
+        render: () => (
+          <SnackbarProvider>
+            <QueueDemo />
+          </SnackbarProvider>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const p = name.split('-');
       let render: () => ReactNode;
@@ -58,7 +105,11 @@ const fixture: FixtureModule = {
             stacked={kind === 'long'}
             twoLine={n === '2'}
             onClose={close === 'close' ? () => {} : undefined}
-            action={kind === 'text' ? undefined : <SnackbarAction>{kind === 'long' ? 'Longer Action' : 'Action'}</SnackbarAction>}
+            action={
+              kind === 'text' ? undefined : (
+                <SnackbarAction>{kind === 'long' ? 'Longer Action' : 'Action'}</SnackbarAction>
+              )
+            }
           >
             {lines(TEXT[key]!)}
           </Snackbar>

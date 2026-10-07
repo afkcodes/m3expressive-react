@@ -16,7 +16,14 @@ const fx = stylex.create({
 
 type IconName = keyof typeof assets.icons;
 const Icon = ({ name, size = 24 }: { name: string; size?: 20 | 24 }) => (
-  <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
+  <svg
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
+    fill="currentColor"
+    aria-hidden
+    style={{ display: 'block' }}
+  >
     <path d={assets.icons[`${name}-${size}` as IconName]} />
   </svg>
 );
@@ -30,7 +37,8 @@ const Toggle = ({ icon, label, on = false }: { icon: string; label: string; on?:
     <Icon name={icon} />
   </ToggleIconButton>
 );
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const shareRow = (
   <>
     <Btn icon="share" label="Share" />
@@ -52,7 +60,12 @@ function block(name: string, tone: ToolbarColor, kind: string, sel: boolean, sta
             <Icon name="stars_filled" />
           </IconButton>
         ) : kind === 'toggle' ? (
-          <ToggleIconButton aria-label="Favourite" pressed={sel} disabled={disabled} selectedIcon={<Icon name="stars_filled" />}>
+          <ToggleIconButton
+            aria-label="Favourite"
+            pressed={sel}
+            disabled={disabled}
+            selectedIcon={<Icon name="stars_filled" />}
+          >
             <Icon name="stars" />
           </ToggleIconButton>
         ) : (
@@ -206,7 +219,12 @@ const fixture: FixtureModule = {
       const [w, h] = v.size as [number, number];
       return [
         name,
-        { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> },
+        {
+          node: v.node,
+          width: w,
+          height: h,
+          render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div>,
+        },
       ];
     }),
   ]),

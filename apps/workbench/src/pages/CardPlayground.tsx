@@ -22,8 +22,24 @@ import media from '../../../../figma/card/assets/media.png';
 import cardAssets from '../../../../figma/card/assets.json';
 
 const s = stylex.create({
-  page: { minHeight: '100vh', backgroundColor: color.surface, color: color.onSurface, padding: 32, display: 'grid', gap: 24, alignContent: 'start' },
-  panel: { display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'end', padding: 16, borderRadius: 16, backgroundColor: color.surfaceContainer },
+  page: {
+    minHeight: '100vh',
+    backgroundColor: color.surface,
+    color: color.onSurface,
+    padding: 32,
+    display: 'grid',
+    gap: 24,
+    alignContent: 'start',
+  },
+  panel: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 20,
+    alignItems: 'end',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: color.surfaceContainer,
+  },
   row: { display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'start' },
   muted: { color: color.onSurfaceVariant },
   w360: { width: 360 },
@@ -49,19 +65,29 @@ export function CardPlayground() {
   return (
     <M3Provider colorScheme={scheme}>
       <main {...stylex.props(s.page)}>
-        <p style={{ margin: 0 }}><a href="/" style={{ color: 'inherit' }}>← all</a></p>
-        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>Card playground</h1>
+        <p style={{ margin: 0 }}>
+          <a href="/" style={{ color: 'inherit' }}>
+            ← all
+          </a>
+        </p>
+        <h1 {...stylex.props(typescale.headlineMedium)} style={{ margin: 0 }}>
+          Card playground
+        </h1>
         <section {...stylex.props(s.panel)}>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span {...stylex.props(s.muted)}>variant</span>
             <select value={variant} onChange={(e) => setVariant(e.target.value as CardVariant)} style={field}>
-              <option>outlined</option><option>elevated</option><option>filled</option>
+              <option>outlined</option>
+              <option>elevated</option>
+              <option>filled</option>
             </select>
           </label>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span {...stylex.props(s.muted)}>colour scheme</span>
             <select value={scheme} onChange={(e) => setScheme(e.target.value as ColorSchemeMode)} style={field}>
-              <option>light</option><option>dark</option><option>system</option>
+              <option>light</option>
+              <option>dark</option>
+              <option>system</option>
             </select>
           </label>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
@@ -76,7 +102,11 @@ export function CardPlayground() {
               avatar={<Avatar>A</Avatar>}
               headline="Header"
               subhead="Subhead"
-              action={<IconButton aria-label="More options"><MoreVert /></IconButton>}
+              action={
+                <IconButton aria-label="More options">
+                  <MoreVert />
+                </IconButton>
+              }
             />
             <CardMedia src={media} fit="contain" blend="luminosity" />
             <CardContent>
@@ -103,7 +133,9 @@ export function CardPlayground() {
           </div>
         </div>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Dividers</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
+          Dividers
+        </h2>
         <div style={{ display: 'grid', gap: 24, maxWidth: 360 }}>
           <Divider />
           <Divider inset="start" />

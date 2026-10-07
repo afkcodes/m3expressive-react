@@ -110,7 +110,10 @@ export const containerMotion = stylex.create({
     transitionProperty: 'border-radius, box-shadow',
     transitionDuration: {
       default: `${motion.defaultEffectsDuration}, ${tween.elevationOutDuration}`,
-      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}` },
+      [stylex.when.ancestor(':hover')]: {
+        default: null,
+        '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
+      },
       [stylex.when.ancestor(':focus-visible')]: {
         default: `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
         '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
@@ -122,7 +125,10 @@ export const containerMotion = stylex.create({
     },
     transitionTimingFunction: {
       default: `${motion.defaultEffectsEasing}, ${tween.elevationOutEasing}`,
-      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}` },
+      [stylex.when.ancestor(':hover')]: {
+        default: null,
+        '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
+      },
       [stylex.when.ancestor(':focus-visible')]: {
         default: `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
         '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
@@ -137,7 +143,10 @@ export const containerMotion = stylex.create({
     transitionProperty: 'border-radius, box-shadow',
     transitionDuration: {
       default: `${motion.fastSpatialDuration}, ${tween.elevationOutDuration}`,
-      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}` },
+      [stylex.when.ancestor(':hover')]: {
+        default: null,
+        '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
+      },
       [stylex.when.ancestor(':focus-visible')]: {
         default: `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
         '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
@@ -149,7 +158,10 @@ export const containerMotion = stylex.create({
     },
     transitionTimingFunction: {
       default: `${motion.fastSpatialEasing}, ${tween.elevationOutEasing}`,
-      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}` },
+      [stylex.when.ancestor(':hover')]: {
+        default: null,
+        '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
+      },
       [stylex.when.ancestor(':focus-visible')]: {
         default: `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
         '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
@@ -233,7 +245,6 @@ export const strokeWidths = stylex.create({
   xlarge: { '::after': { borderWidth: 2 } },
 });
 
-
 // The kit raises elevated buttons with size (level 1 at XS/S, 2 at M, 3 at L/XL).
 // XL at rest: the kit puts the fill on an inner layer, so Figma drops the shadow spread (a frame
 // without its own fill casts spread-less shadows); its hover/focus/pressed variants keep spread.
@@ -246,7 +257,10 @@ export const elevatedShadow = stylex.create({
     boxShadow: {
       default: elevation.level3NoSpread,
       [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': elevation.level3 },
-      [stylex.when.ancestor(':focus-visible')]: { default: elevation.level3, '@media (hover: hover)': elevation.level3 },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: elevation.level3,
+        '@media (hover: hover)': elevation.level3,
+      },
       [stylex.when.ancestor(':active')]: { default: elevation.level3, '@media (hover: hover)': elevation.level3 },
     },
   },

@@ -118,8 +118,14 @@ const handle = stylex.create({
     backgroundColor: {
       default: color.onPrimary,
       [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': color.primaryContainer },
-      [stylex.when.ancestor(':focus-visible')]: { default: color.primaryContainer, '@media (hover: hover)': color.primaryContainer },
-      [stylex.when.ancestor(':active')]: { default: color.primaryContainer, '@media (hover: hover)': color.primaryContainer },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: color.primaryContainer,
+        '@media (hover: hover)': color.primaryContainer,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: color.primaryContainer,
+        '@media (hover: hover)': color.primaryContainer,
+      },
     },
     color: color.onPrimaryContainer,
   },
@@ -128,15 +134,25 @@ const handle = stylex.create({
     backgroundColor: {
       default: color.outline,
       [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': color.onSurfaceVariant },
-      [stylex.when.ancestor(':focus-visible')]: { default: color.onSurfaceVariant, '@media (hover: hover)': color.onSurfaceVariant },
-      [stylex.when.ancestor(':active')]: { default: color.onSurfaceVariant, '@media (hover: hover)': color.onSurfaceVariant },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: color.onSurfaceVariant,
+        '@media (hover: hover)': color.onSurfaceVariant,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: color.onSurfaceVariant,
+        '@media (hover: hover)': color.onSurfaceVariant,
+      },
     },
     color: color.surfaceContainerHighest,
   },
   offInteracting: { backgroundColor: color.onSurfaceVariant },
   onDisabled: { backgroundColor: color.surface, color: `color-mix(in srgb, ${color.onSurface} 38%, transparent)` },
   // Kit: the whole handle (icon included) at 38%.
-  offDisabled: { backgroundColor: color.onSurface, color: color.surfaceContainerHighest, opacity: state.disabledContentOpacity },
+  offDisabled: {
+    backgroundColor: color.onSurface,
+    color: color.surfaceContainerHighest,
+    opacity: state.disabledContentOpacity,
+  },
 });
 
 export interface SwitchProps extends Omit<BaseSwitch.Root.Props, 'className' | 'style' | 'render' | 'children'> {

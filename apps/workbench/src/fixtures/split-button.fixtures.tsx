@@ -1,4 +1,10 @@
-import { SplitButton, SplitButtonLeading, SplitButtonTrailing, type ButtonSize, type SplitButtonVariant } from '@m3x/react';
+import {
+  SplitButton,
+  SplitButtonLeading,
+  SplitButtonTrailing,
+  type ButtonSize,
+  type SplitButtonVariant,
+} from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/split-button/manifest.json';
 import assets from '../../../../figma/split-button/assets.json';
@@ -13,7 +19,8 @@ function StarsFilled() {
   );
 }
 
-const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
+const asForced = (s: string): ForcedState | undefined =>
+  s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 /** Figma "Split button": {colour}-{size}-{leading state}-{trailing state}. */
 const fixture: FixtureModule = {

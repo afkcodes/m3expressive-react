@@ -116,8 +116,5 @@ export class Point {
 export function interpolatePoint(start: Point, stop: Point, fraction: number): Point {
   // Same arithmetic as `Point(interpolate(start.x, stop.x, fraction), ...)`, inlined to avoid a
   // circular import with utils.ts.
-  return new Point(
-    (1 - fraction) * start.x + fraction * stop.x,
-    (1 - fraction) * start.y + fraction * stop.y,
-  );
+  return new Point((1 - fraction) * start.x + fraction * stop.x, (1 - fraction) * start.y + fraction * stop.y);
 }
