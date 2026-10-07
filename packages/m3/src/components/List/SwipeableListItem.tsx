@@ -3,9 +3,9 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
 import { motion } from '../../tokens/motion.stylex';
-import { useReducedMotion, useSpringToken } from '../../motion/context.tsx';
-import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useReducedMotion } from '../../motion/context.tsx';
 import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
+import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';
 
 export type SwipeRevealState = 'closed' | 'peek' | 'revealed' | 'action';
 
@@ -22,13 +22,22 @@ export interface SwipeAction {
  *              opens, the pills widen evenly into…
  *   revealed — 48px icon buttons (52px when there's a single action), fully rounded;
  *   action   — a full swipe: the primary grows to 120px, the others shrink back to pills.
- * The reveal is a pure function of the offset, so the drag tracks the finger and releases settle
- * on the default spatial spring.
+ * The reveal is a pure function of the offset, so the drag tracks the finger. Release follows
+ * Compose SwipeToDismissBox (AnchoredDraggable fling behaviour): the pointer's velocity (Compose
+ * VelocityTracker, 100ms horizon) at or above 125dp/s picks the next anchor in the fling direction,
+ * slower releases go on once 56dp past the anchor they left; it then settles with
+ * AnchoredDraggableDefaults.SnapAnimationSpec — tween(300ms, FastOutSlowIn). A full swipe (the
+ * kit's swipe action, engaged 24px past the revealed width) runs the action unless flung back.
  */
 const GAP = 2;
 const PILL = 8;
 const BUTTON = 48;
 const ACTION = 120;
+/** SwipeToDismissBox.kt: DismissVelocityThreshold (125.dp) and positionalThreshold (56.dp). */
+const VELOCITY_THRESHOLD = 125;
+const POSITIONAL_THRESHOLD = 56;
+/** AnchoredDraggableDefaults.SnapAnimationSpec = tween() — 300ms, FastOutSlowInEasing. */
+const SETTLE_MS = 300;
 
 const s = stylex.create({
   // No text selection: a horizontal drag swipes rather than selecting the label.
@@ -79,6 +88,41 @@ export function swipeOffset(n: number, state: SwipeRevealState) {
   if (state === 'revealed') return (n === 1 ? 52 : n * BUTTON + (n - 1) * GAP) + GAP;
   if (state === 'action') return ACTION + (n - 1) * (PILL + GAP) + GAP;
   return 0;
+}
+
+/**
+ * Release target: AnchoredDraggable `computeTarget` over the closed (0) and revealed anchors.
+ * `velocity` is in px/s along the offset (positive = opening).
+ */
+export function swipeTarget(n: number, offset: number, velocity: number, mode: 'drag' | 'action'): SwipeRevealState {
+  if (n === 0) return 'closed';
+  if (mode === 'action') return velocity <= -VELOCITY_THRESHOLD ? 'revealed' : 'action';
+  const anchors: [SwipeRevealState, number][] = [
+    ['closed', 0],
+    ['revealed', swipeOffset(n, 'revealed')],
+  ];
+  // DefaultDraggableAnchors.closestAnchor (ties and "nothing in that direction" pick the later anchor).
+  const closest = (pos: number, upwards?: boolean) => {
+    let best = anchors[0]!;
+    let min = Infinity;
+    for (const a of anchors) {
+      const delta = upwards === undefined ? Math.abs(pos - a[1]) : upwards ? a[1] - pos : pos - a[1];
+      const dist = delta < 0 ? Infinity : delta;
+      if (dist <= min) {
+        best = a;
+        min = dist;
+      }
+    }
+    return best;
+  };
+  if (velocity === 0 || Number.isNaN(velocity)) return closest(offset)[0];
+  const forward = velocity > 0;
+  if (Math.abs(velocity) >= VELOCITY_THRESHOLD) return closest(offset, forward)[0];
+  const left = closest(offset, false);
+  const right = closest(offset, true);
+  const fromStart = forward ? left[1] : right[1];
+  const crossed = Math.abs(fromStart - offset) >= POSITIONAL_THRESHOLD;
+  return (crossed ? (forward ? right : left) : forward ? left : right)[0];
 }
 
 export interface SwipeActionsProps {
@@ -134,7 +178,6 @@ export interface SwipeableListItemProps extends ListItemProps {
 export function SwipeableListItem({ actions, swipeAction, revealState, onRevealStateChange, sx, ...item }: SwipeableListItemProps) {
   const list = useContext(ListContext);
   const reduced = useReducedMotion();
-  const spring = useSpringToken('default-spatial');
   const n = actions.length;
   const [inner, setInner] = useState<SwipeRevealState>('closed');
   const state = revealState ?? inner;
@@ -142,48 +185,71 @@ export function SwipeableListItem({ actions, swipeAction, revealState, onRevealS
     if (revealState === undefined) setInner(v);
     onRevealStateChange?.(v);
   };
-  const [offset, setOffset] = useState(() => swipeOffset(n, state));
+  const [offset, setOffsetState] = useState(() => swipeOffset(n, state));
+  const offsetRef = useRef(offset);
+  const setOffset = (v: number) => {
+    offsetRef.current = v;
+    setOffsetState(v);
+  };
   const [mode, setMode] = useState<'drag' | 'action'>(state === 'action' ? 'action' : 'drag');
-  const anim = useRef<SpringAnimation | null>(null);
+  const anim = useRef<{ target: number; stop: () => void } | null>(null);
   const drag = useRef<{ x: number; start: number; moved: boolean } | null>(null);
+  const tracker = useRef(new VelocityTracker1D());
   const width = useRef(280);
   const root = useRef<HTMLElement | null>(null);
 
-  // Settle on the state's offset with the spatial spring (instant under reduced motion).
-  useEffect(() => {
-    const target = swipeOffset(n, state);
-    setMode(state === 'action' ? 'action' : 'drag');
-    if (!spring || reduced) {
-      anim.current?.stop();
+  // Settle on a state's offset: tween(300ms, FastOutSlowIn), instant under reduced motion.
+  const settle = (next: SwipeRevealState) => {
+    const target = swipeOffset(n, next);
+    setMode(next === 'action' ? 'action' : 'drag');
+    if (anim.current?.target === target) return;
+    anim.current?.stop();
+    anim.current = null;
+    const from = offsetRef.current;
+    if (reduced || from === target) {
       setOffset(target);
       return;
     }
-    if (anim.current) anim.current.retarget(target, spring);
-    else
-      anim.current = animateSpring({
-        spring,
-        from: offset,
-        to: target,
-        precision: 0.5,
-        onUpdate: setOffset,
-        onComplete: () => (anim.current = null),
-      });
+    let frame = 0;
+    let begin: number | undefined;
+    const tick = (now: number) => {
+      begin ??= now;
+      const p = Math.min(1, (now - begin) / SETTLE_MS);
+      setOffset(from + (target - from) * fastOutSlowIn(p));
+      if (p < 1) frame = requestAnimationFrame(tick);
+      else anim.current = null;
+    };
+    frame = requestAnimationFrame(tick);
+    anim.current = { target, stop: () => cancelAnimationFrame(frame) };
+  };
+  useEffect(() => {
+    settle(state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, n]);
+  useEffect(() => () => anim.current?.stop(), []);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
     width.current = root.current?.getBoundingClientRect().width ?? 280;
-    drag.current = { x: e.clientX, start: offset, moved: false };
+    drag.current = { x: e.clientX, start: offsetRef.current, moved: false };
+    tracker.current.reset();
+    tracker.current.add(e.timeStamp, e.clientX);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     const d = drag.current;
     if (!d) return;
+    // Compose Lsq2VelocityTracker: every MOVE, with its historical (coalesced) samples.
+    const samples = e.nativeEvent.getCoalescedEvents?.() ?? [];
+    for (const c of samples.length > 0 ? samples : [e.nativeEvent]) tracker.current.add(c.timeStamp, c.clientX);
     const dx = d.x - e.clientX;
     if (!d.moved && Math.abs(dx) < 6) return;
     if (!d.moved) {
       d.moved = true;
-      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      } catch {
+        // The pointer is already gone (or synthetic): keep tracking without capture.
+      }
       anim.current?.stop();
       anim.current = null;
     }
@@ -191,18 +257,20 @@ export function SwipeableListItem({ actions, swipeAction, revealState, onRevealS
     setOffset(next);
     setMode(next > swipeOffset(n, 'revealed') + 24 ? 'action' : 'drag');
   };
-  const onPointerUp = () => {
+  const onPointerUp = (e: React.PointerEvent) => {
     const d = drag.current;
     drag.current = null;
     if (!d?.moved) return;
-    const revealed = swipeOffset(n, 'revealed');
-    if (offset > revealed + 24 && n > 0) {
-      setState('action');
-      (swipeAction ?? actions[n - 1])?.onAction?.();
-    } else if (offset > revealed / 2) setState('revealed');
-    else setState('closed');
-    // Re-run the settle effect even if the state didn't change.
-    setOffset((o) => o);
+    // The UP isn't a sample; released over 40ms after the last MOVE, the pointer had stopped
+    // (Lsq2VelocityTracker, b/238654963). The item moves left as the pointer does: opening
+    // velocity is the pointer's, negated.
+    const stopped = e.type === 'pointercancel' || e.timeStamp - tracker.current.lastTime() > 40;
+    const velocity = stopped ? 0 : -tracker.current.velocity();
+    const target = swipeTarget(n, offsetRef.current, velocity, mode);
+    if (target === 'action') (swipeAction ?? actions[n - 1])?.onAction?.();
+    setState(target);
+    // Settle even when the state doesn't change (released back where it started).
+    settle(target);
   };
 
   return (

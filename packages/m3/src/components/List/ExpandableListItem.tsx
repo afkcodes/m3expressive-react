@@ -9,6 +9,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState, type ForcedState } from '../../testing/ForceState.tsx';
 import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
+import { expandPanelMarker } from './list.stylex';
 
 const CHEVRON_DOWN = 'M10 12.8334L5 7.83341L6.16667 6.66675L10 10.5001L13.8333 6.66675L15 7.83341L10 12.8334Z';
 const CHEVRON_UP = 'M10 9.00008L6.16667 12.8334L5 11.6667L10 6.66675L15 11.6667L13.8333 12.8334L10 9.00008Z';
@@ -19,7 +20,9 @@ const flip = stylex.keyframes({ from: { transform: 'rotate(-180deg)' }, to: { tr
  * while expanded — with a 20px chevron (down = expand, up = collapse). The pill is filled only at
  * rest: hover / focus / press drop it for a 32×32 on-surface-variant layer 4px from the top, round
  * while hovered or focused and squaring to 8px corners (with the ripple clipped to it) when pressed.
- * Opening is a spatial transition.
+ * Opening (Compose SegmentedListItemWithExpansionSample: expandVertically / shrinkVertically on
+ * FastSpatial, expandFrom Bottom): the panel's height springs on fast spatial while its items stay
+ * anchored to the panel's bottom edge, so they slide down out of the header.
  */
 const s = stylex.create({
   button: {
@@ -76,11 +79,26 @@ const s = stylex.create({
     overflow: 'hidden',
     height: 'var(--collapsible-panel-height)',
     transitionProperty: 'height',
-    transitionDuration: motion.defaultSpatialDuration,
-    transitionTimingFunction: motion.defaultSpatialEasing,
+    transitionDuration: motion.fastSpatialDuration,
+    transitionTimingFunction: motion.fastSpatialEasing,
     [':is([data-starting-style], [data-ending-style])' as string]: { height: 0 },
   },
-  panelList: { display: 'flex', flexDirection: 'column', margin: 0, padding: 0, listStyle: 'none' },
+  // Bottom-anchored: while the panel is h of its full height H, the list is shifted by h − H
+  // (−100% when closed). Same duration and easing as the height, so the two stay in step.
+  panelList: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+    transform: {
+      default: 'none',
+      [stylex.when.ancestor(':is([data-starting-style], [data-ending-style])', expandPanelMarker)]: 'translateY(-100%)',
+    },
+    transitionProperty: 'transform',
+    transitionDuration: motion.fastSpatialDuration,
+    transitionTimingFunction: motion.fastSpatialEasing,
+  },
   panelListGap: { rowGap: 2, paddingTop: 2 },
   li: { listStyle: 'none', margin: 0, padding: 0 },
 });
@@ -161,7 +179,7 @@ export function ExpandableListItem({ expanded, defaultExpanded = false, onExpand
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen} render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}>
       <ListContext value={{ ...list, inList: false }}>{header}</ListContext>
-      <Collapsible.Panel {...stylex.props(s.panel)}>
+      <Collapsible.Panel {...stylex.props(expandPanelMarker, s.panel)}>
         <ListContext value={{ ...list, inList: true }}>
           <ul {...stylex.props(s.panelList, list.segmented && s.panelListGap)}>{items}</ul>
         </ListContext>

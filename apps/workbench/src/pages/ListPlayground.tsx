@@ -123,7 +123,7 @@ export function ListPlayground() {
               ))}
             </List>
           </Section>
-          <Section title="Expandable" note="The accordion button toggles nested items; the panel height animates on the default spatial spring.">
+          <Section title="Expandable" note="The accordion button toggles nested items: the panel grows on the fast spatial spring with its items sliding down from the header (Compose expandVertically).">
             <List type="segmented" aria-label="Settings">
               <ExpandableListItem
                 leading={<Icon name="stars-20" />}
@@ -150,7 +150,7 @@ export function ListPlayground() {
               </ExpandableListItem>
             </List>
           </Section>
-          <Section title="Swipeable" note={`Drag a row left: peek → revealed actions → a full swipe archives. Last action: ${log}`}>
+          <Section title="Swipeable" note={`Drag a row left: peek → revealed actions → a full swipe archives. A flick (≥ 125px/s) or 56px of travel decides where it settles (300ms). Last action: ${log}`}>
             <List type={type} aria-label="Messages">
               {messages.map((t) => (
                 <SwipeableListItem key={t} actions={actions} swipeAction={archive(t)} leading={<Icon name="stars-20" />} trailing={<Icon name="more_vert-20" />}>
@@ -189,7 +189,7 @@ export function ListPlayground() {
               </ListItem>
             </List>
           </Section>
-          <Section title="Lifted (reorder)" note="The dragged state for your drag-and-drop layer: tertiary container, elevation 5, 16px corners.">
+          <Section title="Lifted (reorder)" note="The dragged state for your drag-and-drop layer: tertiary container, elevation 5, 16px corners; it stays above its neighbours until the shadow has animated out.">
             <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14, marginBottom: 8 }}>
               <input type="checkbox" checked={dragged} onChange={(e) => setDragged(e.target.checked)} /> dragged
             </label>
