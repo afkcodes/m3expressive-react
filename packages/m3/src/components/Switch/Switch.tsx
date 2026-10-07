@@ -19,7 +19,11 @@ import { useForcedState } from '../../testing/ForceState.tsx';
  *   Disabled on: track on-surface 10%, handle surface, icon on-surface 38%.
  *   Disabled off: track surface-variant 10% + on-surface 10% stroke, handle on-surface (whole handle
  *   incl. icon at 38%).
- *   The handle slides and resizes on the fast spatial spring.
+ *
+ * Motion — Compose material3 Switch.kt (ThumbNode, SwitchImpl):
+ *   handle size and offset spring on FastSpatial, except while pressed: the press into the 28px
+ *   handle is a snap (SnapSpec); the release springs back. Track, outline, handle and icon colours
+ *   are not animated in Compose — they change with the state.
  */
 const CHECK = 'M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z';
 const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
@@ -43,9 +47,6 @@ const s = stylex.create({
     outlineWidth: state.focusIndicatorThickness,
     outlineOffset: state.focusIndicatorOuterOffset,
     verticalAlign: 'middle',
-    transitionProperty: 'background-color',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
   },
   ringForced: { outlineStyle: 'solid' },
   disabled: { cursor: 'default' },
@@ -83,7 +84,8 @@ const s = stylex.create({
     justifyContent: 'center',
     zIndex: 1,
     transitionProperty: 'translate',
-    transitionDuration: motion.fastSpatialDuration,
+    // Compose: SnapSpec while pressed, FastSpatial otherwise (the destination style's spec).
+    transitionDuration: { default: motion.fastSpatialDuration, [stylex.when.ancestor(':active')]: '0s' },
     transitionTimingFunction: motion.fastSpatialEasing,
   },
   thumbOn: { translate: '20px 0' },
@@ -93,9 +95,10 @@ const s = stylex.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
-    transitionProperty: 'width, height, background-color',
-    transitionDuration: `${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}, ${motion.fastEffectsDuration}`,
-    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}, ${motion.fastEffectsEasing}`,
+    transitionProperty: 'width, height',
+    // Pressing snaps into the 28px handle (Compose SnapSpec); releasing springs back.
+    transitionDuration: { default: motion.fastSpatialDuration, [stylex.when.ancestor(':active')]: '0s' },
+    transitionTimingFunction: motion.fastSpatialEasing,
   },
   icon: { width: 16, height: 16, flexShrink: 0, fill: 'currentColor' },
   // Kit: the off+disabled icon has its own 38% inside the 38% handle.
