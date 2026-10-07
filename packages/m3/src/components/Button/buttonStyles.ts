@@ -9,13 +9,21 @@ import { typescale } from '../../tokens/typescale.ts';
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 export type ButtonShape = 'round' | 'square';
 
+/** 48px touch target around the XS / S containers (M3 minimum). */
+export const TOUCH_TARGET = 48;
+
+/** Whether a size's container is smaller than the touch target (XS / S), which then pads it. */
+export const needsTouchTarget = (size: ButtonSize) => size === 'xsmall' || size === 'small';
+
 /*
  * Geometry from the Figma kit (Buttons page, sets Button / Button - tonal /
  * - outline / - elevated / - text). Container height = padding + label line
  * height, exactly as the kit's hug layout. "Round" radius is half the height
  * (renders like the kit's 100, but morphs from the real corner on press).
+ * The container's focus indicator is `focusRing.part` (3px secondary ring, 2px outside — the
+ * kit's hidden "Focus indicator" layer), listed right after `container`.
  */
-export const base = stylex.create({
+export const buttonBase = stylex.create({
   root: {
     // <button> reset; the root is the full touch target.
     appearance: 'none',
@@ -48,13 +56,7 @@ export const base = stylex.create({
     alignItems: 'center',
     justifyContent: 'center',
     boxSizing: 'border-box',
-    // Focus indicator: 3px secondary ring, 2px outside (the kit's hidden "Focus indicator" layer).
-    outlineStyle: { default: 'none', [stylex.when.ancestor(':focus-visible')]: 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
   },
-  ringForced: { outlineStyle: 'solid' },
   content: {
     position: 'relative',
     display: 'inline-flex',
@@ -175,8 +177,8 @@ export const containerMotion = stylex.create({
 });
 
 export const sizes = stylex.create({
-  xsmall: { height: 48 },
-  small: { height: 48 },
+  xsmall: { height: TOUCH_TARGET },
+  small: { height: TOUCH_TARGET },
   medium: {},
   large: {},
   xlarge: {},
@@ -219,7 +221,7 @@ export const labelRole = {
 } as const;
 
 // Corner radii: [round, square, pressed]. Pressed is the same for both shapes.
-export const radii = stylex.create({
+export const buttonRadii = stylex.create({
   xsmallRound: { borderRadius: { default: '16px', [stylex.when.ancestor(':active')]: '8px' } },
   xsmallSquare: { borderRadius: { default: '12px', [stylex.when.ancestor(':active')]: '8px' } },
   smallRound: { borderRadius: { default: '20px', [stylex.when.ancestor(':active')]: '8px' } },
@@ -237,7 +239,7 @@ export const radii = stylex.create({
   xlargePressed: { borderRadius: '16px' },
 });
 
-export const strokeWidths = stylex.create({
+export const buttonStrokeWidths = stylex.create({
   xsmall: { '::after': { borderWidth: 1 } },
   small: { '::after': { borderWidth: 1 } },
   medium: { '::after': { borderWidth: 1 } },
@@ -267,7 +269,7 @@ export const elevatedShadow = stylex.create({
   xlargeInteracting: { boxShadow: elevation.level3 },
 });
 
-export const disabled = stylex.create({
+export const buttonDisabled = stylex.create({
   // Kit: container md.sys.color.on-surface @ 10% for every variant (incl. text/outlined).
   container: {
     backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)`,

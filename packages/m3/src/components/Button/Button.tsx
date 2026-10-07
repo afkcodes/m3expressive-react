@@ -3,15 +3,15 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
-import { stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from './ButtonFrame.tsx';
 import {
-  base,
+  buttonBase,
+  buttonStrokeWidths,
   containerMotion,
   elevatedShadow,
   sizes,
-  strokeWidths,
   type ButtonShape,
   type ButtonSize,
 } from './buttonStyles.ts';
@@ -38,26 +38,24 @@ export interface ButtonProps extends Omit<BaseButton.Props, 'className' | 'style
 }
 
 export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
-  { variant = 'filled', size = 'small', shape = 'round', icon, children, disabled: isDisabled = false, sx, ...rest },
+  { variant = 'filled', size = 'small', shape = 'round', icon, children, disabled = false, sx, ...rest },
   ref,
 ) {
   const forced = useForcedState();
-  const pressed = forced.state === 'pressed';
+  const elevated = variant === 'elevated' && !disabled;
   return (
     <BaseButton
       ref={ref}
-      disabled={isDisabled}
+      disabled={disabled}
       data-ripple-host=""
       {...rest}
       {...stylex.props(
-        base.root,
+        buttonBase.root,
         sizes[size],
         stateLayerHost.host,
-        isDisabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
+        disabled && stateLayerHost.disabled,
         // Kit's Pressed variants keep the hover layer under the ripple.
-        pressed && stateLayerHost.forceHover,
+        forcedStateLayer(forced.state, 'hover'),
         stylex.defaultMarker(),
         sx,
       )}
@@ -65,24 +63,18 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
       <ButtonFrame
         size={size}
         shape={shape}
-        pressed={pressed}
-        isDisabled={isDisabled}
-        focusRing={!!forced.focusRing}
+        pressed={forced.state === 'pressed'}
+        disabled={disabled}
+        ringForced={!!forced.focusRing}
         icon={icon}
         container={[
           // Shape morph on DefaultEffects (Compose: no bounce); XL elevated also tweens its shadow.
-          variant === 'elevated' && !isDisabled && size === 'xlarge'
-            ? containerMotion.effectsElevated
-            : containerMotion.effects,
+          elevated && size === 'xlarge' ? containerMotion.effectsElevated : containerMotion.effects,
           variants[variant],
-          variant === 'elevated' && !isDisabled && elevatedShadow[size],
-          variant === 'elevated' &&
-            !isDisabled &&
-            size === 'xlarge' &&
-            !!forced.state &&
-            elevatedShadow.xlargeInteracting,
-          variant === 'outlined' && base.stroke,
-          variant === 'outlined' && strokeWidths[size],
+          elevated && elevatedShadow[size],
+          elevated && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,
+          variant === 'outlined' && buttonBase.stroke,
+          variant === 'outlined' && buttonStrokeWidths[size],
         ]}
       >
         {children}

@@ -16,7 +16,9 @@ import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 
@@ -34,6 +36,11 @@ export type SegmentedButtonDensity = 0 | -1 | -2 | -3;
  *   Disabled: outline on-surface 10%, content 38%.
  */
 const CHECK = 'M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z';
+/** Segment container height at density 0, and the px each density step removes. */
+const SEGMENT_HEIGHT = 40;
+const DENSITY_STEP = 4;
+/** The touch row pads the container by 4px above and below. */
+const TOUCH_ROW_PADDING = 4;
 
 const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
 const scaleIn = stylex.keyframes({ from: { scale: 0 } });
@@ -83,10 +90,7 @@ const s = stylex.create({
     boxSizing: 'border-box',
     paddingInline: 12,
     columnGap: 8,
-    outlineStyle: { default: 'none', [stylex.when.ancestor(':focus-visible')]: 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
+    // Focus indicator: focusRing.part, listed right after this style.
     // No colour transition: Compose snaps the container colour (SegmentedButtonColors.containerColor).
     // Inside stroke, drawn above the state layer (kit order).
     '::after': {
@@ -100,7 +104,6 @@ const s = stylex.create({
       pointerEvents: 'none',
     },
   },
-  ringForced: { outlineStyle: 'solid' },
   unselected: { backgroundColor: 'transparent', color: color.onSurface },
   selected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
   disabled: {
@@ -143,7 +146,7 @@ const s = stylex.create({
 
 const dyn = stylex.create({
   heights: (row: number, box: number) => ({ height: row, paddingBlock: (row - box) / 2 }),
-  box: (h: number) => ({ height: h }),
+  box: (px: number) => ({ height: px }),
   radii: (start: string, end: string) => ({
     borderStartStartRadius: start,
     borderEndStartRadius: start,
@@ -178,7 +181,7 @@ export interface SegmentedButtonProps {
 
 export function SegmentedButton({
   density = 0,
-  value: valueProp,
+  value,
   defaultValue = [],
   onValueChange,
   multiple = false,
@@ -187,8 +190,7 @@ export function SegmentedButton({
   sx,
   ...rest
 }: SegmentedButtonProps) {
-  const [inner, setInner] = useState<readonly string[]>(defaultValue);
-  const selected = valueProp ?? inner;
+  const [selected, setSelected] = useControllableState<readonly string[]>(value, defaultValue);
   const items = Children.toArray(children).filter(isValidElement);
   // Each item learns its position from a number-valued context (a stable provider value).
   const positioned = items.map((child, index) => (
@@ -208,7 +210,7 @@ export function SegmentedButton({
       multiple={multiple}
       disabled={disabled}
       onValueChange={(next: string[]) => {
-        if (valueProp === undefined) setInner(next);
+        setSelected(next);
         onValueChange?.(next);
       }}
       {...rest}
@@ -263,7 +265,7 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
           : 'middle'
     : positionProp;
   const isDisabled = !!disabled || !!group?.disabled;
-  const box = 40 + 4 * density;
+  const box = SEGMENT_HEIGHT + DENSITY_STEP * density;
   const full = `${box / 2}px`;
   const start = position === 'start' || position === 'only' ? full : '0px';
   const end = position === 'end' || position === 'only' ? full : '0px';
@@ -293,13 +295,11 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
       {...rest}
       {...stylex.props(
         s.root,
-        dyn.heights(box + 8, box),
+        dyn.heights(box + 2 * TOUCH_ROW_PADDING, box),
         group && s.overlap,
         stateLayerHost.hostPressLayer,
         isDisabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
+        forcedStateLayer(forced.state, 'pressed'),
         stylex.defaultMarker(),
         sx,
       )}
@@ -307,12 +307,13 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
       <span
         {...stylex.props(
           s.container,
+          focusRing.part,
           dyn.box(box),
           dyn.radii(start, end),
           isSelected ? s.selected : s.unselected,
           isDisabled && s.disabled,
           isDisabled && isSelected && s.disabledSelected,
-          forced.focusRing && s.ringForced,
+          forced.focusRing && focusRing.forced,
         )}
       >
         <StateLayer />
