@@ -1,9 +1,9 @@
-import { forwardRef, useState, type InputHTMLAttributes, type ReactNode } from 'react';
+import { useState, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Field } from '@base-ui/react/field';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { textFieldMarker } from './textField.stylex.ts';
@@ -27,15 +27,21 @@ const ERROR_ICON =
 
 type InputPhase = 'focused' | 'unfocusedEmpty' | 'unfocusedNotEmpty';
 
-export interface TextFieldProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'value' | 'defaultValue' | 'onChange' | 'size' | 'style' | 'className'
+/**
+ * The documented exception to "ref and native props go to the root" (docs/API-CONVENTIONS.md §1):
+ * `ref` and the native input props — `name`, `onChange`, `onBlur`, `autoComplete`, `required`… —
+ * go to the `<input>`, which is what form libraries expect (`{...register('email')}`); `sx` styles
+ * the root (the field and its supporting text).
+ */
+export interface TextFieldProps extends SxProps<
+  Omit<ComponentPropsWithRef<'input'>, 'value' | 'defaultValue' | 'size' | 'children'>
 > {
   variant?: TextFieldVariant;
   label?: string;
   value?: string;
   defaultValue?: string;
-  onValueChange?: (value: string) => void;
+  /** The new text, and Base UI's event details. Native `onChange` (on the input) fires too. */
+  onValueChange?: (value: string, details: Field.Control.ChangeEventDetails) => void;
   /** Supporting text under the field (replaced by `errorText` when `error`). */
   supportingText?: ReactNode;
   errorText?: ReactNode;
@@ -46,33 +52,34 @@ export interface TextFieldProps extends Omit<
   trailingIcon?: ReactNode;
   /** Keep the label floated (and the placeholder visible) while empty — Compose `alwaysMinimize`. */
   alwaysFloatLabel?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  {
-    variant = 'filled',
-    label,
-    value: valueProp,
-    defaultValue = '',
-    onValueChange,
-    placeholder,
-    supportingText,
-    errorText,
-    error = false,
-    disabled = false,
-    leadingIcon,
-    trailingIcon,
-    alwaysFloatLabel = false,
-    sx,
-    onFocus,
-    onBlur,
-    ...inputProps
-  },
+export function TextField({
   ref,
-) {
+  variant = 'filled',
+  label,
+  value: valueProp,
+  defaultValue = '',
+  onValueChange,
+  placeholder,
+  supportingText,
+  errorText,
+  error = false,
+  disabled = false,
+  leadingIcon,
+  trailingIcon,
+  alwaysFloatLabel = false,
+  sx,
+  onFocus,
+  onBlur,
+  ...inputProps
+}: TextFieldProps) {
   const forced = useForcedState();
-  const [value, setValue] = useControllableState(valueProp, defaultValue, onValueChange);
+  const [value, setValue] = useControllableState<string, [Field.Control.ChangeEventDetails]>(
+    valueProp,
+    defaultValue,
+    onValueChange,
+  );
   const [focusedReal, setFocused] = useState(false);
   const focused = !disabled && (forced.state === 'focused' || focusedReal);
   const hovered = !disabled && forced.state === 'hovered';
@@ -151,7 +158,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           <Field.Control
             ref={ref}
             value={value}
-            onValueChange={(next) => setValue(next)}
+            onValueChange={setValue}
             placeholder={placeholder}
             onFocus={(e) => {
               setFocused(true);
@@ -247,4 +254,4 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       )}
     </Field.Root>
   );
-});
+}
