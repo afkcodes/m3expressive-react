@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, M3Provider, MorphingShape, Shape, figmaShapes, type ShapeName } from '@m3x/react';
+import { Button, M3Provider, MorphingShape, Shape, type ShapeName } from '@m3x/react';
+import { figmaShapes } from '@m3x/react/shapes';
 
 const names = Object.keys(figmaShapes) as ShapeName[];
 // The M3 loading-indicator sequence, for the auto-cycle.

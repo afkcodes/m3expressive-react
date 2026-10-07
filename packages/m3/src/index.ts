@@ -5,25 +5,18 @@ export type { M3Labels } from './theme/labels.tsx';
 // Dynamic colour scheme generation lives in '@m3x/react/dynamic-color'; the core only knows the roles.
 export { COLOR_ROLES } from './theme/colorRoles.ts';
 export type { ColorRole, DynamicColorScheme, RoleColors } from './theme/colorRoles.ts';
-export { StateLayer, stateLayerHost } from './primitives/StateLayer.tsx';
-export { Ripple } from './primitives/Ripple.tsx';
-export type { RippleProps } from './primitives/Ripple.tsx';
-export { focusRing } from './primitives/focusRing.ts';
-export { textBox } from './primitives/textBox.ts';
+// Interaction primitives: '@m3x/react/primitives'; the shape engine: '@m3x/react/shapes'.
 export { typescale } from './tokens/typescale.ts';
 export type { TypescaleRole } from './tokens/typescale.ts';
 export { Shape } from './shapes/Shape.tsx';
 export type { ShapeProps } from './shapes/Shape.tsx';
-export { figmaShapes, SHAPE_FRAME } from './shapes/figmaPaths.ts';
 export type { ShapeName } from './shapes/figmaPaths.ts';
 export { Button } from './components/Button/index.ts';
 export type { ButtonProps, ButtonVariant, ButtonSize, ButtonShape } from './components/Button/index.ts';
 export { materialShapes } from './shapes/materialShapes.ts';
 export type { MaterialShapeName } from './shapes/materialShapes.ts';
-export { Morph, RoundedPolygon, CornerRounding } from './shapes/graphics/index.ts';
 export { MorphingShape } from './shapes/MorphingShape.tsx';
 export type { MorphingShapeProps } from './shapes/MorphingShape.tsx';
-export { createShapeMorph, shapePolygon, shapeMorphPath } from './shapes/shapeMorph.ts';
 export { Badge } from './components/Badge/index.ts';
 export type { BadgeProps } from './components/Badge/index.ts';
 export {

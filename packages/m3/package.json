@@ -11,6 +11,8 @@
     ".": "./src/index.ts",
     "./dynamic-color": "./src/dynamic-color.ts",
     "./motion": "./src/motion/index.ts",
+    "./primitives": "./src/primitives/index.ts",
+    "./shapes": "./src/shapes/index.ts",
     "./testing": "./src/testing/index.ts",
     "./tokens/*.stylex": "./src/tokens/*.stylex.ts",
     "./tokens/*": "./src/tokens/*.ts",
@@ -31,6 +33,14 @@
       "./motion": {
         "types": "./dist/motion/index.d.ts",
         "default": "./dist/motion/index.js"
+      },
+      "./primitives": {
+        "types": "./dist/primitives/index.d.ts",
+        "default": "./dist/primitives/index.js"
+      },
+      "./shapes": {
+        "types": "./dist/shapes/index.d.ts",
+        "default": "./dist/shapes/index.js"
       },
       "./testing": {
         "types": "./dist/testing/index.d.ts",

@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { textBox, typescale, type TypescaleRole } from '@m3x/react';
+import { typescale, type TypescaleRole } from '@m3x/react';
+import { textBox } from '@m3x/react/primitives';
 import { color } from '@m3x/react/tokens/color.stylex';
 import manifest from '../../../../figma/typescale/manifest.json';
 import type { FixtureModule } from './types.ts';

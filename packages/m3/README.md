@@ -92,9 +92,11 @@ to 1px wider.
 
 | Import | Contents |
 |---|---|
-| `@m3x/react` | Components, `M3Provider`, primitives (`StateLayer`, `Ripple`, focus ring), typescale |
+| `@m3x/react` | Components, `M3Provider`, labels, typescale, `Shape` / `MorphingShape` / `materialShapes` |
 | `@m3x/react/dynamic-color` | `schemeFromSeed`, `seedColorsFromImage`, `useDynamicScheme`, `useSeedColorsFromImage` |
 | `@m3x/react/motion` | Spring tokens, `animateSpring`, `useSpringToken`, `useReducedMotion` |
+| `@m3x/react/primitives` | `StateLayer` (+ `stateLayerHost`), `Ripple`, `focusRing`, `textBox` — for custom components |
+| `@m3x/react/shapes` | Shape engine: the kit's paths (`figmaShapes`), `RoundedPolygon`, `Morph`, morph helpers |
 | `@m3x/react/tokens/*.stylex` | StyleX token variables (colour, shape, elevation, motion, state, typeface) |
 | `@m3x/react/primitives/*.stylex` | Interaction variables (state-layer / ripple colour and opacity, tweens) |
 | `@m3x/react/fonts.css` | Roboto `@font-face` rules and font files |

@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { Ripple, StateLayer, focusRing, stateLayerHost, typescale } from '@m3x/react';
+import { typescale } from '@m3x/react';
+import { Ripple, StateLayer, focusRing, stateLayerHost } from '@m3x/react/primitives';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { shape } from '@m3x/react/tokens/shape.stylex';
 import type { FixtureModule } from './types.ts';
