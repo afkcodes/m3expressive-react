@@ -6,12 +6,13 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent,
   type ReactNode,
-  type Ref,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
@@ -27,6 +28,7 @@ import { textBox } from '../../primitives/textBox.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { rovingIndex } from './roving.ts';
 
 export type FabMenuColor = 'primary' | 'secondary' | 'tertiary';
 
@@ -50,6 +52,9 @@ export type FabMenuColor = 'primary' | 'secondary' | 'tertiary';
  *   - Each item reveals with its width 0 → 1 (FastSpatial, anchored to the end edge, content not
  *     moving) and alpha (FastEffects); a fully transparent item is not drawn. The list unmounts
  *     once every item has faded out.
+ * Keyboard (menu pattern): opening from the toggle moves focus to the first item as soon as it is
+ * drawn; the items are one tab stop (roving tabindex: arrows, Home / End); Escape closes and
+ * returns focus to the toggle.
  */
 const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
 const ITEM_PAD = 24;
@@ -145,6 +150,10 @@ interface FabMenuContextValue {
   visible: boolean;
   /** Item reports whether it is drawn (alpha > 0) so the menu can unmount the list after closing. */
   onShown: (index: number, shown: boolean) => void;
+  /** Roving tabindex: this item is the menu's tab stop. */
+  tabStop: boolean;
+  /** Item received focus (it becomes the tab stop). */
+  onItemFocus: (index: number) => void;
 }
 const FabMenuContext = createContext<FabMenuContextValue>({
   color: 'primary',
@@ -153,6 +162,8 @@ const FabMenuContext = createContext<FabMenuContextValue>({
   animated: false,
   visible: true,
   onShown: () => {},
+  tabStop: true,
+  onItemFocus: () => {},
 });
 
 function forcedStyles(forced: ReturnType<typeof useForcedState>) {
@@ -200,33 +211,42 @@ export function FabMenu({
   };
   const listRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+  // Roving tab stop (item index) and a pending "focus the first item once it is drawn".
+  const [tabStop, setTabStop] = useState(0);
+  const focusFirst = useRef(false);
+  const menuItems = () => Array.from(listRef.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
   const close = () => {
+    focusFirst.current = false;
     setOpen(false);
     requestAnimationFrame(() => fabRef.current?.focus());
   };
   const onKeyDown = (e: KeyboardEvent) => {
     if (!open) return;
     if (e.key === 'Escape') return close();
-    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
-    const items = Array.from(listRef.current?.querySelectorAll<HTMLElement>('[role=menuitem]') ?? []);
-    const i = items.indexOf(document.activeElement as HTMLElement);
-    // From the close button: Up enters at the nearest (last) item, Down at the first.
-    const next =
-      i === -1
-        ? items[e.key === 'ArrowUp' ? items.length - 1 : 0]
-        : items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length];
-    next?.focus();
+    const list = menuItems();
+    const next = rovingIndex(e.key, list.indexOf(document.activeElement as HTMLElement), list.length);
+    // Home / End only within the items (the toggle keeps its own keys).
+    if (next == null || ((e.key === 'Home' || e.key === 'End') && !listRef.current?.contains(e.target as Node))) return;
+    focusFirst.current = false;
+    list[next]?.focus();
     e.preventDefault();
   };
   const items = Children.toArray(children).filter(isValidElement);
-  const { count, mounted, onShown } = useStagger(open, items.length);
+  const { count, mounted, onShown } = useStagger(open, items.length, (index) => {
+    // The first item is drawn (alpha > 0): it can take focus now.
+    if (index !== 0 || !focusFirst.current) return;
+    focusFirst.current = false;
+    menuItems()[0]?.focus();
+  });
+  const hasMenu = items.length > 0;
 
   return (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- arrow-key navigation delegated from the items
     <span {...stylex.props(s.root, sx)} onKeyDown={onKeyDown}>
-      {mounted && items.length > 0 && (
+      {mounted && hasMenu && (
         // Closing: the items fade out but are no longer part of the menu.
-        <div ref={listRef} role="menu" aria-label={label} inert={!open} {...stylex.props(s.list)}>
+        <div ref={listRef} id={listId} role="menu" aria-label={label} inert={!open} {...stylex.props(s.list)}>
           {items.map((child, index) => (
             <FabMenuContext
               key={child.key ?? index}
@@ -237,6 +257,8 @@ export function FabMenu({
                 animated: true,
                 visible: index >= items.length - count,
                 onShown,
+                tabStop: index === Math.min(tabStop, items.length - 1),
+                onItemFocus: setTabStop,
               }}
             >
               {child}
@@ -250,22 +272,44 @@ export function FabMenu({
         color={menuColor}
         icon={icon}
         aria-label={open ? closeLabel : label}
-        onClick={() => (open ? close() : setOpen(true))}
+        aria-haspopup={hasMenu ? 'menu' : undefined}
+        aria-controls={mounted && hasMenu ? listId : undefined}
+        onClick={() => {
+          if (open) return close();
+          setTabStop(0);
+          focusFirst.current = hasMenu;
+          setOpen(true);
+          // Reopened while the first item is still drawn (closing): it won't report being shown.
+          requestAnimationFrame(() => {
+            if (!focusFirst.current) return;
+            const first = menuItems()[0];
+            first?.focus();
+            if (first && document.activeElement === first) focusFirst.current = false;
+          });
+        }}
       />
     </span>
   );
 }
 
-/** Visible-item count (stagger) and list lifetime. */
-function useStagger(open: boolean, n: number) {
+/**
+ * Visible-item count (stagger) and list lifetime. `onItemShown` hears every item that starts being
+ * drawn (alpha > 0).
+ */
+function useStagger(open: boolean, n: number, onItemShown: (index: number) => void) {
   const spring = useSpringToken('slow-effects')!;
   const [count, setCount] = useState(open ? n : 0);
   const [mounted, setMounted] = useState(open);
+  // Opening mounts the list in the same render (closing keeps it until the items have faded out).
+  if (open && !mounted) setMounted(true);
   const value = useRef(open ? n : 0);
   const anim = useRef<SpringAnimation | null>(null);
   const shown = useRef(new Set<number>());
-  const live = useRef({ open, count });
-  live.current = { open, count };
+  // Latest props for the callbacks below (items call them from their effects and springs).
+  const live = useRef({ open, onItemShown });
+  useLayoutEffect(() => {
+    live.current = { open, onItemShown };
+  });
   const first = useRef(true);
 
   const maybeUnmount = useCallback(() => {
@@ -277,6 +321,7 @@ function useStagger(open: boolean, n: number) {
     (index: number, isShown: boolean) => {
       if (isShown) shown.current.add(index);
       else shown.current.delete(index);
+      if (isShown) live.current.onItemShown(index);
       maybeUnmount();
     },
     [maybeUnmount],
@@ -288,13 +333,12 @@ function useStagger(open: boolean, n: number) {
       return;
     }
     const target = open ? n : 0;
-    if (open) setMounted(true);
     if (anim.current) {
       anim.current.retarget(target);
       return;
     }
+    // Already there (count === trunc(value) === target): only the list's lifetime can change.
     if (value.current === target) {
-      setCount(target);
       maybeUnmount();
       return;
     }
@@ -334,11 +378,21 @@ const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function
   const forced = useForcedState();
   const spring = useSpringToken('fast-spatial');
   const el = useRef<HTMLButtonElement | null>(null);
-  const setRef = useMergedRef(ref, el);
+  useImperativeHandle(ref, () => el.current!, []);
   const progress = useRef(open ? 1 : 0);
   const anim = useRef<SpringAnimation | null>(null);
   const [morphing, setMorphing] = useState(false);
   const [glyphClose, setGlyphClose] = useState(open);
+  // Toggling starts the morph (or snaps without motion) in the same render; the effect below runs
+  // the spring.
+  const [prev, setPrev] = useState({ open, spring });
+  if (prev.open !== open || prev.spring !== spring) {
+    setPrev({ open, spring });
+    if (!spring) {
+      setMorphing(false);
+      setGlyphClose(open);
+    } else if (prev.open !== open) setMorphing(true);
+  }
   const first = useRef(true);
 
   useLayoutEffect(() => {
@@ -370,11 +424,8 @@ const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function
       anim.current = null;
       progress.current = target;
       clear();
-      setMorphing(false);
-      setGlyphClose(open);
       return;
     }
-    setMorphing(true);
     if (anim.current) {
       anim.current.retarget(target);
       return;
@@ -400,8 +451,7 @@ const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function
   const showClose = morphing ? glyphClose : open;
   return (
     <BaseButton
-      ref={setRef}
-      aria-haspopup="menu"
+      ref={el}
       aria-expanded={open}
       data-ripple-host=""
       {...rest}
@@ -435,17 +485,6 @@ const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function
   );
 });
 
-function useMergedRef<T>(outer: Ref<T> | undefined, inner: { current: T | null }) {
-  return useCallback(
-    (node: T | null) => {
-      inner.current = node;
-      if (typeof outer === 'function') outer(node);
-      else if (outer) (outer as { current: T | null }).current = node;
-    },
-    [outer, inner],
-  );
-}
-
 export interface FabMenuItemProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
   /** Leading icon (use currentColor), 24px. */
   icon?: ReactNode;
@@ -458,22 +497,28 @@ export interface FabMenuItemProps extends Omit<BaseButton.Props, 'className' | '
 }
 
 export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(function FabMenuItem(
-  { icon, children, color: colorProp, keepOpen = false, onClick, sx, ...rest },
+  { icon, children, color: colorProp, keepOpen = false, onClick, onFocus, sx, ...rest },
   ref,
 ) {
   const ctx = useContext(FabMenuContext);
   const forced = useForcedState();
   const el = useRef<HTMLButtonElement | null>(null);
-  const setRef = useMergedRef(ref, el);
+  useImperativeHandle(ref, () => el.current!, []);
   useItemReveal(el, ctx);
   return (
     <BaseButton
-      ref={setRef}
+      ref={el}
       role="menuitem"
       data-ripple-host=""
+      // Inside a menu only the roving tab stop is tabbable (arrow keys move between items).
+      tabIndex={ctx.animated ? (ctx.tabStop ? 0 : -1) : undefined}
       onClick={(e) => {
         onClick?.(e);
         if (!keepOpen && !e.defaultPrevented) ctx.close();
+      }}
+      onFocus={(e) => {
+        ctx.onItemFocus(ctx.index);
+        onFocus?.(e);
       }}
       {...rest}
       {...stylex.props(
@@ -511,8 +556,11 @@ function useItemReveal(el: { current: HTMLElement | null }, ctx: FabMenuContextV
     natural: 0,
     shown: false,
   });
+  // Latest context for the spring callbacks; updated before the reveal effect below runs.
   const ctxRef = useRef(ctx);
-  ctxRef.current = ctx;
+  useLayoutEffect(() => {
+    ctxRef.current = ctx;
+  });
   const first = useRef(true);
 
   const apply = () => {

@@ -1,4 +1,6 @@
 import {
+  Menu,
+  MenuItem,
   SplitButton,
   SplitButtonLeading,
   SplitButtonTrailing,
@@ -23,9 +25,33 @@ const asForced = (s: string): ForcedState | undefined =>
   s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
 /** Figma "Split button": {colour}-{size}-{leading state}-{trailing state}. */
+/** Live (a11y): a standalone trailing button, and one that opens a real menu. */
+function LiveMenu() {
+  return (
+    <div style={{ display: 'grid', rowGap: 16 }}>
+      <div data-row="plain">
+        <SplitButton>
+          <SplitButtonLeading>Save</SplitButtonLeading>
+          <SplitButtonTrailing aria-label="Save options" />
+        </SplitButton>
+      </div>
+      <div data-row="menu">
+        <SplitButton>
+          <SplitButtonLeading>Edit</SplitButtonLeading>
+          <Menu trigger={<SplitButtonTrailing aria-label="More options" />}>
+            <MenuItem>Duplicate</MenuItem>
+            <MenuItem>Rename</MenuItem>
+          </Menu>
+        </SplitButton>
+      </div>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'split-button',
   variants: Object.fromEntries([
+    ['live-menu', { render: () => <LiveMenu /> } satisfies FixtureVariant],
     ...(['filled', 'tonal', 'outlined', 'elevated'] as const).map((variant): [string, FixtureVariant] => [
       `${variant}-live`,
       {

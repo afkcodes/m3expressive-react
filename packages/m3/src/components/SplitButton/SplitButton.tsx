@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useState, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, useMemo, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -199,8 +199,9 @@ export interface SplitButtonProps {
 }
 
 export function SplitButton({ variant = 'filled', size = 'small', disabled = false, children, sx }: SplitButtonProps) {
+  const ctx = useMemo(() => ({ variant, size, disabled }), [variant, size, disabled]);
   return (
-    <SplitContext value={{ variant, size, disabled }}>
+    <SplitContext value={ctx}>
       <div role="group" {...stylex.props(s.group, sx)}>
         {children}
       </div>
@@ -307,9 +308,14 @@ export interface SplitButtonTrailingProps extends Omit<
 > {
   /** Accessible name — required (e.g. "More options"). */
   'aria-label': string;
-  /** Menu open ("Selected" in the kit). Controlled. */
+  /**
+   * Menu open ("Selected" in the kit). Controlled. As the trigger of a `<Menu>` (or a Base UI menu)
+   * the button follows the menu's own state and announces it (aria-haspopup / aria-expanded);
+   * standalone it toggles on click and announces only aria-expanded.
+   */
   expanded?: boolean;
   defaultExpanded?: boolean;
+  /** Standalone toggling (a menu trigger reports through the menu's `onOpenChange`). */
   onExpandedChange?: (expanded: boolean) => void;
   /** Replaces the chevron. */
   icon?: ReactNode;
@@ -322,7 +328,11 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
 ) {
   const { variant, size, disabled: isDisabled, forced } = usePart();
   const [inner, setInner] = useState(defaultExpanded);
-  const expanded = expandedProp ?? inner;
+  // A menu trigger (Base UI passes aria-haspopup / aria-expanded with the popup's state) shows the
+  // menu's real state; standalone, the button keeps its own.
+  const popupExpanded = rest['aria-expanded'];
+  const isTrigger = rest['aria-haspopup'] != null && popupExpanded != null;
+  const expanded = expandedProp ?? (isTrigger ? popupExpanded === true || popupExpanded === 'true' : inner);
   const outer = `${H[size] / 2}px`;
   const [restR, activeR] = INNER[size].map((r) => `${r}px`) as [string, string];
   const pressedForced = forced.state === 'pressed';
@@ -342,11 +352,11 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
     <BaseButton
       ref={ref}
       disabled={isDisabled}
-      aria-haspopup="menu"
       aria-expanded={expanded}
       data-ripple-host=""
       onClick={(e) => {
         onClick?.(e);
+        if (isTrigger) return;
         if (expandedProp === undefined) setInner(!expanded);
         onExpandedChange?.(!expanded);
       }}
