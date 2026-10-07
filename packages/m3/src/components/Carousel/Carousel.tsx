@@ -227,6 +227,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       if (Math.abs(to - from) < 0.5) return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         el.scrollLeft = to;
+        place();
         return;
       }
       anim.current = animateSpring({
