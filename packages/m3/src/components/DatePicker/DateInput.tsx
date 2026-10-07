@@ -150,7 +150,7 @@ export function DateInputPanel({
     <div {...stylex.props(s.surface, sx)}>
       {/* A forced test state belongs to the first field only. */}
       <ForceStateBoundary>
-        <div {...stylex.props(s.header)}>
+        <div data-dp-header="" {...stylex.props(s.header)}>
           <p {...stylex.props(typescale.labelLarge, s.supporting)}>{supportingText}</p>
           <div {...stylex.props(s.headlineRow, range && s.headlineRowRange)}>
             <p {...stylex.props(typescale.headlineLarge, s.headline)}>{headline ?? (range ? 'Enter dates' : 'Enter date')}</p>
@@ -162,12 +162,12 @@ export function DateInputPanel({
           </div>
         </div>
       </ForceStateBoundary>
-      <div {...stylex.props(s.fields)}>
+      <div data-dp-body="" {...stylex.props(s.fields)}>
         {field(a, setA, onChange, label, range, autoFocus)}
         {range && <ForceStateBoundary>{field(b, setB, onEndChange, endLabel, true)}</ForceStateBoundary>}
       </div>
       <ForceStateBoundary>
-        <div {...stylex.props(s.actions)}>
+        <div data-dp-actions="" {...stylex.props(s.actions)}>
           {onCancel && (
             <Button variant="text" onClick={onCancel}>
               {labels.cancel ?? 'Cancel'}

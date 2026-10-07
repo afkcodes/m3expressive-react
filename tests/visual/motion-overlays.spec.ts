@@ -261,7 +261,7 @@ test.describe('modal bottom sheet', () => {
 
     // A short fast flick down (≥ 125dp/s): Hidden.
     ({ sheet, x, y } = await openSheet(page));
-    await flick(page, x, y, 0, 24);
+    await flick(page, x, y, 0, 32);
     await expect(sheet).toHaveCount(0);
   });
 
@@ -406,9 +406,9 @@ test.describe('modal side sheet', () => {
     await page.waitForTimeout(120);
     await page.mouse.up();
     await expect(side).toHaveCount(0);
-    // A quick 60px swipe (> 500px/s, mostly horizontal): hides.
+    // A quick 90px swipe (> 500px/s, mostly horizontal; at rest it would stay): hides.
     ({ side, x, y } = await open());
-    await flick(page, x, y, 60);
+    await flick(page, x, y, 90, 0, 3, 8);
     await expect(side).toHaveCount(0);
   });
 });
@@ -602,14 +602,14 @@ test.describe('carousel', () => {
     // Past half an item: on to the next one.
     await dragTo(-110, true);
     await expect.poll(scroll).toBe(196);
-    // A 40px flick (well over 400dp/s; a slow 40px release stays): to the next item.
-    await flick(page, x, y, -40);
+    // A 50px flick (over 400dp/s; released at rest 50px would stay): to the next item.
+    await flick(page, x, y, -50, 0, 2, 8);
     await expect.poll(scroll).toBe(392);
     // A long fast flick still moves only one item past where it was released.
     await flick(page, x, y, -150, 0, 5, 8);
     await expect.poll(scroll).toBe(588);
     // Backwards: one item back.
-    await flick(page, x, y, 40);
+    await flick(page, x, y, 50, 0, 2, 8);
     await expect.poll(scroll).toBe(392);
   });
 
@@ -652,5 +652,126 @@ test.describe('carousel', () => {
     // … and stays wherever it stopped (no snap to an item).
     expect(await scroll()).toBe(await scroll());
     expect(end).toBeGreaterThan(50);
+  });
+});
+
+test.describe('date picker', () => {
+  async function openPicker(page: Page) {
+    await openFixture(page, '/fixture/date-picker/live');
+    await page.getByRole('button', { name: 'Pick date' }).click();
+    const dialog = page.getByRole('dialog');
+    await settled(dialog);
+    return dialog;
+  }
+
+  test('next month slides the grids one width on spring(1500); the weekday row stays', async ({ page }) => {
+    const dialog = await openPicker(page);
+    const read = `(() => {
+      const grids = [...document.querySelectorAll('[role="dialog"] [role="grid"]')];
+      const main = grids.find((g) => !g.closest('[data-month-copy]'));
+      const rows = [...main.querySelectorAll(':scope > [role="row"]')];
+      const tx = (el) => new DOMMatrix(getComputedStyle(el).transform).m41;
+      return { grids: grids.length, header: tx(rows[0]), week: tx(rows[1]) };
+    })()`;
+    const sampling = sampleFrames<{ grids: number; header: number; week: number }>(page, 500, read);
+    await dialog.getByRole('button', { name: 'Next month' }).click();
+    const frames = await sampling;
+    const moving = frames.filter((f) => f.v.grids === 2);
+    expect(moving.length).toBeGreaterThan(2);
+    // The new month enters from the right (+336 → 0), the weekday headings don't move.
+    expect(Math.max(...moving.map((f) => f.v.week))).toBeGreaterThan(100);
+    for (const f of frames) expect(f.v.header).toBe(0);
+    expect(frames.at(-1)!.v).toEqual({ grids: 1, header: 0, week: 0 });
+    await expect(dialog.getByRole('grid', { name: 'August 2025' })).toBeVisible();
+  });
+
+  test('a horizontal drag swipes months (snap fling: half way at rest, or ≥ 400dp/s)', async ({ page }) => {
+    const dialog = await openPicker(page);
+    const grid = dialog.getByRole('grid', { name: 'July 2025' });
+    const b = (await grid.boundingBox())!;
+    const [x, y] = [b.x + b.width / 2, b.y + 150];
+    // 100px and rest: back to July.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x - 100, y, { steps: 10 });
+    await page.waitForTimeout(100);
+    await page.mouse.up();
+    await expect(dialog.getByRole('grid', { name: 'July 2025' })).toBeVisible();
+    await expect(dialog.locator('[data-month-copy]')).toHaveCount(0);
+    // 200px (past half of 336) and rest: August.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x - 200, y, { steps: 10 });
+    await page.waitForTimeout(100);
+    await page.mouse.up();
+    await expect(dialog.getByRole('grid', { name: 'August 2025' })).toBeVisible();
+    // A quick 120px flick to the right (at rest it would stay): back to July; no day was picked.
+    await flick(page, x, y, 120, 0, 4, 8);
+    await expect(dialog.getByRole('grid', { name: 'July 2025' })).toBeVisible();
+    await expect(dialog.getByText('Thu, Jul 17')).toBeVisible();
+  });
+
+  test('the year list expands over the calendar from 60% alpha, anchored at its bottom, and shrinks back', async ({ page }) => {
+    const dialog = await openPicker(page);
+    const read = `(() => {
+      const list = document.querySelector('[role="dialog"] [role="listbox"]');
+      if (!list) return null;
+      const box = list.parentElement.parentElement;
+      const cs = getComputedStyle(box);
+      return { pos: cs.position, h: box.getBoundingClientRect().height, o: Number(cs.opacity), cal: !!document.querySelector('[role="dialog"] [role="grid"]') };
+    })()`;
+    let sampling = sampleFrames<{ pos: string; h: number; o: number; cal: boolean } | null>(page, 600, read);
+    await dialog.getByRole('button', { name: /select year/ }).click();
+    let frames = (await sampling).filter((f) => f.v);
+    const first = frames[0]!.v!;
+    expect(first.pos).toBe('absolute');
+    expect(first.h).toBeLessThan(140);
+    expect(first.o).toBeGreaterThanOrEqual(0.6);
+    expect(first.o).toBeLessThan(0.9);
+    expect(first.cal).toBe(true);
+    expect(frames.at(-1)!.v).toEqual({ pos: 'static', h: 280, o: 1, cal: false });
+    // Back: the calendar returns under the shrinking list, which fades out on fast effects.
+    sampling = sampleFrames(page, 600, read);
+    await dialog.getByRole('button', { name: /select year/ }).click();
+    frames = (await sampling).filter((f) => f.v);
+    expect(frames.some((f) => f.v!.cal && f.v!.pos === 'absolute')).toBe(true);
+    await expect(dialog.getByRole('listbox')).toHaveCount(0);
+    // The arrow flips without animation (Compose rotates it instantly).
+    expect(await dialog.getByRole('button', { name: /select year/ }).locator('svg').evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+  });
+
+  test('selection colours animate on default effects (day container on selection, content, years)', async ({ page }) => {
+    const dialog = await openPicker(page);
+    const day = dialog.getByRole('button', { name: 'July 9, 2025' });
+    await day.click();
+    const circle = day.locator('> span').nth(0);
+    expect(await circle.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('background-color 0.231s');
+    expect(await day.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('color 0.231s');
+    // Deselected: the container snaps (no transition on the unselected state).
+    await dialog.getByRole('button', { name: 'July 10, 2025' }).click();
+    expect(await circle.evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
+    await dialog.getByRole('button', { name: /select year/ }).click();
+    const year = dialog.getByRole('button', { name: '2025', exact: true });
+    expect(await year.evaluate((e) => [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '))).toBe('color, background-color 0.231s');
+  });
+
+  test('picker ⇄ input: bodies slide and fade, the size animates on default spatial', async ({ page }) => {
+    const dialog = await openPicker(page);
+    const read = `(() => {
+      const slots = [...document.querySelectorAll('[role="dialog"] [data-mode-slot]')];
+      const wrap = slots[0] && slots[0].parentElement;
+      const input = document.querySelector('[role="dialog"] [data-mode-slot="input"] [data-dp-body]');
+      return { slots: slots.map((s) => s.dataset.modeSlot).join(','), w: wrap ? wrap.getBoundingClientRect().width : 0, o: input ? Number(getComputedStyle(input).opacity) : null };
+    })()`;
+    const sampling = sampleFrames<{ slots: string; w: number; o: number | null }>(page, 700, read);
+    await dialog.getByRole('button', { name: 'Switch to text input' }).click();
+    const frames = await sampling;
+    const both = frames.filter((f) => f.v.slots === 'picker,input');
+    expect(both.length).toBeGreaterThan(3);
+    expect(both[0]!.v.o!).toBeLessThan(0.5);
+    // Width animates 360 → 328 through intermediate values.
+    expect(frames.some((f) => f.v.w > 328.5 && f.v.w < 359.5)).toBe(true);
+    expect(frames.at(-1)!.v).toEqual({ slots: 'input', w: 328, o: 1 });
+    await expect(dialog.getByRole('textbox', { name: 'Date' })).toBeFocused();
   });
 });

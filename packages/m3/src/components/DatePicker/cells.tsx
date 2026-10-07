@@ -1,6 +1,7 @@
-import { forwardRef, type MouseEventHandler, type ReactNode } from 'react';
+import { forwardRef, useEffect, useRef, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
+import { motion } from '../../tokens/motion.stylex';
 import { state } from '../../tokens/state.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
@@ -20,6 +21,10 @@ import { useForcedState } from '../../testing/ForceState.tsx';
  *   ripple, in the content colour (range days: On Surface).
  *   Year: 88×52 cell, 72×36 pill; body-large On Surface Variant, selected title-medium On Primary
  *   on Primary. Menu button: label-large On Surface Variant + 18px drop arrow, fully rounded.
+ * Motion (Compose DatePickerColors): a day's content colour animates on default effects unless the
+ * day is in a range; the container fades in on default effects for the selected (start) day only
+ * — deselection and range ends snap; year cells animate content and container on default effects.
+ * The menu arrow flips at once (Compose rotates it without animation).
  */
 const s = stylex.create({
   day: {
@@ -67,6 +72,18 @@ const s = stylex.create({
   // Disabled today: On Surface ring and text (at 38%), not Primary.
   todayDisabled: { borderColor: color.onSurface },
   selected: { backgroundColor: color.primary },
+  // dayContainerColor(animate = startDateSelected): only entering the selected state animates.
+  selectedEnter: {
+    transitionProperty: 'background-color',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
+  },
+  // dayContentColor: animated unless in a range.
+  contentAnimated: {
+    transitionProperty: 'color',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
+  },
   band: { position: 'absolute', top: 4, height: 40, backgroundColor: color.secondaryContainer },
   bandFull: { left: -14.4, width: 76.8 },
   bandRight: { left: 24, width: 38.4 },
@@ -100,6 +117,10 @@ const s = stylex.create({
     color: color.onSurfaceVariant,
     backgroundColor: 'transparent',
     [interaction.layerColor]: color.onSurface,
+    // yearContentColor / yearContainerColor: default effects.
+    transitionProperty: 'color, background-color',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
   },
   yearSelected: { color: color.onPrimary, backgroundColor: color.primary, [interaction.layerColor]: color.onPrimary },
   // Menu button
@@ -123,7 +144,7 @@ const s = stylex.create({
     backgroundColor: 'transparent',
     [interaction.layerColor]: color.onSurfaceVariant,
   },
-  arrow: { display: 'block', width: 18, height: 18, flexShrink: 0, transitionProperty: 'rotate', transitionDuration: '200ms' },
+  arrow: { display: 'block', width: 18, height: 18, flexShrink: 0 },
   arrowOpen: { rotate: '180deg' },
   arrowHidden: { visibility: 'hidden' },
 });
@@ -151,6 +172,12 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
   ref,
 ) {
   const forced = useForcedState();
+  // A day leaving a range takes its new colour at once (Compose swaps to a fresh animated state).
+  const prevKind = useRef(kind);
+  const fromRange = prevKind.current === 'range';
+  useEffect(() => {
+    prevKind.current = kind;
+  });
   if (kind === 'empty') return <span aria-hidden {...stylex.props(s.day)} />;
   const interactive = !disabled;
   const text =
@@ -176,6 +203,7 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
       {...stylex.props(
         s.day,
         text,
+        kind !== 'range' && !fromRange && s.contentAnimated,
         interactive && s.pressLayer,
         forced.state === 'hovered' && stateLayerHost.forceHover,
         forced.state === 'focused' && stateLayerHost.forceFocus,
@@ -188,7 +216,11 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
       {kind === 'selected' && rangeEnd && <span aria-hidden {...stylex.props(s.band, s.bandLeft)} />}
       <span
         aria-hidden
-        {...stylex.props(s.circle, kind === 'today' && [s.today, disabled && s.todayDisabled], kind === 'selected' && s.selected)}
+        {...stylex.props(
+          s.circle,
+          kind === 'today' && [s.today, disabled && s.todayDisabled],
+          kind === 'selected' && [s.selected, !rangeEnd && s.selectedEnter],
+        )}
       >
         {interactive && <StateLayer />}
         {interactive && <Ripple />}
