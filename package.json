@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@stylexjs/unplugin": "^0.19.1",
     "@types/jsdom": "^30.0.0",
