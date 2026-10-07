@@ -16,3 +16,7 @@ The package is unpublished (`0.0.0`); these are the breaking changes made while 
 
 ### API renames
 _Filled in as phase 5 lands: one line per change — old → new, with a find/replace hint._
+
+- Entry points: `StateLayer`, `stateLayerHost`, `Ripple`, `focusRing`, `textBox` → `@m3x/react/primitives`;
+  `figmaShapes`, `SHAPE_FRAME`, `RoundedPolygon`, `CornerRounding`, `Morph`, `createShapeMorph`, `shapePolygon`,
+  `shapeMorphPath` → `@m3x/react/shapes` (change the import path; names are unchanged).
