@@ -6,8 +6,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type AnchorHTMLAttributes,
-  type HTMLAttributes,
   type MouseEventHandler,
   type ReactNode,
   type Ref,
@@ -19,7 +17,7 @@ import { InheritSurfaceContext } from './surface.ts';
 import { legacyLeading, textBox, textEnd } from '../../primitives/textBox.ts';
 import { forcedStateLayer, isInteractionState, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
-import type { SxProps } from '../../primitives/types.ts';
+import type { LinkOrButtonProps, SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ListContext, ListItemContext, type ListVariant } from './context.ts';
 import { listItemStyles as s } from './listItemStyles.ts';
@@ -67,12 +65,12 @@ export interface ListItemOwnProps {
 }
 
 /** Native props of the row, whichever element it renders (`<a>` with `href`, `<button>` with `onClick`, else `<div>`). */
-type RowNativeProps = HTMLAttributes<HTMLElement> &
-  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel' | 'download' | 'hrefLang' | 'ping' | 'referrerPolicy'>;
+type RowNativeProps = LinkOrButtonProps;
 
 /**
- * Native props and `sx` go to the row (`<a>` / `<button>` / `<div>`); `ref` goes to the item's
- * outermost element: the `<li>` inside a `List`, otherwise the row.
+ * `ref`, native props and `sx` all go to the row (`<a>` / `<button>` / `<div>`): the element that
+ * takes focus and events, so a ListItem works as a menu / tooltip trigger (Base UI puts `ref` and
+ * props on one element). Inside a `List` the row sits in a semantic `<li>`.
  */
 export interface ListItemProps extends ListItemOwnProps, SxProps<Omit<RowNativeProps, keyof ListItemOwnProps>> {
   ref?: Ref<HTMLElement>;
@@ -236,20 +234,18 @@ function ListItemImpl({
     'data-ripple-host': interactive ? '' : undefined,
     'data-selected': selected ? '' : undefined,
   };
-  // The row takes the ref only outside a list (inside one, the <li> does).
-  const rowRef = list.inList ? undefined : ref;
 
   let el: ReactNode;
   if (href != null && !disabled) {
     el = (
-      <a ref={rowRef as Ref<HTMLAnchorElement>} href={href} onClick={onClick} {...common}>
+      <a ref={ref as Ref<HTMLAnchorElement>} href={href} onClick={onClick} {...common}>
         {body}
       </a>
     );
   } else if (onClick != null) {
     el = (
       <button
-        ref={rowRef as Ref<HTMLButtonElement>}
+        ref={ref as Ref<HTMLButtonElement>}
         type="button"
         disabled={disabled}
         aria-pressed={selected || undefined}
@@ -261,7 +257,7 @@ function ListItemImpl({
     );
   } else {
     el = (
-      <div ref={rowRef as Ref<HTMLDivElement>} aria-disabled={disabled || undefined} {...common}>
+      <div ref={ref as Ref<HTMLDivElement>} aria-disabled={disabled || undefined} {...common}>
         {body}
       </div>
     );
@@ -275,13 +271,7 @@ function ListItemImpl({
     el
   );
   const item = <ListItemContext value={itemContext}>{withDivider}</ListItemContext>;
-  return list.inList ? (
-    <li ref={ref as Ref<HTMLLIElement>} {...stylex.props(s.li)}>
-      {item}
-    </li>
-  ) : (
-    item
-  );
+  return list.inList ? <li {...stylex.props(s.li)}>{item}</li> : item;
 }
 
 /** A list row; memoised, so a parent re-render with the same props skips it. */

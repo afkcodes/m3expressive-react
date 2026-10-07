@@ -11,8 +11,14 @@ settled the same day; the decisions are folded in below.
   `Ref<HTMLSpanElement>` for Base UI's Checkbox / Radio / Switch roots, `Ref<HTMLDivElement>` for containers…).
 - **Popups** (Dialog, sheets, Menu, tooltips, modal pickers, search view): `ref`, native props and `sx` all go to
   the **popup element** (the surface the user sees), never to an inner part.
-- Exception, documented on the component: **TextField** puts `ref` and the native input props (including
-  `onChange`) on the `<input>` — what form libraries expect — and `sx` on the root.
+- `ref` and the native props always land on the **same element** (Base UI's trigger composition puts both on one
+  element and returns focus through the ref; `tests/dom/refs.dom.test.tsx`). Documented compounds:
+  - **TextField**: `ref` + native input props (including `onChange`) on the `<input>` — what form libraries expect;
+    `sx` on the root.
+  - **ListItem**: `ref`, native props and `sx` on the row (`<a>` / `<button>` / `<div>`, the element that takes focus);
+    inside a `List` the row sits in a semantic `<li>`.
+  - **Dialog / ModalSideSheet**: the popup *is* the surface. **ModalBottomSheet**: the popup is the full-width strip
+    that holds the sheet (the surface's drag continuation needs it).
 - Named exports only. Every component exports its props type as `XProps`.
 
 ## 2. Props passthrough and styling
@@ -23,7 +29,9 @@ settled the same day; the decisions are folded in below.
   from the native props: use the shared `SxProps<ComponentPropsWithRef<'el'>>` helper from `primitives/types.ts`,
   which also brings `ref`).
 - A prop name that collides with a native attribute (`title`, `content`, `color`, `onChange`) is renamed, not
-  shadowed: see §4 (`headline`) and §5 (`Tooltip content` omits the native one).
+  shadowed: see §4 (`headline`) and §5 (`Tooltip content` omits the native one). React's `HTMLAttributes` include
+  `defaultValue` / `defaultChecked`: `Omit` them when the component declares its own.
+- Parts that render a link with `href` and a button without take `LinkOrButtonProps` (`primitives/types.ts`).
 
 ## 3. State props
 Every piece of user-changeable state is **controllable**: `x` (controlled), `defaultX` (uncontrolled

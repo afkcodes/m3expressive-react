@@ -52,3 +52,30 @@ _Filled in as phase 5 lands: one line per change — old → new, with a find/re
   `onChange` → `onValueChange`; `PeriodSelector` `pm` / `onChange(pm)` → `value: 'am' | 'pm'` / `onValueChange`;
   `DateInputPanel` `value` / `end` / `onChange` / `onEndChange` → `defaultValue` / `onValueChange` (a `DateRange` with `range`).
 - No longer exported (internal): `monthWeeks`, `sameDay`, `inputFormatHint`, `parseInputDate`, `DATE_PICKER_ICONS`.
+
+#### Lists, menus, navigation, surfaces
+- `<List type="…">` → `<List variant="…">`; List / ListItem `variant="expressive"` → `"standard"` (or drop it),
+  `"baseline"` unchanged; type `ListItemVariant` → `ListVariant` (`'standard' | 'segmented' | 'baseline'`).
+- `ListItemImage` / `ListItemVideo` `expressive={false}` → remove (the item's or list's variant decides);
+  `ListItemImage` `selected` → remove (it follows the enclosing ListItem; a static image uses `<ForceState selected>`).
+- `ExpandableListItem` `expanded` / `defaultExpanded` / `onExpandedChange` → `open` / `defaultOpen` /
+  `onOpenChange(open, details)`; `toggleLabel="X"` → `labels={{ expand: 'X' }}`; `sx` now styles the root, not the header row.
+- `AccordionButton` `expanded` → `open`; `forcedState` removed (wrap in `<ForceState state>`); `className` / `style` → `sx`.
+- `SwipeActions` (+ `SwipeActionsProps`), `swipeOffset` → `@m3x/react/testing`; `swipeLayout` is no longer exported.
+  `SwipeableListItem` gains `defaultRevealState`.
+- `MenuItem` `active` → `<ForceState state="hovered">` (testing); `MenuScope` → `@m3x/react/testing`. Menu `ref` and
+  native props reach the popup; `MenuItem` `onClick` is a `MouseEventHandler<HTMLDivElement>`; Menu / MenuCheckboxItem /
+  MenuRadioGroup / Submenu callbacks get Base UI details second (not breaking). `Submenu` gains `open` / `defaultOpen` /
+  `onOpenChange`.
+- `NavigationBar` `itemLayout` → `layout`; `NavigationRail` `type` → `layout` (`'docked' | 'floating'`);
+  `NavigationItemLayout` drops `'rail-horizontal'`; `NavigationItem` `selected` → removed (a static item uses
+  `<ForceState selected>`); `NavigationScope` → `@m3x/react/testing`. `NavigationBar` / `NavigationRail` gain
+  `defaultValue` — without `value` they are now uncontrolled (the selection follows clicks).
+- `Dialog`: `open` optional with `defaultOpen`, `onOpenChange(open, details)`; `ref`, native props and `sx` reach the
+  popup, which is now the surface itself (no visual change). `DialogSurface` `headlineId` / `descriptionId` removed.
+- `BottomSheet` `modal` / `handleLabel` / `onHandleActivate` / `onHandlePointerDown` / `onSurfacePointerDown` /
+  `contentRef` and `SideSheet` `modal` / `headlineId` removed: use `ModalBottomSheet` / `ModalSideSheet` (the static
+  modal look is `BottomSheetSurface` / `SideSheetSurface` in `@m3x/react/testing`).
+- `ModalBottomSheet` / `ModalSideSheet`: `open` optional with `defaultOpen`, `onOpenChange(open, details?)` (a drag or
+  the handle pass no details); `sx` styles the popup (the bottom sheet's full-width strip; the side sheet's surface);
+  the handle's name is `labels={{ closeSheet }}`.

@@ -1,17 +1,8 @@
-import {
-  useContext,
-  useMemo,
-  type AnchorHTMLAttributes,
-  type HTMLAttributes,
-  type MouseEvent,
-  type MouseEventHandler,
-  type ReactNode,
-  type Ref,
-} from 'react';
+import { useContext, useMemo, type MouseEvent, type MouseEventHandler, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
-import type { SxProps } from '../../primitives/types.ts';
+import type { LinkOrButtonProps, SxProps } from '../../primitives/types.ts';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
@@ -169,8 +160,7 @@ interface NavigationItemOwnProps {
 }
 
 /** Native props of the item, whichever element it renders (`<a>` with `href`, else `<button>`). */
-type ItemNativeProps = HTMLAttributes<HTMLElement> &
-  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel' | 'download' | 'hrefLang' | 'ping' | 'referrerPolicy'>;
+type ItemNativeProps = LinkOrButtonProps;
 
 /** Native props, `ref` and `sx` go to the item's `<button>` (or `<a>`). */
 interface NavigationItemBaseProps
