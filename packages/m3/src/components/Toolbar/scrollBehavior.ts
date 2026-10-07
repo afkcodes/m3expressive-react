@@ -119,34 +119,34 @@ export function useFloatingToolbarExitAlways(exitDirection: FloatingToolbarExitD
   const ended = useRef(true);
 
   const measure = (): ExitGeometry | null => {
-    const e = el.current;
-    if (!e) return null;
+    const element = el.current;
+    if (!element) return null;
     const side: PhysicalSide =
       exitDirection === 'top' || exitDirection === 'bottom'
         ? exitDirection
-        : (exitDirection === 'start') !== (getComputedStyle(e).direction === 'rtl')
+        : (exitDirection === 'start') !== (getComputedStyle(element).direction === 'rtl')
           ? 'left'
           : 'right';
-    const parent = e.offsetParent as HTMLElement | null;
+    const parent = element.offsetParent as HTMLElement | null;
     if (!parent) return { side, limit: 0 };
     const distance =
       side === 'top'
-        ? e.offsetHeight + e.offsetTop
+        ? element.offsetHeight + element.offsetTop
         : side === 'bottom'
-          ? parent.clientHeight - e.offsetTop
+          ? parent.clientHeight - element.offsetTop
           : side === 'left'
-            ? e.offsetWidth + e.offsetLeft
-            : parent.clientWidth - e.offsetLeft;
+            ? element.offsetWidth + element.offsetLeft
+            : parent.clientWidth - element.offsetLeft;
     return { side, limit: -distance };
   };
   const current = () => (geometry.current ??= measure());
 
   const offset = useExitAlwaysOffset(
     (value) => {
-      const e = el.current;
+      const element = el.current;
       const side = current()?.side;
-      if (!e || !side) return;
-      e.style.translate =
+      if (!element || !side) return;
+      element.style.translate =
         side === 'top'
           ? `0 ${value}px`
           : side === 'bottom'
