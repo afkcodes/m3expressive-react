@@ -1,6 +1,5 @@
-import { forwardRef, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, MouseEventHandler, ReactNode, Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
@@ -10,6 +9,8 @@ import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/S
 import { focusRing } from '../../primitives/focusRing.ts';
 import { ICON_PATHS, SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { legacyLeading, textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { useForcedState, type ForceStateValue } from '../../testing/ForceState.tsx';
 
 /*
@@ -120,20 +121,16 @@ const forcedStyles = (forced: ForceStateValue) => [
   forced.focusRing && focusRing.forced,
 ];
 
-export interface SnackbarActionProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface SnackbarActionProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children'>> {
+  ref?: Ref<HTMLButtonElement>;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /** The snackbar's inverse text button. */
-export const SnackbarAction = forwardRef<HTMLButtonElement, SnackbarActionProps>(function SnackbarAction(
-  { children, sx, ...rest },
-  ref,
-) {
+export function SnackbarAction({ children, sx, ...rest }: SnackbarActionProps) {
   const forced = useForcedState();
   return (
     <BaseButton
-      ref={ref}
       {...rest}
       {...stylex.props(s.button, focusRing.host, s.action, stateLayerHost.hostPressLayer, forcedStyles(forced), sx)}
     >
@@ -141,22 +138,21 @@ export const SnackbarAction = forwardRef<HTMLButtonElement, SnackbarActionProps>
       <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{children}</span>
     </BaseButton>
   );
-});
-
-export interface SnackbarCloseProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
-  sx?: StyleXStyles;
 }
 
-/** The close affordance (48px target, 40px circle). */
-export const SnackbarClose = forwardRef<HTMLButtonElement, SnackbarCloseProps>(function SnackbarClose(
-  { sx, 'aria-label': label = 'Dismiss', ...rest },
-  ref,
-) {
+export interface SnackbarCloseProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children'>> {
+  ref?: Ref<HTMLButtonElement>;
+  /** Overrides the built-in strings (`dismiss`, the default accessible name). */
+  labels?: Partial<M3Labels>;
+}
+
+/** The close affordance (48px target, 40px circle), named `labels.dismiss` unless `aria-label` is given. */
+export function SnackbarClose({ sx, labels: labelOverrides, 'aria-label': ariaLabel, ...rest }: SnackbarCloseProps) {
   const forced = useForcedState();
+  const labels = useLabels(labelOverrides);
   return (
     <BaseButton
-      ref={ref}
-      aria-label={label}
+      aria-label={ariaLabel ?? labels.dismiss}
       {...rest}
       {...stylex.props(
         s.button,
@@ -175,28 +171,30 @@ export const SnackbarClose = forwardRef<HTMLButtonElement, SnackbarCloseProps>(f
       </span>
     </BaseButton>
   );
-});
+}
 
-export interface SnackbarProps {
+/** The static snackbar surface `<div>` (`ref`, native props, `sx`). Apps show snackbars with `useSnackbar()`. */
+export interface SnackbarProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** Supporting text. */
   children: ReactNode;
   /** A <SnackbarAction/>. */
   action?: ReactNode;
   /** Shows the close affordance. */
-  onClose?: () => void;
+  onClose?: MouseEventHandler<HTMLButtonElement>;
   /** Long action label: the action moves under the text. */
   stacked?: boolean;
   /** Reserve two lines of text (kit "Two lines"). */
   twoLine?: boolean;
-  sx?: StyleXStyles;
+  /** Overrides the built-in strings (`dismiss`, the close affordance's name). */
+  labels?: Partial<M3Labels>;
 }
 
 /** The snackbar surface (static). Use `useSnackbar()` to show one. */
-export function Snackbar({ onClose, ...rest }: SnackbarProps) {
-  return <SnackbarSurface {...rest} close={onClose ? <SnackbarClose onClick={onClose} /> : null} />;
+export function Snackbar({ onClose, labels, ...rest }: SnackbarProps) {
+  return <SnackbarSurface {...rest} close={onClose ? <SnackbarClose labels={labels} onClick={onClose} /> : null} />;
 }
 
-export interface SnackbarSurfaceProps extends Omit<SnackbarProps, 'onClose'> {
+export interface SnackbarSurfaceProps extends Omit<SnackbarProps, 'onClose' | 'labels'> {
   /** The close affordance element (the host renders a Toast.Close). */
   close: ReactNode;
 }
@@ -208,10 +206,11 @@ export function SnackbarSurface({
   stacked = false,
   twoLine = false,
   sx,
+  ...rest
 }: SnackbarSurfaceProps) {
   if (stacked) {
     return (
-      <div {...stylex.props(typescale.bodyMedium, s.surface, s.stacked, sx)}>
+      <div {...rest} {...stylex.props(typescale.bodyMedium, s.surface, s.stacked, sx)}>
         <p {...stylex.props(s.text, s.stackedText, twoLine && s.twoLine)}>
           <span {...stylex.props(legacyLeading.shift(14, 20))}>{children}</span>
         </p>
@@ -223,7 +222,10 @@ export function SnackbarSurface({
     );
   }
   return (
-    <div {...stylex.props(typescale.bodyMedium, s.surface, close ? s.endClose : action ? s.endAction : s.endText, sx)}>
+    <div
+      {...rest}
+      {...stylex.props(typescale.bodyMedium, s.surface, close ? s.endClose : action ? s.endAction : s.endText, sx)}
+    >
       {/* The kit's snackbar text layers use Figma's legacy line height (see textBox.ts). */}
       <p {...stylex.props(s.text, twoLine && s.twoLine)}>
         <span {...stylex.props(legacyLeading.shift(14, 20))}>{children}</span>

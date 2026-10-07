@@ -33,7 +33,7 @@ function LiveDemo() {
     <Button
       onClick={() =>
         snackbar.show('Message archived', {
-          action: { label: 'Undo', onClick: () => document.body.setAttribute('data-undo', '1') },
+          action: { label: 'Undo', onAction: () => document.body.setAttribute('data-undo', '1') },
         })
       }
     >
