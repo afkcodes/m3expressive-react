@@ -1,30 +1,15 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { PNG } from 'pngjs';
+import { captureRegion, hexToRgb } from './capture.ts';
 import { compareImages } from './compare.ts';
+import { fontsReady } from './helpers/page.ts';
 import { loadManifests, REFS_DIR } from './manifest.ts';
 
 const OUT = join(process.cwd(), 'tests/visual/__output__');
 
-const DPR = 2;
-
-function cropDevicePx(buf: Buffer, r: { x: number; y: number; width: number; height: number }): Buffer {
-  const src = PNG.sync.read(buf);
-  const [x, y, w, h] = [r.x, r.y, r.width, r.height].map(Math.round) as [number, number, number, number];
-  if (x === 0 && y === 0 && w === src.width && h === src.height) return buf;
-  const out = new PNG({ width: w, height: h });
-  PNG.bitblt(src, out, x, y, w, h, 0, 0);
-  return PNG.sync.write(out);
-}
-
 /** px. Covers Figma's 3-decimal export precision; ~1/30 of a device pixel at 2x. */
 const BOX_EPSILON = 0.015;
-
-const hexToRgb = (hex: string): [number, number, number] => {
-  const n = parseInt(hex.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-};
 
 for (const manifest of loadManifests()) {
   test.describe(manifest.component, () => {
@@ -42,7 +27,7 @@ for (const manifest of loadManifests()) {
           await page.setViewportSize({ width: Math.max(vp.width, needW), height: Math.max(vp.height, needH) });
         }
         await page.goto(`/fixture/${manifest.component}/${name}`);
-        await page.evaluate(() => document.fonts.ready);
+        await fontsReady(page);
         const node = page.locator('[data-fixture-node]');
         await expect(node).toBeVisible();
         let box = (await node.boundingBox())!;
@@ -82,22 +67,10 @@ for (const manifest of loadManifests()) {
         }
 
         // 3. Pixels. Clip to the same render bounds Figma exported. Playwright rounds clips to
-        //    whole CSS px, so capture the enclosing whole-px rect and cut the exact device-px
-        //    region ourselves (render bounds may sit on the 0.5px grid at 2x).
-        const [rx, ry, rw, rh] = v.renderBounds ?? [0, 0, v.size[0], v.size[1]];
-        const want = { x: box.x + rx, y: box.y + ry, width: rw, height: rh };
-        const outer = {
-          x: Math.floor(want.x),
-          y: Math.floor(want.y),
-          width: Math.ceil(want.x + want.width) - Math.floor(want.x),
-          height: Math.ceil(want.y + want.height) - Math.floor(want.y),
-        };
-        const raw = await page.screenshot({ clip: outer, omitBackground: true, animations: 'disabled' });
-        const shot = cropDevicePx(raw, {
-          x: (want.x - outer.x) * DPR,
-          y: (want.y - outer.y) * DPR,
-          width: want.width * DPR,
-          height: want.height * DPR,
+        //    whole CSS px, so captureRegion captures the enclosing whole-px rect and cuts the exact
+        //    device-px region itself (render bounds may sit on the 0.5px grid at 2x).
+        const shot = await captureRegion(page, node, v.renderBounds ?? [0, 0, v.size[0], v.size[1]], {
+          animations: 'disabled',
         });
         const result = compareImages(readFileSync(refPath), shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
 

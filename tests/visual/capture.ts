@@ -21,6 +21,8 @@ export async function captureRegion(
   page: Page,
   node: Locator,
   [rx, ry, rw, rh]: readonly [number, number, number, number] | number[],
+  /** `disabled` finishes / freezes running animations first (static parity); live checks capture as is. */
+  { animations = 'allow' }: { animations?: 'allow' | 'disabled' } = {},
 ): Promise<Buffer> {
   const box = (await node.boundingBox())!;
   const want = { x: box.x + rx, y: box.y + ry, width: rw, height: rh };
@@ -30,7 +32,7 @@ export async function captureRegion(
     width: Math.ceil(want.x + want.width) - Math.floor(want.x),
     height: Math.ceil(want.y + want.height) - Math.floor(want.y),
   };
-  const raw = await page.screenshot({ clip: outer, omitBackground: true, animations: 'allow' });
+  const raw = await page.screenshot({ clip: outer, omitBackground: true, animations });
   return cropDevicePx(raw, {
     x: (want.x - outer.x) * DPR,
     y: (want.y - outer.y) * DPR,
