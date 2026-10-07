@@ -103,6 +103,9 @@ export function FabMenuToggle({ open, color: menuColor, icon, ref, ...rest }: Fa
       clearMorph();
       return;
     }
+    // The render already switched the open / closed styles; the spring's first frame comes a frame
+    // later. Paint the current progress now, or one frame flashes the end shape with the old glyph.
+    if (!checked.animating) applyMorph(checked.value);
     checked.to(target, spring);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- runs on the toggle; the morph reads the latest colour
   }, [open, spring, menuColor]);
