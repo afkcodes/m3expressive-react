@@ -1,16 +1,17 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { usePortalContainer } from '../../theme/portal.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
-import { scrim } from '../../primitives/scrim.ts';
+import { ModalShell } from '../../primitives/ModalShell.tsx';
+import { SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { dialogMotion } from '../../primitives/dialogMotion.ts';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
-import { ClockFace, PeriodSelector, TimeField, TimeSelector, TimeSeparator } from './parts.tsx';
+import { ClockFace } from './ClockFace.tsx';
+import { PeriodSelector, TimeField, TimeSelector, TimeSeparator } from './parts.tsx';
 import { normalizeTime, type Time } from './time.ts';
 
 export type { Time } from './time.ts';
@@ -31,12 +32,6 @@ const KEYBOARD =
   'M4 19C3.45 19 2.97917 18.8042 2.5875 18.4125C2.19583 18.0208 2 17.55 2 17V7C2 6.45 2.19583 5.97917 2.5875 5.5875C2.97917 5.19583 3.45 5 4 5H20C20.55 5 21.0208 5.19583 21.4125 5.5875C21.8042 5.97917 22 6.45 22 7V17C22 17.55 21.8042 18.0208 21.4125 18.4125C21.0208 18.8042 20.55 19 20 19H4ZM8 16H16V14H8V16ZM5 13H7V11H5V13ZM8 13H10V11H8V13ZM11 13H13V11H11V13ZM14 13H16V11H14V13ZM17 13H19V11H17V13ZM5 10H7V8H5V10ZM8 10H10V8H8V10ZM11 10H13V8H11V10ZM14 10H16V8H14V10ZM17 10H19V8H17V10Z';
 const SCHEDULE =
   'M15.3 16.7L16.7 15.3L13 11.6V7H11V12.4L15.3 16.7ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22Z';
-
-const Glyph = ({ d }: { d: string }) => (
-  <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ display: 'block' }}>
-    <path d={d} />
-  </svg>
-);
 
 const s = stylex.create({
   surface: {
@@ -122,13 +117,8 @@ export function TimePicker({
   sx,
 }: TimePickerProps) {
   const value = normalizeTime(valueProp);
-  const [innerSel, setInnerSel] = useState<'hour' | 'minute'>('hour');
-  const sel = selProp ?? innerSel;
-  const setSel = (v: 'hour' | 'minute') => {
-    if (!selProp) setInnerSel(v);
-    onSelectionChange?.(v);
-  };
-  const h = orientation === 'horizontal';
+  const [sel, setSel] = useControllableState<'hour' | 'minute'>(selProp, 'hour', onSelectionChange);
+  const horizontal = orientation === 'horizontal';
   const pm = value.hour >= 12;
   const dialHour = is24Hour ? value.hour : display12(value.hour);
   const setHourFromDial = (v: number) => {
@@ -140,7 +130,7 @@ export function TimePicker({
       <TimeSelector
         value={pad(dialHour)}
         selected={sel === 'hour'}
-        wide={is24Hour && !h}
+        wide={is24Hour && !horizontal}
         onClick={() => setSel('hour')}
         aria-label={`Hour ${dialHour}`}
       />
@@ -149,7 +139,7 @@ export function TimePicker({
         <TimeSelector
           value={pad(value.minute)}
           selected={sel === 'minute'}
-          wide={is24Hour && !h}
+          wide={is24Hour && !horizontal}
           onClick={() => setSel('minute')}
           aria-label={`Minute ${value.minute}`}
         />
@@ -160,19 +150,19 @@ export function TimePicker({
     <ForceStateBoundary>
       <PeriodSelector
         pm={pm}
-        orientation={h ? 'horizontal' : 'vertical'}
+        orientation={horizontal ? 'horizontal' : 'vertical'}
         labels={labels}
         onChange={(toPm) => onChange({ hour: (value.hour % 12) + (toPm ? 12 : 0), minute: value.minute })}
       />
     </ForceStateBoundary>
   );
   return (
-    <div {...stylex.props(s.surface, h && s.surfaceH, sx)}>
+    <div {...stylex.props(s.surface, horizontal && s.surfaceH, sx)}>
       <div {...stylex.props(s.header)}>
         <p {...stylex.props(typescale.labelMedium, s.title)}>{title}</p>
       </div>
-      <div {...stylex.props(s.body, is24Hour && !h && s.body24, h && s.bodyH)}>
-        <div {...stylex.props(s.inputs, h && s.inputsCol, h && is24Hour && s.inputsCol24)}>
+      <div {...stylex.props(s.body, is24Hour && !horizontal && s.body24, horizontal && s.bodyH)}>
+        <div {...stylex.props(s.inputs, horizontal && s.inputsCol, horizontal && is24Hour && s.inputsCol24)}>
           {boxes}
           {period}
         </div>
@@ -188,10 +178,10 @@ export function TimePicker({
       </div>
       {(onModeToggle || onCancel || onConfirm) && (
         <ForceStateBoundary>
-          <div {...stylex.props(s.actions, h && s.actionsH)}>
+          <div {...stylex.props(s.actions, horizontal && s.actionsH)}>
             {onModeToggle ? (
               <IconButton aria-label={labels.mode ?? 'Switch to text input'} onClick={onModeToggle}>
-                <Glyph d={KEYBOARD} />
+                <SvgIcon d={KEYBOARD} />
               </IconButton>
             ) : (
               <span />
@@ -295,7 +285,7 @@ export function TimeInput({
           <div {...stylex.props(s.actions)}>
             {onModeToggle ? (
               <IconButton aria-label={labels.mode ?? 'Switch to clock'} onClick={onModeToggle}>
-                <Glyph d={SCHEDULE} />
+                <SvgIcon d={SCHEDULE} />
               </IconButton>
             ) : (
               <span />
@@ -326,7 +316,6 @@ export interface ModalTimePickerProps extends Omit<TimePickerProps, 'onCancel' |
 
 /** The time picker dialog: dial ⇄ keyboard, OK commits, Cancel / Escape discard. */
 export function ModalTimePicker({ open, onOpenChange, value, onChange, ...picker }: ModalTimePickerProps) {
-  const portal = usePortalContainer();
   const [draft, setDraft] = useState<Time>(() => normalizeTime(value));
   const [mode, setMode] = useState<'dial' | 'keyboard'>('dial');
   // Each opening starts from the confirmed time on the dial; a parent re-render while open keeps
@@ -344,36 +333,33 @@ export function ModalTimePicker({ open, onOpenChange, value, onChange, ...picker
     onOpenChange(false);
   };
   return (
-    <BaseDialog.Root open={open} onOpenChange={(next) => onOpenChange(next)}>
-      <BaseDialog.Portal container={portal}>
-        <BaseDialog.Backdrop {...stylex.props(scrim.backdrop)} />
-        <BaseDialog.Popup
-          aria-label={mode === 'dial' ? 'Select time' : 'Enter time'}
-          {...stylex.props(s.popup, dialogMotion.fadeScale)}
-        >
-          {mode === 'dial' ? (
-            <TimePicker
-              {...picker}
-              value={draft}
-              onChange={setDraft}
-              onModeToggle={() => setMode('keyboard')}
-              onCancel={() => onOpenChange(false)}
-              onConfirm={confirm}
-            />
-          ) : (
-            <TimeInput
-              value={draft}
-              onChange={setDraft}
-              is24Hour={picker.is24Hour}
-              labels={picker.labels}
-              autoFocus
-              onModeToggle={() => setMode('dial')}
-              onCancel={() => onOpenChange(false)}
-              onConfirm={confirm}
-            />
-          )}
-        </BaseDialog.Popup>
-      </BaseDialog.Portal>
-    </BaseDialog.Root>
+    <ModalShell
+      open={open}
+      onOpenChange={onOpenChange}
+      aria-label={mode === 'dial' ? 'Select time' : 'Enter time'}
+      sx={[s.popup, dialogMotion.fadeScale]}
+    >
+      {mode === 'dial' ? (
+        <TimePicker
+          {...picker}
+          value={draft}
+          onChange={setDraft}
+          onModeToggle={() => setMode('keyboard')}
+          onCancel={() => onOpenChange(false)}
+          onConfirm={confirm}
+        />
+      ) : (
+        <TimeInput
+          value={draft}
+          onChange={setDraft}
+          is24Hour={picker.is24Hour}
+          labels={picker.labels}
+          autoFocus
+          onModeToggle={() => setMode('dial')}
+          onCancel={() => onOpenChange(false)}
+          onConfirm={confirm}
+        />
+      )}
+    </ModalShell>
   );
 }
