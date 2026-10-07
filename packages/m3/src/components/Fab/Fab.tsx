@@ -1,4 +1,4 @@
-import { forwardRef, useContext, useRef, type ReactNode } from 'react';
+import { useContext, useRef, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -13,20 +13,22 @@ import { tween } from '../../primitives/tweens.stylex.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { visuallyHidden } from '../../primitives/visuallyHidden.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ToolbarFabContext } from '../Toolbar/context.ts';
 import { useExpandMotion } from './useExpandMotion.ts';
 
 export type FabColor =
-  'primary' | 'secondary' | 'tertiary' | 'primary-container' | 'secondary-container' | 'tertiary-container';
-export type FabSize = 'default' | 'medium' | 'large';
+  'primary' | 'secondary' | 'tertiary' | 'primaryContainer' | 'secondaryContainer' | 'tertiaryContainer';
+/** 56 / 80 / 96px (the kit's "default" FAB is `small`; the deprecated 40dp small FAB isn't in the kit). */
+export type FabSize = 'small' | 'medium' | 'large';
 export type ExtendedFabSize = 'small' | 'medium' | 'large';
 
 /*
  * Figma kit, Buttons page, sets "FAB" and "Extended FAB" (3 sizes × 6 colours × 4 states).
  *            FAB    radius  icon   extended: height  padding (block/inline)  gap  label
- *   default  56     16      24     small     56      16 / 16                 8    title-medium
+ *   small    56     16      24     small     56      16 / 16                 8    title-medium
  *   medium   80     20      28     medium    80      26 / 26                 12   title-large
  *   large    96     28      36     large     96      30 / 28                 16   headline-small
  * Elevation 3 at rest and pressed; 4 while hovered. Focused: level 3 without spread (the kit's
@@ -35,7 +37,7 @@ export type ExtendedFabSize = 'small' | 'medium' | 'large';
  * No disabled state in the kit.
  */
 const FAB: Record<FabSize, { box: number; radius: number; icon: number }> = {
-  default: { box: 56, radius: 16, icon: 24 },
+  small: { box: 56, radius: 16, icon: 24 },
   medium: { box: 80, radius: 20, icon: 28 },
   large: { box: 96, radius: 28, icon: 36 },
 };
@@ -139,12 +141,12 @@ const colors = stylex.create({
   primary: { backgroundColor: color.primary, color: color.onPrimary },
   secondary: { backgroundColor: color.secondary, color: color.onSecondary },
   tertiary: { backgroundColor: color.tertiary, color: color.onTertiary },
-  'primary-container': { backgroundColor: color.primaryContainer, color: color.onPrimaryContainer },
-  'secondary-container': { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
-  'tertiary-container': { backgroundColor: color.tertiaryContainer, color: color.onTertiaryContainer },
+  primaryContainer: { backgroundColor: color.primaryContainer, color: color.onPrimaryContainer },
+  secondaryContainer: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer },
+  tertiaryContainer: { backgroundColor: color.tertiaryContainer, color: color.onTertiaryContainer },
 });
 
-type BaseProps = Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'>;
+type BaseProps = SxProps<Omit<BaseButton.Props, 'render' | 'children' | 'color'>> & { ref?: Ref<HTMLButtonElement> };
 
 function useFabRoot(fabColor: FabColor, elevated: boolean, sx?: StyleXStyles) {
   const forced = useForcedState();
@@ -168,25 +170,28 @@ export interface FabProps extends Omit<BaseProps, 'aria-label'> {
   /** Accessible name — required, the FAB has no visible text. */
   'aria-label': string;
   size?: FabSize;
+  /** Container colour role (content: the matching on-colour). */
   color?: FabColor;
   /** The icon (use currentColor); sized 24/28/36px. */
   children: ReactNode;
   /** Shadow (level 3; default true). Flat FABs sit in containers such as a navigation rail. */
   elevated?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
-  { size = 'default', color: fabColor = 'primary-container', elevated = true, children, sx, ...rest },
-  ref,
-) {
+export function Fab({
+  size = 'small',
+  color: fabColor = 'primaryContainer',
+  elevated = true,
+  children,
+  sx,
+  ...rest
+}: FabProps) {
   const { box: restBox, radius, icon } = FAB[size];
   const toolbar = useContext(ToolbarFabContext);
-  // Compose FabSizeRange: the default FAB grows to the medium FAB's 80px while its toolbar is collapsed.
-  const box = toolbar?.collapsed && size === 'default' ? FAB.medium.box : restBox;
+  // Compose FabSizeRange: the 56px FAB grows to the medium FAB's 80px while its toolbar is collapsed.
+  const box = toolbar?.collapsed && size === 'small' ? FAB.medium.box : restBox;
   return (
     <BaseButton
-      ref={ref}
       data-ripple-host=""
       {...rest}
       {...stylex.props(...useFabRoot(fabColor, elevated, sx), toolbar && s.inToolbar, dyn.box(box, box, radius))}
@@ -196,10 +201,11 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
       <Ripple above />
     </BaseButton>
   );
-});
+}
 
 export interface ExtendedFabProps extends BaseProps {
   size?: ExtendedFabSize;
+  /** Container colour role (content: the matching on-colour). */
   color?: FabColor;
   /** Leading icon (use currentColor); sized 24/28/36px. */
   icon?: ReactNode;
@@ -208,26 +214,24 @@ export interface ExtendedFabProps extends BaseProps {
   /**
    * Show the label (default true). Collapsing shrinks the FAB to its icon (a square of the FAB's
    * height) and fades the label out; the label stays the accessible name. Needs an icon.
+   * Controlled only: layout state the FAB never changes itself (a scroll or the app collapses it).
    */
   expanded?: boolean;
   /** Shadow (level 3; default true). */
   elevated?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(function ExtendedFab(
-  {
-    size = 'small',
-    color: fabColor = 'primary-container',
-    elevated = true,
-    expanded = true,
-    icon,
-    children,
-    sx,
-    ...rest
-  },
+export function ExtendedFab({
+  size = 'small',
+  color: fabColor = 'primaryContainer',
+  elevated = true,
+  expanded = true,
+  icon,
+  children,
+  sx,
   ref,
-) {
+  ...rest
+}: ExtendedFabProps) {
   const metrics = EXTENDED[size];
   const root = useRef<HTMLButtonElement | null>(null);
   const label = useRef<HTMLSpanElement | null>(null);
@@ -257,4 +261,4 @@ export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(funct
       <Ripple above />
     </BaseButton>
   );
-});
+}

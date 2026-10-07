@@ -24,7 +24,8 @@ function ExtendedToggle() {
   );
 }
 
-const toColor = (c: string) => c.replace(/([A-Z])/g, (m) => '-' + m.toLowerCase()) as FabColor;
+/** The kit's FAB sizes are default / medium / large; the 56px "default" FAB is `small`. */
+const toFabSize = (kit: string): FabSize => (kit === 'default' ? 'small' : (kit as FabSize));
 
 /** Figma "FAB" / "Extended FAB": {fab|extended}-{colour}-{size}-{state}. */
 const fixture: FixtureModule = {
@@ -55,7 +56,7 @@ const fixture: FixtureModule = {
       const [kind, c, size, state] = name.split('-') as [string, string, string, string];
       const forced: ForcedState | undefined =
         state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
-      const color = toColor(c);
+      const color = c as FabColor;
       return [
         name,
         {
@@ -64,9 +65,9 @@ const fixture: FixtureModule = {
             kind === 'fab' ? (
               <ForceState
                 state={forced}
-                ripplePath={assets.fab[size as FabSize][c as keyof (typeof assets.fab)['default']]}
+                ripplePath={assets.fab[size as keyof typeof assets.fab][c as keyof (typeof assets.fab)['default']]}
               >
-                <Fab aria-label={name} size={size as FabSize} color={color}>
+                <Fab aria-label={name} size={toFabSize(size)} color={color}>
                   <StarsFilled />
                 </Fab>
               </ForceState>

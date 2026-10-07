@@ -42,9 +42,9 @@ const ICON_VARIANTS: IconButtonVariant[] = ['filled', 'tonal', 'outlined', 'stan
 const WIDTHS: IconButtonWidth[] = ['narrow', 'default', 'wide'];
 const TOGGLE_VARIANTS: ToggleButtonVariant[] = ['filled', 'tonal', 'outlined', 'elevated'];
 const FAB_COLORS: FabColor[] = [
-  'primary-container',
-  'secondary-container',
-  'tertiary-container',
+  'primaryContainer',
+  'secondaryContainer',
+  'tertiaryContainer',
   'primary',
   'secondary',
   'tertiary',

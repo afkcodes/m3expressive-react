@@ -216,7 +216,7 @@ function Preview() {
         <Fab aria-label="Compose">
           <Icon name="stars_filled-24" />
         </Fab>
-        <Fab aria-label="Compose tertiary" color="tertiary-container">
+        <Fab aria-label="Compose tertiary" color="tertiaryContainer">
           <Icon name="stars_filled-24" />
         </Fab>
       </div>

@@ -1,6 +1,5 @@
-import { forwardRef, useContext, useRef, type ReactNode } from 'react';
+import { useContext, useRef, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { typescale } from '../../tokens/typescale.ts';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
@@ -8,26 +7,34 @@ import { focusRing } from '../../primitives/focusRing.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { FabMenuContext, FabMenuIndexContext } from './context.ts';
 import { fabMenuStyles as s, itemColors, type FabMenuColor } from './fabMenuStyles.ts';
 import { useItemReveal } from './useItemReveal.ts';
 
-export interface FabMenuItemProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface FabMenuItemProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children'>> {
+  ref?: Ref<HTMLButtonElement>;
   /** Leading icon (use currentColor), 24px. */
   icon?: ReactNode;
   children: ReactNode;
-  /** Overrides the menu's colour (standalone use). */
+  /** Overrides the menu's colour set (standalone use). */
   color?: FabMenuColor;
-  /** Keep the menu open after this item is chosen. */
-  keepOpen?: boolean;
-  sx?: StyleXStyles;
+  /** Close the menu when this item is chosen (default true; a handler can also `preventDefault()`). */
+  closeOnClick?: boolean;
 }
 
-export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(function FabMenuItem(
-  { icon, children, color, keepOpen = false, onClick, onFocus, sx, ...rest },
+export function FabMenuItem({
+  icon,
+  children,
+  color,
+  closeOnClick = true,
+  onClick,
+  onFocus,
+  sx,
   ref,
-) {
+  ...rest
+}: FabMenuItemProps) {
   const menu = useContext(FabMenuContext);
   const index = useContext(FabMenuIndexContext);
   const forced = useForcedState();
@@ -45,7 +52,7 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
       tabIndex={menu.animated ? (tabStop ? 0 : -1) : undefined}
       onClick={(e) => {
         onClick?.(e);
-        if (!keepOpen && !e.defaultPrevented) menu.close();
+        if (closeOnClick && !e.defaultPrevented) menu.close();
       }}
       onFocus={(e) => {
         menu.onItemFocus(index);
@@ -69,4 +76,4 @@ export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(funct
       <span {...stylex.props(typescale.titleMedium, textBox.hug, s.label)}>{children}</span>
     </BaseButton>
   );
-});
+}

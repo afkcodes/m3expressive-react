@@ -139,7 +139,7 @@ function render(name: string): ReactNode {
         <Btn key={i} icon={i} label={i.replace('-24', '')} />
       ))}
       fab={
-        <Fab aria-label="Add" color="secondary-container" elevated={false}>
+        <Fab aria-label="Add" color="secondaryContainer" elevated={false}>
           <Icon name="add-24" />
         </Fab>
       }
@@ -181,7 +181,7 @@ function LiveBottomAppBar() {
           <Btn key={i} icon={i} label={i.replace('-24', '')} />
         ))}
         fab={
-          <Fab aria-label="Add" color="secondary-container" elevated={false}>
+          <Fab aria-label="Add" color="secondaryContainer" elevated={false}>
             <Icon name="add-24" />
           </Fab>
         }
