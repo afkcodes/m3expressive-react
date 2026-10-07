@@ -346,6 +346,7 @@ navigation drawer (out of scope).
 | | |
 |---|---|
 | `pnpm dev` | workbench http://localhost:5199 — `/compare/<c>`, `/fixture/<c>/<variant>`, `/demo/<c>` |
+| `pnpm showcase` | `apps/showcase` on :5300 — the public-API showcase (only `@m3x/react*` imports; a page per component, `pages/<id>.tsx` + `routes.ts`) |
 | `pnpm test` | unit tests (springs, tokens sync, baseline, shapes port, morph) |
 | `pnpm test:visual` | Figma parity + live suites (`-g <component>` to filter); `test:visual:parity` / `test:visual:live` run one half |
 | `npx playwright show-report` | per-variant diff / actual images |

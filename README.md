@@ -23,6 +23,7 @@ scripts/              gen-motion (springs → CSS), figma-pull (REST re-sync, op
 | | |
 |---|---|
 | `pnpm dev` | workbench on http://localhost:5199 |
+| `pnpm showcase` | component showcase on http://localhost:5300 — every component, live, with theme controls and copyable code |
 | `pnpm test` | unit tests (spring physics, token sync) |
 | `pnpm test:visual` | Figma parity + live interaction / motion / a11y suites — diffs land in `tests/visual/__output__` (`test:visual:parity`, `test:visual:live`: one half) |
 | `pnpm gen:motion` | regenerate CSS motion tokens from `motion/tokens.ts` |
