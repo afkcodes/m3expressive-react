@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { typescale } from '@m3x/react';
-import { Badge, MenuDivider, MenuGroup, MenuItem, MenuScope, MenuSectionLabel, MenuSurface } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { Badge, MenuDivider, MenuGroup, MenuItem, MenuSectionLabel, MenuSurface } from '@m3x/react';
+import { ForceState, MenuScope, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/menu/manifest.json';
 import assets from '../../../../figma/menu/assets.json';
 import listAssets from '../../../../figma/list/assets.json';
@@ -112,13 +112,13 @@ function render(name: string): ReactNode {
     return (
       <div {...stylex.props(vib ? fx.groupVibrant : fx.groupStandard)} style={{ width: 228 }}>
         <MenuScope variant={vib ? 'vibrant' : 'standard'}>
-          <ForceState state={asForced(state)} ripplePath={ripple}>
+          {/* The kit's "Active" item (its submenu open) keeps the hover layer. */}
+          <ForceState state={state === 'active' ? 'hovered' : asForced(state)} ripplePath={ripple}>
             <MenuItem
               leading={<Icon name={sel ? 'stars_filled-20' : 'stars-20'} />}
               trailing={<Icon name="arrow_right-20" />}
               selected={sel}
               disabled={state === 'disabled'}
-              active={state === 'active'}
             >
               Label
             </MenuItem>

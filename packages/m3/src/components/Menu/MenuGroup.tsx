@@ -1,7 +1,16 @@
-import { useCallback, useContext, useLayoutEffect, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useState,
+  type ComponentPropsWithRef,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
+import type { SxProps } from '../../primitives/types.ts';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -91,8 +100,13 @@ function useRegisterGroup(enabled: boolean) {
   useLayoutEffect(() => (enabled && register ? register() : undefined), [enabled, register]);
 }
 
+/** `ref`, native props and `sx` go to the label `<div>`. */
+export interface MenuSectionLabelProps extends SxProps<ComponentPropsWithRef<'div'>> {
+  children: ReactNode;
+}
+
 /** A group's section label (kit "Label-basic" / "Label-vibrant"): 32px, label-large. */
-export function MenuSectionLabel({ children, sx }: { children: ReactNode; sx?: StyleXStyles }) {
+export function MenuSectionLabel({ children, sx, ...rest }: MenuSectionLabelProps) {
   const { variant, live } = useContext(MenuContext);
   const labelProps = stylex.props(
     typescale.labelLarge,
@@ -101,23 +115,32 @@ export function MenuSectionLabel({ children, sx }: { children: ReactNode; sx?: S
     sx,
   );
   return live ? (
-    <BaseMenu.GroupLabel {...labelProps}>{children}</BaseMenu.GroupLabel>
+    <BaseMenu.GroupLabel {...rest} {...labelProps}>
+      {children}
+    </BaseMenu.GroupLabel>
   ) : (
-    <div {...labelProps}>{children}</div>
+    <div {...rest} {...labelProps}>
+      {children}
+    </div>
   );
 }
 
 // ── Group ─────────────────────────────────────────────────────────────────────────────────────
 
-export interface MenuGroupProps {
+/**
+ * `ref`, native props and `sx` go to the group `<div>`. Baseline menus have no groups: their
+ * groups render the items alone (no element).
+ */
+export interface MenuGroupProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** Section label shown above the group's items. */
   label?: ReactNode;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
+type GroupNativeProps = Omit<MenuGroupProps, 'label' | 'children' | 'sx'>;
+
 /** Group container props + label, shared by MenuGroup and MenuRadioGroup. */
-function useGroup(label: ReactNode, sx: StyleXStyles | undefined) {
+function useGroup(label: ReactNode, sx: StyleXStyles | undefined, native: GroupNativeProps) {
   const { variant, live } = useContext(MenuContext);
   const solo = useContext(GroupCountContext) === 1;
   // Compose DropdownMenuGroup: once hovered and left, the group settles on its inactive shape.
@@ -125,11 +148,16 @@ function useGroup(label: ReactNode, sx: StyleXStyles | undefined) {
   const [hasBeenHovered, setHasBeenHovered] = useState(false);
   const labelEl = label != null && <MenuSectionLabel>{label}</MenuSectionLabel>;
   const props = {
-    onPointerEnter: () => {
+    ...native,
+    onPointerEnter: (e: ReactPointerEvent<HTMLDivElement>) => {
+      native.onPointerEnter?.(e);
       setHovered(true);
       setHasBeenHovered(true);
     },
-    onPointerLeave: () => setHovered(false),
+    onPointerLeave: (e: ReactPointerEvent<HTMLDivElement>) => {
+      native.onPointerLeave?.(e);
+      setHovered(false);
+    },
     ...stylex.props(
       s.group,
       solo && s.groupSolo,
@@ -142,8 +170,8 @@ function useGroup(label: ReactNode, sx: StyleXStyles | undefined) {
 }
 
 /** A group's frame; `implicit`: the group a menu wraps loose items in (not counted as a group). */
-function GroupFrame({ label, children, sx, implicit = false }: MenuGroupProps & { implicit?: boolean }) {
-  const { variant, live, labelEl, props } = useGroup(label, sx);
+function GroupFrame({ label, children, sx, implicit = false, ...native }: MenuGroupProps & { implicit?: boolean }) {
+  const { variant, live, labelEl, props } = useGroup(label, sx, native);
   useRegisterGroup(!implicit);
   if (variant === 'baseline') return <>{children}</>;
   // Groups inside a group aren't the menu's groups; the implicit one lets wrapped groups through.
@@ -170,15 +198,25 @@ export function MenuGroup(props: MenuGroupProps) {
 }
 (MenuGroup as unknown as Record<symbol, boolean>)[MENU_GROUP] = true;
 
-export interface MenuRadioGroupProps extends MenuGroupProps {
+/** As `MenuGroupProps`; inside `<Menu>` a baseline radio group renders a plain `<div role="group">`. */
+export interface MenuRadioGroupProps extends Omit<MenuGroupProps, 'defaultValue'> {
   value?: unknown;
   defaultValue?: unknown;
-  onValueChange?: (value: unknown) => void;
+  /** Base UI's change details (reason, event, `cancel()`) come second. */
+  onValueChange?: (value: unknown, details: BaseMenu.RadioGroup.ChangeEventDetails) => void;
 }
 
 /** Single-choice options (`MenuRadioItem`); renders as a menu group. */
-export function MenuRadioGroup({ value, defaultValue, onValueChange, label, children, sx }: MenuRadioGroupProps) {
-  const { variant, live, labelEl, props } = useGroup(label, sx);
+export function MenuRadioGroup({
+  value,
+  defaultValue,
+  onValueChange,
+  label,
+  children,
+  sx,
+  ...native
+}: MenuRadioGroupProps) {
+  const { variant, live, labelEl, props } = useGroup(label, sx, native);
   useRegisterGroup(true);
   const content = <GroupRegistryContext value={null}>{children}</GroupRegistryContext>;
   if (!live)
@@ -194,8 +232,8 @@ export function MenuRadioGroup({ value, defaultValue, onValueChange, label, chil
     <BaseMenu.RadioGroup
       value={value}
       defaultValue={defaultValue}
-      onValueChange={onValueChange ? (v) => onValueChange(v) : undefined}
-      {...(variant === 'baseline' ? {} : props)}
+      onValueChange={onValueChange}
+      {...(variant === 'baseline' ? native : props)}
     >
       {labelEl}
       {content}

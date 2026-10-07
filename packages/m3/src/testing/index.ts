@@ -10,6 +10,8 @@ export type { ForcedState, ForceStateValue, ForcedProgressFrame, ForcedPosition 
 export { SwipeActions } from '../components/List/SwipeActions.tsx';
 export type { SwipeActionsProps } from '../components/List/SwipeActions.tsx';
 export { swipeOffset } from '../components/List/swipeGeometry.ts';
+export { MenuScope } from '../components/Menu/Menu.tsx';
+export type { MenuScopeProps } from '../components/Menu/Menu.tsx';
 
 // — Selection, pickers, inputs, media
 export { CalendarDay, PickerMenuButton, YearChip } from '../components/DatePicker/cells.tsx';
