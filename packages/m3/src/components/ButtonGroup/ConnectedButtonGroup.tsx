@@ -1,6 +1,5 @@
-import { Children, createContext, forwardRef, isValidElement, useContext, useMemo, type ReactNode } from 'react';
+import { Children, createContext, isValidElement, useContext, useMemo, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import { ToggleGroup as BaseToggleGroup } from '@base-ui/react/toggle-group';
 import { color } from '../../tokens/color.stylex.ts';
@@ -8,6 +7,7 @@ import { useControllableState } from '../../hooks/useControllableState.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { forcedStateLayer, isInteractionState, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonContent } from '../Button/ButtonContent.tsx';
 import {
@@ -147,20 +147,23 @@ interface ConnectedContextValue {
 const ConnectedContext = createContext<ConnectedContextValue | null>(null);
 /** The segment's position in its group (a number, so the provider value is stable). */
 const ConnectedIndexContext = createContext(0);
+/** A segment drawn outside a group (the kit's building blocks) takes its size from here. */
+const StandaloneSizeContext = createContext<ButtonSize>('small');
 
-export interface ConnectedButtonGroupProps {
+/** The root is Base UI's ToggleGroup `<div>` (`role="group"`): name it with `aria-label`. */
+export interface ConnectedButtonGroupProps extends SxProps<
+  Omit<BaseToggleGroup.Props, 'render' | 'children' | 'value' | 'defaultValue' | 'onValueChange'>
+> {
   size?: ButtonSize;
   /** Outer corners: fully round, or square like the inner corners. */
   shape?: ButtonShape;
   value?: readonly string[];
   defaultValue?: readonly string[];
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: string[], details: BaseToggleGroup.ChangeEventDetails) => void;
   /** Allow several segments to be selected. */
   multiple?: boolean;
   disabled?: boolean;
-  'aria-label'?: string;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 export function ConnectedButtonGroup({
@@ -190,9 +193,9 @@ export function ConnectedButtonGroup({
       value={selected}
       multiple={multiple}
       disabled={disabled}
-      onValueChange={(next: string[]) => {
+      onValueChange={(next: string[], details) => {
         setSelected(next);
-        onValueChange?.(next);
+        onValueChange?.(next, details);
       }}
       {...rest}
       {...stylex.props(s.connected, needsTouchTarget(size) && dyn.minHeight(TOUCH_TARGET), sx)}
@@ -202,108 +205,113 @@ export function ConnectedButtonGroup({
   );
 }
 
-export interface ConnectedButtonGroupItemProps extends Omit<
-  BaseToggle.Props,
-  'className' | 'style' | 'render' | 'children' | 'value'
+/**
+ * A segment of a `ConnectedButtonGroup`, which sets its size and selection. Outside a group it is a
+ * plain toggle (`pressed` / `defaultPressed` / `onPressedChange`).
+ */
+export interface ConnectedButtonGroupItemProps extends SxProps<
+  Omit<BaseToggle.Props, 'render' | 'children' | 'value'>
 > {
+  ref?: Ref<HTMLButtonElement>;
   value: string;
-  /** Standalone use only (inside a group the group decides): size, and whether it's selected. */
-  size?: ButtonSize;
-  selected?: boolean;
   icon?: ReactNode;
   /** Icon when selected (the kit uses the filled version). Defaults to `icon`. */
   selectedIcon?: ReactNode;
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedButtonGroupItemProps>(
-  function ConnectedButtonGroupItem(
-    {
-      value,
-      size: sizeProp = 'small',
-      selected: selectedProp = false,
-      icon,
-      selectedIcon,
-      children,
-      disabled: disabledProp,
-      sx,
-      ...rest
-    },
-    ref,
-  ) {
-    const group = useContext(ConnectedContext);
-    const groupIndex = useContext(ConnectedIndexContext);
-    const size = group?.size ?? sizeProp;
-    const shape: ButtonShape = group?.shape ?? 'square';
-    const index = group ? groupIndex : 0;
-    const count = group?.count ?? 1;
-    const forced = useForcedState();
-    const selected = group ? group.selected.includes(value) : selectedProp;
-    const disabled = !!disabledProp || !!group?.disabled;
-    const [restRadius, activeRadius] = RADII[size].map((radius) => `${radius}px`) as [string, string];
-    const full = `${HEIGHT[size] / 2}px`;
-    const interacting = isInteractionState(forced.state);
-    const round = shape === 'round';
-    // Outer corners (fully round in a "round" group) never morph; everything else follows the segment state.
-    const outerStart = index === 0 && round;
-    const outerEnd = index === count - 1 && round;
-    const corner = selected ? full : disabled || interacting ? (interacting ? activeRadius : restRadius) : null;
+export function ConnectedButtonGroupItem({
+  value,
+  icon,
+  selectedIcon,
+  children,
+  disabled: disabledProp,
+  pressed,
+  defaultPressed = false,
+  onPressedChange,
+  sx,
+  ...rest
+}: ConnectedButtonGroupItemProps) {
+  const group = useContext(ConnectedContext);
+  const groupIndex = useContext(ConnectedIndexContext);
+  const standaloneSize = useContext(StandaloneSizeContext);
+  const size = group?.size ?? standaloneSize;
+  const shape: ButtonShape = group?.shape ?? 'square';
+  const index = group ? groupIndex : 0;
+  const count = group?.count ?? 1;
+  const forced = useForcedState();
+  const [ownPressed, setOwnPressed] = useControllableState(pressed, defaultPressed, onPressedChange);
+  const selected = group ? group.selected.includes(value) : (forced.selected ?? ownPressed);
+  const disabled = !!disabledProp || !!group?.disabled;
+  const [restRadius, activeRadius] = RADII[size].map((radius) => `${radius}px`) as [string, string];
+  const full = `${HEIGHT[size] / 2}px`;
+  const interacting = isInteractionState(forced.state);
+  const round = shape === 'round';
+  // Outer corners (fully round in a "round" group) never morph; everything else follows the segment state.
+  const outerStart = index === 0 && round;
+  const outerEnd = index === count - 1 && round;
+  const corner = selected ? full : disabled || interacting ? (interacting ? activeRadius : restRadius) : null;
 
-    const fixedOrLive = (fixed: string | null, corner: 'ss' | 'se' | 'es' | 'ee') =>
-      fixed ? corners[corner](fixed) : corners[`${corner}Live`](restRadius, activeRadius);
-    const startFixed = outerStart ? full : corner;
-    const endFixed = outerEnd ? full : corner;
+  const fixedOrLive = (fixed: string | null, corner: 'ss' | 'se' | 'es' | 'ee') =>
+    fixed ? corners[corner](fixed) : corners[`${corner}Live`](restRadius, activeRadius);
+  const startFixed = outerStart ? full : corner;
+  const endFixed = outerEnd ? full : corner;
 
-    return (
-      <BaseToggle
-        ref={ref}
-        value={value}
-        {...(group ? {} : { pressed: selected })}
-        disabled={disabled}
-        data-ripple-host=""
-        {...rest}
+  return (
+    <BaseToggle
+      value={value}
+      {...(group ? { onPressedChange } : { pressed: selected, onPressedChange: setOwnPressed })}
+      disabled={disabled}
+      data-ripple-host=""
+      {...rest}
+      {...stylex.props(
+        buttonBase.root,
+        s.item,
+        needsTouchTarget(size) && s.touch,
+        stateLayerHost.host,
+        disabled && stateLayerHost.disabled,
+        forcedStateLayer(forced.state, 'hover'),
+        stylex.defaultMarker(),
+        sx,
+      )}
+    >
+      <span
         {...stylex.props(
-          buttonBase.root,
-          s.item,
-          needsTouchTarget(size) && s.touch,
-          stateLayerHost.host,
-          disabled && stateLayerHost.disabled,
-          forcedStateLayer(forced.state, 'hover'),
-          stylex.defaultMarker(),
-          sx,
+          buttonBase.container,
+          focusRing.part,
+          // Connected segments are ToggleButtons with connected shapes: corners morph on FastSpatial.
+          containerMotion.spatial,
+          containerSizes[size],
+          s.container,
+          dyn.height(HEIGHT[size]),
+          fixedOrLive(startFixed, 'ss'),
+          fixedOrLive(endFixed, 'se'),
+          fixedOrLive(startFixed, 'es'),
+          fixedOrLive(endFixed, 'ee'),
+          selected ? segment.selected : segment.unselected,
+          disabled && buttonDisabled.container,
+          forced.focusRing && focusRing.forced,
         )}
       >
-        <span
-          {...stylex.props(
-            buttonBase.container,
-            focusRing.part,
-            // Connected segments are ToggleButtons with connected shapes: corners morph on FastSpatial.
-            containerMotion.spatial,
-            containerSizes[size],
-            s.container,
-            dyn.height(HEIGHT[size]),
-            fixedOrLive(startFixed, 'ss'),
-            fixedOrLive(endFixed, 'se'),
-            fixedOrLive(startFixed, 'es'),
-            fixedOrLive(endFixed, 'ee'),
-            selected ? segment.selected : segment.unselected,
-            disabled && buttonDisabled.container,
-            forced.focusRing && focusRing.forced,
-          )}
+        <StateLayer />
+        <Ripple disabled={disabled} />
+        <ButtonContent
+          size={size}
+          disabled={disabled}
+          icon={selected ? (selectedIcon ?? icon) : icon}
+          sx={disabled && selected && segment.disabledSelectedContent}
         >
-          <StateLayer />
-          <Ripple disabled={disabled} />
-          <ButtonContent
-            size={size}
-            disabled={disabled}
-            icon={selected ? (selectedIcon ?? icon) : icon}
-            sx={disabled && selected && segment.disabledSelectedContent}
-          >
-            {children}
-          </ButtonContent>
-        </span>
-      </BaseToggle>
-    );
-  },
-);
+          {children}
+        </ButtonContent>
+      </span>
+    </BaseToggle>
+  );
+}
+
+/**
+ * Testing: the size of `ConnectedButtonGroupItem`s drawn outside a group (the kit's segment
+ * building blocks); their selection comes from `ForceState selected`.
+ */
+export function ConnectedButtonGroupScope({ size = 'small', children }: { size?: ButtonSize; children: ReactNode }) {
+  return <StandaloneSizeContext value={size}>{children}</StandaloneSizeContext>;
+}

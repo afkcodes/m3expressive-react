@@ -1,9 +1,9 @@
-import { forwardRef, type ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
 import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from './ButtonFrame.tsx';
 import {
@@ -27,25 +27,30 @@ const variants = stylex.create({
   text: { backgroundColor: 'transparent', color: color.primary },
 });
 
-export interface ButtonProps extends Omit<BaseButton.Props, 'className' | 'style' | 'render' | 'children'> {
+export interface ButtonProps extends SxProps<Omit<BaseButton.Props, 'render' | 'children'>> {
+  ref?: Ref<HTMLButtonElement>;
   variant?: ButtonVariant;
   size?: ButtonSize;
   shape?: ButtonShape;
   /** Leading icon, sized by the button (20/20/24/32/40px). Use currentColor. */
   icon?: ReactNode;
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
-  { variant = 'filled', size = 'small', shape = 'round', icon, children, disabled = false, sx, ...rest },
-  ref,
-) {
+export function Button({
+  variant = 'filled',
+  size = 'small',
+  shape = 'round',
+  icon,
+  children,
+  disabled = false,
+  sx,
+  ...rest
+}: ButtonProps) {
   const forced = useForcedState();
   const elevated = variant === 'elevated' && !disabled;
   return (
     <BaseButton
-      ref={ref}
       disabled={disabled}
       data-ripple-host=""
       {...rest}
@@ -81,4 +86,4 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
       </ButtonFrame>
     </BaseButton>
   );
-});
+}
