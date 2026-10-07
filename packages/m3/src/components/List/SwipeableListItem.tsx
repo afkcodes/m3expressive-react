@@ -21,6 +21,7 @@ import type { SxProps } from '../../primitives/types.ts';
 import { state as stateTokens } from '../../tokens/state.stylex.ts';
 import { ListContext } from './context.ts';
 import { ListItem, type ListItemOwnProps } from './ListItem.tsx';
+import { listItemStyles } from './listItemStyles.ts';
 import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';
 import { SwipeActions, type SwipeAction, type SwipeActionsProps } from './SwipeActions.tsx';
 import { SETTLE_MS, swipeMode, swipeOffset, swipeTarget, type SwipeRevealState } from './swipeGeometry.ts';
@@ -316,12 +317,11 @@ export function SwipeableListItem({
     settle(target);
   };
 
-  return (
+  const swipeRow = (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- swipe gesture and its keyboard path, delegated from the row and its actions
     <div
       {...rest}
       ref={rootRef}
-      role={list.inList ? 'listitem' : undefined}
       tabIndex={ownTarget ? undefined : 0}
       data-swipe-item=""
       onPointerDown={onPointerDown}
@@ -356,4 +356,6 @@ export function SwipeableListItem({
       </div>
     </div>
   );
+  // Inside a List the item sits in a semantic <li> (as ListItem does); ref and props stay on the row.
+  return list.inList ? <li {...stylex.props(listItemStyles.li)}>{swipeRow}</li> : swipeRow;
 }
