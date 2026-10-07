@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 export type DividerInset = 'none' | 'start' | 'middle';
 
@@ -32,21 +32,22 @@ const s = stylex.create({
   sub: { color: color.onSurfaceVariant, margin: 0 },
 });
 
-export interface DividerProps {
+/** `ref`, native props and `sx` go to the root `<div role="separator">`. */
+export interface DividerProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
   orientation?: 'horizontal' | 'vertical';
   inset?: DividerInset;
   /** Horizontal only: a subheader under the line ("Divider with subhead"). */
   subheader?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export function Divider({ orientation = 'horizontal', inset = 'none', subheader, sx }: DividerProps) {
+export function Divider({ orientation = 'horizontal', inset = 'none', subheader, sx, ...rest }: DividerProps) {
   const horizontal = orientation === 'horizontal';
   const withSubheader = subheader != null && horizontal;
   return (
     <div
       role="separator"
       aria-orientation={orientation}
+      {...rest}
       {...stylex.props(
         horizontal ? s.horizontal : s.vertical,
         withSubheader
