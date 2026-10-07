@@ -97,6 +97,9 @@ export function TabsPlayground() {
           <h2 {...stylex.props(typescale.titleMedium)} style={{ margin: 0 }}>
             Scrollable
           </h2>
+          <p {...stylex.props(typescale.bodySmall)} style={{ margin: 0 }}>
+            The selected tab scrolls to the centre of the row (clamped at the ends) on the default spatial spring.
+          </p>
           <Tabs variant={variant} scrollable defaultValue={0} aria-label="Sections">
             {MANY.map((t, i) => (
               <Tab key={t} value={i} label={t} />

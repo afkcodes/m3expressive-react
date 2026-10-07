@@ -30,7 +30,9 @@ const TabsContext = createContext<{ variant: TabsVariant; scrollable: boolean; l
  *   secondary — 2px across the tab. Both sit on the row's bottom edge, above a 1px divider.
  *   Fixed rows share the width; scrollable rows start 52px in, with 90px-minimum tabs.
  * Motion (Compose): the indicator's offset and width spring on the default spatial spring;
- * content colour fades in on default effects and out on fast effects.
+ * content colour fades in on default effects and out on fast effects. A scrollable row scrolls the
+ * selected tab to its centre (clamped to the ends) on the default spatial spring — also on first
+ * layout — and a new selection restarts that scroll from where it is (TabRow.kt ScrollableTabData).
  */
 const s = stylex.create({
   // minWidth 0: as a grid / flex item the row must not grow to its tabs (scrollable rows scroll).
@@ -41,7 +43,9 @@ const s = stylex.create({
     overflowX: 'auto',
     overflowY: 'hidden',
     scrollbarWidth: 'none',
+    // Compose ScrollableTabRow: edge padding on both ends (layoutWidth = padding × 2 + tabs).
     paddingInlineStart: 52,
+    paddingInlineEnd: 52,
     '::-webkit-scrollbar': { display: 'none' },
   },
   divider: { display: 'block', height: 1, flexShrink: 0, backgroundColor: color.outlineVariant },
@@ -264,6 +268,8 @@ function TabList({ variant, scrollable, current, ariaLabel, children }: { varian
   const [geo, setGeo] = useState<{ x: number; w: number } | null>(null);
   const anims = useRef<{ x?: SpringAnimation; w?: SpringAnimation; scroll?: SpringAnimation }>({});
   const shown = useRef<{ x: number; w: number } | null>(null);
+  // The value the row last scrolled for (Compose ScrollableTabData.selectedTab; unset at first).
+  const scrolledFor = useRef<{ value: unknown } | null>(null);
 
   useLayoutEffect(() => {
     const el = list.current;
@@ -307,22 +313,43 @@ function TabList({ variant, scrollable, current, ariaLabel, children }: { varian
       };
       run('x');
       run('w');
-      // Scrollable rows bring the active tab into view on the same spring (Compose).
+    };
+    // Scrollable rows: centre the selected tab, clamped (ScrollableTabData.calculateTabOffset), once
+    // per selection including the first layout. animateScrollTo cancels a running scroll and
+    // starts again at zero velocity; Float visibility threshold 0.01.
+    const scrollToSelected = () => {
       const tab = el.querySelector<HTMLElement>('[data-active]');
-      if (scrollable && tab) {
-        const left = tab.offsetLeft - 52;
-        const right = tab.offsetLeft + tab.offsetWidth - el.clientWidth + 52;
-        const to = el.scrollLeft > left ? left : el.scrollLeft < right ? right : el.scrollLeft;
-        if (to !== el.scrollLeft) {
-          anims.current.scroll?.stop();
-          anims.current.scroll = animateSpring({ spring, from: el.scrollLeft, to, precision: 0.5, onUpdate: (v) => (el.scrollLeft = v) });
-        }
+      if (!scrollable || !tab || (scrolledFor.current && scrolledFor.current.value === current)) return;
+      scrolledFor.current = { value: current };
+      const visible = el.clientWidth;
+      const available = Math.max(0, el.scrollWidth - visible);
+      const centred = tab.offsetLeft - (Math.trunc(visible / 2) - Math.trunc(tab.offsetWidth / 2));
+      const to = Math.min(available, Math.max(0, centred));
+      if (to === el.scrollLeft) return;
+      anims.current.scroll?.stop();
+      anims.current.scroll = undefined;
+      if (!spring || reduced) {
+        el.scrollLeft = to;
+        return;
       }
+      anims.current.scroll = animateSpring({ spring, from: el.scrollLeft, to, precision: 0.01, onUpdate: (v) => (el.scrollLeft = v) });
     };
     place(true);
+    // The first layout waits for web fonts: tab widths (and so the centred offset) depend on them.
+    let cancelled = false;
+    if (scrolledFor.current == null && document.fonts.status !== 'loaded') {
+      void document.fonts.ready.then(() => {
+        if (!cancelled) scrollToSelected();
+      });
+    } else scrollToSelected();
+    // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded.
     const ro = new ResizeObserver(() => place(false));
     ro.observe(el);
-    return () => ro.disconnect();
+    for (const tab of el.querySelectorAll('[role="tab"]')) ro.observe(tab);
+    return () => {
+      cancelled = true;
+      ro.disconnect();
+    };
   }, [current, variant, scrollable, spring, reduced]);
 
   return (
