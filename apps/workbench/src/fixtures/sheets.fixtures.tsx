@@ -10,9 +10,9 @@ import {
   ListItem,
   ModalBottomSheet,
   ModalSideSheet,
-  SideSheet,
   Slider,
 } from '@m3x/react';
+import { BottomSheetSurface, SideSheetSurface } from '@m3x/react/testing';
 import manifest from '../../../../figma/sheets/manifest.json';
 import assets from '../../../../figma/sheets/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -59,7 +59,7 @@ function render(name: string): ReactNode {
   if (p[0] === 'side') {
     // side-{modal|standard}-{back|noback}
     return (
-      <SideSheet
+      <SideSheetSurface
         modal={p[1] === 'modal'}
         headline="Title"
         navigation={p[2] === 'back' ? back : undefined}
@@ -72,7 +72,7 @@ function render(name: string): ReactNode {
     return (
       <div {...stylex.props(fx.scrimHost)}>
         <span {...stylex.props(fx.scrim)} />
-        <BottomSheet modal />
+        <BottomSheetSurface modal />
       </div>
     );
   }

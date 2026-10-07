@@ -1,9 +1,10 @@
-import { forwardRef, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
+import type { ComponentPropsWithRef, PointerEvent as ReactPointerEvent, ReactNode, Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 
 /*
  * Figma kit, "Sheets" page (Bottom sheet set 51827:5859; Compose ModalBottomSheet /
@@ -64,47 +65,49 @@ const s = stylex.create({
   content: { flexGrow: 1, minHeight: 0, overflowY: 'auto' },
 });
 
-export interface BottomSheetProps {
-  /** Modal styling (flat, over a scrim). `ModalBottomSheet` sets it. */
-  modal?: boolean;
+/** `ref`, native props and `sx` go to the sheet `<div>`. */
+export interface BottomSheetProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** The drag handle (default true). */
   dragHandle?: boolean;
-  /** Accessible name of the handle when it can dismiss the sheet. */
-  handleLabel?: string;
+  children?: ReactNode;
+}
+
+/**
+ * The sheet surface with the modal sheet's plumbing (internal; `@m3x/react/testing` exports it
+ * for the kit's static modal sheet).
+ */
+export interface BottomSheetSurfaceProps extends BottomSheetProps {
+  /** Modal styling (flat, over a scrim). */
+  modal?: boolean;
+  /** `closeSheet`: the handle's name when it can dismiss the sheet. */
+  labels?: Partial<M3Labels>;
   /** Activating the handle (click / Enter) dismisses the sheet. */
   onHandleActivate?: () => void;
   onHandlePointerDown?: (e: ReactPointerEvent<HTMLElement>) => void;
-  /** Pointer down anywhere on the sheet (a modal sheet drags from its whole surface). */
-  onSurfacePointerDown?: (e: ReactPointerEvent<HTMLDivElement>) => void;
   /** The scrolling content element. */
   contentRef?: Ref<HTMLDivElement>;
-  children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-/** The bottom sheet surface (standard sheets sit in the layout; see `ModalBottomSheet`). */
-export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function BottomSheet(
-  {
-    modal = false,
-    dragHandle = true,
-    handleLabel = 'Close sheet',
-    onHandleActivate,
-    onHandlePointerDown,
-    onSurfacePointerDown,
-    contentRef,
-    children,
-    sx,
-  },
-  ref,
-) {
+export function BottomSheetSurface({
+  modal = false,
+  dragHandle = true,
+  labels,
+  onHandleActivate,
+  onHandlePointerDown,
+  contentRef,
+  children,
+  sx,
+  ...rest
+}: BottomSheetSurfaceProps) {
+  const { closeSheet } = useLabels(labels);
   return (
-    <div ref={ref} onPointerDown={onSurfacePointerDown} {...stylex.props(s.sheet, !modal && s.standard, sx)}>
+    <div {...rest} {...stylex.props(s.sheet, !modal && s.standard, sx)}>
       {dragHandle && (
         <div data-sheet-header="" onPointerDown={onHandlePointerDown} {...stylex.props(s.header)}>
           {onHandleActivate ? (
             <button
               type="button"
-              aria-label={handleLabel}
+              aria-label={closeSheet}
               onClick={onHandleActivate}
               {...stylex.props(s.handleButton, focusRing.host, s.handle)}
             />
@@ -118,4 +121,9 @@ export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function
       </div>
     </div>
   );
-});
+}
+
+/** The bottom sheet surface (standard sheets sit in the layout; see `ModalBottomSheet`). */
+export function BottomSheet(props: BottomSheetProps) {
+  return <BottomSheetSurface {...props} />;
+}

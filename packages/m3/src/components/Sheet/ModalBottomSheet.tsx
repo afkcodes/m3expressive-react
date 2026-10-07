@@ -3,12 +3,16 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
+  type ComponentPropsWithRef,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import type { M3Labels } from '../../theme/labels.tsx';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
@@ -21,8 +25,8 @@ import {
   suppressNextClick,
   TOUCH_SLOP,
 } from '../../motion/gesture.ts';
-import { ModalShell } from '../../primitives/ModalShell.tsx';
-import { BottomSheet } from './BottomSheet.tsx';
+import { ModalShell, type ModalOpenChangeDetails } from '../../primitives/ModalShell.tsx';
+import { BottomSheetSurface } from './BottomSheet.tsx';
 import { isNoDragTarget } from '../../motion/dragGuard.ts';
 
 /* The modal bottom sheet: placement, show / hide and the drag — kit geometry and motion in ./BottomSheet.tsx. */
@@ -72,13 +76,23 @@ const POSITIONAL_THRESHOLD = 56;
 const VELOCITY_THRESHOLD = 125;
 const BOUNDARY_DAMPENING_ZONE = 125;
 
-export interface ModalBottomSheetProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+/**
+ * `ref`, native props and `sx` go to the popup: the strip along the bottom of the screen that holds
+ * the sheet (centred, at most 640px wide) and moves with it.
+ */
+export interface ModalBottomSheetProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'role' | 'children'>> {
+  open?: boolean;
+  defaultOpen?: boolean;
+  /**
+   * Base UI's change details (reason, event, `cancel()`) come second when Base UI closes the sheet
+   * (Escape, scrim); a drag or the handle closing it pass none.
+   */
+  onOpenChange?: (open: boolean, details?: ModalOpenChangeDetails) => void;
+  /** The drag handle (default true). */
   dragHandle?: boolean;
-  'aria-label'?: string;
+  /** `closeSheet`: the drag handle's name. */
+  labels?: Partial<M3Labels>;
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
 interface Drag {
@@ -94,13 +108,18 @@ interface Drag {
 /** A modal bottom sheet: scrim, focus trap, Escape / scrim / handle / drag to dismiss. */
 export function ModalBottomSheet({
   open,
+  defaultOpen = false,
   onOpenChange,
   dragHandle = true,
-  'aria-label': ariaLabel,
+  labels,
   children,
   sx,
+  ref,
+  ...rest
 }: ModalBottomSheetProps) {
+  const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange);
   const popup = useRef<HTMLDivElement>(null);
+  const popupRef = useMergedRefs(popup, ref);
   const backdrop = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement | null>(null);
   const settleSpec = useSpringToken('default-spatial');
@@ -115,9 +134,9 @@ export function ModalBottomSheet({
   const touchExempt = useRef(false);
   // Gesture and settle callbacks outlive the render that created them: they read the latest
   // props here.
-  const latest = useRef({ onOpenChange, settleSpec });
+  const latest = useRef({ setOpen, settleSpec });
   useLayoutEffect(() => {
-    latest.current = { onOpenChange, settleSpec };
+    latest.current = { setOpen, settleSpec };
   });
 
   const hiddenAnchor = () => popup.current?.offsetHeight ?? 0;
@@ -200,7 +219,7 @@ export function ModalBottomSheet({
     const done = () => {
       settle.current = null;
       // Settled at Hidden: dismiss (the sheet stays there through the dialog's exit).
-      if (hide) latest.current.onOpenChange(false);
+      if (hide) latest.current.setOpen(false);
       else reset();
     };
     const spring = latest.current.settleSpec;
@@ -352,7 +371,7 @@ export function ModalBottomSheet({
   // Closed by its owner mid-gesture or mid-settle: drop both and let the CSS hide take over. (A
   // drag that dismissed the sheet has already settled at Hidden and stays there.)
   useEffect(() => {
-    if (!open && (gesture.current || settle.current)) interrupt();
+    if (!isOpen && (gesture.current || settle.current)) interrupt();
   });
   // Unmounted: nothing may run on (or call back from) a sheet that's gone.
   useEffect(
@@ -366,28 +385,29 @@ export function ModalBottomSheet({
 
   return (
     <ModalShell
-      open={open}
-      onOpenChange={(next) => {
+      open={isOpen}
+      onOpenChange={(next, details) => {
         // Escape / scrim / handle: hand the sheet back to the CSS hide (fast effects) from wherever
         // a drag or settle left it.
         if (!next) interrupt();
-        onOpenChange(next);
+        setOpen(next, details);
       }}
-      ref={popup}
+      {...rest}
+      ref={popupRef}
       backdropRef={backdrop}
-      aria-label={ariaLabel}
-      sx={s.popup}
+      sx={[s.popup, sx]}
     >
-      <BottomSheet
+      <BottomSheetSurface
         modal
         dragHandle={dragHandle}
-        onHandleActivate={() => onOpenChange(false)}
-        onSurfacePointerDown={onSurfacePointerDown}
+        labels={labels}
+        onHandleActivate={() => setOpen(false)}
+        onPointerDown={onSurfacePointerDown}
         contentRef={contentRef}
-        sx={[s.popupSheet, sx]}
+        sx={s.popupSheet}
       >
         {children}
-      </BottomSheet>
+      </BottomSheetSurface>
     </ModalShell>
   );
 }

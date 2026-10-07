@@ -1,19 +1,21 @@
 import {
-  forwardRef,
   useEffect,
   useId,
   useLayoutEffect,
   useRef,
+  type ComponentPropsWithRef,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { Divider } from '../Divider/Divider.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { isNoDragTarget } from '../../motion/dragGuard.ts';
-import { ModalShell } from '../../primitives/ModalShell.tsx';
+import { ModalShell, type ModalOpenChangeDetails } from '../../primitives/ModalShell.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   MAX_FLING_VELOCITY,
@@ -105,29 +107,32 @@ const s = stylex.create({
   },
 });
 
-export interface SideSheetProps {
-  /** Modal styling (rounded, Surface Container Low, no edge divider). `ModalSideSheet` sets it. */
-  modal?: boolean;
+/** `ref`, native props and `sx` go to the sheet `<div>`. */
+export interface SideSheetProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
   headline?: ReactNode;
-  /** Leading icon button, e.geometry. back (the kit's narrow icon button). */
+  /** Leading icon button, e.g. back (the kit's narrow icon button). */
   navigation?: ReactNode;
-  /** Trailing icon button, e.geometry. close. */
+  /** Trailing icon button, e.g. close. */
   close?: ReactNode;
   /** Buttons under the divider at the bottom. */
   actions?: ReactNode;
   children?: ReactNode;
-  /** Id for the headline (a modal sheet's dialog is labelled by it). */
-  headlineId?: string;
-  sx?: StyleXStyles;
 }
 
-/** The side sheet surface (standard sheets sit beside the content; see `ModalSideSheet`). */
-export const SideSheet = forwardRef<HTMLDivElement, SideSheetProps>(function SideSheet(
-  { modal = false, headline, navigation, close, actions, children, headlineId, sx },
-  ref,
-) {
+type SideSheetParts = Pick<SideSheetProps, 'headline' | 'navigation' | 'close' | 'actions' | 'children'>;
+
+/** The sheet's parts (edge divider, header, content, actions), on a standard sheet or the modal's popup. */
+function SideSheetBody({
+  modal,
+  headline,
+  navigation,
+  close,
+  actions,
+  children,
+  headlineId,
+}: SideSheetParts & { modal: boolean; headlineId?: string }) {
   return (
-    <div ref={ref} {...stylex.props(s.sheet, modal && s.modal, sx)}>
+    <>
       {!modal && <Divider orientation="vertical" sx={s.edge} />}
       {(headline != null || navigation != null || close != null) && (
         <div {...stylex.props(s.header, navigation != null && s.headerNav)}>
@@ -145,21 +150,76 @@ export const SideSheet = forwardRef<HTMLDivElement, SideSheetProps>(function Sid
           <div {...stylex.props(s.buttons)}>{actions}</div>
         </div>
       )}
+    </>
+  );
+}
+
+/**
+ * A side sheet surface, standard or with the modal styling (internal; `@m3x/react/testing` exports
+ * it for the kit's static modal sheet).
+ */
+export interface SideSheetSurfaceProps extends SideSheetProps {
+  /** Modal styling (rounded, Surface Container Low, no edge divider). */
+  modal?: boolean;
+}
+
+export function SideSheetSurface({
+  modal = false,
+  headline,
+  navigation,
+  close,
+  actions,
+  children,
+  sx,
+  ...rest
+}: SideSheetSurfaceProps) {
+  return (
+    <div {...rest} {...stylex.props(s.sheet, modal && s.modal, sx)}>
+      <SideSheetBody modal={modal} headline={headline} navigation={navigation} close={close} actions={actions}>
+        {children}
+      </SideSheetBody>
     </div>
   );
-});
+}
 
-export interface ModalSideSheetProps extends Omit<SideSheetProps, 'modal' | 'headlineId'> {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+/** The side sheet surface (standard sheets sit beside the content; see `ModalSideSheet`). */
+export function SideSheet(props: SideSheetProps) {
+  return <SideSheetSurface {...props} />;
+}
+
+/** The sheet's props; `ref`, native props and `sx` go to the popup, which is the sheet surface. */
+export interface ModalSideSheetProps extends Omit<SideSheetProps, 'role'> {
+  open?: boolean;
+  defaultOpen?: boolean;
+  /**
+   * Base UI's change details (reason, event, `cancel()`) come second when Base UI closes the sheet
+   * (Escape, scrim); a drag closing it passes none.
+   */
+  onOpenChange?: (open: boolean, details?: ModalOpenChangeDetails) => void;
   /** The edge it slides in from (default the end edge). */
   side?: 'end' | 'start';
 }
 
 /** A modal side sheet: scrim, focus trap, Escape / scrim / drag to dismiss. */
-export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: ModalSideSheetProps) {
+export function ModalSideSheet({
+  open,
+  defaultOpen = false,
+  onOpenChange,
+  side = 'end',
+  headline,
+  navigation,
+  close,
+  actions,
+  children,
+  sx,
+  ref,
+  onPointerDown: onPointerDownProp,
+  ...rest
+}: ModalSideSheetProps) {
   const id = useId();
+  const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange);
   const popup = useRef<HTMLDivElement>(null);
+  const popupRef = useMergedRefs(popup, ref);
   const backdrop = useRef<HTMLDivElement>(null);
   const settling = useRef<(() => void) | null>(null);
   /** Ends the pointer gesture in progress (its window listeners); null when there is none. */
@@ -167,9 +227,9 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   // Inward offset from Expanded (px, ≥ 0); the sheet's physical edge sets the sign.
   const offset = useRef(0);
   // Settle callbacks outlive the render that created them.
-  const latest = useRef(onOpenChange);
+  const latest = useRef(setOpen);
   useLayoutEffect(() => {
-    latest.current = onOpenChange;
+    latest.current = setOpen;
   });
 
   const measure = (el: HTMLElement): SideSheetGeometry => {
@@ -209,6 +269,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   };
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    onPointerDownProp?.(e);
     const popupEl = popup.current;
     if (e.button !== 0 || !popupEl || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
     gesture.current?.();
@@ -295,7 +356,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   // Closed by its owner mid-gesture or mid-settle: drop both and let the window animation take
   // over. (A drag that dismissed the sheet has already settled off screen and stays there.)
   useEffect(() => {
-    if (!open && (gesture.current || settling.current)) interrupt();
+    if (!isOpen && (gesture.current || settling.current)) interrupt();
   });
   // Unmounted: nothing may run on (or call back from) a sheet that's gone.
   useEffect(
@@ -309,19 +370,22 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
 
   return (
     <ModalShell
-      open={open}
-      onOpenChange={(next) => {
+      open={isOpen}
+      onOpenChange={(next, details) => {
         // Escape / scrim: the window animation takes over from wherever a drag left the sheet.
         if (!next) interrupt();
-        onOpenChange(next);
+        setOpen(next, details);
       }}
-      ref={popup}
+      aria-labelledby={headline != null ? id : undefined}
+      {...rest}
+      ref={popupRef}
       backdropRef={backdrop}
-      aria-labelledby={sheet.headline != null ? id : undefined}
       onPointerDown={onPointerDown}
-      sx={[s.popup, side === 'start' && s.popupStart]}
+      sx={[s.sheet, s.modal, s.popup, side === 'start' && s.popupStart, sx]}
     >
-      <SideSheet modal headlineId={id} {...sheet} />
+      <SideSheetBody modal headlineId={id} headline={headline} navigation={navigation} close={close} actions={actions}>
+        {children}
+      </SideSheetBody>
     </ModalShell>
   );
 }
