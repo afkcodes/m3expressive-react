@@ -1,7 +1,10 @@
-import { Children, forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Children, forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../Sheet/gesture.ts';
+import { splineFling } from './fling.ts';
 import { heroKeylineList, itemPlacement, maxScrollOffset, multiBrowseKeylineList, Strategy, uncontainedKeylineList } from './keylines.ts';
 
 /*
@@ -11,8 +14,14 @@ import { heroKeylineList, itemPlacement, maxScrollOffset, multiBrowseKeylineList
  * Behaviour (Compose HorizontalMultiBrowseCarousel / HorizontalUncontainedCarousel /
  *   HorizontalCenteredHeroCarousel): the keyline model in ./keylines.ts — each item is sized to
  *   its interpolated keyline as it scrolls (large ⇄ medium ⇄ small ⇄ anchor) and pinned to its
- *   neighbours; scrolling settles on the nearest item (singleAdvanceFlingBehavior: spring,
- *   stiffness 400 / StiffnessMediumLow, no bounce). The kit draws each item at its visible size
+ *   neighbours. Drags (touch, mouse, pen) are ours: on release multi-browse / hero / centred hero
+ *   advance at most one item (CarouselDefaults.singleAdvanceFlingBehavior = PagerDefaults
+ *   .flingBehavior with PagerSnapDistance.atMost(1): ≥ 400dp/s goes to the next / previous item,
+ *   slower picks by the dragged fraction — past half an item onwards, past 56dp back, else the
+ *   closest) and snap on spring(stiffness = StiffnessMediumLow 400, no bounce) from the release
+ *   velocity; uncontained flings freely with Compose's spline decay and doesn't snap
+ *   (noSnapFlingBehavior; touch keeps the browser's own scrolling there). Wheel / trackpad scrolling
+ *   stays native and snaps to the nearest item when it ends (snapping layouts). The kit draws each item at its visible size
  *   with its image fitted, so the item box (not a mask over a full-size item) takes the keyline
  *   size — identical to Compose's masked crop for height-bound, cover-fitted content.
  * Multi-aspect ratio: items keep their aspect ratio at the carousel's height and scroll freely.
@@ -20,12 +29,20 @@ import { heroKeylineList, itemPlacement, maxScrollOffset, multiBrowseKeylineList
  */
 export type CarouselLayout = 'multi-browse' | 'hero' | 'center-hero' | 'uncontained' | 'multi-aspect' | 'full-screen';
 
-const SPRING_STIFFNESS = 400;
+/** singleAdvanceFlingBehavior's snapAnimationSpec: spring(stiffness = Spring.StiffnessMediumLow). */
+const SNAP_SPRING = { dampingRatio: 1, stiffness: 400 };
+/** SnapFlingBehavior MinFlingVelocityDp. */
+const MIN_FLING_VELOCITY = 400;
+/** PagerDefaults.flingBehavior snapPositionalThreshold. */
+const SNAP_POSITIONAL_THRESHOLD = 0.5;
+/** PagerState DefaultPositionThreshold (56dp). */
+const DEFAULT_POSITION_THRESHOLD = 56;
 
 const s = stylex.create({
   viewport: {
     position: 'relative',
     display: 'block',
+    userSelect: 'none',
     boxSizing: 'border-box',
     width: '100%',
     height: '100%',
@@ -37,6 +54,8 @@ const s = stylex.create({
     '::-webkit-scrollbar': { display: 'none' },
   },
   track: { position: 'relative', height: '100%' },
+  // Snapping carousels take horizontal touch drags themselves (vertical pans still scroll the page).
+  ownDrag: { touchAction: 'pan-y' },
   item: {
     position: 'absolute',
     top: 8,
@@ -190,45 +209,149 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     place();
   }, [strategy, snapTargets, initialItem, count, place]);
 
-  // Settle on the nearest item with the Compose snap spring (critically damped, stiffness 400).
-  const anim = useRef<number | null>(null);
+  // Snap with the Compose snap spring (critically damped, stiffness 400) from `velocity` (px/s).
+  const anim = useRef<SpringAnimation | (() => void) | null>(null);
+  const stop = () => {
+    const a = anim.current;
+    if (typeof a === 'function') a();
+    else a?.stop();
+    anim.current = null;
+  };
   const settle = useCallback(
-    (target?: number) => {
+    (target?: number, velocity = 0) => {
       const el = viewport.current;
       if (!el || snapTargets.length === 0) return;
       const from = el.scrollLeft;
       const to = target ?? snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
+      stop();
       if (Math.abs(to - from) < 0.5) return;
-      if (anim.current) cancelAnimationFrame(anim.current);
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         el.scrollLeft = to;
         return;
       }
-      const w = Math.sqrt(SPRING_STIFFNESS);
-      const x0 = from - to;
-      const t0 = performance.now();
-      const step = (now: number) => {
-        const t = (now - t0) / 1000;
-        const x = (x0 + w * x0 * t) * Math.exp(-w * t);
-        el.scrollLeft = to + x;
-        if (Math.abs(x) > 0.3) anim.current = requestAnimationFrame(step);
-        else {
-          el.scrollLeft = to;
+      anim.current = animateSpring({
+        spring: SNAP_SPRING,
+        from,
+        to,
+        velocity,
+        onUpdate: (v) => {
+          el.scrollLeft = v;
+          place();
+        },
+        onComplete: () => {
           anim.current = null;
-        }
-      };
-      anim.current = requestAnimationFrame(step);
+        },
+      });
     },
-    [snapTargets],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [snapTargets, place],
   );
+
+  /**
+   * PagerSnapLayoutInfoProvider calculateFinalSnappingBound for a release at `scroll` with scroll
+   * velocity `velocity` (px/s, + forward) after a drag of `dragDelta` px (up − down, pointer x).
+   */
+  const singleAdvanceTarget = (scroll: number, velocity: number, dragDelta: number) => {
+    let lower = -Infinity;
+    let upper = Infinity;
+    for (const t of snapTargets) {
+      if (t <= scroll && t > lower) lower = t;
+      if (t >= scroll && t < upper) upper = t;
+    }
+    if (lower === -Infinity) lower = upper;
+    if (upper === Infinity) upper = lower;
+    const notGesture = Math.trunc(dragDelta) === 0;
+    const forward = !((notGesture ? -velocity : dragDelta) > 0);
+    if (scroll >= max) {
+      upper = scroll;
+      if (forward) lower = scroll;
+    }
+    if (scroll <= 0) {
+      lower = scroll;
+      if (!forward) upper = scroll;
+    }
+    if (Math.abs(velocity) >= MIN_FLING_VELOCITY) return velocity > 0 ? upper : lower;
+    const pageSize = strategy!.itemMainAxisSize;
+    const offset = pageSize === 0 ? 0 : dragDelta / pageSize;
+    const overflow = offset - Math.trunc(offset);
+    const positionThresholdFraction = Math.min(DEFAULT_POSITION_THRESHOLD, pageSize / 2) / pageSize;
+    if (Math.abs(overflow) > SNAP_POSITIONAL_THRESHOLD) return forward ? upper : lower;
+    if (Math.abs(offset) >= Math.abs(positionThresholdFraction)) return forward ? lower : upper;
+    return Math.abs(lower - scroll) < Math.abs(upper - scroll) ? lower : upper;
+  };
+
+  const dragging = useRef(false);
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const el = viewport.current;
+    if (!el || !strategy || e.button !== 0) return;
+    // Uncontained keeps the browser's touch scrolling (its momentum is the decay).
+    if (layout === 'uncontained' && e.pointerType === 'touch') return;
+    const id = e.pointerId;
+    const downX = e.clientX;
+    let x0 = e.clientX;
+    let scroll0 = el.scrollLeft;
+    let active = false;
+    const slop = pointerSlop(e.pointerType);
+    const tracker = new PointerVelocityTracker();
+    tracker.down(e);
+    const move = (ev: PointerEvent) => {
+      if (ev.pointerId !== id) return;
+      tracker.move(ev);
+      if (!active) {
+        const dx = ev.clientX - x0;
+        if (Math.abs(dx) <= slop) return;
+        active = true;
+        dragging.current = true;
+        stop();
+        scroll0 = el.scrollLeft;
+        x0 += Math.sign(dx) * slop; // Compose's overSlop
+      }
+      el.scrollLeft = Math.min(max, Math.max(0, scroll0 - (ev.clientX - x0)));
+      place();
+    };
+    const up = (ev: PointerEvent) => {
+      if (ev.pointerId !== id) return;
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (!active) return;
+      dragging.current = false;
+      tracker.up(ev);
+      suppressNextClick();
+      const velocity = -tracker.velocity().x;
+      if (layout === 'uncontained') {
+        // noSnapFlingBehavior: decay, no snap.
+        if (velocity === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const from = el.scrollLeft;
+        const fling = splineFling(velocity);
+        let start: number | undefined;
+        let frame = requestAnimationFrame(function tick(now) {
+          start ??= now;
+          const t = now - start;
+          el.scrollLeft = Math.min(max, Math.max(0, from + fling.position(t)));
+          place();
+          const atBound = el.scrollLeft <= 0 || el.scrollLeft >= max;
+          if (t < fling.duration && !atBound) frame = requestAnimationFrame(tick);
+          else anim.current = null;
+        });
+        anim.current = () => cancelAnimationFrame(frame);
+        return;
+      }
+      settle(singleAdvanceTarget(el.scrollLeft, velocity, ev.clientX - downX), velocity);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  };
 
   useLayoutEffect(() => {
     const el = viewport.current;
     if (!el || !strategy) return;
     const onScroll = () => place();
+    // Wheel / trackpad / keyboard scrolling (not our drags or snaps) settles on the nearest item;
+    // uncontained doesn't snap.
     const onEnd = () => {
-      if (anim.current == null) settle();
+      if (anim.current == null && !dragging.current && layout !== 'uncontained') settle();
     };
     el.addEventListener('scroll', onScroll, { passive: true });
     el.addEventListener('scrollend', onEnd);
@@ -236,7 +359,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       el.removeEventListener('scroll', onScroll);
       el.removeEventListener('scrollend', onEnd);
     };
-  }, [strategy, place, settle]);
+  }, [strategy, place, settle, layout]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const el = viewport.current;
@@ -297,7 +420,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
 
   const trackWidth = available + max + padStart + padEnd;
   return (
-    <div {...common} {...stylex.props(s.viewport, s.clip(padStart, padEnd), sx)}>
+    <div {...common} onPointerDown={onPointerDown} onDragStart={(e) => e.preventDefault()} {...stylex.props(s.viewport, layout !== 'uncontained' && s.ownDrag, s.clip(padStart, padEnd), sx)}>
       <div style={{ width: trackWidth }} {...stylex.props(s.track)}>
         {strategy &&
           items.map((child, i) => (

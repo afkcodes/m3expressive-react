@@ -46,6 +46,7 @@ const fixture: FixtureModule = {
   component: 'carousel',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 221, render: () => render('carousel-mobile-multi') } satisfies FixtureVariant],
+    ['live-uncontained', { width: 412, height: 221, render: () => render('carousel-mobile-uncontained') } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
