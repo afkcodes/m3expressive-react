@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
@@ -6,7 +6,10 @@ import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { StateLayer, forcedStateLayer, isInteractionState, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { ICON_PATHS, SvgIcon } from '../../primitives/SvgIcon.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 
 /*
@@ -26,7 +29,8 @@ import { useForcedState } from '../../testing/ForceState.tsx';
  *   are not animated in Compose — they change with the state.
  */
 const CHECK = 'M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z';
-const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
+/** Icon size inside the handle. */
+const ICON_SIZE = 16;
 
 const s = stylex.create({
   root: {
@@ -42,13 +46,8 @@ const s = stylex.create({
     borderWidth: 0,
     cursor: 'pointer',
     WebkitTapHighlightColor: 'transparent',
-    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
     verticalAlign: 'middle',
   },
-  ringForced: { outlineStyle: 'solid' },
   disabled: { cursor: 'default' },
   on: { backgroundColor: color.primary, [interaction.layerColor]: color.primary },
   off: {
@@ -100,7 +99,6 @@ const s = stylex.create({
     transitionDuration: { default: motion.fastSpatialDuration, [stylex.when.ancestor(':active')]: '0s' },
     transitionTimingFunction: motion.fastSpatialEasing,
   },
-  icon: { width: 16, height: 16, flexShrink: 0, fill: 'currentColor' },
   // Kit: the off+disabled icon has its own 38% inside the 38% handle.
   iconOffDisabled: { opacity: state.disabledContentOpacity },
 });
@@ -165,33 +163,28 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   { checked: checkedProp, defaultChecked = false, onCheckedChange, icons = false, disabled = false, sx, ...rest },
   ref,
 ) {
-  const [inner, setInner] = useState(defaultChecked);
-  const on = checkedProp ?? inner;
+  const [on, setOn] = useControllableState(checkedProp, defaultChecked, onCheckedChange);
   const forced = useForcedState();
-  const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
+  const interacting = isInteractionState(forced.state);
   const restSize = on || icons ? 24 : 16;
   return (
     <BaseSwitch.Root
       ref={ref}
       checked={on}
       disabled={disabled}
-      onCheckedChange={(next, details) => {
-        if (checkedProp === undefined) setInner(next);
-        onCheckedChange?.(next, details);
-      }}
+      onCheckedChange={setOn}
       {...rest}
       {...stylex.props(
         s.root,
+        focusRing.host,
         stylex.defaultMarker(),
         stateLayerHost.hostPressLayer,
         disabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
+        forcedStateLayer(forced.state, 'pressed'),
         on ? s.on : s.off,
         disabled && (on ? s.onDisabled : s.offDisabled),
         disabled && s.disabled,
-        forced.focusRing && s.ringForced,
+        forced.focusRing && focusRing.forced,
         sx,
       )}
     >
@@ -207,9 +200,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
           )}
         >
           {icons && (
-            <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.icon, disabled && !on && s.iconOffDisabled)}>
-              <path d={on ? CHECK : CLOSE} />
-            </svg>
+            <SvgIcon d={on ? CHECK : ICON_PATHS.close} size={ICON_SIZE} sx={disabled && !on && s.iconOffDisabled} />
           )}
         </span>
       </span>

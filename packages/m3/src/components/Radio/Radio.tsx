@@ -7,7 +7,9 @@ import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { StateLayer, forcedStateLayer, isInteractionState, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { radioVars } from './radio.stylex.ts';
 
@@ -54,12 +56,7 @@ const s = stylex.create({
     width: 40,
     height: 40,
     borderRadius: '50%',
-    outlineStyle: { default: 'none', [stylex.when.ancestor(':focus-visible')]: 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
   },
-  ringForced: { outlineStyle: 'solid' },
   glyph: {
     position: 'relative',
     width: 24,
@@ -127,18 +124,18 @@ export function RadioGroup({
   children,
   ...rest
 }: RadioGroupProps) {
-  const [inner, setInner] = useState<unknown>(defaultValue ?? null);
-  const value = valueProp !== undefined ? valueProp : inner;
+  const [value, setValue] = useControllableState<unknown, [BaseRadioGroup.ChangeEventDetails]>(
+    valueProp,
+    defaultValue ?? null,
+    onValueChange,
+  );
   const group = useMemo(() => ({ value, disabled }), [value, disabled]);
   return (
     <GroupContext value={group}>
       <BaseRadioGroup
         value={value}
         disabled={disabled}
-        onValueChange={(next, details) => {
-          if (valueProp === undefined) setInner(next);
-          onValueChange?.(next, details);
-        }}
+        onValueChange={setValue}
         {...rest}
         {...stylex.props(groupStyles.group, sx)}
       >
@@ -160,7 +157,7 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
 ) {
   const group = useContext(GroupContext);
   const forced = useForcedState();
-  const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
+  const interacting = isInteractionState(forced.state);
   const selected = group ? Object.is(group.value, value) : !!checkedProp;
   const disabled = disabledProp || (group?.disabled ?? false);
   // Compose snaps the colour while disabled and across an enabled ⇄ disabled change: decided when
@@ -181,9 +178,7 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
         stylex.defaultMarker(),
         stateLayerHost.hostPressLayer,
         disabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
+        forcedStateLayer(forced.state, 'pressed'),
         selected ? roles.selected : roles.unselected,
         !selected && interacting && roles.unselectedInteracting,
         forced.state === 'pressed' && (selected ? roles.selectedPressed : roles.unselectedPressed),
@@ -192,7 +187,7 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
         sx,
       )}
     >
-      <span {...stylex.props(s.circle, forced.focusRing && s.ringForced)}>
+      <span {...stylex.props(s.circle, focusRing.part, forced.focusRing && focusRing.forced)}>
         <StateLayer />
         <svg
           viewBox="0 0 24 24"
