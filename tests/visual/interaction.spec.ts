@@ -1289,7 +1289,9 @@ test('carousel (live): items resize through the keylines as it scrolls; keys and
 test('date pickers (live): modal pick / keys / year / input, docked panel, full-screen range', async ({ page }) => {
   await page.goto('/fixture/date-picker/live');
   await page.evaluate(() => document.fonts.ready);
-  const out = (k: string) => page.locator(`[data-${k}]`);
+  // The fixture's <output>s (the closing dialog's days carry data-date while they fade out: the
+  // M3 dialog fade stays under reduced motion).
+  const out = (k: string) => page.locator(`output[data-${k}]`);
 
   // Modal: the selected day holds the tab stop; arrows move it; a click selects; OK commits.
   await page.getByRole('button', { name: 'Pick date' }).click();

@@ -13,6 +13,7 @@ import { TextField } from '../TextField/TextField.tsx';
 import { textFieldVars } from '../TextField/textField.stylex.ts';
 import { PickerMenuButton } from './cells.tsx';
 import { CalendarMonth } from './CalendarMonth.tsx';
+import { MonthPager } from './MonthPager.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { addMonths, defaultFormatter, parseInputDate, startOfDay, type DatePickerFormatter } from './calendar.ts';
 
@@ -258,17 +259,21 @@ export function DockedCalendar({
       </div>
       {view === 'day' && (
         <>
-          <CalendarMonth
-            month={month}
-            value={value}
-            today={today}
-            formatter={f}
-            firstDayOfWeek={firstDayOfWeek}
-            outsideDays
-            onPick={onChange}
-            onNavigate={setMonth}
-            sx={s.grid}
-          />
+          <MonthPager month={month} onSwipe={setMonth}>
+            {(m, copy) => (
+              <CalendarMonth
+                month={m}
+                value={value}
+                today={today}
+                formatter={f}
+                firstDayOfWeek={firstDayOfWeek}
+                outsideDays
+                onPick={copy ? () => {} : onChange}
+                onNavigate={copy ? undefined : setMonth}
+                sx={s.grid}
+              />
+            )}
+          </MonthPager>
           <div {...stylex.props(s.actions)}>
             {onCancel && (
               <Button variant="text" onClick={onCancel}>
