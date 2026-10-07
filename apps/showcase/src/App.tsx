@@ -24,10 +24,11 @@ const s = stylex.create({
     flexShrink: 0,
     overflowY: 'auto',
     backgroundColor: color.surfaceContainerLow,
-    paddingBlock: 12,
   },
-  brand: { margin: 0, paddingInline: 24, paddingBlock: 16, color: color.onSurface },
-  groupLabel: { margin: 0, paddingInline: 24, paddingTop: 16, paddingBottom: 4, color: color.onSurfaceVariant },
+  // M3 navigation drawer: items inset 12px from the drawer's edges; headings align with the icons.
+  navList: { paddingInline: 12, paddingBlock: 12 },
+  brand: { margin: 0, paddingInline: 16, paddingTop: 8, paddingBottom: 16, color: color.onSurface },
+  groupLabel: { margin: 0, paddingInline: 16, paddingTop: 20, paddingBottom: 8, color: color.onSurfaceVariant },
   main: { flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column' },
   scroll: { flexGrow: 1, overflowY: 'auto' },
   content: { maxWidth: 1200, marginInline: 'auto', paddingInline: 24, paddingTop: 24 },
@@ -37,7 +38,7 @@ const s = stylex.create({
 /** The navigation: home, then every page by group. */
 function Nav({ current, onNavigate }: { current: string; onNavigate?: () => void }) {
   return (
-    <nav aria-label="Components">
+    <nav aria-label="Components" {...stylex.props(s.navList)}>
       <p {...stylex.props(typescale.titleLarge, s.brand)}>M3 Expressive</p>
       <List aria-label="Overview">
         <ListItem href="#/" selected={current === ''} leading={<Icon name="home" />} onClick={onNavigate}>
