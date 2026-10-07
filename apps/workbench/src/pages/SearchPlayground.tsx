@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import {
   Avatar,
@@ -75,11 +75,6 @@ export function SearchPlayground() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const bar = useRef<HTMLDivElement>(null);
-  const wasOpen = useRef(false);
-  useEffect(() => {
-    if (wasOpen.current && !open) bar.current?.querySelector<HTMLElement>('[data-search-trigger]')?.focus();
-    wasOpen.current = open;
-  }, [open]);
   const close = () => {
     setOpen(false);
     setQ('');
