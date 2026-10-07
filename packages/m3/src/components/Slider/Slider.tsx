@@ -10,6 +10,7 @@ import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { sliderVars, thumb0, thumb1 } from './slider.stylex.ts';
+import { sortRange, thumbValueText, tickSteps } from './values.ts';
 
 export type SliderSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 export type SliderOrientation = 'horizontal' | 'vertical';
@@ -168,14 +169,27 @@ interface CommonProps {
   name?: string;
   /** Show the value indicator while pressed / dragged / keyboard-focused (default true). */
   labeled?: boolean;
-  /** Value indicator content (Material Web `valueLabel`). Default: the formatted value. */
+  /**
+   * Value indicator content (Material Web `valueLabel`). Default: the formatted value. A string or
+   * number result is also announced as the thumb's value (aria-valuetext).
+   */
   valueLabel?: (value: number, index: number) => ReactNode;
   format?: Intl.NumberFormatOptions;
   locale?: Intl.LocalesArgument;
-  /** Discrete stop indicators at every `step`. */
+  /**
+   * Discrete stop indicators at every `step`. Drawn for up to 200 steps (`MAX_TICKS`); a denser
+   * scale would paint a solid line of dots, so above that no ticks are drawn.
+   */
   ticks?: boolean;
   'aria-label'?: string;
   'aria-labelledby'?: string;
+  /**
+   * Accessible name per thumb (range sliders: e.g. "Minimum price" / "Maximum price"); replaces
+   * `aria-label` / `aria-labelledby` on the thumbs.
+   */
+  getAriaLabel?: (index: number) => string;
+  /** Announced value per thumb. Default: the `valueLabel` text, or the formatted value. */
+  getAriaValueText?: (formattedValue: string, value: number, index: number) => string;
   sx?: StyleXStyles;
 }
 
@@ -189,6 +203,7 @@ export interface SliderProps extends CommonProps {
 }
 
 export interface RangeSliderProps extends CommonProps {
+  /** [start, end]; a reversed pair is put in order. */
   value?: [number, number];
   defaultValue?: [number, number];
   onValueChange?: (value: [number, number]) => void;
@@ -214,6 +229,8 @@ function SliderImpl({
   format,
   locale,
   ticks = false,
+  getAriaLabel,
+  getAriaValueText,
   sx,
   forwardedRef,
   ...aria
@@ -337,11 +354,11 @@ function SliderImpl({
 
   // Discrete stop indicators (hidden in the kit's variants; M3: on-active / on-inactive colours).
   const tickEls: ReactNode[] = [];
-  if (ticks && step > 0) {
-    const n = Math.round((max - min) / step);
+  const n = ticks ? tickSteps(min, max, step) : null;
+  if (n != null) {
     const lo = mode === 'range' ? p[0]! : mode === 'centered' ? Math.min(0.5, p[0]!) : 0;
     const hi = mode === 'range' ? p[1]! : mode === 'centered' ? Math.max(0.5, p[0]!) : p[0]!;
-    for (let k = 0; k <= n && n <= 200; k++) {
+    for (let k = 0; k <= n; k++) {
       const t = k / n;
       if (p.some((q) => Math.abs(q - t) < 1e-9)) continue;
       const main = `calc(6px + ${T(t)})`;
@@ -360,6 +377,12 @@ function SliderImpl({
   }
 
   const label = (v: number, i: number) => valueLabel?.(v, i) ?? new Intl.NumberFormat(locale, format).format(v);
+  // A text value label is what sighted users read: announce the same (Base UI's default otherwise).
+  const valueText =
+    getAriaValueText ??
+    (valueLabel
+      ? (formatted: string, v: number, i: number) => thumbValueText(valueLabel(v, i), formatted, i, mode === 'range')
+      : undefined);
 
   return (
     <BaseSlider.Root
@@ -420,7 +443,9 @@ function SliderImpl({
               key={i}
               index={mode === 'range' ? i : undefined}
               aria-label={aria['aria-label']}
-              aria-labelledby={aria['aria-labelledby']}
+              aria-labelledby={getAriaLabel ? undefined : aria['aria-labelledby']}
+              getAriaLabel={getAriaLabel}
+              getAriaValueText={valueText}
               onFocus={(e) => setKbFocus((e.target as Element).matches(':focus-visible') ? i : null)}
               onBlur={() => setKbFocus(null)}
               {...stylex.props(
@@ -499,7 +524,7 @@ export const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(function
       min={min}
       max={max}
       mode="range"
-      values={v}
+      values={v[0] <= v[1] ? v : sortRange(v)}
       setValues={(n) => setV([n[0]!, n[1]!])}
       onCommit={onValueCommitted && ((n) => onValueCommitted([n[0]!, n[1]!]))}
       forwardedRef={ref}
