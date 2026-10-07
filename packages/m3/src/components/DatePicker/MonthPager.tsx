@@ -170,13 +170,20 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [other]);
 
-  useLayoutEffect(() => () => anim.current?.stop(), []);
-
-  // Swipe.
+  // Swipe. The gesture's window listeners are removed on release, on a new press and on unmount.
   const drag = useRef<{ side: 1 | -1 } | null>(null);
+  const endGesture = useRef<(() => void) | null>(null);
+  useLayoutEffect(
+    () => () => {
+      anim.current?.stop();
+      endGesture.current?.();
+    },
+    [],
+  );
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     // A gesture during a slide / snap is ignored (Compose ignores keys while the list scrolls).
     if (e.button !== 0 || !onSwipe || anim.current) return;
+    endGesture.current?.();
     const id = e.pointerId;
     const slop = pointerSlop(e.pointerType);
     const tracker = new PointerVelocityTracker();
@@ -205,9 +212,7 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
+      detach();
       if (!active || !drag.current) {
         drag.current = null;
         return;
@@ -250,6 +255,13 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
         onComplete: done,
       });
     };
+    const detach = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (endGesture.current === detach) endGesture.current = null;
+    };
+    endGesture.current = detach;
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
