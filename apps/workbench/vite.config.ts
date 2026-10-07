@@ -17,5 +17,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react/jsx-dev-runtime', 'react-dom/client', '@base-ui/react'],
   },
-  server: { port: 5199, strictPort: true },
+  server: { port: Number(process.env.M3X_PORT ?? 5199), strictPort: true },
 });

@@ -87,7 +87,8 @@ FAB menu, split button, button groups.
 - **Spatial** = position, size, radius, rotation (may overshoot). **Effects** = colour, opacity.
 - CSS: `motion.*Duration` + `motion.*Easing` — exact spring `linear()` curves (≤ 0.1% error) generated
   by `pnpm gen:motion` from `spring.ts` (line-for-line port of Compose `SpringSimulation`); settle
-  threshold 0.001 reproduces Google's published web durations. Never edit `motion.stylex.ts`.
+  threshold 0.001 only cuts the invisible tail (Google's published web durations 350/500/650… belong to its
+  cubic-bezier approximations, not to the springs). Never edit `motion.stylex.ts`.
 - Interruptible / gesture motion: `animateSpring` (rAF, keeps velocity on retarget, like Compose).
 - Motion scheme swap per subtree: `M3Provider motionScheme` (+ `MotionSchemeContext` for JS).
 - Reduced motion: spatial durations → 0 (CSS var + `useSpringToken` returns null); effects stay.
@@ -103,6 +104,8 @@ FAB menu, split button, button groups.
 ## 6. Interaction states
 - State layer = content colour at **8% hover · 10% focus · 10% pressed · 16% dragged**
   (`interaction.layerOpacity`/`layerColor` vars; `<StateLayer/>` reads them).
+- State-layer fades are Compose material-ripple `StateLayer` tweens, **not** motion-scheme springs:
+  15ms linear, entering focus / drag 45ms (`interaction.layerDuration`, set per host condition).
 - **Priority hover < focus-visible < active.** Hover lives inside `@media (hover: hover)`, which
   outranks plain pseudo-classes in StyleX — so focus/active must use the same media wrapper.
 - Press semantics follow the kit per component: buttons/icon buttons = hover layer + ripple (the

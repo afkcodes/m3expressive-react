@@ -7,6 +7,11 @@ import * as stylex from '@stylexjs/stylex';
  */
 export const interaction = stylex.defineVars({
   layerOpacity: '0',
+  /**
+   * State-layer fade. Compose material-ripple `StateLayer`: every change is a 15 ms linear
+   * tween, except entering focus / drag (45 ms) and leaving drag (150 ms).
+   */
+  layerDuration: '15ms',
   /** Colour of the state layer. Defaults to the host's content colour. */
   layerColor: 'currentColor',
   /** Ripple colour — defaults to the host's content colour (checkbox uses the opposite role). */

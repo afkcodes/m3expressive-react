@@ -1262,12 +1262,13 @@ test('carousel (live): items resize through the keylines as it scrolls; keys and
     el.dispatchEvent(new Event('scroll'));
     return [...el.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')].slice(0, 2).map((s) => {
       const r = s.getBoundingClientRect();
-      return [r.left - el.getBoundingClientRect().left, r.width];
+      return [r.left - el.getBoundingClientRect().left, r.width] as const;
     });
   });
-  expect(part[1]![1]).toBeGreaterThan(122);
-  expect(part[1]![1]).toBeLessThan(188);
-  expect(part[0]![0] + part[0]![1] + 8).toBeCloseTo(part[1]![0], 0);
+  const [[x0, w0], [x1, w1]] = part as [readonly [number, number], readonly [number, number]];
+  expect(w1).toBeGreaterThan(122);
+  expect(w1).toBeLessThan(188);
+  expect(x0 + w0 + 8).toBeCloseTo(x1, 0);
 
   // A free scroll comes to rest on the nearest item (Compose snap spring).
   await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBe(196);

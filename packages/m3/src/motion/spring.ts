@@ -77,8 +77,11 @@ export function stepSpring(
 
 /**
  * Residual (as a fraction of travel) below which a spring counts as settled.
- * 0.001 reproduces the durations Google publishes for web
- * (e.g. expressive slow spatial → 650 ms, fast effects → 150 ms).
+ * The generated `linear()` follows the spring exactly in time, so this only decides where
+ * the invisible tail is cut (0.1% of travel; Compose cuts at its visibility threshold).
+ * The durations Google publishes for web (350 / 500 / 650 ms …) belong to its cubic-bezier
+ * approximations (`officialWebCurves`), not to spring settle times — only fast effects
+ * (150 ms) coincides.
  */
 export const SETTLE_THRESHOLD = 0.001;
 
@@ -165,4 +168,112 @@ function simplify(points: Array<[number, number]>, tolerance: number): Array<[nu
     }
   }
   return points.filter((_, i) => keep[i]);
+}
+
+/**
+ * How long Compose runs a spring before snapping to the target — animation-core
+ * SpringEstimation.kt `estimateAnimationDurationMillis`, ported line for line. Compose's
+ * `FloatSpringSpec.getDurationNanos` passes displacement and velocity in units of the
+ * visibility threshold with `delta = 1`, so a spring ends once its envelope is within one
+ * threshold of the target (an overshoot that is still visible plays out).
+ */
+export function estimateDurationMs(
+  spring: SpringParams,
+  initialDisplacement: number,
+  initialVelocity: number,
+  delta = 1,
+): number {
+  const { stiffness, dampingRatio } = spring;
+  if (dampingRatio === 0) return Number.MAX_SAFE_INTEGER;
+  const dampingCoefficient = 2 * dampingRatio * Math.sqrt(stiffness);
+  const partialRoot = dampingCoefficient * dampingCoefficient - 4 * stiffness;
+  const partialRootReal = partialRoot < 0 ? 0 : Math.sqrt(partialRoot);
+  const partialRootImaginary = partialRoot < 0 ? Math.sqrt(Math.abs(partialRoot)) : 0;
+  const firstRootReal = (-dampingCoefficient + partialRootReal) * 0.5;
+  const firstRootImaginary = partialRootImaginary * 0.5;
+  const secondRootReal = (-dampingCoefficient - partialRootReal) * 0.5;
+
+  if (initialDisplacement === 0 && initialVelocity === 0) return 0;
+  const v0 = initialDisplacement < 0 ? -initialVelocity : initialVelocity;
+  const p0 = Math.abs(initialDisplacement);
+  const seconds =
+    dampingRatio > 1
+      ? estimateOverDamped(firstRootReal, secondRootReal, p0, v0, delta)
+      : dampingRatio < 1
+        ? estimateUnderDamped(firstRootReal, firstRootImaginary, p0, v0, delta)
+        : estimateCriticallyDamped(firstRootReal, p0, v0, delta);
+  return Math.trunc(seconds * 1000);
+}
+
+function estimateUnderDamped(r: number, imaginary: number, p0: number, v0: number, delta: number) {
+  const c1 = p0;
+  const c2 = (v0 - r * c1) / imaginary;
+  const c = Math.sqrt(c1 * c1 + c2 * c2);
+  return Math.log(delta / c) / r;
+}
+
+function estimateCriticallyDamped(r: number, p0: number, v0: number, delta: number) {
+  const c1 = p0;
+  const c2 = v0 - r * c1;
+  const t1 = Math.log(Math.abs(delta / c1)) / r;
+  const guess = Math.log(Math.abs(delta / c2));
+  let g = guess;
+  for (let i = 0; i <= 5; i++) g = guess - Math.log(Math.abs(g / r));
+  const t2 = g / r;
+  let tCurr = !Number.isFinite(t1) ? t2 : !Number.isFinite(t2) ? t1 : Math.max(t1, t2);
+
+  const tInflection = -(r * c1 + c2) / (r * c2);
+  const xInflection = c1 * Math.exp(r * tInflection) + c2 * tInflection * Math.exp(r * tInflection);
+  let signedDelta: number;
+  if (Number.isNaN(tInflection) || tInflection <= 0) {
+    signedDelta = -delta;
+  } else if (tInflection > 0 && -xInflection < delta) {
+    if (c2 < 0 && c1 > 0) tCurr = 0;
+    signedDelta = -delta;
+  } else {
+    tCurr = -(2 / r) - c1 / c2;
+    signedDelta = delta;
+  }
+
+  let tDelta = Number.MAX_VALUE;
+  for (let iterations = 0; tDelta > 0.001 && iterations < 100; iterations++) {
+    const tLast = tCurr;
+    const fn = (c1 + c2 * tCurr) * Math.exp(r * tCurr) + signedDelta;
+    const fnPrime = (c2 * (r * tCurr + 1) + c1 * r) * Math.exp(r * tCurr);
+    tCurr = tCurr - fn / fnPrime;
+    tDelta = Math.abs(tLast - tCurr);
+  }
+  return tCurr;
+}
+
+function estimateOverDamped(r1: number, r2: number, p0: number, v0: number, delta: number) {
+  const c2 = (r1 * p0 - v0) / (r1 - r2);
+  const c1 = p0 - c2;
+  const t1 = Math.log(Math.abs(delta / c1)) / r1;
+  const t2 = Math.log(Math.abs(delta / c2)) / r2;
+  let tCurr = !Number.isFinite(t1) ? t2 : !Number.isFinite(t2) ? t1 : Math.max(t1, t2);
+
+  const tInflection = Math.log((c1 * r1) / (-c2 * r2)) / (r2 - r1);
+  const xInflection = () => c1 * Math.exp(r1 * tInflection) + c2 * Math.exp(r2 * tInflection);
+  let signedDelta: number;
+  if (Number.isNaN(tInflection) || tInflection <= 0) {
+    signedDelta = -delta;
+  } else if (tInflection > 0 && -xInflection() < delta) {
+    if (c2 > 0 && c1 < 0) tCurr = 0;
+    signedDelta = -delta;
+  } else {
+    tCurr = Math.log(-(c2 * r2 * r2) / (c1 * r1 * r1)) / (r1 - r2);
+    signedDelta = delta;
+  }
+
+  if (Math.abs(c1 * r1 * Math.exp(r1 * tCurr) + c2 * r2 * Math.exp(r2 * tCurr)) < 0.0001) return tCurr;
+  let tDelta = Number.MAX_VALUE;
+  for (let iterations = 0; tDelta > 0.001 && iterations < 100; iterations++) {
+    const tLast = tCurr;
+    const fn = c1 * Math.exp(r1 * tCurr) + c2 * Math.exp(r2 * tCurr) + signedDelta;
+    const fnPrime = c1 * r1 * Math.exp(r1 * tCurr) + c2 * r2 * Math.exp(r2 * tCurr);
+    tCurr = tCurr - fn / fnPrime;
+    tDelta = Math.abs(tLast - tCurr);
+  }
+  return tCurr;
 }

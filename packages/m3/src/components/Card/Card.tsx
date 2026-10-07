@@ -3,10 +3,10 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
 import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
 import { shape } from '../../tokens/shape.stylex';
 import { state } from '../../tokens/state.stylex';
 import { interaction } from '../../primitives/state.stylex';
+import { elevationMotion } from '../../primitives/elevationMotion.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
@@ -36,9 +36,6 @@ const styles = stylex.create({
     overflow: 'hidden',
     color: color.onSurface,
     [interaction.layerColor]: color.onSurface,
-    transitionProperty: 'box-shadow',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
   },
   interactive: {
     cursor: 'pointer',
@@ -171,6 +168,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
         variant === 'outlined' && visualState === 'focused' && styles.strokeUnderLayer,
         isInteractive && styles.interactive,
         isInteractive && live[variant],
+        isInteractive && elevationMotion.host,
         // Static states always show their layer, interactive or not (Figma building blocks).
         (isInteractive || visualState) && stateLayerHost.hostPressExclusive,
         visualState === 'hovered' && stateLayerHost.forceHover,

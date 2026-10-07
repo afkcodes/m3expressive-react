@@ -106,6 +106,8 @@ const s = stylex.create({
       ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity },
       ':is([data-dragging])': { default: state.pressedOpacity, '@media (hover: hover)': state.pressedOpacity },
     },
+    // Compose StateLayer: a drag fades in over 45 ms (linear).
+    [interaction.layerDuration]: { default: '15ms', ':is([data-dragging])': { default: '45ms', '@media (hover: hover)': '45ms' } },
     // 48px touch / hover target around the 4px bar.
     '::after': { content: '""', position: 'absolute', inset: '-4px -22px' },
   },

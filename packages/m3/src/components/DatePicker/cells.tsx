@@ -48,6 +48,7 @@ const s = stylex.create({
       ':focus-visible': { default: state.focusOpacity, '@media (hover: hover)': state.focusOpacity },
       ':active': { default: state.pressedOpacity, '@media (hover: hover)': state.pressedOpacity },
     },
+    [interaction.layerDuration]: { default: '15ms', ':focus-visible': { default: '45ms', '@media (hover: hover)': '45ms' } },
   },
   // Above the neighbouring days' range bands (a range's start / end circle stays whole).
   circle: {

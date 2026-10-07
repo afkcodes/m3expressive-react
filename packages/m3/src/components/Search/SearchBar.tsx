@@ -43,6 +43,10 @@ const s = stylex.create({
       ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity },
       ':has([data-search-trigger]:focus-visible)': { default: state.focusOpacity, '@media (hover: hover)': state.focusOpacity },
     },
+    [interaction.layerDuration]: {
+      default: '15ms',
+      ':has([data-search-trigger]:focus-visible)': { default: '45ms', '@media (hover: hover)': '45ms' },
+    },
   },
   trigger: {
     display: 'block',

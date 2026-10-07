@@ -1,4 +1,4 @@
-import { stepSpring, type SpringParams } from './spring.ts';
+import { estimateDurationMs, stepSpring, type SpringParams } from './spring.ts';
 
 export interface SpringAnimationOptions {
   spring: SpringParams;
@@ -6,7 +6,10 @@ export interface SpringAnimationOptions {
   to: number;
   /** Units per second. Carry this over when interrupting to keep motion continuous. */
   velocity?: number;
-  /** Absolute distance from target treated as "at rest" (e.g. 0.5 for px, 0.001 for 0–1). */
+  /**
+   * Visibility threshold in the animated unit (Compose: 0.01 for Float, 0.1 for Dp, 0.5 for px
+   * offsets). The animation ends once the spring's envelope is within it of the target.
+   */
   precision?: number;
   onUpdate: (value: number, velocity: number) => void;
   onComplete?: () => void;
@@ -27,6 +30,11 @@ export interface SpringAnimation {
 /**
  * rAF-driven spring for interruptible / gesture motion, where CSS transitions
  * would restart from zero velocity. Same physics as the CSS tokens.
+ *
+ * Ends like Compose's `Animatable.animateTo`: each segment (start or retarget) runs for
+ * `estimateAnimationDurationMillis` with displacement and velocity measured in units of
+ * `precision` (Compose's visibility threshold), then snaps to the target — so a visible
+ * overshoot plays out instead of being cut when the value first comes within `precision`.
  */
 export function animateSpring(opts: SpringAnimationOptions): SpringAnimation {
   let spring = opts.spring;
@@ -34,18 +42,23 @@ export function animateSpring(opts: SpringAnimationOptions): SpringAnimation {
   let velocity = opts.velocity ?? 0;
   let target = opts.to;
   const precision = opts.precision ?? 0.01;
-  let last: number | undefined;
+  // Current segment: analytic from its start state.
+  let segStart = { value, velocity };
+  let segDuration = 0;
+  let segBegin: number | undefined;
   let frame = 0;
   let running = true;
 
+  const beginSegment = () => {
+    segStart = { value, velocity };
+    segDuration = estimateDurationMs(spring, (value - target) / precision, velocity / precision);
+    segBegin = undefined;
+  };
+
   const tick = (now: number) => {
-    // Cap dt so a backgrounded tab resumes smoothly instead of teleporting.
-    const dt = last === undefined ? 0 : Math.min(now - last, 64);
-    last = now;
-    ({ value, velocity } = stepSpring(spring, { value, velocity }, target, dt));
-    const atRest =
-      Math.abs(value - target) < precision && Math.abs(velocity) < precision * 60;
-    if (atRest) {
+    if (segBegin === undefined) segBegin = now;
+    const elapsed = now - segBegin;
+    if (elapsed >= segDuration) {
       value = target;
       velocity = 0;
       running = false;
@@ -53,9 +66,11 @@ export function animateSpring(opts: SpringAnimationOptions): SpringAnimation {
       opts.onComplete?.();
       return;
     }
+    ({ value, velocity } = stepSpring(spring, segStart, target, elapsed));
     opts.onUpdate(value, velocity);
     frame = requestAnimationFrame(tick);
   };
+  beginSegment();
   frame = requestAnimationFrame(tick);
 
   return {
@@ -71,9 +86,9 @@ export function animateSpring(opts: SpringAnimationOptions): SpringAnimation {
     retarget(to, nextSpring) {
       target = to;
       if (nextSpring) spring = nextSpring;
+      beginSegment();
       if (!running) {
         running = true;
-        last = undefined;
         frame = requestAnimationFrame(tick);
       }
     },
