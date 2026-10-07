@@ -233,11 +233,16 @@ test('app bar (live): medium bar matches the kit, collapses to 64px with the scr
   expect(await height()).toBe(112);
   // A scroll that stops part-way snaps to the nearer end (Compose settleAppBar): under halfway it
   // opens again, from halfway on it collapses. (The interpolation itself: motion-nav.spec.ts.)
+  // The snap is a spring that writes scrollTop every frame until it ends, and scrollTop reaches its
+  // end value a few frames earlier: let it finish before the next scroll, which it would overwrite
+  // (only user input — wheel, touch, keys — takes over from a snap).
   await scrollTo(12);
   await expect.poll(scrollTop).toBe(0);
+  await settle(page);
   await expect.poll(height).toBe(112);
   await scrollTo(24);
   await expect.poll(scrollTop).toBe(48);
+  await settle(page);
   await expect.poll(height).toBe(64);
   // Collapsed: 64px, Surface Container, the row title visible.
   await scrollTo(200);
