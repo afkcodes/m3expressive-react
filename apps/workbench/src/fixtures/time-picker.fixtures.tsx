@@ -1,19 +1,16 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
+import { Button, ModalTimePicker, TimeInput, TimePicker, type Time } from '@m3x/react';
 import {
-  Button,
   ClockFace,
   ClockNumber,
-  ModalTimePicker,
+  ForceState,
   PeriodSelector,
   TimeField,
-  TimeInput,
-  TimePicker,
   TimeSelector,
-  type Time,
-} from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+  type ForcedState,
+} from '@m3x/react/testing';
 import manifest from '../../../../figma/time-picker/manifest.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
 
@@ -63,21 +60,21 @@ function render(name: string): ReactNode {
     return (
       <ForceState state={asForced(p[2]!)}>
         <PeriodSelector
-          pm={p[1] === 'pm'}
-          onChange={noop}
+          value={p[1] === 'pm' ? 'pm' : 'am'}
+          onValueChange={noop}
           orientation={p[0] === 'periodh' ? 'horizontal' : 'vertical'}
         />
       </ForceState>
     );
   }
-  if (name === 'clock-12') return <ClockFace mode="hour" value={7} onChange={noop} />;
-  if (name === 'clock-24') return <ClockFace mode="hour" value={20} is24Hour onChange={noop} />;
+  if (name === 'clock-12') return <ClockFace mode="hour" value={7} onValueChange={noop} />;
+  if (name === 'clock-24') return <ClockFace mode="hour" value={20} is24Hour onValueChange={noop} />;
   if (p[0] === 'dial') {
     const is24 = p[1] === '24';
     return (
       <TimePicker
         value={is24 ? { hour: 20, minute: 0 } : { hour: 7, minute: 0 }}
-        onChange={noop}
+        onValueChange={noop}
         is24Hour={is24}
         orientation={p[2] === 'h' ? 'horizontal' : 'vertical'}
         onModeToggle={noop}
@@ -93,7 +90,7 @@ function render(name: string): ReactNode {
         {/* The kit's 12-hour field reads "20" next to AM (impossible in 12-hour time); 08 AM. */}
         <TimeInput
           value={is24 ? { hour: 20, minute: 0 } : { hour: 8, minute: 0 }}
-          onChange={noop}
+          onValueChange={noop}
           is24Hour={is24}
           onModeToggle={noop}
           onCancel={noop}
@@ -113,7 +110,7 @@ function LiveTime() {
     <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
       <Button onClick={() => setOpen(true)}>Pick time</Button>
       <output data-time>{`${time.hour}:${String(time.minute).padStart(2, '0')}`}</output>
-      <ModalTimePicker open={open} onOpenChange={setOpen} value={time} onChange={setTime} />
+      <ModalTimePicker open={open} onOpenChange={setOpen} value={time} onValueChange={setTime} />
     </div>
   );
 }
@@ -131,7 +128,7 @@ function ChurnTime() {
       <Button onClick={() => setOpen(true)}>Pick time</Button>
       <output data-tick>{tick}</output>
       <output data-time>{`${time.hour}:${String(time.minute).padStart(2, '0')}`}</output>
-      <ModalTimePicker open={open} onOpenChange={setOpen} value={{ ...time }} onChange={setTime} />
+      <ModalTimePicker open={open} onOpenChange={setOpen} value={{ ...time }} onValueChange={setTime} />
     </div>
   );
 }
@@ -142,11 +139,11 @@ function InvalidTime() {
   return (
     <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
       <output data-time>{`${time.hour}:${time.minute}`}</output>
-      <TimePicker value={time} onChange={setTime} />
-      <ClockFace mode="minute" value={60} onChange={noop} aria-label="Minute 60" />
-      <ClockFace mode="hour" value={-1} onChange={noop} aria-label="Hour -1" />
-      <ClockFace mode="hour" value={Number.NaN} is24Hour onChange={noop} aria-label="Hour NaN" />
-      <TimeInput value={{ hour: Number.NaN, minute: 61 }} onChange={noop} />
+      <TimePicker value={time} onValueChange={setTime} />
+      <ClockFace mode="minute" value={60} onValueChange={noop} aria-label="Minute 60" />
+      <ClockFace mode="hour" value={-1} onValueChange={noop} aria-label="Hour -1" />
+      <ClockFace mode="hour" value={Number.NaN} is24Hour onValueChange={noop} aria-label="Hour NaN" />
+      <TimeInput value={{ hour: Number.NaN, minute: 61 }} onValueChange={noop} />
     </div>
   );
 }

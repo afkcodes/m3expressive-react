@@ -1,4 +1,5 @@
 /** Time values for the time pickers. */
+import { defaultLabels, type M3Labels } from '../../theme/labels.tsx';
 
 export interface Time {
   /** 0–23 */
@@ -26,8 +27,12 @@ export function dialValue(mode: 'hour' | 'minute', value: number, is24Hour = fal
   return is24Hour ? hour : hour % 12 || 12;
 }
 
-/** The dial's accessible value (Compose's m3c_time_picker_*_suffix strings). */
-export function dialValueText(mode: 'hour' | 'minute', value: number, is24Hour = false): string {
-  if (mode === 'minute') return `${value} minutes`;
-  return is24Hour ? `${value} hours` : `${value} o'clock`;
+/** The dial's accessible value (Compose's m3c_time_picker_*_suffix strings, from `M3Labels`). */
+export function dialValueText(
+  mode: 'hour' | 'minute',
+  value: number,
+  is24Hour = false,
+  labels: Pick<M3Labels, 'hourValue' | 'minuteValue'> = defaultLabels,
+): string {
+  return mode === 'minute' ? labels.minuteValue(value) : labels.hourValue(value, is24Hour);
 }

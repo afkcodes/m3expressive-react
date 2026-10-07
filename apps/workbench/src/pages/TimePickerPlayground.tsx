@@ -78,7 +78,7 @@ export function TimePickerPlayground() {
         </section>
         <TimePicker
           value={inline}
-          onChange={setInline}
+          onValueChange={setInline}
           is24Hour={h24}
           orientation={horizontal ? 'horizontal' : 'vertical'}
         />
@@ -87,7 +87,7 @@ export function TimePickerPlayground() {
           open={open}
           onOpenChange={setOpen}
           value={time}
-          onChange={setTime}
+          onValueChange={setTime}
           is24Hour={h24}
           orientation={horizontal ? 'horizontal' : 'vertical'}
         />

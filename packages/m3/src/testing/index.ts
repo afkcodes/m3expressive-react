@@ -9,3 +9,13 @@ export type { ForcedState, ForceStateValue, ForcedProgressFrame, ForcedPosition 
 // — Lists, menus, navigation, surfaces
 
 // — Selection, pickers, inputs, media
+export { ClockFace, ClockNumber } from '../components/TimePicker/ClockFace.tsx';
+export type { ClockFaceProps, ClockNumberProps } from '../components/TimePicker/ClockFace.tsx';
+export { PeriodSelector, TimeField, TimeSelector, TimeSeparator } from '../components/TimePicker/parts.tsx';
+export type {
+  Period,
+  PeriodSelectorProps,
+  TimeFieldProps,
+  TimeSelectorProps,
+  TimeSeparatorProps,
+} from '../components/TimePicker/parts.tsx';
