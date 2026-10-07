@@ -155,3 +155,244 @@ test.describe('dialog', () => {
     await expect.poll(() => popup.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
   });
 });
+
+/** The `translate` of an element as [x, y] px. */
+const translateOf = (el: Locator) =>
+  el.evaluate((e) => {
+    const t = getComputedStyle(e).translate;
+    if (!t || t === 'none') return [0, 0];
+    const [x = '0', y = '0'] = t.split(' ');
+    return [parseFloat(x), parseFloat(y)];
+  });
+
+/** Pointer moves of `step` px every frame (a slow, steady drag: ~step × 60 px/s). */
+async function slowDrag(page: Page, x: number, y: number, dx: number, dy: number, step = 1) {
+  const n = Math.max(Math.abs(dx), Math.abs(dy)) / step;
+  for (let i = 1; i <= n; i++) {
+    await page.mouse.move(x + (dx * i) / n, y + (dy * i) / n);
+    await page.waitForTimeout(16);
+  }
+}
+
+test.describe('modal bottom sheet', () => {
+  async function openSheet(page: Page) {
+    await openFixture(page, '/fixture/sheets/live');
+    await page.getByRole('button', { name: 'Open bottom sheet' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Share' });
+    await expect(sheet).toBeVisible();
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+    const handle = page.getByRole('button', { name: 'Close sheet' });
+    const hb = (await handle.boundingBox())!;
+    return { sheet, x: hb.x + hb.width / 2, y: hb.y + 2, height: (await sheet.boundingBox())!.height };
+  }
+
+  test('shows on the default spatial spring: the overshoot lifts it and the surface continues below', async ({ page }) => {
+    await openFixture(page, '/fixture/sheets/live');
+    await page.getByRole('button', { name: 'Open bottom sheet' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Share' });
+    const ys = await sheet.evaluate(
+      (el) =>
+        new Promise<number[]>((resolve) => {
+          const out: number[] = [];
+          const t0 = performance.now();
+          const tick = () => {
+            out.push(el.getBoundingClientRect().top - (el as HTMLElement).offsetTop);
+            if (performance.now() - t0 < 700) requestAnimationFrame(tick);
+            else resolve(out);
+          };
+          tick();
+        }),
+    );
+    expect(Math.min(...ys)).toBeLessThan(-1);
+    const after = await sheet.evaluate((el) => {
+      const cs = getComputedStyle(el, '::after');
+      return { content: cs.content, top: cs.top, height: cs.height, bg: cs.backgroundColor, h: (el as HTMLElement).offsetHeight };
+    });
+    expect(after.content).toBe('""');
+    expect(after.top).toBe(`${after.h}px`);
+    expect(after.bg).toBe('rgb(247, 242, 250)'); // Surface Container Low, like the sheet
+  });
+
+  test('release target follows AnchoredDraggable.computeTarget (56dp / 125dp/s)', async ({ page }) => {
+    // Slow downward drag released past 56px: hides (a slow fling past the positional threshold).
+    let { sheet, x, y } = await openSheet(page);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await slowDrag(page, x, y, 0, 70);
+    await page.mouse.up();
+    await expect(sheet).toHaveCount(0);
+
+    // Slow downward drag released under 56px: back to Expanded.
+    ({ sheet, x, y } = await openSheet(page));
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await slowDrag(page, x, y, 0, 50);
+    await page.mouse.up();
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+
+    // Resting before release (no velocity): the closest anchor, so 80px of a 204px sheet stays.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 90, { steps: 10 });
+    await page.waitForTimeout(120);
+    await page.mouse.up();
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+    await expect(sheet).toBeVisible();
+
+    // Slow upward move near Hidden (within 56px of it): hides; further up: stays.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 166, { steps: 10 });
+    await page.waitForTimeout(60);
+    await slowDrag(page, x, y + 166, 0, -12, 2);
+    await page.mouse.up();
+    await expect(sheet).toHaveCount(0);
+  });
+
+  test('no rubber band above Expanded; the scrim follows the closest anchor while dragging', async ({ page }) => {
+    const { sheet, x, y, height } = await openSheet(page);
+    const scrim = page.locator('[data-m3-portal] [role="presentation"][data-open]');
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y - 60, { steps: 6 });
+    expect((await translateOf(sheet))[1]).toBe(0);
+    await page.mouse.move(x, y + height * 0.6, { steps: 10 });
+    await expect.poll(() => scrim.evaluate((e) => getComputedStyle(e).opacity)).toBe('0');
+    await page.mouse.move(x, y + height * 0.3, { steps: 6 });
+    await expect.poll(() => scrim.evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
+    await page.waitForTimeout(120);
+    await page.mouse.up();
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+  });
+
+  test('drags from the content too; a tap on an item still activates it', async ({ page }) => {
+    const { sheet } = await openSheet(page);
+    const item = sheet.getByText('Email');
+    const b = (await item.boundingBox())!;
+    await page.mouse.move(b.x + 20, b.y + b.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(b.x + 20, b.y + b.height / 2 + 40, { steps: 6 });
+    expect((await translateOf(sheet))[1]).toBeGreaterThan(30);
+    await page.waitForTimeout(120);
+    await page.mouse.up();
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+    await expect(sheet).toBeVisible(); // the drag didn't click the item
+    await item.click();
+    await expect(sheet).toHaveCount(0);
+  });
+
+  test('settles from the release velocity with the default spatial spring', async ({ page }) => {
+    const { sheet, x, y } = await openSheet(page);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 40, { steps: 4 });
+    // A quick flick back up: Expanded, overshooting above it on the way (velocity carried).
+    await page.mouse.move(x, y + 10, { steps: 2 });
+    const ys = sheet.evaluate(
+      (el) =>
+        new Promise<number[]>((resolve) => {
+          const out: number[] = [];
+          const t0 = performance.now();
+          const tick = () => {
+            out.push(el.getBoundingClientRect().top - (el as HTMLElement).offsetTop);
+            if (performance.now() - t0 < 500) requestAnimationFrame(tick);
+            else resolve(out);
+          };
+          tick();
+        }),
+    );
+    await page.mouse.up();
+    const samples = await ys;
+    expect(Math.min(...samples)).toBeLessThan(-0.5);
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+  });
+});
+
+test.describe('modal bottom sheet (touch)', () => {
+  test.use({ hasTouch: true });
+  test('a touch drag on the content moves the sheet while the content is at its top', async ({ page }) => {
+    await openFixture(page, '/fixture/sheets/live');
+    await page.getByRole('button', { name: 'Open bottom sheet' }).click();
+    const sheet = page.getByRole('dialog', { name: 'Share' });
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+    const b = (await sheet.getByText('Email').boundingBox())!;
+    const cdp = await page.context().newCDPSession(page);
+    const touch = (type: 'touchStart' | 'touchMove' | 'touchEnd', y: number) =>
+      cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x: b.x + 20, y }] });
+    await touch('touchStart', b.y + 10);
+    for (let i = 1; i <= 12; i++) {
+      await touch('touchMove', b.y + 10 + i * 10);
+      await page.waitForTimeout(16);
+    }
+    expect((await translateOf(sheet))[1]).toBeGreaterThan(80);
+    await page.waitForTimeout(120);
+    await touch('touchEnd', 0);
+    // Released at rest past the half way point of the 204px sheet: Hidden.
+    await expect(sheet).toHaveCount(0);
+  });
+});
+
+test.describe('modal side sheet', () => {
+  test('enters from the end edge by the window width over 275ms on the emphasized path; RTL enters from the left', async ({ page }) => {
+    await openFixture(page, '/fixture/sheets/live');
+    await page.getByRole('button', { name: 'Open side sheet' }).click();
+    const side = page.getByRole('dialog', { name: 'Filters' });
+    const style = await side.evaluate((el) => ({ d: getComputedStyle(el).transitionDuration, e: getComputedStyle(el).transitionTimingFunction }));
+    expect(style.d).toBe('0.275s');
+    expect(style.e).toMatch(/^linear\(0( 0%)?, 0\.0005 0\.83%.*0\.9994 92\.97%, 1( 100%)?\)$/);
+    const vw = await page.evaluate(() => innerWidth);
+    const first = (await translateOf(side))[0];
+    expect(first).toBeGreaterThan(vw * 0.5);
+    await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
+    expect((await side.boundingBox())!.x + (await side.boundingBox())!.width).toBe(vw - 16);
+    await page.keyboard.press('Escape');
+    await expect(side).toHaveCount(0);
+
+    await page.evaluate(() => (document.documentElement.dir = 'rtl'));
+    await page.getByRole('button', { name: 'Open side sheet' }).click();
+    const rtlFirst = (await translateOf(side))[0];
+    expect(rtlFirst).toBeLessThan(-vw * 0.5);
+    await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
+    expect((await side.boundingBox())!.x).toBe(16);
+  });
+
+  test('drags to dismiss (SideSheetBehavior: half way or a 500px/s swipe), otherwise settles back', async ({ page }) => {
+    await openFixture(page, '/fixture/sheets/live');
+    const open = async () => {
+      await page.getByRole('button', { name: 'Open side sheet' }).click();
+      const side = page.getByRole('dialog', { name: 'Filters' });
+      await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
+      const b = (await side.boundingBox())!;
+      return { side, x: b.x + b.width / 2, y: b.y + 300 };
+    };
+    // 120px then rest: under half of 336 → back.
+    let { side, x, y } = await open();
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + 120, y, { steps: 10 });
+    expect((await translateOf(side))[0]).toBeGreaterThan(100);
+    await page.waitForTimeout(120);
+    await page.mouse.up();
+    await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
+    // Can't drag outwards past Expanded.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x - 80, y, { steps: 8 });
+    expect((await translateOf(side))[0]).toBe(0);
+    await page.mouse.up();
+    // 200px then rest: past half way → hides.
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + 200, y, { steps: 10 });
+    await page.waitForTimeout(120);
+    await page.mouse.up();
+    await expect(side).toHaveCount(0);
+    // A quick 60px swipe: hides.
+    ({ side, x, y } = await open());
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + 60, y, { steps: 3 });
+    await page.mouse.up();
+    await expect(side).toHaveCount(0);
+  });
+});

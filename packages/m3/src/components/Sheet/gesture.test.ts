@@ -75,3 +75,38 @@ describe('cubicBezier', () => {
     expect(cubicBezier(0, 0, 1, 1)(0.37)).toBeCloseTo(0.37, 5);
   });
 });
+
+describe('side sheet easing', () => {
+  it('is m3_sys_motion_easing_emphasized as linear() within 0.001', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('./SideSheet.tsx', import.meta.url), 'utf8');
+    const literal = /'(linear\([^']+\))'/.exec(src)![1]!;
+    const stops = literal
+      .slice(7, -1)
+      .split(',')
+      .map((p, i, all) => {
+        const [y, x] = p.trim().split(' ');
+        return [x ? parseFloat(x) / 100 : i === 0 ? 0 : i === all.length - 1 ? 1 : NaN, parseFloat(y!)] as const;
+      });
+    const evalLinear = (x: number) => {
+      for (let i = 1; i < stops.length; i++) {
+        const [x0, y0] = stops[i - 1]!;
+        const [x1, y1] = stops[i]!;
+        if (x <= x1) return y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+      }
+      return 1;
+    };
+    // path(M 0,0 C 0.05,0 0.133333,0.06 0.166666,0.4 C 0.208333,0.82 0.25,1 1,1)
+    const segs = [
+      [[0, 0], [0.05, 0], [0.133333, 0.06], [0.166666, 0.4]],
+      [[0.166666, 0.4], [0.208333, 0.82], [0.25, 1], [1, 1]],
+    ];
+    for (const seg of segs)
+      for (let i = 0; i <= 400; i++) {
+        const t = i / 400;
+        const u = 1 - t;
+        const [x, y] = [0, 1].map((k) => u * u * u * seg[0]![k]! + 3 * u * u * t * seg[1]![k]! + 3 * u * t * t * seg[2]![k]! + t * t * t * seg[3]![k]!);
+        expect(Math.abs(evalLinear(x!) - y!)).toBeLessThan(0.001);
+      }
+  });
+});

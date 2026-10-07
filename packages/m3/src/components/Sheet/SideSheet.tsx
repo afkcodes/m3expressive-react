@@ -1,13 +1,13 @@
-import { forwardRef, useId, type ReactNode } from 'react';
+import { forwardRef, useId, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { scrim } from './scrim.ts';
+import { MAX_FLING_VELOCITY, MIN_FLING_VELOCITY, PointerVelocityTracker, suppressNextClick, TOUCH_SLOP, tween } from './gesture.ts';
 
 /*
  * Figma kit, "Sheets" page (Side Sheet set 53198:27851).
@@ -16,9 +16,25 @@ import { scrim } from './scrim.ts';
  *   Content fills; actions sit under a full-width divider (12px top, 24px sides, 8px gaps) with
  *   20px below. Standard: Surface with a vertical divider on its start edge. Modal: Surface
  *   Container Low, 16px corners, over a 32% Scrim.
- * Motion: Compose has no side sheet; it moves like its sheets (in on the default spatial spring,
- *   out on fast effects; the scrim fades on default effects).
+ * Motion: Compose has no side sheet; Material Components' modal side sheet is the reference
+ *   (SideSheetDialog / SideSheetBehavior):
+ *   - show / hide: the dialog window slides in from / out to its edge by 100% of the window width
+ *     over 275ms on m3_sys_motion_easing_emphasized (the path below, exact as linear()); the edge
+ *     follows the layout direction (SheetDialog picks the left animations for an absolute-left
+ *     sheet). The scrim keeps the M3 default-effects fade (Android dims the window separately);
+ *   - drag to dismiss (ViewDragHelper): horizontal drags past the touch slop move the sheet between
+ *     Expanded and fully off screen (width + its 16px inner margin); on release it hides when
+ *     moving inwards fast (> 500px/s, mostly horizontal) or released past half way, expands when
+ *     moving outwards, and settles over ViewDragHelper's computed duration (≤ 600ms) on its
+ *     quintic ease-out.
  */
+/**
+ * m3_sys_motion_easing_emphasized — path(M 0,0 C 0.05,0 0.133333,0.06 0.166666,0.4 C 0.208333,0.82
+ * 0.25,1 1,1) (MDC motion tokens.xml), sampled to ≤ 0.0005 (checked in gesture.test.ts).
+ */
+const EMPHASIZED =
+  'linear(0, 0.0005 0.83%, 0.0021 1.63%, 0.0047 2.43%, 0.0082 3.2%, 0.0128 3.98%, 0.0185 4.75%, 0.0251 5.5%, 0.0327 6.22%, 0.041 6.93%, 0.0506 7.63%, 0.0611 8.3%, 0.0723 8.95%, 0.0845 9.57%, 0.098 10.2%, 0.1117 10.78%, 0.1269 11.35%, 0.1421 11.88%, 0.158 12.38%, 0.1746 12.85%, 0.1927 13.33%, 0.2104 13.75%, 0.2298 14.17%, 0.2498 14.57%, 0.2704 14.95%, 0.2884 15.25%, 0.3079 15.55%, 0.3273 15.82%, 0.3486 16.1%, 0.3633 16.28%, 0.3789 16.45%, 0.4402 17.08%, 0.4768 17.47%, 0.5121 17.9%, 0.5292 18.13%, 0.5452 18.35%, 0.5618 18.6%, 0.5772 18.85%, 0.5929 19.13%, 0.6074 19.4%, 0.6221 19.7%, 0.6357 20%, 0.661 20.63%, 0.6762 21.05%, 0.6901 21.48%, 0.7043 21.95%, 0.7174 22.43%, 0.7299 22.93%, 0.7421 23.45%, 0.7655 24.6%, 0.7876 25.87%, 0.8078 27.25%, 0.827 28.78%, 0.8448 30.43%, 0.8649 32.63%, 0.8833 35.05%, 0.9002 37.72%, 0.9155 40.63%, 0.9295 43.8%, 0.9421 47.25%, 0.9533 50.98%, 0.9633 55%, 0.972 59.35%, 0.9795 64.03%, 0.9858 69.05%, 0.9909 74.42%, 0.9949 80.2%, 0.9977 86.38%, 0.9994 92.97%, 1)';
+
 const s = stylex.create({
   sheet: {
     position: 'relative',
@@ -49,15 +65,22 @@ const s = stylex.create({
     insetInlineEnd: 16,
     display: 'flex',
     outlineStyle: 'none',
-    translate: { default: '0 0', ':is([data-starting-style], [data-ending-style])': 'calc(100% + 16px) 0' },
+    touchAction: 'pan-y',
+    translate: {
+      default: '0 0',
+      ':is([data-starting-style], [data-ending-style])': { default: '100vw 0', ':dir(rtl)': '-100vw 0' },
+    },
     transitionProperty: 'translate',
-    transitionDuration: { default: motion.defaultSpatialDuration, ':is([data-ending-style])': motion.fastEffectsDuration },
-    transitionTimingFunction: { default: motion.defaultSpatialEasing, ':is([data-ending-style])': motion.fastEffectsEasing },
+    transitionDuration: { default: '275ms', '@media (prefers-reduced-motion: reduce)': '0ms' },
+    transitionTimingFunction: EMPHASIZED,
   },
   popupStart: {
     insetInlineEnd: 'auto',
     insetInlineStart: 16,
-    translate: { default: '0 0', ':is([data-starting-style], [data-ending-style])': 'calc(-100% - 16px) 0' },
+    translate: {
+      default: '0 0',
+      ':is([data-starting-style], [data-ending-style])': { default: '-100vw 0', ':dir(rtl)': '100vw 0' },
+    },
   },
 });
 
@@ -112,16 +135,166 @@ export interface ModalSideSheetProps extends Omit<SideSheetProps, 'modal' | 'hea
   side?: 'end' | 'start';
 }
 
-/** A modal side sheet: scrim, focus trap, Escape / scrim to dismiss. */
+/** SideSheetBehavior: SIGNIFICANT_VEL_THRESHOLD, HIDE_THRESHOLD, HIDE_FRICTION. */
+const SIGNIFICANT_VEL_THRESHOLD = 500;
+const HIDE_THRESHOLD = 0.5;
+const HIDE_FRICTION = 0.1;
+/** ViewDragHelper BASE_SETTLE_DURATION / MAX_SETTLE_DURATION (ms) and its quintic ease-out. */
+const BASE_SETTLE_DURATION = 256;
+const MAX_SETTLE_DURATION = 600;
+const quinticOut = (t: number) => {
+  const u = t - 1;
+  return u * u * u * u * u + 1;
+};
+const clampMag = (value: number, absMin: number, absMax: number) => {
+  const abs = Math.abs(value);
+  if (abs < absMin) return 0;
+  if (abs > absMax) return value > 0 ? absMax : -absMax;
+  return value;
+};
+/** ViewDragHelper.computeAxisDuration. */
+function computeAxisDuration(delta: number, velocity: number, motionRange: number, parentWidth: number) {
+  if (delta === 0) return 0;
+  const halfWidth = Math.trunc(parentWidth / 2);
+  const distanceRatio = Math.min(1, Math.abs(delta) / parentWidth);
+  const influence = Math.sin((distanceRatio - 0.5) * ((0.3 * Math.PI) / 2));
+  const distance = halfWidth + halfWidth * influence;
+  let duration: number;
+  velocity = Math.abs(velocity);
+  if (velocity > 0) duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+  else duration = Math.trunc((Math.abs(delta) / motionRange + 1) * BASE_SETTLE_DURATION);
+  return Math.min(duration, MAX_SETTLE_DURATION);
+}
+/** ViewDragHelper.computeSettleDuration for a horizontal-only drag (vertical range 0, dy 0). */
+function computeSettleDuration(dx: number, xvel: number, yvel: number, motionRange: number, parentWidth: number) {
+  xvel = Math.trunc(clampMag(xvel, MIN_FLING_VELOCITY, MAX_FLING_VELOCITY));
+  yvel = Math.trunc(clampMag(yvel, MIN_FLING_VELOCITY, MAX_FLING_VELOCITY));
+  const absXVel = Math.abs(xvel);
+  const addedVel = absXVel + Math.abs(yvel);
+  const xweight = xvel !== 0 ? absXVel / addedVel : 1;
+  return Math.trunc(computeAxisDuration(dx, xvel, motionRange, parentWidth) * xweight);
+}
+
+/** A modal side sheet: scrim, focus trap, Escape / scrim / drag to dismiss. */
 export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: ModalSideSheetProps) {
   const portal = usePortalContainer();
   const id = useId();
+  const popup = useRef<HTMLDivElement>(null);
+  const backdrop = useRef<HTMLDivElement>(null);
+  const settling = useRef<(() => void) | null>(null);
+  // Inward offset from Expanded (px, ≥ 0); the sheet's physical edge sets the sign.
+  const offset = useRef(0);
+
+  const geometry = () => {
+    const el = popup.current!;
+    const rtl = getComputedStyle(el).direction === 'rtl';
+    const right = (side === 'end') !== rtl;
+    const parentWidth = document.documentElement.clientWidth;
+    const childWidth = el.offsetWidth;
+    const innerMargin = right ? parentWidth - el.offsetLeft - childWidth : el.offsetLeft;
+    return { right, parentWidth, childWidth, innerMargin, range: childWidth + innerMargin };
+  };
+  const place = (inward: number, right: boolean) => {
+    offset.current = inward;
+    if (popup.current) popup.current.style.translate = `${right ? inward : -inward}px 0`;
+  };
+  const showScrim = (visible: boolean) => {
+    if (backdrop.current) backdrop.current.style.opacity = visible ? '' : '0';
+  };
+  const reset = () => {
+    settling.current?.();
+    settling.current = null;
+    offset.current = 0;
+    if (popup.current) {
+      popup.current.style.translate = '';
+      popup.current.style.transition = '';
+    }
+    showScrim(true);
+  };
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 || !popup.current) return;
+    const g = geometry();
+    const tracker = new PointerVelocityTracker();
+    tracker.down(e);
+    const pointer = e.pointerId;
+    const x0 = e.clientX;
+    const y0 = e.clientY;
+    let start = offset.current;
+    let active = false;
+    const begin = () => {
+      active = true;
+      settling.current?.();
+      settling.current = null;
+      // From wherever the sheet is (a show transition may still be running).
+      const el = popup.current!;
+      const shift = el.getBoundingClientRect().left - el.offsetLeft;
+      start = Math.min(g.range, Math.max(0, g.right ? shift : -shift));
+      el.style.transition = 'none';
+      place(start, g.right);
+    };
+    const move = (ev: PointerEvent) => {
+      if (ev.pointerId !== pointer) return;
+      tracker.move(ev);
+      const dx = ev.clientX - x0;
+      if (!active) {
+        // ViewDragHelper.checkTouchSlop on the horizontal axis (vertical drags scroll the content).
+        if (Math.abs(dx) <= TOUCH_SLOP || Math.abs(dx) <= Math.abs(ev.clientY - y0)) return;
+        begin();
+      }
+      // clampViewPositionHorizontal: between Expanded and fully off screen.
+      place(Math.min(g.range, Math.max(0, start + (g.right ? dx : -dx))), g.right);
+    };
+    const up = (ev: PointerEvent) => {
+      if (ev.pointerId !== pointer) return;
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (!active) return;
+      tracker.up(ev);
+      suppressNextClick();
+      const { x: vx, y: vy } = tracker.velocity(MAX_FLING_VELOCITY);
+      const hide = shouldHideOnRelease(g, offset.current, vx, vy);
+      showScrim(!hide);
+      const to = hide ? g.range : 0;
+      const finish = () => {
+        settling.current = null;
+        if (hide) onOpenChange(false);
+        else reset();
+      };
+      const left = (inward: number) => (g.right ? g.parentWidth - g.innerMargin - g.childWidth + inward : g.innerMargin - inward);
+      const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 0
+        : computeSettleDuration(left(to) - left(offset.current), vx, vy, g.range, g.parentWidth);
+      settling.current = tween({ from: offset.current, to, duration, easing: quinticOut, onUpdate: (v) => place(v, g.right), onComplete: finish });
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  };
+
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => onOpenChange(next)}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        // Escape / scrim: the window animation takes over from wherever a drag left the sheet.
+        if (!next) {
+          settling.current?.();
+          settling.current = null;
+          if (popup.current?.style.translate) {
+            popup.current.style.transition = '';
+            popup.current.style.translate = '';
+          }
+        }
+        onOpenChange(next);
+      }}
+    >
       <Dialog.Portal container={portal}>
-        <Dialog.Backdrop {...stylex.props(scrim.backdrop)} />
+        <Dialog.Backdrop ref={backdrop} {...stylex.props(scrim.backdrop)} />
         <Dialog.Popup
+          ref={popup}
           aria-labelledby={sheet.headline != null ? id : undefined}
+          onPointerDown={onPointerDown}
           {...stylex.props(s.popup, side === 'start' && s.popupStart)}
         >
           <SideSheet modal headlineId={id} {...sheet} />
@@ -129,4 +302,38 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       </Dialog.Portal>
     </Dialog.Root>
   );
+}
+
+/**
+ * SideSheetBehavior.calculateTargetStateOnViewReleased with the Right / LeftSheetDelegate
+ * geometry. (shouldHide compares the released edge in px with HIDE_THRESHOLD 0.5 — always true
+ * on screen, so the significant-swipe / half-way rules decide; ported as is.)
+ */
+function shouldHideOnRelease(
+  g: { right: boolean; parentWidth: number; childWidth: number; innerMargin: number },
+  inward: number,
+  vx: number,
+  vy: number,
+) {
+  const mostlyHorizontal = Math.abs(vx) > Math.abs(vy);
+  if (g.right) {
+    const expanded = Math.max(0, g.parentWidth - g.childWidth - g.innerMargin);
+    const hidden = g.parentWidth;
+    const left = expanded + inward;
+    if (vx < 0) return false; // isExpandingOutwards
+    if (Math.abs(left + g.childWidth + vx * HIDE_FRICTION) > HIDE_THRESHOLD) {
+      return (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left > (hidden + expanded) / 2;
+    }
+    if (vx === 0 || !mostlyHorizontal) return Math.abs(left - expanded) >= Math.abs(left - hidden);
+    return true;
+  }
+  const expanded = Math.max(0, g.innerMargin);
+  const hidden = -g.childWidth - g.innerMargin;
+  const left = expanded - inward;
+  if (vx > 0) return false;
+  if (Math.abs(left + vx * HIDE_FRICTION) > HIDE_THRESHOLD) {
+    return (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left + g.childWidth < (expanded - hidden) / 2;
+  }
+  if (vx === 0 || !mostlyHorizontal) return Math.abs(left - expanded) >= Math.abs(left - hidden);
+  return true;
 }
