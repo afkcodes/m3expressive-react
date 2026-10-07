@@ -14,8 +14,6 @@ centred hero, uncontained, multi-aspect, full screen; Compose keyline motion), D
 input, docked day / month / year, full-screen range), Time pickers (dial vertical / horizontal,
 12 / 24 hour, keyboard, clock faces, period selectors). All pages done except XR and the deprecated
 navigation drawer (out of scope).
-Still queued from Buttons (55141:14168): toggle buttons, toggle icon buttons, FAB, extended FAB,
-FAB menu, split button, button groups.
 
 ---
 
@@ -89,10 +87,19 @@ FAB menu, split button, button groups.
   by `pnpm gen:motion` from `spring.ts` (line-for-line port of Compose `SpringSimulation`); settle
   threshold 0.001 only cuts the invisible tail (Google's published web durations 350/500/650… belong to its
   cubic-bezier approximations, not to the springs). Never edit `motion.stylex.ts`.
-- Interruptible / gesture motion: `animateSpring` (rAF, keeps velocity on retarget, like Compose).
+- Interruptible / gesture motion: `animateSpring` (rAF, keeps velocity on retarget, like Compose). It ends
+  like Compose `Animatable`: after `estimateAnimationDurationMillis` (ported) with `precision` = the visibility
+  threshold, then snaps — a visible overshoot plays out (LoadingIndicator morph ends at 297ms, value 1.09).
 - Motion scheme swap per subtree: `M3Provider motionScheme` (+ `MotionSchemeContext` for JS).
 - Reduced motion: spatial durations → 0 (CSS var + `useSpringToken` returns null); effects stay.
-- Press shape morph: radius → 8 (XS/S) / 12 (M) / 16 (L/XL) on `:active`, fast-spatial spring.
+- Press shape morph: radius → 8 (XS/S) / 12 (M) / 16 (L/XL) on `:active`. Token per Compose: Button,
+  IconButton (+ toggle) and SplitButton use **default-effects** ("intentional … to prevent any bounce",
+  Button.kt); ToggleButton and connected ButtonGroup segments use **fast-spatial**. Check each component's
+  source — never assume fast-spatial.
+- Not everything is a scheme spring: Compose keeps fixed tweens for elevation (`tween.elevation*` /
+  `elevationMotion`: 120ms FastOutSlowIn in, 120/150ms cubic(.4,0,.6,1) out), state layers (15/45ms linear)
+  and the ripple. Dialogs follow MDC `m3_motion_fade` (400ms cubic(0.1,0.7,0.1,1) in, 150ms
+  cubic(0.3,0,0.8,0.2) out — MDC's numbers, not the M3-web 0.05 / 0.15 ones).
 - Ripple (`primitives/Ripple.tsx`): Compose `RippleAnimation` — start r = 0.3·max(w,h), end r =
   ½·diagonal + 10, fade-in 75ms linear, radius 225ms FastOutSlowIn, origin→centre 225ms, fade-out
   150ms after release; peak alpha = pressed opacity.
@@ -100,6 +107,26 @@ FAB menu, split button, button groups.
   graphics-shapes port on polygons built **from the Figma paths** (Compose's MaterialShapes differ
   from the kit by up to 3.6% area — never render them). At rest draw the Figma path; interrupting
   restarts from the current outline.
+
+- Motion implementation (each of these bit us during the 2026-10-07 Compose motion audit):
+  - Gesture physics are shared ports in `motion/gesture.ts` (Lsq2 velocity tracker, slops,
+    `computeAnchorTarget`, tweens / cubic-bezier, click suppression) and `motion/fling.ts` (spline decay).
+  - Layout-changing motion (group widths, extended FAB width, rail morph, FAB menu) runs as `animateSpring`
+    writing inline styles only while in flight and clears them at rest, so static frames stay untouched.
+    Never leave a property in a CSS transition list if JS also writes it every frame.
+  - Decide an entry animation once at mount (an element that mounts already-selected must not animate in).
+  - rAF-driven exits must call `onOpenChange(false)` only after they finish: Base UI only waits for CSS / WAAPI.
+  - A typed custom property named in `transition-property` needs a literal `'--name'` key in `defineVars`
+    (StyleX keeps it unhashed) plus `stylex.types.*` so it registers as @property.
+  - A colour transition a child inherits belongs on a persistent ancestor; a remounted child snaps.
+  - ResizeObserver fires once on `observe()` — ignore that callback before stopping an animation.
+  - Base UI positioners rewrite their inline style on every placement: derive values (menu transform origin)
+    with a MutationObserver. Ignore Base UI `trigger-hover` reasons for touch / pen when a long press opens
+    a popup (Chrome's synthesised mouse events reopen / close it).
+  - Chrome transitions `::placeholder`; StyleX merges `::placeholder` styles per property.
+  - Live motion tests: computed durations read back in seconds ("0.369s"); await `document.fonts.ready`
+    before measuring text; dispatch velocity-dependent drags in-page at fixed intervals (CDP timing jitters)
+    and avoid speeds right at a threshold (2px / 16ms is exactly 125px/s).
 
 ## 6. Interaction states
 - State layer = content colour at **8% hover · 10% focus · 10% pressed · 16% dragged**

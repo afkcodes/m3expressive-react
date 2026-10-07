@@ -7,7 +7,7 @@ import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import type { SpringParams } from '../../motion/spring.ts';
 import { List } from '../List/List.tsx';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
-import { cubicBezier, tween } from '../Sheet/gesture.ts';
+import { cubicBezier, tween } from '../../motion/gesture.ts';
 import { SearchBar } from './SearchBar.tsx';
 import { searchViewVars } from './searchView.stylex';
 

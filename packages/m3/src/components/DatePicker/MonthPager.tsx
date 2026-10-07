@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEve
 import * as stylex from '@stylexjs/stylex';
 import { useReducedMotion, useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../Sheet/gesture.ts';
+import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
 import { addMonths } from './calendar.ts';
 
 /*

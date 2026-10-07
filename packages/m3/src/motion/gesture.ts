@@ -1,6 +1,6 @@
 /**
- * Pointer-gesture physics shared by the sheets, the carousel and the date picker — ported from
- * Compose / Android, not approximated:
+ * Pointer-gesture physics shared by the sheets, carousel, date / time pickers, search and list
+ * swipe — ported from Compose / Android, not approximated:
  *
  * - `VelocityTracker1D` / `PointerVelocityTracker`: compose ui `VelocityTracker1D` (Strategy.Lsq2)
  *   and `Lsq2VelocityTracker` (the non-framework tracker Compose uses on every platform):
@@ -11,8 +11,6 @@
  *   and `AnchoredDraggable.computeTarget`.
  * - Slops: Android `ViewConfiguration.TOUCH_SLOP` (8dp) and Compose's mouse slop
  *   (`pointerSlop`: touchSlop × 0.125dp / 18dp).
- *
- * TODO(shared): this module would sit better in `motion/` (shared by Sheet, Carousel, DatePicker).
  */
 
 const ASSUME_POINTER_MOVE_STOPPED_MS = 40;
@@ -268,3 +266,6 @@ export function suppressNextClick() {
   window.addEventListener('click', swallow, true);
   const timer = setTimeout(done, 100);
 }
+
+/** animation-core FastOutSlowInEasing = CubicBezierEasing(0.4, 0, 0.2, 1). */
+export const fastOutSlowIn = cubicBezier(0.4, 0, 0.2, 1);

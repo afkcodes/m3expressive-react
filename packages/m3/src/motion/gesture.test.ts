@@ -79,7 +79,7 @@ describe('cubicBezier', () => {
 describe('side sheet easing', () => {
   it('is m3_sys_motion_easing_emphasized as linear() within 0.001', async () => {
     const { readFileSync } = await import('node:fs');
-    const src = readFileSync(new URL('./SideSheet.tsx', import.meta.url), 'utf8');
+    const src = readFileSync(new URL('../components/Sheet/SideSheet.tsx', import.meta.url), 'utf8');
     const literal = /'(linear\([^']+\))'/.exec(src)![1]!;
     const stops = literal
       .slice(7, -1)

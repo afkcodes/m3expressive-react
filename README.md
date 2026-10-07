@@ -57,8 +57,21 @@ M3 Expressive motion is spring-based (`md.sys.motion.spring.{fast|default|slow}.
 Spring values come from the Compose token source and match m3.material.io.
 For CSS, each spring is converted to an exact `linear()` easing (≤0.1% error)
 instead of Google's cubic-bezier approximation; interruptible motion uses
-`animateSpring`, which keeps velocity when retargeted, as Compose does. Spatial motion is
+`animateSpring`, which keeps velocity when retargeted and ends where Compose's `Animatable` ends
+(a port of `estimateAnimationDurationMillis`), so visible overshoots play out. Spatial motion is
 disabled under `prefers-reduced-motion`.
+
+Which motion each component uses is ported per component from the Compose material3 source
+(Material Components Android where Compose has none: dialogs, side sheets) — audited 2026-10-07:
+- Not everything is a scheme spring: state layers fade with Compose's `StateLayer` tweens (15ms
+  linear; focus / drag in 45ms), elevation changes use `ElevationDefaults` (120ms FastOutSlowIn in,
+  120 / 150ms out), the ripple keeps its 75 / 225 / 150ms tweens.
+- Press shape morphs: Button, IconButton and SplitButton on default effects (no bounce, as Compose
+  intends); ToggleButton and connected button groups on fast spatial.
+- Gestures (sheets, carousel, list swipe, date / time pickers) use ports of Compose's velocity
+  tracker, `AnchoredDraggable.computeTarget`, Pager single-advance flings and the spline fling decay
+  (`motion/gesture.ts`, `motion/fling.ts`).
+- Live checks: `tests/visual/motion-*.spec.ts` compare frames against the analytic springs.
 
 ## Where the Figma kit departs from the M3 guidelines
 The library follows the kit (the brief is pixel parity with Figma). Each item is one style
@@ -92,13 +105,14 @@ line to flip if you'd rather follow the M3 guidelines:
 | Circular progress, arc lengths | drawn by eye per sample (e.g. 4 dp: 10% → 50°, 30% → 80°, 50% → 170° of arc), gaps vary 20.7–22.6° | proportional arcs — we follow the kit's samples as keyframes, interpolated in between |
 | Linear wavy progress, 100% (4 dp) | active runs 2px past the frame (to x=404) | ends at width − 2 like Flat and 8 dp — we follow this |
 | Linear wavy indeterminate, Step 2 | 40px wavelength (Step 1: 20px) | 20px (Compose `LinearIndeterminateWavelength`) — default; `wavelength` prop reproduces Step 2 |
-| Circular wavy progress, 10% | wavy (linear 10% is flat) | Compose flattens ≤10% — we follow the kit for each shape |
+| Circular wavy progress, 10% / 100% | wavy (linear 10% / 100% are flat) | Compose flattens the wave ≤10% and ≥95% — we follow the kit: flat only below 10%; the amplitude ramps over 500ms (Standard up, Emphasized Accelerate down) |
 | Slider, 0% Enabled / Hovered (XS–L) | hover layer swapped between the two variants | Enabled without, Hovered with — we follow this |
 | Slider XS, disabled | active track square-cornered | 8px outer corner like every other size — we follow this |
 | Centered / Range slider, ±50 frames | handles placed by eye (e.g. 88 / 266px, not ±50% of travel); centered labels show "50" for −50 | any value works; fixtures reproduce the kit's positions and label text via `valueLabel` |
 | Centered slider S / M | tracks at fractional offsets (y 6.27, 6.54, 7…) | whole-pixel layout — we follow this |
 | Range slider Medium | 44px frame (52px handles overflow), value indicator 8px above the handle | 52px like Standard Medium, indicator 4px above — we follow this |
-| Slider, keyboard focus | — (no Focused variant) | handle halves to 2px and the value indicator shows, as Compose does on focus |
+| Slider, keyboard focus | — (no Focused variant) | handle halves to 2px as Compose does on focus; the value indicator also shows (our a11y choice — Compose's Label shows it on press / drag / hover only) |
+| Slider, hover | Hovered variants draw no value indicator | Compose's Label also shows it on hover — we follow the kit |
 | Slider inset icon | layer present but hidden in every variant | not implemented yet |
 | Outlined text field, floating label | notch drawn as a Surface-coloured patch over the stroke (Figma can't cut strokes) | a real gap in the outline (fieldset legend), so it works on any background; `textFieldVars.notchColor` (default transparent) — parity fixtures set it to Surface |
 | Outlined text field, disabled | stroke = 1px On Surface 10% centred + 1px On Surface 4% inside | On Surface 12% — we follow the kit |
@@ -137,7 +151,7 @@ line to flip if you'd rather follow the M3 guidelines:
 | Bottom app bar FAB | shadow clipped by its frame | `Fab elevated={false}` |
 | Search, focused input caret | static 1px caret after the hugged text ("Input text" hugs at 73px) | live inputs use the native caret; the test-only static caret follows `textBox.hug` (72px with our Roboto) — 1px, recorded exception |
 | Search bar (collapsed) | one clickable surface around the icon buttons | the hint is a real button stretched over the bar (no nested interactive controls); icon buttons stay separate |
-| Search full-screen layout | no container fill (bar and results over the screen) | — we follow the kit; place the view on Surface |
+| Search full-screen layout | no container fill (bar and results over the screen) | — we follow the kit (transparent by default); `searchViewVars.containerColor` sets a fill that fades in with the expand progress, as Compose's contained bar does |
 | Search, expanded input bar | static layouts only (no state variants) | a text field with no state layer (Compose InputField) |
 | Toolbar, floating elevation | level 3 (no spread: the frame doesn't clip) | Compose: level 0 (level 1 with a FAB) — we follow the kit |
 | Toolbar, floating padding | 12px across the main axis in a fixed 64px bar (48px items overflow it) | Compose 8px all round, ≥ 64px — identical for the kit's items, and the bar keeps 64px in any parent |
@@ -148,15 +162,15 @@ line to flip if you'd rather follow the M3 guidelines:
 | Toolbar building blocks | several variants placed off the pixel grid (x 33.2, y 106.25 …) | references are individual node exports (a frame crop bakes in a sub-pixel offset) |
 | Toolbar + FAB collapse | no collapsed state | Compose: the toolbar shrinks into the FAB, which grows 56 → 80px in place (FastSpatial); the shadow lerps to none |
 | Side sheet, standard | edge divider runs 1px past the sheet's bottom | — we follow the kit |
-| Side sheet, modal | 16px corners all round | detached 16px from the screen edges; Compose has no side sheet, so it moves like its bottom sheet (in on default spatial, out on fast effects, scrim on default effects) |
-| Bottom sheet drag handle | 16px padding (36px header) | Compose pads it 22px — we follow the kit; on a modal sheet the handle is a button that dismisses (keyboard / assistive tech), dragging past 56px or 125px/s dismisses |
+| Side sheet, modal | 16px corners all round | detached 16px from the screen edges; Compose has no side sheet, so it moves like Material Components' modal side sheet: slides 100% over 275ms on the emphasized path both ways, drag to dismiss past half or 500px/s (SideSheetBehavior); scrim on default effects |
+| Bottom sheet drag handle | 16px padding (36px header) | Compose pads it 22px — we follow the kit; on a modal sheet the handle is a button that dismisses (keyboard / assistive tech), the whole surface drags; release follows Compose `AnchoredDraggable.computeTarget` (56dp positional / 125dp/s velocity thresholds) and settles on default spatial from the release velocity |
 | Sheet content building blocks | an empty frame and the kit's dashed "replace this slot" placeholder | not fixtures (sheets take any content) |
 | Modal bottom sheet reference | the component set clips the variant's scrim with a rounded corner | recorded exception (154px, outside the sheet) |
 | Dialogs, elevation | no shadow | — we follow the kit (the scrim separates the dialog) |
-| Dialog motion | — | Compose dialogs use the platform window animation; we use Material Components' M3 dialog: fade + scale 0.8 → 1 over 400ms emphasized decelerate, fade out over 150ms emphasized accelerate |
+| Dialog motion | — | Compose dialogs use the platform window animation; we use Material Components' `m3_motion_fade`: fade + scale 0.8 → 1 over 400ms cubic(0.1, 0.7, 0.1, 1), fade out over 150ms cubic(0.3, 0, 0.8, 0.2) (MDC's values; the M3 web tokens read 0.05 / 0.15); reduced motion keeps the fade |
 | List dialogs | baseline list items without their Surface fill, middle-inset dividers, right-aligned "100+" 10px before the checkbox | items inherit the dialog surface; `ListItem divider`; right-aligned hug text (`textEnd`) |
 | `alertdialog` | — | `Dialog role="alertdialog"` ignores outside clicks (decisions); Escape still dismisses |
-| Carousel motion | static frames only | Compose's keyline model is ported (`Carousel/keylines.ts`: multi-browse, hero, centred hero, uncontained) — items resize large → medium → small → anchor as they scroll and settle on the Compose snap spring (stiffness 400, no bounce) |
+| Carousel motion | static frames only | Compose's keyline model is ported (`Carousel/keylines.ts`: multi-browse, hero, centred hero, uncontained) — items resize large → medium → small → anchor as they scroll and settle on the Compose snap spring (stiffness 400, no bounce) from the release velocity, at most one item per fling (single-advance); uncontained decays without snapping (Compose spline decay); wheel / trackpad scrolling stays native and snaps when it ends |
 | Carousel items | drawn at their visible size with the art fitted | the item box takes the keyline size (the same as Compose's masked crop for cover-fitted, height-bound content) |
 | Carousel padding | 16px each side (uncontained: start only) | keylines are laid out inside the padding; items leave under the padding edge (Compose's anchors sit outside the container) |
 | Carousel, mobile multi-browse | 188 / 120 / 56 | Compose arranges 188 / 122 / 54 — recorded exception |
@@ -171,17 +185,39 @@ line to flip if you'd rather follow the M3 guidelines:
 | Docked month / year lists | decorative scroll thumb | a working, proportional thumb — recorded exceptions |
 | Input date picker | format hint drawn as input text (On Surface) | the field's placeholder (On Surface Variant, as Compose) — recorded exception |
 | Calendar rows | as many weeks as the month needs (modal); six weeks with the neighbouring days (docked) | — we follow the kit (Compose keeps six rows in the modal) |
-| Date picker motion | — | modal: the M3 dialog fade + scale; docked panel: fade + 8px drop on fast effects; full-screen range: fade + 24px rise |
+| Date picker motion | — | modal: the M3 dialog fade + scale; months slide / swipe on Compose's default spring (ζ1, k1500); the year list expands from 60% opacity on default effects; picker ⇄ input bodies slide and fade as in Compose (headers swap at once — the kit's two headers differ); docked panel fade + 8px drop and full-screen range fade + 24px rise have no Compose / MDC reference (unverified) |
 | Time picker values | 12-hour dials at 07 AM; the 12-hour keyboard picker reads "20" next to AM | fixtures use each frame's time; the keyboard field shows 08 AM — recorded exception |
 | Clock face | number cells hand-placed (inner 24-hour ring radius 70.7–77.4) | — we use the kit's cell positions at rest; in motion the selector follows the hand on Compose's radii (101 / 69) |
 | Clock hand | 12-hour: from the centre + 0.5px, 3px past the selector's centre; 24-hour: to the cell centre | centre → selector centre — recorded exceptions (line edge pixels) |
 | Period selector | focused variants inset their halves 1px (labels move 0.5–1px) | the enabled geometry in every state — recorded exceptions |
 | Hour-line building block | 24 angle variants stacked on top of each other | not fixtures (covered by the clock faces and the selected hour cell) |
-| Time picker motion | — | the hand rotates on the default spatial spring (Compose ClockDialModifier); hours ⇄ minutes cross-fade on default effects; the dialog uses the M3 dialog fade + scale |
+| Time picker motion | — | the hand rotates on the default spatial spring (Compose ClockDialModifier) and follows the pointer while dragging, springing to the value on release; minute taps pick 5-minute steps; an hour tap switches to minutes after 100ms; hours ⇄ minutes cross-fade on default effects; the dialog uses the M3 dialog fade + scale |
 | Checkbox, disabled indeterminate | dash bound to On Primary (disabled check uses Surface) | Surface for both (M3) — we follow this; identical-looking in light, avoids a purple dash in dark |
 | Checkbox, error selected (enabled) | check bound to On Primary (other error states: On Error) | On Error — pixel-identical in light theme |
 | Shape "Soft boom" | vector has a hairline internal seam (visible in Figma too) | n/a |
 | Shape "4-leaf clover" | component frame 381px wide (vector unaffected) | n/a |
+
+
+### Motion: where we knowingly differ from Compose
+| Component | Compose | Ours |
+|---|---|---|
+| Snackbar timer | runs while visible (Android lengthens it via the accessibility manager) | pauses while hovered or focused (WCAG 2.2.1) |
+| Snackbar exit | removed when the 150ms fade ends | stays in the DOM, invisible and without pointer events, until its scale spring ends (Base UI waits for every animation) |
+| Rich tooltip | no click toggle; a non-persistent one closes on anchor exit; opens on keyboard focus | Base UI Popover behaviour: a click toggles it, the pointer can move into it, no open on focus |
+| Checkbox check ⇄ dash | morphs | CSS `d` morph — Safari swaps without morphing |
+| Split button chevron | sample spring ζ1, k1500 | default effects (ζ1, k1600), the nearest token |
+| FAB menu toggle colour | Oklab lerp extrapolates during the spring overshoot | `color-mix` clamps to 0–100% |
+| Button group press-to-widen | rounds device px | whole CSS px (Chrome snaps box sizes anyway) |
+| Elevation when re-enabled | snaps | plays the 120 / 150ms out tween |
+| Segmented list | outer corners morph with the item shape | outer 16px corners hold in every state (the kit's clipping frame); a dragged item's shadow is clipped inside it |
+| List swipe | no three-state reveal (SwipeToDismissBox: 56dp / 125dp/s, 300ms FastOutSlowIn settle) | those rules between closed and revealed; the kit's full-swipe action is kept |
+| Navigation rail morph | label x truncated to whole px | continuous, so the end frames meet the kit exactly; a collapsed rail without labels snaps; header / FAB container switch at the start of the morph |
+| Two-row app bar | lerps surface → container; consumes nested scroll | colour mixes with transparent (the kit's flat bars have no fill); `scrollTarget` pads the scroller by the collapsed amount so content moves 1:1 with the bar edge |
+| Tabs, first centring | on first layout | waits for web fonts (late fonts move the target) |
+| Floating toolbar | balanced padding animates on default effects; the bar itself drags / flings in exitAlways | no balanced padding (our 48px targets have no asymmetric insets — Compose adds 0 for them); scroll-driven exitAlways only |
+| Circular flat progress, gap near 0% | gap = min(sweep, gap) | the 8dp gap opens over the first 25° of sweep (the kit's 10% frame: 25° arc with the full 40° gap) |
+| Circular wavy amplitude | flat ≤10% and ≥95% | flat only below 10% (the kit draws 10% / 100% wavy) |
+| Linear progress at 100% | — | the kit's length formula ends at W−6 just below 100% but W−2 at 100%, so the active indicator jumps 4px as an animation lands on 100% (known, not yet fixed) |
 
 ## Shapes
 `<Shape shape="cookie9Sided" />` draws the kit's exact vector. `<MorphingShape shape={…} />` springs

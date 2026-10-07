@@ -8,13 +8,13 @@ import {
   ToggleIconButton,
   Toolbar,
   typescale,
+  useFloatingToolbarExitAlways,
+  useFloatingToolbarNestedScroll,
   type ColorSchemeMode,
   type ToolbarColor,
 } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/toolbar/assets.json';
-// Not yet re-exported from the package index (src/index.ts is outside the toolbar's files).
-import { useFloatingToolbarExitAlways, useFloatingToolbarNestedScroll } from '../../../../packages/m3/src/components/Toolbar/scrollBehavior.ts';
 
 const s = stylex.create({
   page: {

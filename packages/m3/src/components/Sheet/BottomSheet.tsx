@@ -8,7 +8,7 @@ import { motion } from '../../tokens/motion.stylex';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { computeAnchorTarget, closestAnchor, MAX_FLING_VELOCITY, PointerVelocityTracker, pointerSlop, suppressNextClick, TOUCH_SLOP } from './gesture.ts';
+import { computeAnchorTarget, closestAnchor, MAX_FLING_VELOCITY, PointerVelocityTracker, pointerSlop, suppressNextClick, TOUCH_SLOP } from '../../motion/gesture.ts';
 import { scrim } from './scrim.ts';
 
 /*

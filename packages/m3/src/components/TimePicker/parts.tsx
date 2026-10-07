@@ -9,7 +9,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { pointerSlop } from '../Sheet/gesture.ts';
+import { pointerSlop } from '../../motion/gesture.ts';
 
 /*
  * Figma kit, "Date & time pickers" time building blocks (52949:28082; Compose TimePicker /

@@ -3,8 +3,8 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../Sheet/gesture.ts';
-import { splineFling } from './fling.ts';
+import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
+import { splineFling } from '../../motion/fling.ts';
 import { heroKeylineList, itemPlacement, maxScrollOffset, multiBrowseKeylineList, Strategy, uncontainedKeylineList } from './keylines.ts';
 
 /*

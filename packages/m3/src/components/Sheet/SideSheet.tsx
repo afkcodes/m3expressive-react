@@ -7,7 +7,7 @@ import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { scrim } from './scrim.ts';
-import { MAX_FLING_VELOCITY, MIN_FLING_VELOCITY, PointerVelocityTracker, suppressNextClick, TOUCH_SLOP, tween } from './gesture.ts';
+import { MAX_FLING_VELOCITY, MIN_FLING_VELOCITY, PointerVelocityTracker, suppressNextClick, TOUCH_SLOP, tween } from '../../motion/gesture.ts';
 
 /*
  * Figma kit, "Sheets" page (Side Sheet set 53198:27851).
