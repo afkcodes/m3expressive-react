@@ -32,6 +32,18 @@ const fixture: FixtureModule = {
         ),
       },
     ],
+    // Motion probe: label-only filter chips (the check slot springs open / closed).
+    [
+      'filter-live',
+      {
+        render: () => (
+          <ChipGroup aria-label="Filters">
+            <FilterChip>Label</FilterChip>
+            <FilterChip elevated>Label</FilterChip>
+          </ChipGroup>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const p = name.split('-');
       let render: () => React.ReactNode;
