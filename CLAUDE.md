@@ -272,6 +272,13 @@ navigation drawer (out of scope).
 - Continuous animations (progress, wave, loading morph): React renders only resting / forced frames into fixed
   element slots (unused slots carry no geometry, so pixels don't change); `motion/frameClock.ts` runs one shared rAF
   that writes per-frame attributes, and drawing pauses off screen (IntersectionObserver) while the clock keeps time.
+  Per-frame motion that drives many children (rail morph) publishes its progress through a small store: children
+  subscribe in layout effects and write their own elements; discrete flips (a label style at half way) go through
+  `useSyncExternalStore`.
+- React Compiler lint: an `eslint-disable react-hooks/*` comment makes the compiler skip the whole component (its
+  other errors go unreported) — use `useEffectEvent` for "run on X, read the latest props" instead of suppressing
+  exhaustive-deps. Name refs passed into hooks `*Ref` (else writing `x.current.style` reads as mutating a hook
+  argument). Don't key a memo on an array the render maps over (`Children.toArray` result).
 - Keyboard: every grid / listbox / radio group / toolbar has exactly one `tabIndex=0` plus arrow keys (mirrored in
   RTL; text fields keep their arrows until the caret can't move). Parts leaving under an overlay become `inert`; a
   bar scrolled away is `inert`. Pointer gestures (swipe, drag) need a keyboard path. Popups move focus in on open and
