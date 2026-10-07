@@ -1,13 +1,20 @@
-import { forwardRef, useContext, useState, type ReactNode } from 'react';
+import { forwardRef, useContext, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
 import { color } from '../../tokens/color.stylex.ts';
-import { stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
-import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
-import { IconButtonFrame, base, disabled, strokeWidths, type IconButtonWidth } from '../IconButton/IconButtonFrame.tsx';
+import { needsTouchTarget, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { IconButtonFrame } from '../IconButton/IconButtonFrame.tsx';
+import {
+  iconButtonBase,
+  iconButtonDisabled,
+  iconStrokeWidth,
+  type IconButtonWidth,
+} from '../IconButton/iconButtonStyles.ts';
 import type { IconButtonVariant } from '../IconButton/IconButton.tsx';
 import { ToolbarColorContext } from '../Toolbar/context.ts';
 
@@ -45,7 +52,7 @@ const inToolbar = stylex.create({
   vibrantSelected: { backgroundColor: color.surfaceContainer, color: color.onSurface },
 });
 
-const selected = stylex.create({
+const selectedColors = stylex.create({
   filled: { backgroundColor: color.primary, color: color.onPrimary },
   tonal: { backgroundColor: color.secondary, color: color.onSecondary },
   outlined: { backgroundColor: color.inverseSurface, color: color.inverseOnSurface },
@@ -76,10 +83,10 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
     size = 'small',
     width = 'default',
     shape = 'round',
-    pressed: pressedProp,
+    pressed,
     defaultPressed = false,
     onPressedChange,
-    disabled: isDisabled = false,
+    disabled = false,
     children,
     selectedIcon,
     sx,
@@ -87,36 +94,29 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
   },
   ref,
 ) {
-  const [inner, setInner] = useState(defaultPressed);
-  const isSelected = pressedProp ?? inner;
+  const [selected, setSelected] = useControllableState(pressed, defaultPressed, onPressedChange);
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
   const toolbar = useContext(ToolbarColorContext);
   const tool = toolbar != null && variant === 'standard' ? toolbar : null;
-  const pressed = forced.state === 'pressed';
-  const effectiveShape: ButtonShape = isSelected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
-  const stroked = variant === 'outlined' && !isSelected;
+  const effectiveShape: ButtonShape = selected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
+  const stroked = variant === 'outlined' && !selected;
   const clear = (variant === 'standard' && !tool) || stroked;
 
   return (
     <BaseToggle
       ref={ref}
-      pressed={isSelected}
-      onPressedChange={(next, details) => {
-        if (pressedProp === undefined) setInner(next);
-        onPressedChange?.(next, details);
-      }}
-      disabled={isDisabled}
+      pressed={selected}
+      onPressedChange={setSelected}
+      disabled={disabled}
       data-ripple-host=""
       {...rest}
       {...stylex.props(
-        base.root,
-        (size === 'xsmall' || size === 'small') && (inGroup ? base.touch48Overlay : base.touch48),
+        iconButtonBase.root,
+        needsTouchTarget(size) && (inGroup ? iconButtonBase.touch48Overlay : iconButtonBase.touch48),
         stateLayerHost.host,
-        isDisabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        pressed && stateLayerHost.forceHover,
+        disabled && stateLayerHost.disabled,
+        forcedStateLayer(forced.state, 'hover'),
         stylex.defaultMarker(),
         sx,
       )}
@@ -125,21 +125,21 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
         size={size}
         width={width}
         shape={effectiveShape}
-        pressed={pressed}
-        isDisabled={isDisabled}
-        focusRing={!!forced.focusRing}
+        pressed={forced.state === 'pressed'}
+        disabled={disabled}
+        ringForced={!!forced.focusRing}
         container={[
           tool
-            ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool]
-            : isSelected
-              ? selected[variant]
+            ? inToolbar[selected ? (`${tool}Selected` as const) : tool]
+            : selected
+              ? selectedColors[variant]
               : unselected[variant],
-          stroked && base.stroke,
-          stroked && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
-          isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),
+          stroked && iconButtonBase.stroke,
+          stroked && iconStrokeWidth(size),
+          disabled && (clear ? iconButtonDisabled.clearContainer : iconButtonDisabled.filledContainer),
         ]}
       >
-        {isSelected ? (selectedIcon ?? children) : children}
+        {selected ? (selectedIcon ?? children) : children}
       </IconButtonFrame>
     </BaseToggle>
   );

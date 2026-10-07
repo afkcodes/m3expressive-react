@@ -3,13 +3,14 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
-import { stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import { StandardIconTintContext } from './context.ts';
 import { ToolbarColorContext } from '../Toolbar/context.ts';
-import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';
-import { IconButtonFrame, base, disabled, strokeWidths, type IconButtonWidth } from './IconButtonFrame.tsx';
+import { needsTouchTarget, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { IconButtonFrame } from './IconButtonFrame.tsx';
+import { iconButtonBase, iconButtonDisabled, iconStrokeWidth, type IconButtonWidth } from './iconButtonStyles.ts';
 
 export type IconButtonVariant = 'filled' | 'tonal' | 'outlined' | 'standard';
 export type { IconButtonWidth };
@@ -40,39 +41,27 @@ export interface IconButtonProps extends Omit<
 }
 
 export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function IconButton(
-  {
-    variant = 'standard',
-    size = 'small',
-    width = 'default',
-    shape = 'round',
-    disabled: isDisabled = false,
-    children,
-    sx,
-    ...rest
-  },
+  { variant = 'standard', size = 'small', width = 'default', shape = 'round', disabled = false, children, sx, ...rest },
   ref,
 ) {
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
   const tint = useContext(StandardIconTintContext);
   const toolbar = useContext(ToolbarColorContext);
-  const pressed = forced.state === 'pressed';
   const clear = variant === 'standard' || variant === 'outlined';
 
   return (
     <BaseButton
       ref={ref}
-      disabled={isDisabled}
+      disabled={disabled}
       data-ripple-host=""
       {...rest}
       {...stylex.props(
-        base.root,
-        (size === 'xsmall' || size === 'small') && (inGroup ? base.touch48Overlay : base.touch48),
+        iconButtonBase.root,
+        needsTouchTarget(size) && (inGroup ? iconButtonBase.touch48Overlay : iconButtonBase.touch48),
         stateLayerHost.host,
-        isDisabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        pressed && stateLayerHost.forceHover,
+        disabled && stateLayerHost.disabled,
+        forcedStateLayer(forced.state, 'hover'),
         stylex.defaultMarker(),
         sx,
       )}
@@ -81,16 +70,16 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
         size={size}
         width={width}
         shape={shape}
-        pressed={pressed}
-        isDisabled={isDisabled}
-        focusRing={!!forced.focusRing}
+        pressed={forced.state === 'pressed'}
+        disabled={disabled}
+        ringForced={!!forced.focusRing}
         container={[
           variants[variant],
           variant === 'standard' && tint === 'on-surface' && variants.standardOnSurface,
           variant === 'standard' && toolbar === 'vibrant' && variants.standardVibrant,
-          variant === 'outlined' && base.stroke,
-          variant === 'outlined' && (size === 'large' || size === 'xlarge' ? strokeWidths.thick : strokeWidths.thin),
-          isDisabled && (clear ? disabled.clearContainer : disabled.filledContainer),
+          variant === 'outlined' && iconButtonBase.stroke,
+          variant === 'outlined' && iconStrokeWidth(size),
+          disabled && (clear ? iconButtonDisabled.clearContainer : iconButtonDisabled.filledContainer),
         ]}
       >
         {children}
