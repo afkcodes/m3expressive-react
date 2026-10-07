@@ -227,28 +227,8 @@ export function tween(opts: {
   return () => cancelAnimationFrame(frame);
 }
 
-/**
- * animation-core `CubicBezierEasing` (x1, y1, x2, y2): solves x(t) = fraction, returns y(t).
- * Bisection to 1e-6 (Compose finds the root analytically; both are exact for display purposes).
- */
-export function cubicBezier(x1: number, y1: number, x2: number, y2: number): (fraction: number) => number {
-  const bez = (a: number, b: number, t: number) => 3 * a * (1 - t) * (1 - t) * t + 3 * b * (1 - t) * t * t + t * t * t;
-  return (fraction) => {
-    if (fraction <= 0) return 0;
-    if (fraction >= 1) return 1;
-    let lo = 0;
-    let hi = 1;
-    let t = fraction;
-    for (let i = 0; i < 60; i++) {
-      t = (lo + hi) / 2;
-      const x = bez(x1, x2, t);
-      if (Math.abs(x - fraction) < 1e-7) break;
-      if (x < fraction) lo = t;
-      else hi = t;
-    }
-    return bez(y1, y2, t);
-  };
-}
+// The cubic-bezier solver and named curves live in easing.ts; re-exported for existing imports.
+export { cubicBezier, fastOutSlowIn } from './easing.ts';
 
 /**
  * After a drag, the browser still fires a click on the element under the pointer: swallow it
@@ -267,6 +247,3 @@ export function suppressNextClick() {
   window.addEventListener('click', swallow, true);
   const timer = setTimeout(done, 100);
 }
-
-/** animation-core FastOutSlowInEasing = CubicBezierEasing(0.4, 0, 0.2, 1). */
-export const fastOutSlowIn = cubicBezier(0.4, 0, 0.2, 1);

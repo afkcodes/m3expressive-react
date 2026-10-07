@@ -1,34 +1,9 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import type { SpringParams } from '../../motion/spring.ts';
+import { emphasizedAccelerate, standard } from '../../motion/easing.ts';
 
-/** CSS cubic-bezier as a function of time fraction (Newton + bisection, like browsers). */
-export function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
-  const bx = (t: number) => 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3;
-  const by = (t: number) => 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
-  const dx = (t: number) => 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t;
-  return (x: number) => {
-    if (x <= 0) return 0;
-    if (x >= 1) return 1;
-    let t = x;
-    for (let i = 0; i < 8; i++) {
-      const e = bx(t) - x;
-      if (Math.abs(e) < 1e-6) return by(t);
-      const d = dx(t);
-      if (Math.abs(d) < 1e-6) break;
-      t -= e / d;
-    }
-    let lo = 0,
-      hi = 1;
-    t = x;
-    while (hi - lo > 1e-6) {
-      if (bx(t) < x) lo = t;
-      else hi = t;
-      t = (lo + hi) / 2;
-    }
-    return by(t);
-  };
-}
+export { cubicBezier } from '../../motion/easing.ts';
 
 /** Calls `onFrame(ms since start)` every animation frame while `active`. */
 export function useFrameLoop(active: boolean, onFrame: (ms: number) => void) {
@@ -91,8 +66,6 @@ export function useSpringNumber(target: number, spring: SpringParams | null, pre
 export const PROGRESS_SPRING: SpringParams = { dampingRatio: 1, stiffness: 50 };
 
 /* Easing tokens (androidx MotionTokens). */
-const emphasizedAccelerate = cubicBezier(0.3, 0, 0.8, 0.15);
-const standard = cubicBezier(0.2, 0, 0, 1);
 
 /** A Compose `tween(durationMillis, easing)`. */
 export interface Tween {

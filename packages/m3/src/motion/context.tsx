@@ -1,6 +1,6 @@
 import { createContext, useContext, useSyncExternalStore } from 'react';
 import type { SpringParams } from './spring.ts';
-import { motionSchemes, type MotionSchemeName, type SpringToken } from './tokens.ts';
+import { motionSchemes, type MotionSchemeName, type SpringSpeed, type SpringToken } from './tokens.ts';
 
 export const MotionSchemeContext = createContext<MotionSchemeName>('expressive');
 
@@ -47,8 +47,10 @@ export function useReducedMotion(): boolean {
 /**
  * Resolve a spring token against the active motion scheme — the JS twin of the
  * `motion.*` CSS vars. Returns `null` for spatial tokens under reduced motion
- * (callers should jump straight to the end value).
+ * (callers should jump straight to the end value); effects tokens always resolve.
  */
+export function useSpringToken(token: `${SpringSpeed}-effects`): SpringParams;
+export function useSpringToken(token: SpringToken): SpringParams | null;
 export function useSpringToken(token: SpringToken): SpringParams | null {
   const scheme = useContext(MotionSchemeContext);
   const reduced = useReducedMotion();

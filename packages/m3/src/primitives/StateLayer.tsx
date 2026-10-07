@@ -1,6 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 import { interaction } from './state.stylex.ts';
 import { state } from '../tokens/state.stylex.ts';
+import type { ForcedState } from '../testing/ForceState.tsx';
 
 /**
  * Hover / focus / drag overlay. Pressed is drawn by <Ripple/>, exactly as
@@ -66,6 +67,33 @@ export const stateLayerHost = stylex.create({
   forcePressed: { [interaction.layerOpacity]: state.pressedOpacity },
   forceDragged: { [interaction.layerOpacity]: state.draggedOpacity, [interaction.layerDuration]: '45ms' },
 });
+
+/**
+ * The static state layer for a forced (test) state — `<ForceState>` fixtures only.
+ *
+ * Two press semantics, as the kit draws them: `'hover'` — the press shows the hover layer and the
+ * ripple paints the press (buttons, icon buttons, tabs, menu items); `'pressed'` — the press shows
+ * the flat 10% pressed layer (checkbox, radio, switch, chips, segments, navigation, date cells).
+ * Keep the call at the component's existing position in `stylex.props()` (the last style wins).
+ */
+export function forcedStateLayer(state: ForcedState | undefined, press: 'hover' | 'pressed') {
+  switch (state) {
+    case 'hovered':
+      return stateLayerHost.forceHover;
+    case 'focused':
+      return stateLayerHost.forceFocus;
+    case 'pressed':
+      return press === 'pressed' ? stateLayerHost.forcePressed : stateLayerHost.forceHover;
+    case 'dragged':
+      return stateLayerHost.forceDragged;
+    default:
+      return null;
+  }
+}
+
+/** Whether a forced state is an interaction (hover / focus / press), e.g. for darker outlines. */
+export const isInteractionState = (state: ForcedState | undefined): boolean =>
+  state === 'hovered' || state === 'focused' || state === 'pressed';
 
 const styles = stylex.create({
   layer: {
