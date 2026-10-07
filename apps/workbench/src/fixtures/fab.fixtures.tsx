@@ -4,7 +4,7 @@ import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/fab/manifest.json';
 import assets from '../../../../figma/fab/assets.json';
 import buttonAssets from '../../../../figma/button/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 function StarsFilled() {
   return (

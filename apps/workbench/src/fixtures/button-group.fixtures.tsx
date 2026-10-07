@@ -14,7 +14,7 @@ import manifest from '../../../../figma/button-group/manifest.json';
 import assets from '../../../../figma/button-group/assets.json';
 import toggleAssets from '../../../../figma/toggle-button/assets.json';
 import iconToggleAssets from '../../../../figma/toggle-icon-button/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Icon = ({ d }: { d: string }) => (
   <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor" aria-hidden>

@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { color } from '../tokens/color.stylex';
-import { state } from '../tokens/state.stylex';
+import { color } from '../tokens/color.stylex.ts';
+import { state } from '../tokens/state.stylex.ts';
 
 /**
  * M3 focus indicator: 3px ring, 2px outside the component, secondary colour,

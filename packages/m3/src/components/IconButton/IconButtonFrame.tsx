@@ -1,9 +1,9 @@
 import { useContext, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import type { ButtonShape, ButtonSize } from '../Button/buttonStyles.ts';

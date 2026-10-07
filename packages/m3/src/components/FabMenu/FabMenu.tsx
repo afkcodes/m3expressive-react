@@ -16,9 +16,9 @@ import {
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { state } from '../../tokens/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { elevationMotion } from '../../primitives/elevationMotion.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
@@ -213,6 +213,7 @@ export function FabMenu({
   const { count, mounted, onShown } = useStagger(open, items.length);
 
   return (
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- arrow-key navigation delegated from the items
     <span {...stylex.props(s.root, sx)} onKeyDown={onKeyDown}>
       {mounted && items.length > 0 && (
         // Closing: the items fade out but are no longer part of the menu.

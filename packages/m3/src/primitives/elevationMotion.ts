@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { tween } from './tweens.stylex';
+import { tween } from './tweens.stylex.ts';
 
 /**
  * Shadow transition for an interactive surface whose elevation follows its own :hover /

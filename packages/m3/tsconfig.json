@@ -1,1 +1,10 @@
-{ "extends": "../../tsconfig.base.json", "include": ["src"], "exclude": ["src/**/*.test.ts"] }
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Node's ESM rules for the published package: explicit file extensions, no bundler-only resolution.
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

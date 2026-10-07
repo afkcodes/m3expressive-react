@@ -2,7 +2,7 @@ import { IconButton, type ButtonShape, type ButtonSize, type IconButtonVariant, 
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/icon-button/manifest.json';
 import assets from '../../../../figma/icon-button/assets.json';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 function StarsFilled() {
   return (

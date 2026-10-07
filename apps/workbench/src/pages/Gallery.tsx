@@ -1,4 +1,4 @@
-import { fixtures } from '../registry';
+import { fixtures } from '../registry.ts';
 
 export function Gallery() {
   const names = Object.keys(fixtures).sort();

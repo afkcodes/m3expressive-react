@@ -1,7 +1,7 @@
 import { Button, IconButton, PlainTooltipSurface, RichTooltip, RichTooltipSurface, Tooltip } from '@m3x/react';
 import manifest from '../../../../figma/tooltip/manifest.json';
 import buttonAssets from '../../../../figma/button/assets.json';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 const Stars = () => (
   <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor" aria-hidden>

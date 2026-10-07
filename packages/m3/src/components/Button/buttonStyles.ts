@@ -1,9 +1,9 @@
 import * as stylex from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
-import { tween } from '../../primitives/tweens.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
+import { tween } from '../../primitives/tweens.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';

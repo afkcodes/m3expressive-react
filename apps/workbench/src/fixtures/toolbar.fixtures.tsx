@@ -5,7 +5,7 @@ import { Fab, IconButton, ToggleButton, ToggleIconButton, Toolbar, ToolbarScope,
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toolbar/manifest.json';
 import assets from '../../../../figma/toolbar/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   // The kit's call example overrides the tertiary-container FAB with Error Container.

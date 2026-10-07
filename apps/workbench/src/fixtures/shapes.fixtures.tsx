@@ -1,6 +1,6 @@
 import { Shape, type ShapeName } from '@m3x/react';
 import manifest from '../../../../figma/shapes/manifest.json';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 /** The kit's Shape Set: each variant is the 380×380 component, vector inside. */
 const camel = (s: string) => s.replace(/-(\w)/g, (_, c: string) => c.toUpperCase()) as ShapeName;

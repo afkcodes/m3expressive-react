@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
 import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';

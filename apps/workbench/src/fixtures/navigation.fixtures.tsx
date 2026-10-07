@@ -3,7 +3,7 @@ import { Badge, ExtendedFab, Fab, IconButton, NavigationBar, NavigationItem, Nav
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/navigation/manifest.json';
 import assets from '../../../../figma/navigation/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 type IconName = keyof typeof assets.icons;
 const Icon = ({ name }: { name: IconName }) => (

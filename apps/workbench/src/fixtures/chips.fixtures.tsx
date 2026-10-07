@@ -4,7 +4,7 @@ import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/chips/manifest.json';
 import assets from '../../../../figma/chips/assets.json';
 import brandLogo from '../../../../figma/chips/assets/brand-logo.svg';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Taxi = () => (
   <svg viewBox="0 0 18 18" width="18" height="18" fill="currentColor" aria-hidden style={{ display: 'block', flexShrink: 0 }}>

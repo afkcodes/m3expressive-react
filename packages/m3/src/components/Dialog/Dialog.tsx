@@ -2,7 +2,7 @@ import { forwardRef, useId, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';

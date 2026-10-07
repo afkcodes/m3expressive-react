@@ -2,7 +2,7 @@ import { forwardRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from './ButtonFrame.tsx';

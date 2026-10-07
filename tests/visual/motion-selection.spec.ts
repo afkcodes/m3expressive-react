@@ -7,7 +7,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { REFS_DIR, type Manifest } from './manifest';
+import { REFS_DIR, type Manifest } from './manifest.ts';
 import { stepSpring, type SpringParams } from '../../packages/m3/src/motion/spring.ts';
 import { motionSchemes } from '../../packages/m3/src/motion/tokens.ts';
 

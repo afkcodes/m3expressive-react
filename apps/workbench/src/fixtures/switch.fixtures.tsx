@@ -1,7 +1,7 @@
 import { Switch } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/switch/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** Figma "Switch": {on|off}-{plain|icon}-{state}. */
 const fixture: FixtureModule = {

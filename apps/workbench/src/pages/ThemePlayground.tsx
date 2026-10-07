@@ -174,7 +174,7 @@ function Preview() {
           </CardContent>
         </Card>
         <div style={{ width: 360 }}>
-          <NavigationBar value={nav} onValueChange={setNav} aria-label="Sections">
+          <NavigationBar value={nav} onValueChange={(v) => setNav(v as number)} aria-label="Sections">
             {['Home', 'Activity', 'Saved'].map((t, i) => (
               <NavigationItem key={t} value={i} icon={<Icon name="stars-24" />} selectedIcon={<Icon name="stars_filled-24" />} label={t} />
             ))}
@@ -328,6 +328,7 @@ export function ThemePlayground() {
             {Object.keys(WALLPAPERS).map((name) => (
               <Wallpaper key={name} name={name} selected={image?.label === name} onPick={(canvas) => setImage({ source: canvas, label: name })} />
             ))}
+            {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- drag-and-drop is an extra; the file input is the accessible path */}
             <label {...stylex.props(s.drop, typescale.labelMedium)} onDragOver={(e) => e.preventDefault()} onDrop={onDrop}>
               <input type="file" accept="image/*" hidden onChange={(e) => pickFile(e.target.files?.[0])} />
               Upload or drop a picture

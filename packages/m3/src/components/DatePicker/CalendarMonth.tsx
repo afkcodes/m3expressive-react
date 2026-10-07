@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { CalendarDay, type CalendarDayKind } from './cells.tsx';
@@ -126,8 +126,8 @@ export function CalendarMonth({
                 <CalendarDay
                   label={d.getDate()}
                   kind={kindOf(d)}
-                  rangeStart={hasRange && sameDay(d, range!.start)}
-                  rangeEnd={hasRange && sameDay(d, range!.end)}
+                  rangeStart={hasRange && sameDay(d, range.start)}
+                  rangeEnd={hasRange && sameDay(d, range.end)}
                   disabled={isDisabled?.(d)}
                   aria-label={f.fullDate(d)}
                   aria-current={sameDay(d, today) ? 'date' : undefined}

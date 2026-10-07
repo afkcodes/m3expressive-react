@@ -53,13 +53,13 @@ async function sample(page: Page, loc: Locator, what: string, ms: number, action
       (window as unknown as { __samples: number[] }).__samples = out;
       const read = () => {
         if (what === 'width') return el.getBoundingClientRect().width;
-        const v = getComputedStyle(el, (pseudo as string) || null).getPropertyValue(what as string);
+        const v = getComputedStyle(el, (pseudo) || null).getPropertyValue(what);
         return parseFloat(v);
       };
       const start = performance.now();
       const tick = (now: number) => {
         out.push(read());
-        if (now - start < (ms as number)) requestAnimationFrame(tick);
+        if (now - start < (ms)) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
     },
@@ -229,10 +229,10 @@ test('segmented button: label slides by half the icon slot, check fades + scales
   const running = await items.nth(2).locator('svg').evaluate((e) =>
     e.getAnimations().map((a) => Math.round(Number(a.effect?.getComputedTiming().duration))),
   );
-  expect.soft(running.sort(), 'fade (DefaultEffects) + scale (FastSpatial)').toEqual([
+  expect.soft(running.sort((a, b) => a - b), 'fade (DefaultEffects) + scale (FastSpatial)').toEqual([
     Math.round(parseFloat(DE) * 1000),
     Math.round(parseFloat(FS) * 1000),
-  ].sort());
+  ].sort((a, b) => a - b));
 
   const icons = await open(page, 'segmented-button', 'live-icons');
   const seg = icons.locator('button').nth(1);
@@ -319,7 +319,7 @@ test('FAB menu: one toggle morphs on FastSpatial; items stagger in from the bott
   expect.soft(await close.evaluate((e) => [e.style.borderRadius, e.style.backgroundColor]), 'rest: no inline overrides').toEqual(['', '']);
   const firstShown = [0, 1, 2].map((i) => log.findIndex((l) => l.vis[i]));
   expect.soft(firstShown.every((f) => f >= 0), 'all items shown').toBe(true);
-  expect.soft(firstShown[2]! < firstShown[1]! && firstShown[1]! <= firstShown[0]!, `bottom first (frames ${firstShown})`).toBe(true);
+  expect.soft(firstShown[2]! < firstShown[1]! && firstShown[1]! <= firstShown[0]!, `bottom first (frames ${firstShown.join(',')})`).toBe(true);
   expect.soft(log.some((l) => l.clip), 'items reveal from the end edge (clipped width)').toBe(true);
   expect.soft(await close.locator('svg path').getAttribute('d'), 'close glyph').toMatch(/^M6\.4 19/);
 
@@ -340,7 +340,7 @@ test('FAB menu: one toggle morphs on FastSpatial; items stagger in from the bott
   const hide = await page.evaluate(() => (window as unknown as { __hide: boolean[][] }).__hide);
   // The list unmounts in the frame the last item reaches alpha 0: count that as hidden.
   const firstHidden = [0, 1, 2].map((i) => hide.findIndex((v) => v.length < 3 || !v[i]));
-  expect.soft(firstHidden[0]! <= firstHidden[1]! && firstHidden[1]! < firstHidden[2]!, `top first (frames ${firstHidden})`).toBe(true);
+  expect.soft(firstHidden[0]! <= firstHidden[1]! && firstHidden[1]! < firstHidden[2]!, `top first (frames ${firstHidden.join(',')})`).toBe(true);
   await expect(node.locator('[role=menuitem]')).toHaveCount(0);
   await expect(node.getByRole('button', { name: 'Actions' })).toHaveAttribute('aria-expanded', 'false');
   expect.soft(await node.locator('button').evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'closed again').toBe('16px');

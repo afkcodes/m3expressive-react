@@ -1,11 +1,11 @@
 import { forwardRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { interaction } from '../../primitives/state.stylex';
-import { state } from '../../tokens/state.stylex';
+import { interaction } from '../../primitives/state.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { ForceStateBoundary, useForcedState } from '../../testing/ForceState.tsx';

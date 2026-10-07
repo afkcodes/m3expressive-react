@@ -15,7 +15,7 @@ import {
 import manifest from '../../../../figma/card/manifest.json';
 import assets from '../../../../figma/card/assets.json';
 import media from '../../../../figma/card/assets/media.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** The kit's "Media & text" cards, composed from the real components. */
 const s = stylex.create({

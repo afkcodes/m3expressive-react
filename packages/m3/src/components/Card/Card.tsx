@@ -1,16 +1,16 @@
 import { forwardRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { shape } from '../../tokens/shape.stylex';
-import { state } from '../../tokens/state.stylex';
-import { interaction } from '../../primitives/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { shape } from '../../tokens/shape.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { elevationMotion } from '../../primitives/elevationMotion.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { cardVars } from './card.stylex';
+import { cardVars } from './card.stylex.ts';
 
 export type CardVariant = 'outlined' | 'elevated' | 'filled';
 
@@ -151,6 +151,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   };
 
   return (
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- role is "button" whenever the handlers act (isInteractive)
     <div
       ref={ref}
       role={isInteractive ? 'button' : undefined}

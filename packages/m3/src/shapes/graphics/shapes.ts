@@ -335,7 +335,7 @@ function pillStarVerticesFromNumVerts(
   // secStart/End are used to determine how far along a given vertex is in the section
   // in which it lands
   let secStart = 0;
-  let secEnd = sections[1]!;
+  let secEnd = sections[1];
   // t value is used to place each vertex. 0 is on the positive x axis,
   // moving into section 0 to begin with. startLocation, a value from 0 to 1, varies the location
   // anywhere on the perimeter of the shape

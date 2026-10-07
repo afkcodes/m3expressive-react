@@ -11,10 +11,10 @@ describe('shape morphing on Figma-derived polygons', () => {
       const b = shapePolygon(n).calculateBounds(new Float64Array(4), false);
       const [x, y, w, h] = figmaShapes[n].box;
       // ≤ 0.6px against the 380px frame — the curve parser keeps the outline.
-      expect(Math.abs(b[0]! - x!)).toBeLessThan(0.6);
-      expect(Math.abs(b[1]! - y!)).toBeLessThan(0.6);
-      expect(Math.abs(b[2]! - (x! + w!))).toBeLessThan(0.6);
-      expect(Math.abs(b[3]! - (y! + h!))).toBeLessThan(0.6);
+      expect(Math.abs(b[0]! - x)).toBeLessThan(0.6);
+      expect(Math.abs(b[1]! - y)).toBeLessThan(0.6);
+      expect(Math.abs(b[2]! - (x + w))).toBeLessThan(0.6);
+      expect(Math.abs(b[3]! - (y + h))).toBeLessThan(0.6);
     }
   });
 

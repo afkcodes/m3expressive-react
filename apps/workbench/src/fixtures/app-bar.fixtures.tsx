@@ -6,7 +6,7 @@ import manifest from '../../../../figma/app-bar/manifest.json';
 import assets from '../../../../figma/app-bar/assets.json';
 import placeholder700 from '../../../../figma/list/assets/placeholder-700.png';
 import placeholder350 from '../../../../figma/list/assets/placeholder-350.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   /** The kit's placeholder art: LUMINOSITY blend over Surface Container High. */

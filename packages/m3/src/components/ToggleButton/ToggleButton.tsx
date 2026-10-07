@@ -2,13 +2,13 @@ import { forwardRef, useContext, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from '../Button/ButtonFrame.tsx';
 import { base, containerMotion, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
-import { motion } from '../../tokens/motion.stylex';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext } from '../Toolbar/context.ts';
 
 export type ToggleButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';

@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 import { textBox, typescale, type TypescaleRole } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import manifest from '../../../../figma/typescale/manifest.json';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 /** Foundations calibration: each M3 text style rendered like the Figma "Styles" page specimen. */
 const s = stylex.create({

@@ -24,7 +24,7 @@ import { textFieldVars } from '@m3x/react/components/TextField/textField.stylex'
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/date-picker/manifest.json';
 import assets from '../../../../figma/date-picker/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined);
 const DAY_KIND: Record<string, CalendarDayKind> = {

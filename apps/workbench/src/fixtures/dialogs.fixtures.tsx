@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { Button, Checkbox, Dialog, DialogSurface, List, ListItem, ListItemMonogram } from '@m3x/react';
 import manifest from '../../../../figma/dialogs/manifest.json';
 import assets from '../../../../figma/dialogs/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Icon = () => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ display: 'block' }}>

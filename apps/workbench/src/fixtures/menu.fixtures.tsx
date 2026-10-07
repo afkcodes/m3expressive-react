@@ -17,7 +17,6 @@ import {
   MenuSectionLabel,
   MenuSurface,
   Submenu,
-  type MenuDensity,
 } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/menu/manifest.json';
@@ -26,7 +25,7 @@ import listAssets from '../../../../figma/list/assets.json';
 import slotLead from '../../../../figma/menu/assets/slot-lead.png';
 import slotContent from '../../../../figma/menu/assets/slot-content.png';
 import slotTrail from '../../../../figma/menu/assets/slot-trail.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   // Kit slip: the vibrant 3-group menu's middle group spaces its items 2px apart (all others: 0).
@@ -131,7 +130,7 @@ function render(name: string): ReactNode {
     );
   }
   if (p[0] === 'bmenu') {
-    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4) as MenuDensity;
+    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4);
     return (
       <MenuSurface variant="baseline" density={density} width={200}>
         {Array.from({ length: 12 }, (_, i) => (
@@ -144,7 +143,7 @@ function render(name: string): ReactNode {
   }
   if (p[0] === 'bitem') {
     // bitem-d{0|m2|m4}-{state}
-    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4) as MenuDensity;
+    const density = (p[1] === 'd0' ? 0 : p[1] === 'dm2' ? -2 : -4);
     const state = p[2]!;
     return (
       <MenuScope variant="baseline" density={density}>

@@ -1,5 +1,5 @@
 import { M3Provider } from '@m3x/react';
-import { fixtures } from '../registry';
+import { fixtures } from '../registry.ts';
 
 /**
  * One variant, nothing else. The parity suite screenshots [data-fixture-node]

@@ -2,7 +2,7 @@ import { Button, type ButtonShape, type ButtonSize, type ButtonVariant } from '@
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/button/manifest.json';
 import assets from '../../../../figma/button/assets.json';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 /** Material Symbols "stars" (filled) — the kit's default button icon, 24-unit box. */
 function StarsFilled() {

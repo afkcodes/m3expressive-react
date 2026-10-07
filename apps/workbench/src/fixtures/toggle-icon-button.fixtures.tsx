@@ -2,7 +2,7 @@ import { ToggleIconButton, type ButtonShape, type ButtonSize, type IconButtonVar
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toggle-icon-button/manifest.json';
 import assets from '../../../../figma/toggle-icon-button/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** The kit's toggle icon, as each Selected state draws it (24-unit box). */
 function Icon({ d }: { d: string }) {

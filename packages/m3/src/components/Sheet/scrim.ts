@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 
 /** The modal scrim: Scrim at 32% (Compose ScrimTokens), fading on default effects. */
 export const scrim = stylex.create({

@@ -2,8 +2,8 @@ import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'reac
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Popover } from '@base-ui/react/popover';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
@@ -163,6 +163,7 @@ function ListView({
   }, [initialScroll]);
   return (
     <div {...stylex.props(s.listWrap)}>
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role -- a styled list with listbox semantics (options are its <li> buttons) */}
       <ul ref={list} role="listbox" onScroll={update} {...stylex.props(s.list)}>
         {items.map((it) => (
           <li key={it.key} role="presentation">

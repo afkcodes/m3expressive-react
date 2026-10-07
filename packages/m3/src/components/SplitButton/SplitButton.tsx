@@ -2,11 +2,11 @@ import { createContext, forwardRef, useContext, useState, type ReactNode } from 
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
-import { interaction } from '../../primitives/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
@@ -202,7 +202,7 @@ function usePart() {
   return { ...ctx, forced };
 }
 
-function containerStyles(variant: SplitButtonVariant, size: ButtonSize, isDisabled: boolean) {
+function containerStyles(variant: SplitButtonVariant, isDisabled: boolean) {
   return [
     // Inner-corner / checked morph on DefaultEffects (Compose SplitButtonDefaults Leading / TrailingButton).
     containerMotion.effects,
@@ -256,7 +256,7 @@ export const SplitButtonLeading = forwardRef<HTMLButtonElement, SplitButtonLeadi
           dyn.box(null, H[size]),
           dyn.pad(padStart, padEnd),
           radii,
-          ...containerStyles(variant, size, isDisabled),
+          ...containerStyles(variant, isDisabled),
           forced.focusRing && base.ringForced,
         )}
       >
@@ -323,7 +323,7 @@ export const SplitButtonTrailing = forwardRef<HTMLButtonElement, SplitButtonTrai
           s.container,
           dyn.box(TRAILING_W[size], H[size]),
           radii,
-          ...containerStyles(variant, size, isDisabled),
+          ...containerStyles(variant, isDisabled),
           forced.focusRing && base.ringForced,
         )}
       >

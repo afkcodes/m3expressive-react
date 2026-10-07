@@ -23,7 +23,7 @@ export async function captureRegion(
   [rx, ry, rw, rh]: readonly [number, number, number, number] | number[],
 ): Promise<Buffer> {
   const box = (await node.boundingBox())!;
-  const want = { x: box.x + rx!, y: box.y + ry!, width: rw!, height: rh! };
+  const want = { x: box.x + rx, y: box.y + ry, width: rw, height: rh };
   const outer = {
     x: Math.floor(want.x),
     y: Math.floor(want.y),

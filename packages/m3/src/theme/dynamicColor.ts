@@ -102,8 +102,11 @@ export function schemeFromSeed(seed: string, options: DynamicSchemeOptions = {})
   const Scheme = SCHEMES[variant];
   const hct = Hct.fromInt(seedArgb(seed));
   const level = contrastLevel(contrast);
-  const light = resolveRoles(new Scheme(hct, false, level, specVersion));
-  const dark = resolveRoles(new Scheme(hct, true, level, specVersion));
+  // Every Scheme* class extends DynamicScheme, but MCU 0.4.0's .d.ts files import it without a file
+  // extension, so under Node ESM resolution TypeScript loses the base class — restate it.
+  const build = (isDark: boolean) => new Scheme(hct, isDark, level, specVersion) as unknown as DynamicScheme;
+  const light = resolveRoles(build(false));
+  const dark = resolveRoles(build(true));
   const out = {} as DynamicColorScheme;
   for (const role of COLOR_ROLES) out[role] = { light: light[role], dark: dark[role] };
   return out;
@@ -183,7 +186,7 @@ export async function seedColorsFromImage(source: ImageSeedSource, options: Imag
     const h = Math.max(1, Math.round(height * scale));
     const canvas =
       typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(w, h) : Object.assign(document.createElement('canvas'), { width: w, height: h });
-    const context = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) throw new Error('Canvas 2D is not available.');
     context.drawImage(image, 0, 0, w, h);
     return seedColorsFromPixels(context.getImageData(0, 0, w, h).data, count);

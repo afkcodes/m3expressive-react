@@ -3,7 +3,7 @@ import { Tab, TabPanel, Tabs, TabScope, type TabsVariant } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/tabs/manifest.json';
 import assets from '../../../../figma/tabs/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 type IconName = keyof typeof assets.icons;
 const Icon = ({ name }: { name: IconName }) => (

@@ -2,12 +2,12 @@ import { Children, createContext, isValidElement, useContext, useLayoutEffect, u
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { interaction } from '../../primitives/state.stylex';
-import { state } from '../../tokens/state.stylex';
+import { interaction } from '../../primitives/state.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
@@ -257,11 +257,14 @@ const surfaceStyles = (variant: MenuVariant, width?: number) => [
   width != null && s.width(width),
 ];
 
-/** The menu container on its own (static rendering, e.g. inside a custom popover). */
+/**
+ * The menu's look on its own — a static, presentational rendering (kit building blocks, previews).
+ * It carries no menu semantics or keyboard behaviour: for an interactive menu use `<Menu>`.
+ */
 export function MenuSurface({ variant = 'standard', density = 0, width, children, sx }: MenuSurfaceProps) {
   return (
     <MenuContext value={{ variant, density, live: false }}>
-      <div role="menu" {...stylex.props(surfaceStyles(variant, width), sx)}>
+      <div {...stylex.props(surfaceStyles(variant, width), sx)}>
         {grouped(variant, children)}
       </div>
     </MenuContext>
@@ -472,7 +475,7 @@ function useItemVisual({ children, leading, selectedLeading, trailing, trailingT
   return { rootProps, body };
 }
 
-/** A menu item: a real menu item inside `<Menu>`, a static row inside `<MenuSurface>`. */
+/** A menu item: a real menu item inside `<Menu>`, a static (presentational) row inside `<MenuSurface>`. */
 export function MenuItem({ onClick, closeOnClick = true, ...props }: MenuItemProps) {
   const ctx = useContext(MenuContext);
   const { rootProps, body } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
@@ -484,11 +487,7 @@ export function MenuItem({ onClick, closeOnClick = true, ...props }: MenuItemPro
       </BaseMenu.Item>
     );
   }
-  return (
-    <div role="menuitem" tabIndex={-1} aria-disabled={props.disabled || undefined} onClick={props.disabled ? undefined : onClick} {...common}>
-      {body}
-    </div>
-  );
+  return <div {...common}>{body}</div>;
 }
 
 export interface MenuCheckboxItemProps extends Omit<MenuItemProps, 'selected' | 'onClick'> {
@@ -515,11 +514,7 @@ export function MenuCheckboxItem({ checked, defaultChecked = false, onCheckedCha
       </BaseMenu.CheckboxItem>
     );
   }
-  return (
-    <div role="menuitemcheckbox" aria-checked={on} tabIndex={-1} onClick={props.disabled ? undefined : () => set(!on)} {...common}>
-      {body}
-    </div>
-  );
+  return <div {...common}>{body}</div>;
 }
 
 export interface MenuRadioItemProps extends Omit<MenuItemProps, 'selected' | 'onClick'> {
@@ -531,7 +526,7 @@ export interface MenuRadioItemProps extends Omit<MenuItemProps, 'selected' | 'on
 /** One option of a `MenuRadioGroup`; the chosen option takes the selected look. */
 export function MenuRadioItem({ value, checked = false, closeOnClick = false, ...props }: MenuRadioItemProps) {
   const ctx = useContext(MenuContext);
-  if (!ctx.live) return <ItemShell role="menuitemradio" aria-checked={checked} {...props} selected={checked} />;
+  if (!ctx.live) return <ItemShell {...props} selected={checked} />;
   return (
     <BaseMenu.RadioItem
       value={value}
@@ -543,19 +538,11 @@ export function MenuRadioItem({ value, checked = false, closeOnClick = false, ..
 }
 
 /** Renders an item's visuals onto a host element (Base UI render props, or a static row). */
-function ItemShell({
-  htmlProps,
-  role,
-  'aria-checked': ariaChecked,
-  ...props
-}: Omit<MenuItemProps, 'onClick' | 'closeOnClick'> & { htmlProps?: React.HTMLAttributes<HTMLElement>; role?: string; 'aria-checked'?: boolean }) {
+function ItemShell({ htmlProps, ...props }: Omit<MenuItemProps, 'onClick' | 'closeOnClick'> & { htmlProps?: React.HTMLAttributes<HTMLElement> }) {
   const ctx = useContext(MenuContext);
   const { rootProps, body } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
   return (
     <div
-      role={role}
-      aria-checked={ariaChecked}
-      tabIndex={htmlProps ? undefined : -1}
       {...htmlProps}
       {...rootProps}
       data-ripple-host={props.disabled ? undefined : ''}
@@ -680,7 +667,7 @@ export function Submenu({ items, width, ...item }: SubmenuProps) {
   }
   return (
     <BaseMenu.SubmenuRoot>
-      <BaseMenu.SubmenuTrigger ref={origin.anchor as React.Ref<HTMLDivElement>} disabled={item.disabled} {...rootProps} data-ripple-host={item.disabled ? undefined : ''}>
+      <BaseMenu.SubmenuTrigger ref={origin.anchor} disabled={item.disabled} {...rootProps} data-ripple-host={item.disabled ? undefined : ''}>
         {body}
       </BaseMenu.SubmenuTrigger>
       <BaseMenu.Portal container={portalContainer}>

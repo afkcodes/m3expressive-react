@@ -411,7 +411,7 @@ export class RoundedPolygon {
             (roundedCorners[i]!.expectedCut - roundedCorners[i]!.expectedRoundCut) * cutRatio,
         );
       }
-      corners.push(roundedCorners[i]!.getCubics(allowedCuts[0]!, allowedCuts[1]!));
+      corners.push(roundedCorners[i]!.getCubics(allowedCuts[0]!, allowedCuts[1]));
     }
     // Finally, store the calculated cubics. This includes all of the rounded corners
     // from above, along with new cubics representing the edges between those corners.

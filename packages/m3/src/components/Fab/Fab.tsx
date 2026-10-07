@@ -2,13 +2,13 @@ import { forwardRef, useCallback, useContext, useEffect, useLayoutEffect, useRef
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { elevationMotion } from '../../primitives/elevationMotion.ts';
-import { tween } from '../../primitives/tweens.stylex';
+import { tween } from '../../primitives/tweens.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';

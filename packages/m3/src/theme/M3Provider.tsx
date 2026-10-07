@@ -1,10 +1,10 @@
-import { useMemo, useState, type CSSProperties, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { MotionSchemeContext } from '../motion/context.tsx';
 import type { MotionSchemeName } from '../motion/tokens.ts';
-import { color } from '../tokens/color.stylex';
-import { highContrastTheme, mediumContrastTheme } from '../tokens/color-themes';
-import { expressiveMotionTheme, standardMotionTheme } from '../tokens/motion-themes';
+import { color } from '../tokens/color.stylex.ts';
+import { highContrastTheme, mediumContrastTheme } from '../tokens/color-themes.ts';
+import { expressiveMotionTheme, standardMotionTheme } from '../tokens/motion-themes.ts';
 import { PortalContainerContext } from './portal.tsx';
 import { COLOR_ROLES, type DynamicColorScheme } from './colorRoles.ts';
 
@@ -57,7 +57,7 @@ function useSchemeStyle(colors: DynamicColorScheme | undefined) {
       const name = varName(color[role]);
       if (name) style[name] = `light-dark(${colors[role].light}, ${colors[role].dark})`;
     }
-    return style as CSSProperties;
+    return style;
   }, [colors]);
 }
 

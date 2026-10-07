@@ -2,8 +2,8 @@ import { forwardRef, useEffect, useLayoutEffect, useRef, useState, type InputHTM
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Field } from '@base-ui/react/field';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';

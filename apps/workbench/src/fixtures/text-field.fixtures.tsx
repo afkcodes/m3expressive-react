@@ -6,7 +6,7 @@ import { ForceState, type ForcedState } from '@m3x/react/testing';
 import { color } from '@m3x/react/tokens/color.stylex';
 import manifest from '../../../../figma/text-field/manifest.json';
 import assets from '../../../../figma/text-field/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Icon = ({ name }: { name: 'search' | 'cancel' }) => (
   <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor" aria-hidden>

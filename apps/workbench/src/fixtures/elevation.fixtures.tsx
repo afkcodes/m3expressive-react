@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { elevation } from '@m3x/react/tokens/elevation.stylex';
 import { shape } from '@m3x/react/tokens/shape.stylex';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** Foundations calibration: the Figma "Elevation" specimen cards (216², corner large). */
 const s = stylex.create({

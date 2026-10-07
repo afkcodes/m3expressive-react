@@ -2,7 +2,7 @@ import { forwardRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { CIRCULAR, circularFrame, circularShapes, type CircularFrame, type ProgressThickness, type ProgressType } from './geometry.ts';

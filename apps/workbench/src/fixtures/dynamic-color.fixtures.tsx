@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, M3Provider, type ColorSchemeMode } from '@m3x/react';
 import { schemeFromSeed, useDynamicScheme, useSeedColorsFromImage } from '@m3x/react/dynamic-color';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 /**
  * Dynamic colour (no Figma frames — behaviour only): a seeded scheme reaches components through

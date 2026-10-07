@@ -1,7 +1,7 @@
 import { useEffect, useRef, type SVGProps } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../tokens/color.stylex';
+import { color } from '../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../motion/animate.ts';
 import { useSpringToken } from '../motion/context.tsx';
 import type { SpringToken } from '../motion/tokens.ts';

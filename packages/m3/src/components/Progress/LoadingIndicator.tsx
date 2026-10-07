@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { Morph } from '../../shapes/graphics/morph.ts';
 import { RoundedPolygon } from '../../shapes/graphics/roundedPolygon.ts';

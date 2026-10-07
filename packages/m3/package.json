@@ -6,30 +6,76 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "description": "Material 3 Expressive components for React \u2014 Base UI behaviour, StyleX styling, Figma-parity tested.",
   "exports": {
     ".": "./src/index.ts",
-    "./tokens/*.stylex": "./src/tokens/*.stylex.ts",
-    "./components/*.stylex": "./src/components/*.stylex.ts",
-    "./tokens/*": "./src/tokens/*.ts",
-    "./motion": "./src/motion/index.ts",
     "./dynamic-color": "./src/dynamic-color.ts",
-    "./fonts.css": "./src/fonts.css",
-    "./testing": "./src/testing/index.ts"
+    "./motion": "./src/motion/index.ts",
+    "./testing": "./src/testing/index.ts",
+    "./tokens/*.stylex": "./src/tokens/*.stylex.ts",
+    "./tokens/*": "./src/tokens/*.ts",
+    "./primitives/*.stylex": "./src/primitives/*.stylex.ts",
+    "./components/*.stylex": "./src/components/*.stylex.ts",
+    "./fonts.css": "./src/fonts.css"
   },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./dynamic-color": {
+        "types": "./dist/dynamic-color.d.ts",
+        "default": "./dist/dynamic-color.js"
+      },
+      "./motion": {
+        "types": "./dist/motion/index.d.ts",
+        "default": "./dist/motion/index.js"
+      },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "default": "./dist/testing/index.js"
+      },
+      "./tokens/*.stylex": {
+        "types": "./dist/tokens/*.stylex.d.ts",
+        "default": "./dist/tokens/*.stylex.js"
+      },
+      "./tokens/*": {
+        "types": "./dist/tokens/*.d.ts",
+        "default": "./dist/tokens/*.js"
+      },
+      "./primitives/*.stylex": {
+        "types": "./dist/primitives/*.stylex.d.ts",
+        "default": "./dist/primitives/*.stylex.js"
+      },
+      "./components/*.stylex": {
+        "types": "./dist/components/*.stylex.d.ts",
+        "default": "./dist/components/*.stylex.js"
+      },
+      "./fonts.css": "./dist/fonts.css",
+      "./package.json": "./package.json"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json && node ../../scripts/build-package-assets.ts"
   },
   "peerDependencies": {
-    "react": ">=19",
-    "react-dom": ">=19"
+    "@stylexjs/stylex": "~0.19.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@base-ui/react": "^1.8.0",
-    "@fontsource-variable/roboto": "^5.3.0",
-    "@material/material-color-utilities": "~0.4.0",
-    "@stylexjs/stylex": "^0.19.1"
+    "@base-ui/react": "~1.8.0",
+    "@material/material-color-utilities": "~0.4.0"
   },
   "devDependencies": {
+    "@fontsource-variable/roboto": "5.3.0",
+    "@stylexjs/stylex": "^0.19.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "react": "^19.3.0",

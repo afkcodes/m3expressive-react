@@ -3,7 +3,7 @@
 import { describe, it } from 'vitest';
 import type { Cubic } from './cubic.ts';
 import { Morph } from './morph.ts';
-import { Point } from './point.ts';
+import type { Point } from './point.ts';
 import { RoundedPolygon } from './roundedPolygon.ts';
 import { assertTrue, cubicsEqualish } from './testUtils.ts';
 

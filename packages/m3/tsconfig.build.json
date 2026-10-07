@@ -1,0 +1,18 @@
+{
+  // Publishable build: ESM + declarations into dist/. StyleX is left uncompiled on purpose — consumers'
+  // StyleX compiler (@stylexjs/unplugin) transforms it, so theme vars and `sx` overrides hash and sort
+  // together with the app's own styles.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

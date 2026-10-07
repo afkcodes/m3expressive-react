@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { M3Provider } from '@m3x/react';
-import { fixtures } from '../registry';
+import { fixtures } from '../registry.ts';
 
 type Mode = 'side' | 'difference' | 'onion';
 
@@ -24,9 +24,10 @@ export function Compare({ component }: { component: string }) {
   const [manifest, setManifest] = useState<Record<string, ManifestVariant>>();
 
   useEffect(() => {
-    fetch(`/figma/${component}/manifest.json`)
+    void fetch(`/figma/${component}/manifest.json`)
       .then((r) => (r.ok ? r.json() : { variants: {} }))
-      .then((m: { variants: Record<string, ManifestVariant> }) => setManifest(m.variants));
+      .then((m: { variants: Record<string, ManifestVariant> }) => setManifest(m.variants))
+      .catch(() => setManifest({}));
   }, [component]);
 
   if (!mod) return <p>Unknown component {component}</p>;
@@ -103,7 +104,7 @@ export function Compare({ component }: { component: string }) {
             {!mv ? (
               <p style={{ opacity: 0.6 }}>No Figma reference captured yet.</p>
             ) : (
-              <div style={{ zoom, imageRendering: 'pixelated' } as React.CSSProperties}>
+              <div style={{ zoom, imageRendering: 'pixelated' }}>
                 {mode === 'side' ? (
                   <div style={{ display: 'flex', gap: 16, alignItems: 'start' }}>
                     {stage(ref)}

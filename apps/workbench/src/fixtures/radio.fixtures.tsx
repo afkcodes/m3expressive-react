@@ -1,7 +1,7 @@
 import { Radio, RadioGroup } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/radio/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** Figma "Radio buttons": {selected|unselected}-{state}. */
 const fixture: FixtureModule = {

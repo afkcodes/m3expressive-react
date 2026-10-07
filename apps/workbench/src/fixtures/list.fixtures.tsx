@@ -29,7 +29,7 @@ import toggleIconAssets from '../../../../figma/toggle-icon-button/assets.json';
 import placeholder700 from '../../../../figma/list/assets/placeholder-700.png';
 import placeholder350 from '../../../../figma/list/assets/placeholder-350.png';
 import slotPlaceholder from '../../../../figma/list/assets/slot.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fxBox = stylex.create({
   onSurfaceVariant: { color: color.onSurfaceVariant },
@@ -42,7 +42,7 @@ const Icon = ({ name }: { name: IconName }) => {
   const size = Number(name.split('-').pop());
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="currentColor" aria-hidden style={{ display: 'block' }}>
-      <path d={assets.icons[name] as string} />
+      <path d={assets.icons[name]} />
     </svg>
   );
 };

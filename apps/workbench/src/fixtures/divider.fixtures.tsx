@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex';
 import { Divider, type DividerInset } from '@m3x/react';
 import manifest from '../../../../figma/divider/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const box = stylex.create({ h: { width: 320 }, v: { height: 120, display: 'flex' } });
 const INSET: Record<string, DividerInset> = { full: 'none', inset: 'start', middle: 'middle' };

@@ -1,9 +1,9 @@
 import { forwardRef, useCallback, useLayoutEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { elevation } from '../../tokens/elevation.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { elevation } from '../../tokens/elevation.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './context.ts';
 
 /*

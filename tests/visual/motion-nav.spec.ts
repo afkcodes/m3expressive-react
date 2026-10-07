@@ -9,9 +9,9 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { stepSpring } from '../../packages/m3/src/motion/spring.ts';
 import { motionSchemes } from '../../packages/m3/src/motion/tokens.ts';
 import { railItemGeometry } from '../../packages/m3/src/components/Navigation/railMorph.ts';
-import { compareImages } from './compare';
-import { captureRegion, hexToRgb } from './capture';
-import { REFS_DIR, type Manifest } from './manifest';
+import { compareImages } from './compare.ts';
+import { captureRegion, hexToRgb } from './capture.ts';
+import { REFS_DIR, type Manifest } from './manifest.ts';
 
 const DEFAULT_EFFECTS = '0.231s';
 const FAST_SPATIAL = '0.369s';
@@ -94,7 +94,7 @@ test.describe('list motion', () => {
     const samples: { t: number; z: string; layer: string }[] = [];
     while (Date.now() - t0 < 700) {
       const [z, layer] = await item.evaluate((el) => [getComputedStyle(el).zIndex, getComputedStyle(el.querySelector(':scope > span[aria-hidden]')!).opacity]);
-      samples.push({ t: Date.now() - t0, z: z!, layer: layer! });
+      samples.push({ t: Date.now() - t0, z: z, layer: layer });
       await page.waitForTimeout(20);
     }
     expect(samples[0]!.z, 'still lifted right after release').toBe('1');

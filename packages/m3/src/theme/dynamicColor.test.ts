@@ -8,8 +8,9 @@ const HEX6 = /^#[0-9A-F]{6}$/;
 describe('schemeFromSeed', () => {
   it('covers exactly the colour roles of color.stylex.ts', () => {
     const src = readFileSync(new URL('../tokens/color.stylex.ts', import.meta.url), 'utf8');
-    const roles = [...src.matchAll(/^ {2}([a-zA-Z]+):/gm)].map((m) => m[1]);
-    expect([...COLOR_ROLES].sort()).toEqual(roles.sort());
+    const roles = [...src.matchAll(/^ {2}([a-zA-Z]+):/gm)].map((m) => m[1]!);
+    const byName = (a: string, b: string) => a.localeCompare(b);
+    expect([...COLOR_ROLES].sort(byName)).toEqual(roles.sort(byName));
   });
 
   it('resolves every role to #RRGGBB in light and dark', () => {

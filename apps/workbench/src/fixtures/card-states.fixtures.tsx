@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex';
 import { Card, type CardVariant } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/card-states/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const s = stylex.create({ size: { width: 360, height: 360 } });
 

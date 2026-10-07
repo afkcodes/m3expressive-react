@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { interaction } from './state.stylex';
-import { state } from '../tokens/state.stylex';
+import { interaction } from './state.stylex.ts';
+import { state } from '../tokens/state.stylex.ts';
 
 /**
  * Hover / focus / drag overlay. Pressed is drawn by <Ripple/>, exactly as

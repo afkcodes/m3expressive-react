@@ -22,8 +22,8 @@ async function sampleAfterClick(page: Page, selector: string, click: string | nu
         const t0 = performance.now();
         if (click) [...document.querySelectorAll('button')].find((b) => b.textContent === click)!.click();
         const tick = (now: number) => {
-          out.push({ t: now - t0, v: fn(document.querySelector(selector as string)!) });
-          if (now - t0 < (ms as number)) requestAnimationFrame(tick);
+          out.push({ t: now - t0, v: fn(document.querySelector(selector)!) });
+          if (now - t0 < (ms)) requestAnimationFrame(tick);
           else resolve(out);
         };
         requestAnimationFrame(tick);

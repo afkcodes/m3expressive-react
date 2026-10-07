@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { Button, Snackbar, SnackbarAction, SnackbarClose, SnackbarProvider, useSnackbar } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/snackbar/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** The kit examples' text overrides (with their hard line breaks). */
 const TEXT: Record<string, string> = {

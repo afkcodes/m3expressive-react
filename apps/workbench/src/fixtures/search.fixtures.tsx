@@ -7,7 +7,7 @@ import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/search/manifest.json';
 import assets from '../../../../figma/search/assets.json';
 import placeholder350 from '../../../../figma/list/assets/placeholder-350.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   monogram: { backgroundColor: color.primary, color: color.onPrimary, letterSpacing: '0.15px' },

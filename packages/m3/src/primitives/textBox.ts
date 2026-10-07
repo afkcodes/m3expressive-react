@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { typeMetrics } from '../tokens/typeMetrics.stylex';
+import { typeMetrics } from '../tokens/typeMetrics.stylex.ts';
 
 /**
  * Figma text-box geometry for hug ("auto width") text.

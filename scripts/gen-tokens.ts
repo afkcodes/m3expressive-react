@@ -62,7 +62,7 @@ ${colorEntries('Light', 'Dark')}
 `;
 
   const colorThemes = `${HEADER}import * as stylex from '@stylexjs/stylex';
-import { color } from './color.stylex';
+import { color } from './color.stylex.ts';
 
 /** Figma "Light/Dark Medium Contrast" modes. */
 export const mediumContrastTheme = stylex.createTheme(color, {
@@ -105,8 +105,8 @@ export const typeface = stylex.defineVars({
     }
   }
   const typescale = `${HEADER}import * as stylex from '@stylexjs/stylex';
-import { typeface } from './typeface.stylex';
-import { typeMetrics } from './typeMetrics.stylex';
+import { typeface } from './typeface.stylex.ts';
+import { typeMetrics } from './typeMetrics.stylex.ts';
 
 /**
  * md.sys.typescale.* — Figma "Typescale" collection + M3 text styles

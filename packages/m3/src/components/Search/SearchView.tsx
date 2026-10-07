@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import type { SpringParams } from '../../motion/spring.ts';
@@ -9,7 +9,7 @@ import { List } from '../List/List.tsx';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
 import { cubicBezier, tween } from '../../motion/gesture.ts';
 import { SearchBar } from './SearchBar.tsx';
-import { searchViewVars } from './searchView.stylex';
+import { searchViewVars } from './searchView.stylex.ts';
 
 /*
  * Figma kit, "Search full-screen layout" / "Search docked layout" (59178:4963 / 4992; Compose
@@ -321,6 +321,7 @@ export function SearchView({
 
   if (!mounted) return null;
   return (
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- Escape bubbling up from the field / results (delegation)
     <div
       ref={root}
       inert={!open || undefined}

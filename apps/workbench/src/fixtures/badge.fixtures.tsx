@@ -1,5 +1,5 @@
 import { Badge } from '@m3x/react';
-import type { FixtureModule } from './types';
+import type { FixtureModule } from './types.ts';
 
 /** Figma Badges set: Size=Large (label "3") and Size=Small. */
 const fixture: FixtureModule = {

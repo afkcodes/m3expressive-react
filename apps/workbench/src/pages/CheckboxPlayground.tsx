@@ -75,7 +75,7 @@ export function CheckboxPlayground() {
           ))}
           {(['unselected', 'selected', 'indeterminate'] as const).map((t) => (
             <Row key={t} label={t}>
-              <Checkbox aria-label={`${t}`} defaultChecked={t === 'selected'} indeterminate={t === 'indeterminate'} />
+              <Checkbox aria-label={t} defaultChecked={t === 'selected'} indeterminate={t === 'indeterminate'} />
               <Checkbox aria-label={`${t} error`} defaultChecked={t === 'selected'} indeterminate={t === 'indeterminate'} error />
               <Checkbox aria-label={`${t} disabled`} defaultChecked={t === 'selected'} indeterminate={t === 'indeterminate'} disabled />
             </Row>

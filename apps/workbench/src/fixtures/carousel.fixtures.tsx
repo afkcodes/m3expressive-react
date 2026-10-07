@@ -3,7 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import { Carousel, CarouselItem, type CarouselProps } from '@m3x/react';
 import manifest from '../../../../figma/carousel/manifest.json';
 import placeholder700 from '../../../../figma/list/assets/placeholder-700.png';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   // The kit's item art: FIT, luminosity over the item's Surface Container High.

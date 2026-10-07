@@ -4,26 +4,36 @@
   "type": "module",
   "packageManager": "pnpm@10.32.1",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18"
   },
   "scripts": {
     "dev": "pnpm --filter workbench dev",
     "build": "pnpm -r build",
     "typecheck": "tsc --noEmit && pnpm -r typecheck",
+    "lint": "oxlint --type-aware",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:visual": "playwright test",
+    "check:package": "pnpm --filter @m3x/react build && node scripts/check-package.ts",
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm check:package",
     "gen:motion": "node scripts/gen-motion.ts",
-    "figma:pull": "node scripts/figma-pull.ts",
     "gen:tokens": "node scripts/gen-tokens.ts",
-    "figma:crop": "node scripts/figma-crop.ts",
-    "gen:shapes": "node scripts/gen-shapes.ts"
+    "gen:shapes": "node scripts/gen-shapes.ts",
+    "figma:pull": "node scripts/figma-pull.ts",
+    "figma:crop": "node scripts/figma-crop.ts"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.4",
     "@types/pngjs": "^6.0.5",
+    "oxlint": "^1.86.0",
+    "oxlint-tsgolint": "^7.0.2003",
     "pixelmatch": "^7.2.0",
     "pngjs": "^7.0.0",
+    "prettier": "^3.9.9",
+    "publint": "^0.3.25",
     "typescript": "^7.0.2",
     "vitest": "^5.0.3"
   }

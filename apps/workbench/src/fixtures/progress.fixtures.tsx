@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { CircularProgress, LinearProgress, LoadingIndicator, type ProgressThickness, type ProgressType } from '@m3x/react';
 import { ForceState, type ForcedProgressFrame } from '@m3x/react/testing';
 import manifest from '../../../../figma/progress/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** The kit's indeterminate still frames: active centre-line frames (px) per Step. */
 const LINEAR_STEPS: Record<string, [number, number][][]> = {

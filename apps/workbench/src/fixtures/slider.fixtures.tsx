@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { RangeSlider, Slider, type SliderSize } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/slider/manifest.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const SIZES: Record<string, SliderSize> = { xs: 'xsmall', s: 'small', m: 'medium', l: 'large', xl: 'xlarge' };
 const asForced = (s: string): ForcedState | undefined => (s === 'hovered' || s === 'pressed' ? s : undefined);
@@ -64,7 +64,7 @@ const fixture: FixtureModule = {
               min={-100}
               max={100}
               step={0.0001}
-              value={CENTERED[val]!}
+              value={CENTERED[val]}
               valueLabel={() => (val === '0' ? '0' : '50')}
               disabled={disabled}
               aria-label="Slider"
@@ -80,7 +80,7 @@ const fixture: FixtureModule = {
               min={-100}
               max={100}
               step={0.0001}
-              value={RANGE[val]!}
+              value={RANGE[val]}
               valueLabel={() => text}
               disabled={disabled}
               aria-label="Range"

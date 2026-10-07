@@ -2,10 +2,10 @@ import { forwardRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
-import { interaction } from '../../primitives/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 

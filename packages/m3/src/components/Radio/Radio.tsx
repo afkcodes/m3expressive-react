@@ -1,15 +1,15 @@
-import { createContext, forwardRef, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, useEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { state } from '../../tokens/state.stylex';
-import { interaction } from '../../primitives/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { radioVars } from './radio.stylex';
+import { radioVars } from './radio.stylex.ts';
 
 /*
  * Figma kit, "Radio button" page, set "Radio buttons" (selected × 5 states).
@@ -129,7 +129,7 @@ export function RadioGroup({ value: valueProp, defaultValue, onValueChange, sx, 
         {...rest}
         {...stylex.props(groupStyles.group, sx)}
       >
-        {children as ReactNode}
+        {children}
       </BaseRadioGroup>
     </GroupContext>
   );

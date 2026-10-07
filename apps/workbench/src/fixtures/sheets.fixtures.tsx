@@ -4,7 +4,7 @@ import { color } from '@m3x/react/tokens/color.stylex';
 import { BottomSheet, Button, IconButton, ListItem, ModalBottomSheet, ModalSideSheet, SideSheet } from '@m3x/react';
 import manifest from '../../../../figma/sheets/manifest.json';
 import assets from '../../../../figma/sheets/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
   // The kit's modal bottom sheet carries its scrim (32% Scrim) behind it, past its own bounds.

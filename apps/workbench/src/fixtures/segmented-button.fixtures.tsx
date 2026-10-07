@@ -3,7 +3,7 @@ import { SegmentedButton, SegmentedButtonItem, type SegmentedButtonDensity } fro
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/segmented-button/manifest.json';
 import assets from '../../../../figma/segmented-button/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const Stars = () => (
   <svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor" aria-hidden>

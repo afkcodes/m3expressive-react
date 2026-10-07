@@ -30,6 +30,8 @@ export abstract class Feature {
     this.cubics = cubics;
   }
 
+  abstract toString(): string;
+
   /**
    * Group a list of [Cubic] objects to a feature that should be ignored in the default [Morph]
    * mapping. The feature can have any indentation.
@@ -158,7 +160,7 @@ export class Edge extends Feature {
     return new Edge(reversedCubics);
   }
 
-  toString(): string {
+  override toString(): string {
     return 'Edge';
   }
 
@@ -216,7 +218,7 @@ export class Corner extends Feature {
     return new Corner(reversedCubics, !this.convex);
   }
 
-  toString(): string {
+  override toString(): string {
     return `Corner: cubics=${this.cubics.map((it) => `[${it.toString()}]`).join(', ')} convex=${this.convex}`;
   }
 }

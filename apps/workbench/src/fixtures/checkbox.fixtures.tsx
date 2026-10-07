@@ -3,7 +3,7 @@ import { Checkbox } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/checkbox/manifest.json';
 import assets from '../../../../figma/checkbox/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 /** Motion probe: buttons drive the checkbox through unchecked / checked / indeterminate. */
 function TriState() {

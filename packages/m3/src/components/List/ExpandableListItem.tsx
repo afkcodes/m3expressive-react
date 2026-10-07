@@ -2,14 +2,14 @@ import { forwardRef, useContext, useRef, useState, type ReactNode } from 'react'
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Collapsible } from '@base-ui/react/collapsible';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
-import { interaction } from '../../primitives/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState, type ForcedState } from '../../testing/ForceState.tsx';
 import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
-import { expandPanelMarker } from './list.stylex';
+import { expandPanelMarker } from './list.stylex.ts';
 
 const CHEVRON_DOWN = 'M10 12.8334L5 7.83341L6.16667 6.66675L10 10.5001L13.8333 6.66675L15 7.83341L10 12.8334Z';
 const CHEVRON_UP = 'M10 9.00008L6.16667 12.8334L5 11.6667L10 6.66675L15 11.6667L13.8333 12.8334L10 9.00008Z';

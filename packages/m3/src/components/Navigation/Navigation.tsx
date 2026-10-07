@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
-import { motion } from '../../tokens/motion.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox, textCentred } from '../../primitives/textBox.ts';
-import { interaction } from '../../primitives/state.stylex';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { useSpringToken } from '../../motion/context.tsx';

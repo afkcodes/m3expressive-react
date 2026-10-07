@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import { interaction } from './state.stylex';
+import { interaction } from './state.stylex.ts';
 import { useForcedState } from '../testing/ForceState.tsx';
 
 /**
@@ -76,7 +76,7 @@ export function Ripple({ disabled = false, above = false }: RippleProps) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.repeat || (e.key !== 'Enter' && e.key !== ' ')) return;
       if (e.target !== host) return;
-      const r = container!.getBoundingClientRect();
+      const r = container.getBoundingClientRect();
       press(r.left + r.width / 2, r.top + r.height / 2, null);
     };
 

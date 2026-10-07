@@ -6,9 +6,9 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { compareImages } from './compare';
-import { captureRegion, hexToRgb } from './capture';
-import { REFS_DIR, type Manifest } from './manifest';
+import { compareImages } from './compare.ts';
+import { captureRegion, hexToRgb } from './capture.ts';
+import { REFS_DIR, type Manifest } from './manifest.ts';
 
 const OUT = join(process.cwd(), 'tests/visual/__output__/interaction');
 const cards = JSON.parse(readFileSync(join(REFS_DIR, 'card-states/manifest.json'), 'utf8')) as Manifest;

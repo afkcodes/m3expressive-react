@@ -2,11 +2,11 @@ import { forwardRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Slider as BaseSlider } from '@base-ui/react/slider';
-import { color } from '../../tokens/color.stylex';
-import { state } from '../../tokens/state.stylex';
+import { color } from '../../tokens/color.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { interaction } from '../../primitives/state.stylex';
+import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { sliderVars, thumb0, thumb1 } from './slider.stylex.ts';
@@ -276,8 +276,8 @@ function SliderImpl({
     <BaseSlider.Root
       ref={forwardedRef}
       value={mode === 'range' ? values : values[0]!}
-      onValueChange={(v) => setValues(Array.isArray(v) ? [...v] : [v as number])}
-      onValueCommitted={(v) => onCommit?.(Array.isArray(v) ? [...v] : [v as number])}
+      onValueChange={(v) => setValues(Array.isArray(v) ? [...v] : [v])}
+      onValueCommitted={(v) => onCommit?.(Array.isArray(v) ? [...v] : [v])}
       min={min}
       max={max}
       step={step}

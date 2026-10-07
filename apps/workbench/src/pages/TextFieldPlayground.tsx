@@ -69,7 +69,7 @@ export function TextFieldPlayground() {
             label="Search payees"
             placeholder="Name or sort code"
             leadingIcon={<Icon name="search" />}
-            trailingIcon={query ? <span onClick={() => setQuery('')} style={{ display: 'flex', cursor: 'pointer' }}><Icon name="cancel" /></span> : undefined}
+            trailingIcon={query ? <button type="button" aria-label="Clear" onClick={() => setQuery('')} style={{ display: 'flex', cursor: 'pointer', padding: 0, border: 0, background: 'none', color: 'inherit' }}><Icon name="cancel" /></button> : undefined}
             value={query}
             onValueChange={setQuery}
             disabled={disabled}

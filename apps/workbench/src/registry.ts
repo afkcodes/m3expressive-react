@@ -1,4 +1,4 @@
-import type { FixtureModule } from './fixtures/types';
+import type { FixtureModule } from './fixtures/types.ts';
 
 const modules = import.meta.glob<{ default: FixtureModule }>('./fixtures/*.fixtures.tsx', {
   eager: true,

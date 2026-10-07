@@ -50,8 +50,8 @@ describe('stepSpring (Compose SpringSimulation port)', () => {
     for (const scheme of Object.values(motionSchemes)) {
       for (const [token, p] of Object.entries(scheme)) {
         const peak = Math.max(...sampleSpring(p, 2000).map(([, v]) => v));
-        if (token.endsWith('effects')) expect(peak).toBeLessThanOrEqual(1);
-        else expect(peak).toBeGreaterThan(1);
+        // Spatial springs overshoot; effects springs (dampingRatio 1) never do.
+        expect({ token, overshoots: peak > 1 }).toEqual({ token, overshoots: token.endsWith('spatial') });
       }
     }
   });

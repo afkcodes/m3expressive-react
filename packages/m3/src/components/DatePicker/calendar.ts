@@ -71,6 +71,6 @@ export function parseInputDate(text: string, locale?: string): Date | null {
     .map((p) => p.type);
   const v: Record<string, number> = {};
   order.forEach((k, i) => (v[k] = parts[i]!));
-  const d = new Date(v.year!, v.month! - 1, v.day!);
+  const d = new Date(v.year!, v.month! - 1, v.day);
   return d.getMonth() === v.month! - 1 && d.getDate() === v.day ? d : null;
 }

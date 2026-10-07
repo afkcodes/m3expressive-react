@@ -1,7 +1,7 @@
 import { Children, forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { color } from '../../tokens/color.stylex';
+import { color } from '../../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
 import { splineFling } from '../../motion/fling.ts';

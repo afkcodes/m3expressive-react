@@ -3,7 +3,7 @@ import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/fab-menu/manifest.json';
 import assets from '../../../../figma/fab-menu/assets.json';
 import buttonAssets from '../../../../figma/button/assets.json';
-import type { FixtureModule, FixtureVariant } from './types';
+import type { FixtureModule, FixtureVariant } from './types.ts';
 
 function StarsFilled() {
   return (
@@ -30,7 +30,7 @@ const fixture: FixtureModule = {
       },
     ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
-      const [part, c, state = 'enabled'] = name.split('-') as [string, FabMenuColor, string];
+      const [part, c, state = 'enabled'] = name.split('-') as [string, FabMenuColor, string?];
       const forced: ForcedState | undefined = state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
       return [
         name,
