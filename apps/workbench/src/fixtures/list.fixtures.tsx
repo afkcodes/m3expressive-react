@@ -481,6 +481,25 @@ function LiveSwipe() {
   );
 }
 
+/** Live: a three-item list whose middle item is lifted while "Drag" is pressed (motion tests). */
+function LiveDrag() {
+  const [dragged, setDragged] = useState(false);
+  return (
+    <div style={{ width: 280 }}>
+      <List aria-label="Reorder">
+        {[0, 1, 2].map((i) => (
+          <ListItem key={i} {...itemProps} dragged={i === 1 && dragged} onClick={() => {}}>
+            Label text {i + 1}
+          </ListItem>
+        ))}
+      </List>
+      <button type="button" data-toggle-drag onClick={() => setDragged((v) => !v)} style={{ position: 'absolute', left: -9999 }}>
+        Drag
+      </button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'list',
   variants: Object.fromEntries([
@@ -497,6 +516,7 @@ const fixture: FixtureModule = {
         ),
       } satisfies FixtureVariant,
     ],
+    ['live-drag', { width: 280, height: 156, render: () => <LiveDrag /> } satisfies FixtureVariant],
     [
       'live-swipe',
       {

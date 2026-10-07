@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, type MouseEventHandler, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, useEffect, useLayoutEffect, useRef, useState, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
@@ -28,12 +28,21 @@ export const ListContext = createContext<{ inList: boolean; segmented: boolean; 
  *   padding, 12px gaps, 20px icons in 28px-tall slots, content column ≥ 32px (top-stacked), overline
  *   label-medium · label body-large · supporting body-medium, trailing label-large text + icon.
  *   Shape per interaction (Compose ListItemShapes, FastSpatial): rest 4 · hover 12 · focus /
- *   press / selected / dragged 16. Colours on DefaultEffects. Selected = secondary container;
- *   dragged = tertiary container, 16% layer, elevation 5, text column centred.
+ *   press / selected / dragged 16. Colours on DefaultEffects — container, content and each slot /
+ *   text colour separately (ListItem.kt InteractiveListItem). Selected = secondary container;
+ *   dragged = tertiary container, 16% layer, elevation 5 (FastSpatial), text column centred; the
+ *   item stays lifted (z-index 1) while its shadow animates out.
  * Baseline (List Item: 0 Density set 51964:63037; the classic M3 list): Surface container, 16px
  *   insets and gaps, 24px icons, 56 / 72 / 88px for 1 / 2 / 3 lines (8px vertical padding, 12px and
  *   top-aligned at 3 lines), label-small overline.
  */
+// Each slot / text colour animates on its own (Compose leadingColor, overlineColor… on DefaultEffects).
+const colorMotion = {
+  transitionProperty: 'color',
+  transitionDuration: motion.defaultEffectsDuration,
+  transitionTimingFunction: motion.defaultEffectsEasing,
+} as const;
+
 const s = stylex.create({
   li: { listStyle: 'none', margin: 0, padding: 0, display: 'block' },
   root: {
@@ -55,9 +64,12 @@ const s = stylex.create({
     color: color.onSurface,
     backgroundColor: 'transparent',
     [interaction.layerColor]: color.onSurface,
-    transitionProperty: 'border-radius, background-color, color, box-shadow',
-    transitionDuration: `${motion.fastSpatialDuration}, ${motion.defaultEffectsDuration}, ${motion.defaultEffectsDuration}, ${motion.fastSpatialDuration}`,
-    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.defaultEffectsEasing}, ${motion.defaultEffectsEasing}, ${motion.fastSpatialEasing}`,
+    // z-index 0 (not auto) so it can transition: un-dragging keeps the item above its neighbours
+    // until the shadow has animated out (Compose: zIndex 1 while shadowElevation > 0).
+    zIndex: 0,
+    transitionProperty: 'border-radius, background-color, color, box-shadow, z-index',
+    transitionDuration: `${motion.fastSpatialDuration}, ${motion.defaultEffectsDuration}, ${motion.defaultEffectsDuration}, ${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}`,
+    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.defaultEffectsEasing}, ${motion.defaultEffectsEasing}, ${motion.fastSpatialEasing}, step-end`,
   },
   interactive: { cursor: 'pointer', userSelect: 'none' },
   expressive: { columnGap: 12, paddingBlock: 10, paddingInline: 16, minHeight: 48, alignItems: 'center', borderRadius: 4 },
@@ -86,15 +98,18 @@ const s = stylex.create({
   selected: { backgroundColor: color.secondaryContainer, color: color.onSecondaryContainer, [interaction.layerColor]: color.onSecondaryContainer },
   selectedDisabled: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
   // Lifted above its siblings: the shadow falls over the neighbouring rows.
+  // Lifting is immediate (z-index 0s); the layer opacity comes from stateLayerHost.forceDragged.
   dragged: {
     zIndex: 1,
     backgroundColor: color.tertiaryContainer,
     color: color.onTertiaryContainer,
     boxShadow: elevation.level5NoSpread,
     [interaction.layerColor]: color.onTertiaryContainer,
-    [interaction.layerOpacity]: '0.16',
+    transitionDuration: `${motion.fastSpatialDuration}, ${motion.defaultEffectsDuration}, ${motion.defaultEffectsDuration}, ${motion.fastSpatialDuration}, 0s`,
   },
-  slot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: color.onSurfaceVariant },
+  // Compose material-ripple StateLayer: the drag layer fades out over 150ms (linear).
+  leavingDrag: { [interaction.layerDuration]: '150ms' },
+  slot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: color.onSurfaceVariant, ...colorMotion },
   slotExpressive: { minHeight: 28 },
   // The text sets the row height (10 + content + 10); taller slots (40px accordion button, 48px
   // controls) are centred and spill into the padding, as the kit's fixed-height rows do.
@@ -110,9 +125,9 @@ const s = stylex.create({
   contentExpressive: { minHeight: 32 },
   // The kit's Dragged variants centre the text column (the rest stack it from the top).
   contentCentered: { justifyContent: 'center' },
-  overline: { color: color.onSurfaceVariant },
-  headline: { color: color.onSurface },
-  supporting: { color: color.onSurfaceVariant },
+  overline: { color: color.onSurfaceVariant, ...colorMotion },
+  headline: { color: color.onSurface, ...colorMotion },
+  supporting: { color: color.onSurfaceVariant, ...colorMotion },
   clamp: (lines: number) => ({
     display: '-webkit-box',
     overflow: 'hidden',
@@ -190,13 +205,24 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     linesProp ??
     (supportingText != null && (overline != null || (supportingMaxLines ?? 1) > 1) ? 3 : supportingText != null || overline != null ? 2 : 1);
   const tone = disabled ? null : dragged ? 'dragged' : selected ? 'selected' : null;
+  // Leaving drag fades the 16% layer over 150ms; the flag clears once that has run.
+  const [leavingDrag, setLeavingDrag] = useState(false);
+  const wasDragged = useRef(dragged);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useLayoutEffect(() => {
+    if (wasDragged.current === dragged) return;
+    wasDragged.current = dragged;
+    clearTimeout(leaveTimer.current);
+    setLeavingDrag(!dragged);
+    if (!dragged) leaveTimer.current = setTimeout(() => setLeavingDrag(false), 150);
+  }, [dragged]);
+  useEffect(() => () => clearTimeout(leaveTimer.current), []);
   const textTone = disabled ? s.textDisabled : tone === 'dragged' ? s.onDragged : tone === 'selected' ? s.onSelected : null;
 
   const body = (
     <>
-      {interactive && !dragged && <StateLayer />}
-      {interactive && !dragged && <Ripple disabled={disabled} />}
-      {dragged && <StateLayer />}
+      {(interactive || dragged) && <StateLayer />}
+      {interactive && <Ripple disabled={disabled} />}
       {leading != null && (
         <span
           {...stylex.props(
@@ -272,7 +298,8 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
     selected && !disabled && s.selected,
     selected && disabled && s.selectedDisabled,
     expressive && (selected || dragged) && s.forceFull,
-    dragged && s.dragged,
+    dragged && [stateLayerHost.forceDragged, s.dragged],
+    !dragged && leavingDrag && s.leavingDrag,
     sx,
   );
   const common = { ...styles, 'data-ripple-host': interactive ? '' : undefined, 'data-selected': selected ? '' : undefined };
