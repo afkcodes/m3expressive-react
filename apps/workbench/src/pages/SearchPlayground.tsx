@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Avatar, IconButton, ListItem, M3Provider, SearchBar, SearchView, typescale, type ColorSchemeMode } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
+import { searchViewVars } from '@m3x/react/components/Search/searchView.stylex';
 import assets from '../../../../figma/search/assets.json';
 
 const s = stylex.create({
@@ -36,7 +37,7 @@ const s = stylex.create({
   },
   barSlot: { paddingBlock: 8, paddingInline: 16 },
   docked: { position: 'absolute', top: 8, left: 16, right: 16 },
-  full: { position: 'absolute', inset: 0, paddingTop: 8, backgroundColor: color.surface },
+  full: { position: 'absolute', inset: 0, paddingTop: 8, [searchViewVars.containerColor]: color.surface },
   body: { paddingBlock: 12, paddingInline: 16, color: color.onSurfaceVariant },
   monogram: { backgroundColor: color.primary, color: color.onPrimary },
   muted: { color: color.onSurfaceVariant },
@@ -57,7 +58,7 @@ const ITEMS = [
   ['Team access', 'Invite colleagues, set permissions'],
 ] as const;
 
-/** A search bar that expands into the docked or full-screen view (slow spatial in, Escape / back out). */
+/** A search bar that expands into the docked or full-screen view (Compose SearchBarState motion; Escape / back collapse). */
 export function SearchPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
   const [mode, setMode] = useState<'docked' | 'full-screen'>('docked');
@@ -137,39 +138,39 @@ export function SearchPlayground() {
               Content row {i + 1}
             </div>
           ))}
-          {open && (
-            <SearchView
-              mode={mode}
-              value={q}
-              onValueChange={setQ}
-              onDismiss={close}
-              placeholder="Search accounts and payments"
-              autoFocus
-              sx={mode === 'docked' ? s.docked : s.full}
-              leading={
-                <IconButton aria-label="Back" onClick={close}>
-                  <Icon name="arrow_back-24" />
+          <SearchView
+            mode={mode}
+            open={open}
+            expandedFrom={bar}
+            value={q}
+            onValueChange={setQ}
+            onDismiss={close}
+            placeholder="Search accounts and payments"
+            autoFocus
+            sx={mode === 'docked' ? s.docked : s.full}
+            leading={
+              <IconButton aria-label="Back" onClick={close}>
+                <Icon name="arrow_back-24" />
+              </IconButton>
+            }
+            trailing={
+              q ? (
+                <IconButton aria-label="Clear" onClick={() => setQ('')}>
+                  <Icon name="close-24" />
                 </IconButton>
-              }
-              trailing={
-                q ? (
-                  <IconButton aria-label="Clear" onClick={() => setQ('')}>
-                    <Icon name="close-24" />
-                  </IconButton>
-                ) : (
-                  <IconButton aria-label="Voice search">
-                    <Icon name="mic-24" />
-                  </IconButton>
-                )
-              }
-            >
-              {results.map(([t, d]) => (
-                <ListItem key={t} supportingText={d} supportingMaxLines={1} onClick={close}>
-                  {t}
-                </ListItem>
-              ))}
+              ) : (
+                <IconButton aria-label="Voice search">
+                  <Icon name="mic-24" />
+                </IconButton>
+              )
+            }
+          >
+            {results.map(([t, d]) => (
+              <ListItem key={t} supportingText={d} supportingMaxLines={1} onClick={close}>
+                {t}
+              </ListItem>
+            ))}
             </SearchView>
-          )}
         </div>
       </main>
     </M3Provider>

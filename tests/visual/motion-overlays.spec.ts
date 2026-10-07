@@ -396,3 +396,83 @@ test.describe('modal side sheet', () => {
     await expect(side).toHaveCount(0);
   });
 });
+
+/** Sample `read` every frame for `ms` in the page. */
+function sampleFrames<T>(page: Page, ms: number, read: string): Promise<{ t: number; v: T }[]> {
+  return page.evaluate(
+    ([ms, read]) =>
+      new Promise<{ t: number; v: T }[]>((resolve) => {
+        const fn = new Function(`return (${read})`) as () => T;
+        const out: { t: number; v: T }[] = [];
+        const t0 = performance.now();
+        const tick = () => {
+          out.push({ t: performance.now() - t0, v: fn() });
+          if (performance.now() - t0 < ms) requestAnimationFrame(tick);
+          else resolve(out);
+        };
+        tick();
+      }),
+    [ms, read] as const,
+  );
+}
+
+test.describe('search', () => {
+  test('full screen: the input grows from the collapsed bar, the surface fades in with progress, results after 50ms', async ({ page }) => {
+    await openFixture(page, '/fixture/search/live-full');
+    const node = page.locator('[data-fixture-node]');
+    const collapsed = (await node.getByRole('button', { name: 'Hinted search text' }).locator('xpath=ancestor::div[1]').boundingBox())!;
+    const read = `(() => {
+      const view = document.querySelector('[data-fixture-node] [role="search"]');
+      if (!view) return null;
+      const r = view.getBoundingClientRect();
+      const root = view.parentElement.parentElement;
+      const results = root.lastElementChild;
+      return { x: r.x, w: r.width, alpha: root.style.getPropertyValue('--m3-search-surface-alpha'), results: getComputedStyle(results).opacity };
+    })()`;
+    const sampling = sampleFrames<{ x: number; w: number; alpha: string; results: string } | null>(page, 700, read);
+    await node.getByRole('button', { name: 'Hinted search text' }).click();
+    const frames = (await sampling).filter((f) => f.v);
+    const first = frames[0]!.v!;
+    expect(first.w).toBeGreaterThan(collapsed.width - 3);
+    expect(first.w).toBeLessThan(collapsed.width + 3);
+    expect(Math.abs(first.x - collapsed.x)).toBeLessThan(2);
+    expect(Number(first.alpha)).toBeLessThan(0.3);
+    // contentProgress waits 50ms, then 100ms on standard accelerate.
+    const t0 = frames[0]!.t;
+    for (const f of frames.filter((f) => f.t - t0 < 40)) expect(Number(f.v!.results)).toBeLessThan(0.01);
+    expect(Number(frames.at(-1)!.v!.results)).toBe(1);
+    // At rest: 12px inset in the 412px view, inline motion styles cleared.
+    const box = (await node.locator('[role="search"]').boundingBox())!;
+    const nodeBox = (await node.boundingBox())!;
+    expect([box.x - nodeBox.x, box.width]).toEqual([12, 388]);
+    expect(await node.locator('[role="search"]').evaluate((e) => (e as HTMLElement).style.transform)).toBe('');
+
+    // Collapse: results fade out first, the view stays mounted through the motion, then unmounts.
+    await node.getByRole('button', { name: 'Back' }).click();
+    await expect(node.locator('[role="search"]')).toHaveCount(1);
+    await expect(node.locator('[role="search"]')).toHaveCount(0);
+  });
+
+  test('docked: the panel appears past 10% progress, its list sliding down from −height/2', async ({ page }) => {
+    await openFixture(page, '/fixture/search/live');
+    const node = page.locator('[data-fixture-node]');
+    const read = `(() => {
+      const view = document.querySelector('[data-fixture-node] [role="search"]');
+      if (!view) return null;
+      const results = view.parentElement.parentElement.lastElementChild;
+      const list = results.firstElementChild;
+      return { visible: getComputedStyle(results).visibility, ty: new DOMMatrix(getComputedStyle(list).transform).m42, h: results.offsetHeight };
+    })()`;
+    const sampling = sampleFrames<{ visible: string; ty: number; h: number } | null>(page, 700, read);
+    await node.getByRole('button', { name: 'Hinted search text' }).click();
+    const frames = (await sampling).filter((f) => f.v);
+    expect(frames[0]!.v!.visible).toBe('hidden');
+    const shown = frames.find((f) => f.v!.visible === 'visible')!;
+    expect(shown.v!.ty).toBeLessThan(-shown.v!.h / 4);
+    expect(frames.at(-1)!.v!.ty).toBe(0);
+    // Escape collapses: still mounted for the motion, then gone with focus back on the bar.
+    await page.keyboard.press('Escape');
+    await expect(node.locator('[role="search"]')).toHaveCount(0);
+    await expect(node.getByRole('button', { name: 'Hinted search text' })).toBeFocused();
+  });
+});

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
+import { searchViewVars } from '@m3x/react/components/Search/searchView.stylex';
 import { Avatar, IconButton, ListItem, SearchBar, SearchView } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/search/manifest.json';
@@ -12,6 +13,8 @@ const fx = stylex.create({
   monogram: { backgroundColor: color.primary, color: color.onPrimary, letterSpacing: '0.15px' },
   placeholderBg: { backgroundColor: color.surfaceContainerHigh },
   placeholderImg: { mixBlendMode: 'luminosity' },
+  overlay: { position: 'absolute', top: 0, left: 0, right: 0 },
+  fullOverlay: { position: 'absolute', inset: 0, paddingTop: 8, [searchViewVars.containerColor]: color.surface },
 });
 
 type IconName = keyof typeof assets.icons;
@@ -86,7 +89,10 @@ function render(name: string): ReactNode {
   );
 }
 
-/** Live: the kit's bar (enabled, no avatar) opening the docked view; typing filters, Escape / back closes. */
+/**
+ * Live: the kit's bar (enabled, no avatar) expanding into the docked view over it; typing filters,
+ * Escape / back collapses (the view animates out, then unmounts).
+ */
 function LiveSearch() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
@@ -101,43 +107,83 @@ function LiveSearch() {
     setQ('');
   };
   const items = ['Savings account', 'Business card', 'Payments', 'Statements'].filter((t) => t.toLowerCase().includes(q.toLowerCase()));
-  return open ? (
-    <SearchView
-      mode="docked"
-      value={q}
-      onValueChange={setQ}
-      onDismiss={close}
-      placeholder="Hinted search text"
-      autoFocus
-      leading={
-        <IconButton aria-label="Back" onClick={close}>
-          <Icon name="arrow_back-24" />
-        </IconButton>
-      }
-      trailing={
-        q ? (
-          <IconButton aria-label="Clear" onClick={() => setQ('')}>
-            <Icon name="close-24" />
+  return (
+    <div style={{ position: 'relative', width: '100%' }}>
+      <SearchBar
+        ref={bar}
+        placeholder="Hinted search text"
+        leading={<Btn icon="menu-24" label="Menu" />}
+        trailing={<Btn icon="search-24" label="Search" />}
+        onActivate={() => setOpen(true)}
+      />
+      <SearchView
+        mode="docked"
+        open={open}
+        expandedFrom={bar}
+        value={q}
+        onValueChange={setQ}
+        onDismiss={close}
+        placeholder="Hinted search text"
+        autoFocus
+        sx={fx.overlay}
+        leading={
+          <IconButton aria-label="Back" onClick={close}>
+            <Icon name="arrow_back-24" />
           </IconButton>
-        ) : (
-          <Btn icon="mic-24" label="Voice search" />
-        )
-      }
-    >
-      {items.map((t) => (
-        <ListItem key={t} onClick={close}>
-          {t}
-        </ListItem>
-      ))}
-    </SearchView>
-  ) : (
-    <SearchBar
-      ref={bar}
-      placeholder="Hinted search text"
-      leading={<Btn icon="menu-24" label="Menu" />}
-      trailing={<Btn icon="search-24" label="Search" />}
-      onActivate={() => setOpen(true)}
-    />
+        }
+        trailing={
+          q ? (
+            <IconButton aria-label="Clear" onClick={() => setQ('')}>
+              <Icon name="close-24" />
+            </IconButton>
+          ) : (
+            <Btn icon="mic-24" label="Voice search" />
+          )
+        }
+      >
+        {items.map((t) => (
+          <ListItem key={t} onClick={close}>
+            {t}
+          </ListItem>
+        ))}
+      </SearchView>
+    </div>
+  );
+}
+
+/** Live: the full-screen view expanding from the bar (Compose contained search). */
+function LiveSearchFull() {
+  const [open, setOpen] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
+  return (
+    <div style={{ position: 'relative', width: 412, height: 600, paddingTop: 8, boxSizing: 'border-box' }}>
+      <div style={{ paddingInline: 16 }}>
+        <SearchBar
+          ref={bar}
+          placeholder="Hinted search text"
+          leading={<Btn icon="menu-24" label="Menu" />}
+          trailing={<Btn icon="search-24" label="Search" />}
+          onActivate={() => setOpen(true)}
+        />
+      </div>
+      <SearchView
+        open={open}
+        expandedFrom={bar}
+        value=""
+        onValueChange={() => {}}
+        onDismiss={() => setOpen(false)}
+        placeholder="Hinted search text"
+        sx={fx.fullOverlay}
+        leading={
+          <IconButton aria-label="Back" onClick={() => setOpen(false)}>
+            <Icon name="arrow_back-24" />
+          </IconButton>
+        }
+        trailing={<Btn icon="mic-24" label="Voice search" />}
+      >
+        {results}
+      </SearchView>
+    </div>
   );
 }
 
@@ -145,6 +191,7 @@ const fixture: FixtureModule = {
   component: 'search',
   variants: Object.fromEntries([
     ['live', { width: 360, height: 250, render: () => <LiveSearch /> } satisfies FixtureVariant],
+    ['live-full', { width: 412, height: 600, render: () => <LiveSearchFull /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
