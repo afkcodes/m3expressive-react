@@ -165,24 +165,48 @@ const translateOf = (el: Locator) =>
     return [parseFloat(x), parseFloat(y)];
   });
 
-/** A quick drag: `n` moves of dx / n px, `ms` apart (≈ dx / (n × ms) px/ms), then release. */
-async function flick(page: Page, x: number, y: number, dx: number, dy = 0, n = 4, ms = 8) {
-  await page.mouse.move(x, y);
-  await page.mouse.down();
-  for (let i = 1; i <= n; i++) {
-    await page.waitForTimeout(ms);
-    await page.mouse.move(x + (dx * i) / n, y + (dy * i) / n);
-  }
-  await page.mouse.up();
+/**
+ * A pointer drag dispatched inside the page with exact timing (busy-waits between events), so
+ * velocity-dependent behaviour doesn't depend on test-runner latency: down at (x, y), then a move
+ * to each [dx, dy] after `wait` ms, then up at once (a release while moving).
+ */
+async function synthDrag(page: Page, x: number, y: number, points: [dx: number, dy: number, wait: number][]) {
+  await page.evaluate(
+    ([x, y, points]) => {
+      const target = document.elementFromPoint(x, y)!;
+      const fire = (type: string, cx: number, cy: number) =>
+        target.dispatchEvent(
+          new PointerEvent(type, { bubbles: true, cancelable: true, composed: true, pointerId: 7, pointerType: 'mouse', isPrimary: true, button: 0, buttons: type === 'pointerup' ? 0 : 1, clientX: cx, clientY: cy }),
+        );
+      const busy = (ms: number) => {
+        const t = performance.now();
+        while (performance.now() - t < ms);
+      };
+      fire('pointerdown', x, y);
+      let [cx, cy] = [x, y];
+      for (const [dx, dy, wait] of points) {
+        busy(wait);
+        [cx, cy] = [x + dx, y + dy];
+        fire('pointermove', cx, cy);
+      }
+      fire('pointerup', cx, cy);
+    },
+    [x, y, points] as const,
+  );
 }
 
-/** Pointer moves of `step` px every frame (a slow, steady drag: ~step × 60 px/s). */
-async function slowDrag(page: Page, x: number, y: number, dx: number, dy: number, step = 1) {
+/** A quick drag: `n` moves of dx / n px, `ms` apart, released while moving. */
+async function flick(page: Page, x: number, y: number, dx: number, dy = 0, n = 4, ms = 8) {
+  await synthDrag(page, x, y, Array.from({ length: n }, (_, i) => [(dx * (i + 1)) / n, (dy * (i + 1)) / n, ms] as [number, number, number]));
+}
+
+/** A slow, steady drag (`step` px every 16ms ≈ step × 60 px/s), released while moving. */
+async function slowRelease(page: Page, x: number, y: number, dx: number, dy: number, step = 1, from: [number, number] = [0, 0]) {
   const n = Math.max(Math.abs(dx), Math.abs(dy)) / step;
-  for (let i = 1; i <= n; i++) {
-    await page.mouse.move(x + (dx * i) / n, y + (dy * i) / n);
-    await page.waitForTimeout(16);
-  }
+  await synthDrag(page, x, y, [
+    ...(from[0] || from[1] ? ([[from[0], from[1], 16], [from[0], from[1], 60]] as [number, number, number][]) : []),
+    ...Array.from({ length: n }, (_, i) => [from[0] + (dx * (i + 1)) / n, from[1] + (dy * (i + 1)) / n, 16] as [number, number, number]),
+  ]);
 }
 
 test.describe('modal bottom sheet', () => {
@@ -227,18 +251,12 @@ test.describe('modal bottom sheet', () => {
   test('release target follows AnchoredDraggable.computeTarget (56dp / 125dp/s)', async ({ page }) => {
     // Slow downward drag released past 56px: hides (a slow fling past the positional threshold).
     let { sheet, x, y } = await openSheet(page);
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await slowDrag(page, x, y, 0, 70);
-    await page.mouse.up();
+    await slowRelease(page, x, y, 0, 70);
     await expect(sheet).toHaveCount(0);
 
     // Slow downward drag released under 56px: back to Expanded.
     ({ sheet, x, y } = await openSheet(page));
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await slowDrag(page, x, y, 0, 50);
-    await page.mouse.up();
+    await slowRelease(page, x, y, 0, 50);
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
 
     // Resting before release (no velocity): the closest anchor, so 80px of a 204px sheet stays.
@@ -250,14 +268,14 @@ test.describe('modal bottom sheet', () => {
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
     await expect(sheet).toBeVisible();
 
-    // Slow upward move near Hidden (within 56px of it): hides; further up: stays.
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await page.mouse.move(x, y + 166, { steps: 10 });
-    await page.waitForTimeout(60);
-    await slowDrag(page, x, y + 166, 0, -12, 2);
-    await page.mouse.up();
+    // Slow upward move near Hidden (within 56px of it): hides.
+    await slowRelease(page, x, y, 0, -12, 1, [0, 166]);
     await expect(sheet).toHaveCount(0);
+    // The same move ending 70px from Hidden: stays.
+    ({ sheet, x, y } = await openSheet(page));
+    await slowRelease(page, x, y, 0, -12, 1, [0, 146]);
+    await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
+    await expect(sheet).toBeVisible();
 
     // A short fast flick down (≥ 125dp/s): Hidden.
     ({ sheet, x, y } = await openSheet(page));
@@ -299,29 +317,30 @@ test.describe('modal bottom sheet', () => {
 
   test('settles from the release velocity with the default spatial spring', async ({ page }) => {
     const { sheet, x, y } = await openSheet(page);
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await page.mouse.move(x, y + 40, { steps: 4 });
-    // A quick flick back up: Expanded, overshooting above it on the way (velocity carried).
-    for (let i = 1; i <= 3; i++) {
-      await page.waitForTimeout(8);
-      await page.mouse.move(x, y + 40 - 10 * i);
-    }
-    const ys = sheet.evaluate(
+    const sampling = sheet.evaluate(
       (el) =>
         new Promise<number[]>((resolve) => {
           const out: number[] = [];
           const t0 = performance.now();
           const tick = () => {
             out.push(el.getBoundingClientRect().top - (el as HTMLElement).offsetTop);
-            if (performance.now() - t0 < 500) requestAnimationFrame(tick);
+            if (performance.now() - t0 < 700) requestAnimationFrame(tick);
             else resolve(out);
           };
           tick();
         }),
     );
-    await page.mouse.up();
-    const samples = await ys;
+    // Down 40px, then a quick flick back up: Expanded, overshooting above it on the way (the
+    // release velocity carries into the default spatial spring).
+    await synthDrag(page, x, y, [
+      [0, 20, 16],
+      [0, 40, 16],
+      [0, 40, 60],
+      [0, 30, 8],
+      [0, 20, 8],
+      [0, 10, 8],
+    ]);
+    const samples = await sampling;
     expect(Math.min(...samples)).toBeLessThan(-0.5);
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
   });
@@ -584,23 +603,22 @@ test.describe('carousel', () => {
 
   test('single advance: a slow release snaps by the dragged fraction (half an item / 56dp), a fling moves one item at most', async ({ page }) => {
     const { scroll, x, y } = await setup(page);
-    const dragTo = async (dx: number, rest: boolean, step = 4) => {
+    // Drag and rest before releasing (no velocity).
+    const dragTo = async (dx: number) => {
       await page.mouse.move(x, y);
       await page.mouse.down();
-      if (rest) {
-        await page.mouse.move(x + dx, y, { steps: 10 });
-        await page.waitForTimeout(120);
-      } else await slowDrag(page, x, y, dx, 0, step);
+      await page.mouse.move(x + dx, y, { steps: 10 });
+      await page.waitForTimeout(120);
       await page.mouse.up();
     };
     // 40px and rest: closest item (back).
-    await dragTo(-40, true);
+    await dragTo(-40);
     await expect.poll(scroll).toBe(0);
     // 70px (over 56dp, under half the 188px item): back to where it came from.
-    await dragTo(-70, true);
+    await dragTo(-70);
     await expect.poll(scroll).toBe(0);
     // Past half an item: on to the next one.
-    await dragTo(-110, true);
+    await dragTo(-110);
     await expect.poll(scroll).toBe(196);
     // A 50px flick (over 400dp/s; released at rest 50px would stay): to the next item.
     await flick(page, x, y, -50, 0, 2, 8);
@@ -615,12 +633,6 @@ test.describe('carousel', () => {
 
   test('the snap starts from the release velocity (no stop at release)', async ({ page }) => {
     const { carousel, x, y } = await setup(page);
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    for (let i = 1; i <= 4; i++) {
-      await page.waitForTimeout(8);
-      await page.mouse.move(x - 15 * i, y);
-    }
     const sampling = carousel.evaluate(
       (el) =>
         new Promise<number[]>((resolve) => {
@@ -628,18 +640,20 @@ test.describe('carousel', () => {
           const t0 = performance.now();
           const tick = () => {
             out.push(el.scrollLeft);
-            if (performance.now() - t0 < 120) requestAnimationFrame(tick);
+            if (performance.now() - t0 < 400) requestAnimationFrame(tick);
             else resolve(out);
           };
           tick();
         }),
     );
-    await page.mouse.up();
+    // 60px at ~1900px/s, released while moving.
+    await flick(page, x, y, -60, 0, 4, 8);
     const s = await sampling;
-    // Keeps moving forward right after release (a v0 = 0 spring would ease in).
-    const i = s.findIndex((v, k) => k > 0 && v > s[0]! + 0.5);
-    expect(i).toBeGreaterThan(0);
-    expect(s[i + 1]! - s[i]!).toBeGreaterThan(3);
+    // After the release (60px) it keeps moving forward at speed (a v0 = 0 spring would ease in).
+    const i = s.findIndex((v) => v >= 60);
+    expect(i).toBeGreaterThanOrEqual(0);
+    expect(s[i + 1]! - s[i]!).toBeGreaterThan(5);
+    await expect.poll(() => carousel.evaluate((el) => Math.round(el.scrollLeft))).toBe(196);
   });
 
   test('uncontained flings with decay and does not snap', async ({ page }) => {
