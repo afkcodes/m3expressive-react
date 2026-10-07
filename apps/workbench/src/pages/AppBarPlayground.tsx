@@ -87,11 +87,12 @@ export function AppBarPlayground() {
           <div ref={ref} {...stylex.props(s.scroll)}>
             {Array.from({ length: 30 }, (_, i) => (
               <div key={i} {...stylex.props(typescale.bodyLarge, s.row)}>
-                Message {i + 1} — scroll to see the bar take Surface Container (small) or collapse (medium / large).
+                Message {i + 1} — scroll to see the bar take Surface Container (small) or collapse with the content (medium / large: stopping half-way snaps it open or shut); the bottom bar hides as you scroll down and returns on any scroll up.
               </div>
             ))}
           </div>
           <BottomAppBar
+            scrollTarget={ref}
             actions={
               <>
                 <Btn icon="search-24" label="Search" />

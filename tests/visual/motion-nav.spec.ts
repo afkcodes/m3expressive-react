@@ -490,6 +490,106 @@ test.describe('navigation motion', () => {
   });
 });
 
+// ── App bars ──────────────────────────────────────────────────────────────────────────────────
+test.describe('app bar motion', () => {
+  /** FastOutLinearInEasing = cubic-bezier(0.4, 0, 1, 1). */
+  const foli = (f: number) => {
+    let lo = 0;
+    let hi = 1;
+    for (let i = 0; i < 40; i++) {
+      const t = (lo + hi) / 2;
+      if (3 * 0.4 * t * (1 - t) ** 2 + 3 * t * t * (1 - t) + t ** 3 < f) lo = t;
+      else hi = t;
+    }
+    const t = (lo + hi) / 2;
+    return 3 * t * t * (1 - t) + t ** 3;
+  };
+  type Bar = { h: number; gap: number; titleGap: number; clip: string; bg: string; top: number };
+  const READ = `(scroll) => {
+    const header = document.querySelector('header');
+    const hr = header.getBoundingClientRect();
+    const content = scroll.firstElementChild.getBoundingClientRect();
+    const big = header.lastElementChild;
+    return {
+      h: hr.height,
+      gap: content.top - hr.bottom,
+      titleGap: hr.bottom - big.getBoundingClientRect().bottom,
+      clip: getComputedStyle(big).clipPath,
+      bg: getComputedStyle(header).backgroundColor,
+      top: scroll.scrollTop,
+    };
+  }`;
+
+  test('medium bar: the scroll collapses the bar first — content and title ride its edge (exitUntilCollapsed)', async ({ page }) => {
+    await open(page, '/fixture/app-bar/live');
+    const scroll = page.locator('[data-scroll]');
+    const header = page.locator('header');
+    expect(await header.evaluate((el) => getComputedStyle(el).transitionProperty)).toBe('none');
+    const rest = (await sampleFrames<Bar>(scroll, READ, 20))[0]!.v;
+    expect(rest).toMatchObject({ h: 112, top: 0, clip: 'none', bg: 'rgba(0, 0, 0, 0)' });
+    // A wheel scroll of 30px (f 0.625): the content keeps its gap to the bar's edge throughout,
+    // then the bar snaps shut (f ≥ 0.5) on default effects.
+    await scroll.hover();
+    const sampling = sampleFrames<Bar>(scroll, READ, 1200);
+    await page.mouse.wheel(0, 30);
+    const frames = (await sampling).map((f) => f.v);
+    const moving = frames.filter((f) => f.h < 111.5 && f.h > 64.5);
+    expect(moving.length, 'caught the collapse mid-way').toBeGreaterThan(3);
+    for (const f of moving) {
+      expect(f.gap, 'content stays on the bar edge (1:1)').toBeCloseTo(rest.gap, 0);
+      // The big title is bottom-anchored: it rides up with the edge, clipped under the top row.
+      expect(f.titleGap).toBeCloseTo(0, 0);
+      const c = 112 - f.h;
+      expect(f.clip).toBe(`inset(${Math.round((8 + c) * 1000) / 1000}px 0px 0px)`.replace('.0px', 'px'));
+      // Colour: lerp(flat, Surface Container, FastOutLinearIn(f)) — the mix's alpha.
+      const alpha = Number(/\/ ([\d.]+)\)$/.exec(f.bg)?.[1] ?? (f.bg.startsWith('rgba(0, 0, 0, 0)') ? 0 : 1));
+      expect(alpha).toBeCloseTo(foli(c / 48), 1);
+    }
+    const last = frames.at(-1)!;
+    expect(last).toMatchObject({ h: 64, top: 48, bg: 'rgb(243, 237, 247)' });
+    expect(last.gap).toBeCloseTo(rest.gap, 0);
+  });
+
+  test('medium bar: stopping under halfway snaps open on the default effects spring (settleAppBar)', async ({ page }) => {
+    await open(page, '/fixture/app-bar/live');
+    const scroll = page.locator('[data-scroll]');
+    const frames = await sampleFrames<Bar>(scroll, READ, 900, '(el) => el.scrollTo({ top: 18, behavior: "instant" })');
+    const tops = frames.map((f) => f.v.top);
+    expect(Math.max(...tops)).toBe(18);
+    expect(tops.at(-1)).toBe(0);
+    expect(frames.at(-1)!.v.h).toBe(112);
+    // Critically damped: back to 0 without overshoot.
+    expect(Math.min(...tops)).toBe(0);
+    const at18 = tops.indexOf(18);
+    const settle = frames.slice(at18).map((f) => ({ t: f.t, v: f.v.top }));
+    expectSpring(settle, 18, 0, motionSchemes.expressive['default-effects']);
+  });
+
+  test('bottom bar hides with the scroll, returns on any scroll back, snaps on fast spatial (exitAlways)', async ({ page }) => {
+    await open(page, '/fixture/app-bar/live-bottom');
+    const scroll = page.locator('[data-scroll]');
+    const bar = page.getByRole('toolbar').locator('xpath=..');
+    const height = () => bar.evaluate((el) => el.getBoundingClientRect().height);
+    expect(await height()).toBe(80);
+    await scroll.hover();
+    await page.mouse.wheel(0, 30);
+    // The offset follows the scroll (80 − 30), then snaps back (f 0.375 < 0.5).
+    const frames = await sampleFrames<number>(bar, '(el) => el.getBoundingClientRect().height', 1200);
+    const hs = frames.map((f) => f.v);
+    expect(Math.min(...hs)).toBeLessThan(60);
+    expect(hs.at(-1)).toBe(80);
+    expect(Math.max(...hs), 'clamped at the full height (BottomAppBarState)').toBe(80);
+    // Further down: past halfway, it hides completely; its content stays top-placed (clipped).
+    await page.mouse.wheel(0, 50);
+    await expect.poll(height, { timeout: 3000 }).toBe(0);
+    // Any scroll back shows it again by the same amount.
+    await page.mouse.wheel(0, -20);
+    await expect.poll(height, { timeout: 3000 }).toBe(0);
+    const tops = await page.getByRole('toolbar').evaluate((el) => el.getBoundingClientRect().top - el.parentElement!.getBoundingClientRect().top);
+    expect(tops).toBe(0);
+  });
+});
+
 void stepSpring;
 void motionSchemes;
 void DEFAULT_SPATIAL;

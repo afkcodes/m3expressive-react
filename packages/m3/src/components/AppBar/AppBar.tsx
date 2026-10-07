@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex';
@@ -6,6 +6,8 @@ import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { legacyLeading } from '../../primitives/textBox.ts';
 import { StandardIconTintContext } from '../IconButton/context.ts';
+import { useSpringToken } from '../../motion/context.tsx';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 
 export type TopAppBarSize = 'small' | 'medium' | 'large';
 
@@ -17,10 +19,15 @@ export type TopAppBarSize = 'small' | 'medium' | 'large';
  *   Medium / large: a 56px icon row over a 28/36 (medium) or 36/44 (large) title 16px in, 8px
  *   below the row and 12px above the bottom; subtitles label-medium / label-large / title-medium.
  *   Flat bars have no container; scrolled bars Surface Container.
- * Motion (Compose): the small bar's container fades to the scrolled colour on default effects once
- * content scrolls under it; medium / large collapse with the scroll (height → 64px), the large
- * title fading out (1 − f) as the row title fades in (cubic 0.8, 0, 0.8, 0.15) and the container
- * colour following FastOutLinearIn(f).
+ * Motion (Compose AppBar.kt): the small bar's container fades to the scrolled colour on default
+ * effects once content scrolls under it. Medium / large bars over a `scrollTarget` behave like
+ * exitUntilCollapsedScrollBehavior: the scroll is spent on the bar's height first, so the content
+ * stays on the bar's edge (the scroller is padded by the collapsed amount), the big title rides up
+ * with that edge under the top row, fading out (1 − f) as the row title fades in (cubic 0.8, 0,
+ * 0.8, 0.15); the container is lerp(container, scrolled, FastOutLinearIn(f)) with no timed
+ * transition; stopping part-way snaps to the nearer end (f < 0.5 expands) on default effects
+ * (TopAppBarDefaults.snapAnimationSpec). The bottom app bar over a `scrollTarget` hides with the
+ * scroll and shows again on any scroll back (exitAlways), snapping on fast spatial.
  */
 const s = stylex.create({
   // flexShrink 0: in a column layout the bar keeps its height when the content below overflows.
@@ -39,6 +46,14 @@ const s = stylex.create({
     transitionTimingFunction: motion.defaultEffectsEasing,
   },
   scrolled: { backgroundColor: color.surfaceContainer },
+  // Two-row bars: lerp(container, scrolled, FastOutLinearIn(f)) per frame, nothing timed. The flat
+  // container is no fill (the kit), so the scrolled colour is mixed with transparent.
+  containerMix: (percent: number) => ({
+    backgroundColor: `color-mix(in oklab, ${color.surfaceContainer} ${percent}%, transparent)`,
+    transitionProperty: 'none',
+  }),
+  containerFlat: { backgroundColor: 'transparent', transitionProperty: 'none' },
+  containerFull: { backgroundColor: color.surfaceContainer, transitionProperty: 'none' },
   row: {
     display: 'flex',
     alignItems: 'center',
@@ -58,6 +73,9 @@ const s = stylex.create({
   centredTitle: { position: 'absolute', left: 56, right: 56, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' },
   trailing: { display: 'flex', alignItems: 'center', flexShrink: 0, marginInlineStart: 'auto' },
   big: { paddingInline: 16, paddingTop: 8, paddingBottom: 12, flexShrink: 0 },
+  // Compose: the bottom row clips (from y 64, below the 64px top row) with the title anchored to its
+  // bottom, so the title rides up with the bar's edge as it collapses.
+  bigRide: (collapsed: number) => ({ transform: `translateY(${-collapsed}px)`, clipPath: `inset(${8 + collapsed}px 0 0 0)` }),
   fade: (o: number) => ({ opacity: o }),
   height: (px: number) => ({ height: px }),
   // ── title block ──
@@ -79,6 +97,8 @@ const s = stylex.create({
     paddingInlineEnd: 16,
     backgroundColor: color.surfaceContainer,
   },
+  // exitAlways: the bar's height gives way to the scroll; its content stays top-placed and clips.
+  bottomClip: (height: number) => ({ display: 'block', flexShrink: 0, width: '100%', height, overflow: 'hidden' }),
   bottomActions: { display: 'flex', alignItems: 'center', columnGap: 8 },
   bottomFab: { marginInlineStart: 'auto', display: 'flex' },
 });
@@ -111,22 +131,118 @@ export function AppBarTitle({ size = 'small', centered = false, children, subtit
   );
 }
 
+/** `scrollend`, or a 150ms pause in `scroll` events where the browser lacks it. */
+function onScrollEnd(el: HTMLElement, fn: () => void) {
+  if ('onscrollend' in window) {
+    el.addEventListener('scrollend', fn);
+    return () => el.removeEventListener('scrollend', fn);
+  }
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const onScroll = () => {
+    clearTimeout(timer);
+    timer = setTimeout(fn, 150);
+  };
+  el.addEventListener('scroll', onScroll, { passive: true });
+  return () => {
+    clearTimeout(timer);
+    el.removeEventListener('scroll', onScroll);
+  };
+}
+
+/** A user gesture on `el` takes over from a running settle. */
+function onUserScroll(el: HTMLElement, fn: () => void) {
+  const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+  for (const e of events) el.addEventListener(e, fn, { passive: true });
+  return () => {
+    for (const e of events) el.removeEventListener(e, fn);
+  };
+}
+
+export interface AppBarScrollOptions {
+  /**
+   * Compose exitUntilCollapsedScrollBehavior (two-row bars): the scroll is consumed by the bar's
+   * collapse first. The target is padded at the top by the collapsed amount so its content stays
+   * on the shrinking bar's edge, and a scroll that stops part-way snaps to the nearer end.
+   */
+  exitUntilCollapsed?: boolean;
+}
+
 /** Scroll position → { overlapped, collapsedFraction } for a bar of `size` over `target`. */
-export function useAppBarScroll(target: RefObject<HTMLElement | null> | undefined, size: TopAppBarSize) {
+export function useAppBarScroll(target: RefObject<HTMLElement | null> | undefined, size: TopAppBarSize, { exitUntilCollapsed = false }: AppBarScrollOptions = {}) {
   const [state, setState] = useState({ overlapped: false, fraction: 0 });
+  // TopAppBarDefaults.snapAnimationSpec = MotionSchemeKeyTokens.DefaultEffects.
+  const snapSpring = useSpringToken('default-effects');
   useEffect(() => {
     const el = target?.current;
     if (!el) return;
     const range = EXPANDED[size] - 64;
+    const exit = exitUntilCollapsed && range > 0;
+    const restore = { paddingTop: el.style.paddingTop, overflowAnchor: el.style.overflowAnchor };
+    const basePadding = exit ? parseFloat(getComputedStyle(el).paddingTop) || 0 : 0;
+    // Padding moves the content: scroll anchoring would fight it.
+    if (exit) el.style.overflowAnchor = 'none';
+    let padded = 0;
+    let settle: SpringAnimation | null = null;
     const update = () => {
-      const top = el.scrollTop;
-      setState({ overlapped: top > 0, fraction: range > 0 ? Math.min(1, Math.max(0, top / range)) : 0 });
+      const top = Math.max(0, el.scrollTop);
+      const collapsed = exit ? Math.min(range, top) : 0;
+      if (exit && collapsed !== padded) {
+        padded = collapsed;
+        el.style.paddingTop = `${basePadding + collapsed}px`;
+      }
+      setState({ overlapped: top > 0, fraction: range > 0 ? Math.min(1, top / range) : 0 });
+    };
+    const snap = () => {
+      if (!exit || settle) return;
+      const f = Math.min(1, Math.max(0, el.scrollTop) / range);
+      // settleAppBar: nothing to do when (nearly) expanded or fully collapsed.
+      if (f < 0.01 || f === 1) return;
+      const to = f < 0.5 ? 0 : range;
+      settle = animateSpring({
+        spring: snapSpring!,
+        from: el.scrollTop,
+        to,
+        precision: 0.01,
+        onUpdate: (v) => el.scrollTo({ top: v, behavior: 'instant' }),
+        onComplete: () => (settle = null),
+      });
+    };
+    const takeOver = () => {
+      settle?.stop();
+      settle = null;
     };
     update();
     el.addEventListener('scroll', update, { passive: true });
-    return () => el.removeEventListener('scroll', update);
-  }, [target, size]);
+    const offEnd = onScrollEnd(el, snap);
+    const offUser = onUserScroll(el, takeOver);
+    return () => {
+      takeOver();
+      el.removeEventListener('scroll', update);
+      offEnd();
+      offUser();
+      if (exit) {
+        el.style.paddingTop = restore.paddingTop;
+        el.style.overflowAnchor = restore.overflowAnchor;
+      }
+    };
+  }, [target, size, exitUntilCollapsed, snapSpring]);
   return state;
+}
+
+/** Compose FastOutLinearInEasing: cubic-bezier(0.4, 0, 1, 1). */
+function fastOutLinearIn(f: number) {
+  if (f <= 0) return 0;
+  if (f >= 1) return 1;
+  const x = (t: number) => 3 * 0.4 * t * (1 - t) ** 2 + 3 * t * t * (1 - t) + t ** 3;
+  const y = (t: number) => 3 * t * t * (1 - t) + t ** 3;
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2;
+    if (x(mid) < f) lo = mid;
+    else hi = mid;
+  }
+  return y((lo + hi) / 2);
 }
 
 /** Compose TopTitleAlphaEasing: cubic-bezier(0.8, 0, 0.8, 0.15). */
@@ -162,7 +278,12 @@ export interface TopAppBarProps {
   scrolled?: boolean;
   /** Medium / large: 0 (expanded) … 1 (collapsed to 64px). Derived from `scrollTarget` if set. */
   collapsedFraction?: number;
-  /** The scroll container under the bar: drives `scrolled` and `collapsedFraction`. */
+  /**
+   * The scroll container under the bar: drives `scrolled` and `collapsedFraction`. Medium / large
+   * bars collapse first (Compose exitUntilCollapsed): the bar pads the container's top by the
+   * collapsed amount (its content stays on the bar's edge) and snaps a half-collapsed bar open or
+   * shut when scrolling stops.
+   */
   scrollTarget?: RefObject<HTMLElement | null>;
   sx?: StyleXStyles;
 }
@@ -181,16 +302,14 @@ export function TopAppBar({
   scrollTarget,
   sx,
 }: TopAppBarProps) {
-  const scroll = useAppBarScroll(scrollTarget, size);
   const twoRows = size !== 'small';
+  const scroll = useAppBarScroll(scrollTarget, size, { exitUntilCollapsed: twoRows && fractionProp == null });
   const fraction = fractionProp ?? (scrollTarget ? scroll.fraction : 0);
   const scrolled = scrolledProp ?? (scrollTarget ? scroll.overlapped : false);
-  // Two-row bars: the container follows the collapse (FastOutLinearIn), else the overlap.
-  const onContainer = twoRows ? scrolled || fraction > 0 : scrolled;
 
   if (!twoRows) {
     return (
-      <header {...stylex.props(s.bar, onContainer && s.scrolled, sx)}>
+      <header {...stylex.props(s.bar, scrolled && s.scrolled, sx)}>
         <div {...stylex.props(s.row, search != null && s.rowSearch)}>
           {navigationIcon != null && (
           <span {...stylex.props(s.slot)}>
@@ -222,9 +341,16 @@ export function TopAppBar({
     );
   }
   const expanded = EXPANDED[size];
-  const height = expanded - fraction * (expanded - 64);
+  const collapsed = fraction * (expanded - 64);
+  const height = expanded - collapsed;
+  // Scroll-driven two-row bars: the container follows the collapse (Compose containerColor(
+  // collapsedFraction)); an explicit `scrolled` keeps the kit's on-scroll fill.
+  const driven = fractionProp != null || scrollTarget != null;
+  const mix = Math.round(fastOutLinearIn(fraction) * 1000) / 10;
+  const container =
+    driven && scrolledProp == null ? (mix <= 0 ? s.containerFlat : mix >= 100 ? s.containerFull : s.containerMix(mix)) : scrolledProp && s.scrolled;
   return (
-    <header {...stylex.props(s.bar, onContainer && s.scrolled, fractionProp != null || scrollTarget ? s.height(height) : null, sx)}>
+    <header {...stylex.props(s.bar, container, driven ? s.height(height) : null, sx)}>
       <div {...stylex.props(s.row, s.rowTwoRows)}>
         {navigationIcon != null && (
           <span {...stylex.props(s.slot)}>
@@ -237,7 +363,7 @@ export function TopAppBar({
         </span>
         {actions != null && <span {...stylex.props(s.trailing)}>{actions}</span>}
       </div>
-      <div {...stylex.props(s.big, s.fade(1 - fraction))} aria-hidden={fraction >= 0.5}>
+      <div {...stylex.props(s.big, s.fade(1 - fraction), collapsed > 0 && s.bigRide(collapsed))} aria-hidden={fraction >= 0.5}>
         <AppBarTitle size={size} centered={centered} subtitle={subtitle}>
           {title}
         </AppBarTitle>
@@ -251,15 +377,82 @@ export interface BottomAppBarProps {
   actions?: ReactNode;
   /** A FAB at the end (use `Fab elevated={false}`: the kit's bottom-bar FAB has no shadow). */
   fab?: ReactNode;
+  /**
+   * The scroll container above the bar: scrolling its content up hides the bar, any scroll back
+   * shows it again (Compose BottomAppBarDefaults.exitAlwaysScrollBehavior).
+   */
+  scrollTarget?: RefObject<HTMLElement | null>;
   sx?: StyleXStyles;
 }
 
+const BOTTOM_HEIGHT = 80;
+
+/**
+ * exitAlways: the height offset follows every scroll delta (clamped to the bar's height); a
+ * scroll that stops with the bar part-hidden snaps it (f < 0.5 shows) on fast spatial
+ * (BottomAppBarDefaults.snapAnimationSpec), clamped like BottomAppBarState.heightOffset.
+ */
+function useBottomBarOffset(target: RefObject<HTMLElement | null> | undefined) {
+  const [offset, setOffset] = useState(0);
+  const offsetRef = useRef(0);
+  const spring = useSpringToken('fast-spatial');
+  useEffect(() => {
+    const el = target?.current;
+    if (!el) return;
+    const set = (v: number) => {
+      offsetRef.current = Math.min(0, Math.max(-BOTTOM_HEIGHT, v));
+      setOffset(offsetRef.current);
+    };
+    let last = el.scrollTop;
+    let lastClient = el.clientHeight;
+    let settle: SpringAnimation | null = null;
+    const onScroll = () => {
+      const top = el.scrollTop;
+      const delta = top - last;
+      const resized = el.clientHeight !== lastClient;
+      last = top;
+      lastClient = el.clientHeight;
+      // The scroller grows as the bar hides; a clamp at the end of its content isn't a user scroll.
+      if (resized && top >= el.scrollHeight - el.clientHeight - 0.5) return;
+      if (delta !== 0 && !settle) set(offsetRef.current - delta);
+    };
+    const snap = () => {
+      if (settle) return;
+      const f = -offsetRef.current / BOTTOM_HEIGHT;
+      if (f < 0.01 || f === 1) return;
+      const to = f < 0.5 ? 0 : -BOTTOM_HEIGHT;
+      if (!spring) {
+        set(to);
+        return;
+      }
+      settle = animateSpring({ spring, from: offsetRef.current, to, precision: 0.01, onUpdate: set, onComplete: () => (settle = null) });
+    };
+    const takeOver = () => {
+      settle?.stop();
+      settle = null;
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    const offEnd = onScrollEnd(el, snap);
+    const offUser = onUserScroll(el, takeOver);
+    return () => {
+      takeOver();
+      el.removeEventListener('scroll', onScroll);
+      offEnd();
+      offUser();
+    };
+  }, [target, spring]);
+  return offset;
+}
+
 /** Baseline bottom app bar: 80px Surface Container, actions from the start, FAB at the end. */
-export function BottomAppBar({ actions, fab, sx }: BottomAppBarProps) {
-  return (
-    <div role="toolbar" {...stylex.props(s.bottom, sx)}>
+export function BottomAppBar({ actions, fab, scrollTarget, sx }: BottomAppBarProps) {
+  const offset = useBottomBarOffset(scrollTarget);
+  const bar = (
+    <div role="toolbar" {...stylex.props(s.bottom, scrollTarget == null && sx)}>
       {actions != null && <div {...stylex.props(s.bottomActions)}>{actions}</div>}
       {fab != null && <div {...stylex.props(s.bottomFab)}>{fab}</div>}
     </div>
   );
+  if (scrollTarget == null) return bar;
+  return <div {...stylex.props(s.bottomClip(BOTTOM_HEIGHT + offset), sx)}>{bar}</div>;
 }

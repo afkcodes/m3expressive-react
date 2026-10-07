@@ -1034,9 +1034,15 @@ test('app bar (live): medium bar matches the kit, collapses to 64px with the scr
   const height = () => header.evaluate((el) => el.getBoundingClientRect().height);
   const bg = () => header.evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await height()).toBe(112);
-  // Halfway: height interpolates, the large title fades (1 − f).
+  // A scroll that stops part-way snaps to the nearer end (Compose settleAppBar): under halfway it
+  // opens again, from halfway on it collapses. (The interpolation itself: motion-nav.spec.ts.)
+  const scrollTop = () => page.locator('[data-scroll]').evaluate((el) => el.scrollTop);
+  await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 12));
+  await expect.poll(scrollTop).toBe(0);
+  await expect.poll(height).toBe(112);
   await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 24));
-  await expect.poll(height).toBe(88);
+  await expect.poll(scrollTop).toBe(48);
+  await expect.poll(height).toBe(64);
   // Collapsed: 64px, Surface Container, the row title visible.
   await page.locator('[data-scroll]').evaluate((el) => (el.scrollTop = 200));
   await expect.poll(height).toBe(64);
