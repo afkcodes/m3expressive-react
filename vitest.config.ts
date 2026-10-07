@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import stylex from '@stylexjs/unplugin';
+import stylex from '@stylexjs/unplugin/vite';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 // material-color-utilities 0.4.0 ships ten extensionless relative imports (e.g. '../dynamiccolor/dynamic_scheme'),
@@ -9,7 +9,7 @@ const rootDir = fileURLToPath(new URL('.', import.meta.url));
 const deps = { inline: ['@material/material-color-utilities'] };
 // Components need the StyleX compiler, as in a consumer app (same options as the workbench).
 const compile = () => [
-  stylex.vite({ useCSSLayers: true, unstable_moduleResolution: { type: 'commonJS', rootDir } }),
+  stylex({ useCSSLayers: true, unstable_moduleResolution: { type: 'commonJS', rootDir } }),
   react(),
 ];
 

@@ -12,7 +12,7 @@ export function ShapesDemo() {
   const [scheme, setScheme] = useState<'expressive' | 'standard'>('expressive');
 
   useEffect(() => {
-    if (!auto) return;
+    if (!auto) return undefined;
     let i = 0;
     const id = setInterval(() => setShape(cycle[i++ % cycle.length]!), 650);
     return () => clearInterval(id);
