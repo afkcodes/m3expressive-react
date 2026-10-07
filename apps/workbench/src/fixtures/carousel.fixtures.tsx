@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Carousel, CarouselItem, type CarouselProps } from '@m3x/react';
 import manifest from '../../../../figma/carousel/manifest.json';
@@ -48,14 +48,68 @@ function render(name: string): ReactNode {
   );
 }
 
+/** Removes its content on a `m3-fixture-unmount` window event (unmount mid-gesture / mid-fling). */
+function Unmountable({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(true);
+  useEffect(() => {
+    const unmount = () => setMounted(false);
+    window.addEventListener('m3-fixture-unmount', unmount);
+    return () => window.removeEventListener('m3-fixture-unmount', unmount);
+  }, []);
+  return mounted ? children : null;
+}
+
+/** Live: slides keep their element (and state) when "Reverse" reorders them. */
+function LiveReorder() {
+  const [order, setOrder] = useState(['a', 'b', 'c', 'd', 'e', 'f']);
+  return (
+    <div style={{ display: 'grid', gap: 8, width: 412, gridTemplateRows: '221px auto' }}>
+      <Carousel aria-label="Photos" preferredItemWidth={188}>
+        {order.map((k) => (
+          <CarouselItem key={k}>
+            <span data-slide={k}>{k}</span>
+          </CarouselItem>
+        ))}
+      </Carousel>
+      <button type="button" onClick={() => setOrder((o) => [...o].reverse())}>
+        Reverse
+      </button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'carousel',
   variants: Object.fromEntries([
-    ['live', { width: 412, height: 221, render: () => render('carousel-mobile-multi') } satisfies FixtureVariant],
+    [
+      'live',
+      {
+        width: 412,
+        height: 221,
+        render: () => <Unmountable>{render('carousel-mobile-multi')}</Unmountable>,
+      } satisfies FixtureVariant,
+    ],
     [
       'live-uncontained',
-      { width: 412, height: 221, render: () => render('carousel-mobile-uncontained') } satisfies FixtureVariant,
+      {
+        width: 412,
+        height: 221,
+        render: () => <Unmountable>{render('carousel-mobile-uncontained')}</Unmountable>,
+      } satisfies FixtureVariant,
     ],
+    [
+      'live-rtl',
+      {
+        width: 412,
+        height: 221,
+        render: () => (
+          <div dir="rtl" style={{ display: 'flex', width: 412, height: 221 }}>
+            {render('carousel-mobile-multi')}
+          </div>
+        ),
+      } satisfies FixtureVariant,
+    ],
+    ['live-reorder', { width: 412, height: 260, render: () => <LiveReorder /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [

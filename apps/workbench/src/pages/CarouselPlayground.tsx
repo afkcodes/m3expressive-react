@@ -46,6 +46,7 @@ export function CarouselPlayground() {
   const [layout, setLayout] = useState<CarouselLayout>('multi-browse');
   const [tablet, setTablet] = useState(false);
   const [art, setArt] = useState(true);
+  const [rtl, setRtl] = useState(false);
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   const width = tablet ? 600 : 412;
   const full = layout === 'full-screen';
@@ -83,10 +84,13 @@ export function CarouselPlayground() {
           <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14 }}>
             <input type="checkbox" checked={art} onChange={(e) => setArt(e.target.checked)} /> kit art
           </label>
+          <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14 }}>
+            <input type="checkbox" checked={rtl} onChange={(e) => setRtl(e.target.checked)} /> right to left
+          </label>
         </section>
-        <div {...stylex.props(s.stage)} style={{ width, height: full ? 640 : 221 }}>
+        <div {...stylex.props(s.stage)} dir={rtl ? 'rtl' : 'ltr'} style={{ width, height: full ? 640 : 221 }}>
           <Carousel
-            key={`${layout}-${width}`}
+            key={`${layout}-${width}-${rtl}`}
             aria-label="Gallery"
             layout={layout}
             preferredItemWidth={
