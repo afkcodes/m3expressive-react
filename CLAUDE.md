@@ -206,8 +206,9 @@ navigation drawer (out of scope).
   half-pixel kit geometry (centred 1px strokes) needs `transform: translate(-0.5px)`.
 - StyleX `defineVars` / `defineMarker` must be imported from their `.stylex.ts` path
   (`@m3x/react/components/<C>/<file>.stylex`), never via a re-export; after changing package
-  `exports`, restart the dev server (the StyleX resolver caches it) — and a broken fixture import
-  breaks every fixture page (one registry), so never run a regression while editing fixtures.
+  `exports`, restart the dev server (the StyleX resolver caches it). Fixture modules and playgrounds load on
+  demand: a broken fixture module only breaks its own component's pages (the gallery lists the error) — still
+  never run a regression while editing fixtures or package code (HMR reloads pages mid-test).
 - Flex columns inside fixed-size fixture boxes shrink: give fixed-height parts `flexShrink: 0`.
 - The Playwright config emulates `prefers-reduced-motion: reduce`; tests about motion must
   `page.emulateMedia({ reducedMotion: 'no-preference' })` first.
@@ -251,7 +252,11 @@ navigation drawer (out of scope).
 - Figma strokes don't take auto-layout space: draw header / footer rules as inset box-shadows, not
   borders (a 1px border moved the date picker's header button).
 - A fixture that never mounts (`[data-fixture-node]` not found) is usually a module-init error —
-  e.g. a circular import evaluated before a spread constant; keep shared constants in leaf modules.
+  e.g. a circular import evaluated before a spread constant; keep shared constants in leaf modules. The page
+  shows it in place (`[data-fixture-error]`); `/fixture/<c>` renders every variant of a component.
+- The workbench runs under React StrictMode. Every playground needs an entry in `apps/workbench/src/demos.ts`
+  (route table); `tests/visual/console.spec.ts` fails on any console error / warning on every fixture and demo
+  page, and on a manifest variant without a fixture.
 - A fixed-size fixture box can hide a component's natural size (a 72px bar stretched to the kit's
   64px passed until it sat in an auto-height parent): probe natural geometry in a live render.
 - Intrinsic-size collapse (toolbar leading / trailing, toolbar into its FAB): a `grid-template-columns`
