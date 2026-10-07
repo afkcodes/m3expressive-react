@@ -1,6 +1,5 @@
-import { createContext, forwardRef, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import { color } from '../../tokens/color.stylex.ts';
@@ -11,6 +10,7 @@ import { StateLayer, forcedStateLayer, isInteractionState, stateLayerHost } from
 import { focusRing } from '../../primitives/focusRing.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { radioVars } from './radio.stylex.ts';
 
 /*
@@ -109,9 +109,8 @@ const roles = stylex.create({
 /** The group's value and `disabled` (radios draw disabled too; Base UI only disables their behaviour). */
 const GroupContext = createContext<{ value: unknown; disabled: boolean } | null>(null);
 
-export interface RadioGroupProps extends Omit<BaseRadioGroup.Props, 'className' | 'style' | 'render'> {
-  sx?: StyleXStyles;
-}
+/** `ref` and the remaining props go to Base UI's group `<div role="radiogroup">`. */
+export type RadioGroupProps = SxProps<Omit<BaseRadioGroup.Props, 'render'>>;
 
 const groupStyles = stylex.create({ group: { display: 'flex', flexDirection: 'column' } });
 
@@ -145,16 +144,17 @@ export function RadioGroup({
   );
 }
 
-export interface RadioProps extends Omit<BaseRadio.Root.Props, 'className' | 'style' | 'render' | 'children'> {
-  /** Standalone use (outside a RadioGroup): whether it's selected. */
+/** `ref` and the remaining props go to Base UI's root `<span role="radio">`. */
+export interface RadioProps extends SxProps<Omit<BaseRadio.Root.Props, 'render' | 'nativeButton' | 'children'>> {
+  /**
+   * Standalone use (outside a RadioGroup): whether it's selected. Controlled only (no
+   * `defaultChecked` / `onCheckedChange`): a radio never changes its own selection — picking one of
+   * several options is the group's job — so a lone radio shows state its parent owns.
+   */
   checked?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
-  { value, checked: checkedProp, disabled: disabledProp = false, sx, ...rest },
-  ref,
-) {
+export function Radio({ ref, value, checked: checkedProp, disabled: disabledProp = false, sx, ...rest }: RadioProps) {
   const group = useContext(GroupContext);
   const forced = useForcedState();
   const interacting = isInteractionState(forced.state);
@@ -207,4 +207,4 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
       {root}
     </BaseRadioGroup>
   );
-});
+}

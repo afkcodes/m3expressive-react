@@ -1,6 +1,4 @@
-import { forwardRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -11,6 +9,7 @@ import { focusRing } from '../../primitives/focusRing.ts';
 import { ICON_PATHS, SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, "Switch" page, set "Switch" (selected × icon × 5 states).
@@ -153,16 +152,25 @@ const handle = stylex.create({
   },
 });
 
-export interface SwitchProps extends Omit<BaseSwitch.Root.Props, 'className' | 'style' | 'render' | 'children'> {
+/**
+ * `ref` and the remaining props go to Base UI's root `<span role="switch">` (a hidden `<input>`
+ * beside it takes part in forms).
+ */
+export interface SwitchProps extends SxProps<Omit<BaseSwitch.Root.Props, 'render' | 'nativeButton' | 'children'>> {
   /** Show the check / close icons in the handle. */
   icons?: boolean;
-  sx?: StyleXStyles;
 }
 
-export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
-  { checked: checkedProp, defaultChecked = false, onCheckedChange, icons = false, disabled = false, sx, ...rest },
+export function Switch({
   ref,
-) {
+  checked: checkedProp,
+  defaultChecked = false,
+  onCheckedChange,
+  icons = false,
+  disabled = false,
+  sx,
+  ...rest
+}: SwitchProps) {
   const [on, setOn] = useControllableState(checkedProp, defaultChecked, onCheckedChange);
   const forced = useForcedState();
   const interacting = isInteractionState(forced.state);
@@ -206,4 +214,4 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       </span>
     </BaseSwitch.Root>
   );
-});
+}
