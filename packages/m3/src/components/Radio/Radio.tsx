@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useState, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Radio as BaseRadio } from '@base-ui/react/radio';
@@ -9,6 +9,7 @@ import { state } from '../../tokens/state.stylex';
 import { interaction } from '../../primitives/state.stylex';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { radioVars } from './radio.stylex';
 
 /*
  * Figma kit, "Radio button" page, set "Radio buttons" (selected × 5 states).
@@ -17,7 +18,12 @@ import { useForcedState } from '../../testing/ForceState.tsx';
  *   Selected: primary. Disabled: on-surface at 38%.
  *   State layer: the radio's colour at 8 / 10%; pressed is a flat 10% layer in the *opposite*
  *   role (primary when unselected, on-surface when selected) — no ripple in the kit.
- *   The inner dot scales in on the fast spatial spring.
+ *
+ * Motion — Compose material3 RadioButton.kt (RadioButtonImpl):
+ *   dot radius r animates 0 ⇄ 6dp on FastSpatial and is drawn at r − 1dp (half the 2dp stroke),
+ *   not at all when r ≤ 0 — so the spring's overshoot past 0 on deselect never shows a dot.
+ *   The kit's 5px dot therefore scales by max(0, (6p − 1) / 5) with p = r / 6dp.
+ *   Ring + dot colour: DefaultEffects; snaps while disabled (and when `disabled` changes).
  */
 const RING = 'M12 22C10.6167 22 9.3167 21.7375 8.1 21.2125C6.8833 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.3167 2.7875 8.1C3.3125 6.8833 4.025 5.825 4.925 4.925C5.825 4.025 6.8833 3.3125 8.1 2.7875C9.3167 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.8833 21.2125 8.1C21.7375 9.3167 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.7667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.7667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.7667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.7667 20 12 20Z';
 const DOT = 'M12 17C13.3833 17 14.5625 16.5125 15.5375 15.5375C16.5125 14.5625 17 13.3833 17 12C17 10.6167 16.5125 9.4375 15.5375 8.4625C14.5625 7.4875 13.3833 7 12 7C10.6167 7 9.4375 7.4875 8.4625 8.4625C7.4875 9.4375 7 10.6167 7 12C7 13.3833 7.4875 14.5625 8.4625 15.5375C9.4375 16.5125 10.6167 17 12 17Z';
@@ -52,17 +58,27 @@ const s = stylex.create({
     outlineOffset: state.focusIndicatorOuterOffset,
   },
   ringForced: { outlineStyle: 'solid' },
-  glyph: { position: 'relative', width: 24, height: 24, fill: 'currentColor', transitionProperty: 'color', transitionDuration: motion.fastEffectsDuration },
+  glyph: {
+    position: 'relative',
+    width: 24,
+    height: 24,
+    fill: 'currentColor',
+    transitionProperty: 'color',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
+  },
+  glyphSnap: { transitionDuration: '0s' },
   glyphDisabled: { opacity: state.disabledContentOpacity },
   dot: {
     transformBox: 'fill-box',
     transformOrigin: 'center',
-    scale: 1,
-    transitionProperty: 'scale',
+    [radioVars['--m3x-radio-dot']]: 1,
+    scale: `max(0, calc((6 * ${radioVars['--m3x-radio-dot']} - 1) / 5))`,
+    transitionProperty: '--m3x-radio-dot',
     transitionDuration: motion.fastSpatialDuration,
     transitionTimingFunction: motion.fastSpatialEasing,
   },
-  dotHidden: { scale: 0 },
+  dotHidden: { [radioVars['--m3x-radio-dot']]: 0 },
 });
 
 const roles = stylex.create({
@@ -130,6 +146,12 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio({ value,
   const forced = useForcedState();
   const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
   const selected = group ? Object.is(group.value, value) : !!checkedProp;
+  // Compose snaps the colour while disabled and across an enabled ⇄ disabled change.
+  const wasDisabled = useRef(disabled);
+  const colourSnap = disabled || wasDisabled.current !== disabled;
+  useEffect(() => {
+    wasDisabled.current = disabled;
+  });
   const root = (
     <BaseRadio.Root
       ref={ref}
@@ -154,7 +176,7 @@ export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio({ value,
     >
       <span {...stylex.props(s.circle, forced.focusRing && s.ringForced)}>
         <StateLayer />
-        <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.glyph, disabled && s.glyphDisabled)}>
+        <svg viewBox="0 0 24 24" aria-hidden {...stylex.props(s.glyph, colourSnap && s.glyphSnap, disabled && s.glyphDisabled)}>
           <path d={RING} />
           <path d={DOT} {...stylex.props(s.dot, !selected && s.dotHidden)} />
         </svg>
