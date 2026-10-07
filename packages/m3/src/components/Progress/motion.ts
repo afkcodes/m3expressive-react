@@ -258,22 +258,27 @@ export function linearIndeterminate(ms: number): [number, number][] {
 }
 
 /*
- * Circular indeterminate — Compose material3 (M3 Expressive) CircularProgressIndicator /
- * CircularWavyProgressIndicator, 6000ms cycle:
- *   - global rotation 0 → 1080° linear;
- *   - additional rotation: +90° every 1500ms, each step linear over 300ms (the spec's
- *     EmphasizedDecelerate `using` clauses sit on the hold intervals, so the steps are linear);
- *   - sweep 10% → 87% linear over 3000ms, then back to 10% with EasingStandard.
+ * Circular indeterminate — M3 Expressive, 6000ms cycle, as Material Components Android draws it
+ * (CircularIndeterminateRetreatAnimatorDelegate) and as m3.material.io's progress-indicator spec
+ * video shows it:
+ *   - constant rotation 0 → 1080° linear;
+ *   - spin: +90° at 0 / 1500 / 3000 / 4500ms, each over 500ms on EasingStandard;
+ *   - sweep 10% → 87% over 3000ms on EasingStandard, then back to 10% over 3000ms on EasingStandard.
+ * Compose's keyframes (ProgressIndicator.kt) declare the same easings but attach them with `using`
+ * to the keyframe *after* each move, so at runtime they ease only the shrinking half (its rotation
+ * steps and growth run linear, steps over 300ms). Fitted to the spec video's frames (2026-10-07),
+ * the MDC timing is within 3.7° rms on the sweep (Compose's 35.7°) and 1.6° on the rotation (4.1°).
  */
 const CIRCULAR_CYCLE = 6000;
+const SPIN_DELAYS = [0, 1500, 3000, 4500];
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
 export function circularIndeterminate(ms: number) {
   const t = ms % CIRCULAR_CYCLE;
-  const global = (t / CIRCULAR_CYCLE) * 1080;
-  const step = Math.floor(t / 1500);
-  const additional = step * 90 + 90 * Math.min(1, (t - step * 1500) / 300);
-  const sweep = t < 3000 ? 0.1 + 0.77 * (t / 3000) : 0.87 - 0.77 * standard((t - 3000) / 3000);
-  return { sweep, rotation: global + additional };
+  const constant = (t / CIRCULAR_CYCLE) * 1080;
+  const spin = SPIN_DELAYS.reduce((sum, d) => sum + 90 * standard(clamp01((t - d) / 500)), 0);
+  const grow = standard(clamp01(t / 3000)) - standard(clamp01((t - 3000) / 3000));
+  return { sweep: 0.1 + 0.77 * grow, rotation: constant + spin };
 }
 
 /*

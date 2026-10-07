@@ -31,7 +31,12 @@ describe('indeterminate motion (Compose material3 keyframes)', () => {
     }
     expect(lo).toBeCloseTo(0.1, 3);
     expect(hi).toBeCloseTo(0.87, 3);
-    expect(circularIndeterminate(300).rotation).toBeCloseTo(54 + 90, 6); // global 54° + one step
+    // MDC: global 54° + the first 90° spin, Standard-eased over 500ms (Standard(0.6) of the way).
+    expect(circularIndeterminate(300).rotation).toBeGreaterThan(54 + 90 * 0.8);
+    expect(circularIndeterminate(500).rotation).toBeCloseTo(90 + 90, 6);
+    // Both halves on Standard easing (m3.material.io spec video): half the growth by ~0.6s.
+    expect(circularIndeterminate(600).sweep).toBeGreaterThan(0.1 + 0.77 * 0.4);
+    expect(circularIndeterminate(3600).sweep).toBeLessThan(0.87 - 0.77 * 0.4);
   });
 
   it('linear: line windows and continuity', () => {

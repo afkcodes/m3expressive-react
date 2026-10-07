@@ -88,6 +88,16 @@ const strip = (type: ProgressType) => () => (
     ))}
   </div>
 );
+/** Review aid: the 8dp wavy indeterminate circle every 200ms over one 6s cycle (the spec video's variant). */
+live['strip-circular-8'] = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 60px)', gap: 8 }}>
+      {Array.from({ length: 30 }, (_, i) => (
+        <div key={i}>{frozen({ time: i * 200 }, <CircularProgress type="wave" thickness={8} aria-label="c" />)}</div>
+      ))}
+    </div>
+  ),
+};
 live['strip-flat'] = { render: strip('flat') };
 live['strip-wave'] = { render: strip('wave') };
 /** Circular: one full 6s cycle, every 200ms (flat and wave, 4 / 8dp). */

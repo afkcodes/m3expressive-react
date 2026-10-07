@@ -48,8 +48,9 @@ export interface CircularProgressProps {
  * Compose's progress spring for both types (the circular wavy KDoc recommends it). The wave is flat
  * below 10% (the kit draws 10% and 100% wavy) and ramps its amplitude over 500ms; it travels while
  * it has one.
- * Indeterminate: Compose's M3 Expressive motion (6s cycle: spin, 90° steps, 10% ↔ 87% sweep); the
- * kit's Step frames (its 10% / 50% arcs, rotated) are reproduced as still frames.
+ * Indeterminate: M3 Expressive motion as Material Components Android and the m3.material.io spec
+ * video draw it (6s cycle: spin, Standard-eased 90° steps, 10% ↔ 87% Standard-eased sweep — see
+ * motion.ts); the kit's Step frames (its 10% / 50% arcs, rotated) are reproduced as still frames.
  */
 export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(function CircularProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, sx, ...aria },
