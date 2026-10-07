@@ -2,8 +2,8 @@ import { forwardRef, type PointerEvent as ReactPointerEvent, type ReactNode, typ
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
-import { state } from '../../tokens/state.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
+import { focusRing } from '../../primitives/focusRing.ts';
 
 /*
  * Figma kit, "Sheets" page (Bottom sheet set 51827:5859; Compose ModalBottomSheet /
@@ -56,10 +56,6 @@ const s = stylex.create({
     borderStyle: 'none',
     backgroundColor: 'transparent',
     cursor: 'grab',
-    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
     // Hit target centred on the handle, like Compose's DragHandle with its 48dp minimum interactive
     // size: 48px wide × the kit's 36px header. The drawn handle and its focus ring stay 32×4.
     '::after': { content: '""', position: 'absolute', top: -16, bottom: -16, left: -8, right: -8 },
@@ -110,7 +106,7 @@ export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function
               type="button"
               aria-label={handleLabel}
               onClick={onHandleActivate}
-              {...stylex.props(s.handleButton, s.handle)}
+              {...stylex.props(s.handleButton, focusRing.host, s.handle)}
             />
           ) : (
             <span aria-hidden {...stylex.props(s.handle)} />
