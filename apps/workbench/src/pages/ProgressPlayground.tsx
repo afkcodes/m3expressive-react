@@ -52,7 +52,7 @@ export function ProgressPlayground() {
   const [value, setValue] = useState(50);
   const [running, setRunning] = useState(false);
   useEffect(() => {
-    if (!running) return;
+    if (!running) return undefined;
     const id = setInterval(() => setValue((v) => (v >= 100 ? 0 : Math.min(100, v + 7))), 600);
     return () => clearInterval(id);
   }, [running]);
