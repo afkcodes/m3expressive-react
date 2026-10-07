@@ -89,6 +89,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     const el = box.current;
     if (!el) return;
     setWidth(el.getBoundingClientRect().width);
+    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
     const ro = new ResizeObserver(([e]) => setWidth(e!.contentRect.width));
     ro.observe(el);
     return () => ro.disconnect();

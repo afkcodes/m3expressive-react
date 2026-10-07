@@ -393,7 +393,8 @@ function TabList({
     place(true);
     // The first layout waits for web fonts: tab widths (and so the centred offset) depend on them.
     let cancelled = false;
-    if (scrolledFor.current == null && document.fonts.status !== 'loaded') {
+    // document.fonts is missing in jsdom: treat fonts as loaded.
+    if (scrolledFor.current == null && document.fonts && document.fonts.status !== 'loaded') {
       void document.fonts.ready.then(() => {
         if (!cancelled) scrollToSelected();
       });
@@ -401,6 +402,7 @@ function TabList({
     // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded. The
     // observer's initial report isn't a resize: acting on it snapped every selection's indicator
     // to its target one frame in.
+    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: no re-placement on resize
     let initial = true;
     const ro = new ResizeObserver(() => {
       if (initial) initial = false;

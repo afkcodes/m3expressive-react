@@ -7,6 +7,7 @@ import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { scrim } from './scrim.ts';
+import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   MAX_FLING_VELOCITY,
   MIN_FLING_VELOCITY,
@@ -277,7 +278,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       };
       const left = (inward: number) =>
         g.right ? g.parentWidth - g.innerMargin - g.childWidth + inward : g.innerMargin - inward;
-      const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const duration = prefersReducedMotion()
         ? 0
         : computeSettleDuration(left(to) - left(offset.current), vx, vy, g.range, g.parentWidth);
       settling.current = tween({

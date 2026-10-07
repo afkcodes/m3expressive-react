@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { interaction } from './state.stylex.ts';
 import { useForcedState } from '../testing/ForceState.tsx';
+import { prefersReducedMotion } from '../motion/context.tsx';
 
 /**
  * Bounded touch ripple — port of Compose `RippleAnimation` (material-ripple):
@@ -65,9 +66,8 @@ export function Ripple({ disabled = false, above = false }: RippleProps) {
   useEffect(() => {
     const container = ref.current;
     const host = container?.closest<HTMLElement>('[data-ripple-host]') ?? container?.parentElement;
-    if (!container || !host || disabled) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // No Web Animations API (e.g. jsdom): no ripple, nothing else depends on it.
+    if (!container || !host || disabled || typeof container.animate !== 'function') return;
 
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
@@ -96,7 +96,7 @@ export function Ripple({ disabled = false, above = false }: RippleProps) {
 
       const alpha = Number(readRippleOpacity(wave));
       const at = (x: number, y: number) => `${x - endRadius}px ${y - endRadius}px`;
-      const instant = reduced.matches;
+      const instant = prefersReducedMotion();
 
       const fadeIn = wave.animate([{ opacity: 0 }, { opacity: alpha }], {
         duration: instant ? 0 : FADE_IN,

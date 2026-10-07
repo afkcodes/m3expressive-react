@@ -16,6 +16,7 @@ import { color } from '../../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
 import { splineFling } from '../../motion/fling.ts';
+import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   heroKeylineList,
   itemPlacement,
@@ -172,9 +173,10 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   useLayoutEffect(() => {
     const el = viewport.current;
     if (!el) return;
+    setWidth(el.clientWidth);
+    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
     const ro = new ResizeObserver(() => setWidth(el.clientWidth));
     ro.observe(el);
-    setWidth(el.clientWidth);
     return () => ro.disconnect();
   }, []);
 
@@ -255,7 +257,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
       stop();
       if (Math.abs(to - from) < 0.5) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (prefersReducedMotion()) {
         el.scrollLeft = to;
         place();
         return;
@@ -352,7 +354,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       const velocity = -tracker.velocity().x;
       if (layout === 'uncontained') {
         // noSnapFlingBehavior: decay, no snap.
-        if (velocity === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (velocity === 0 || prefersReducedMotion()) return;
         const from = el.scrollLeft;
         const fling = splineFling(velocity);
         let start: number | undefined;

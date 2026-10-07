@@ -4,4 +4,4 @@ export { motionSchemes, officialWebCurves } from './tokens.ts';
 export type { MotionScheme, MotionSchemeName, SpringToken, SpringSpeed, SpringType } from './tokens.ts';
 export { animateSpring } from './animate.ts';
 export type { SpringAnimation, SpringAnimationOptions } from './animate.ts';
-export { MotionSchemeContext, useReducedMotion, useSpringToken } from './context.tsx';
+export { MotionSchemeContext, prefersReducedMotion, useReducedMotion, useSpringToken } from './context.tsx';

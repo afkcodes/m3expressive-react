@@ -577,6 +577,7 @@ export function NavigationRail({
       setShift(centred >= headerBottom ? centred - el.offsetTop : 0);
     };
     measure();
+    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
     const ro = new ResizeObserver(measure);
     ro.observe(rail);
     ro.observe(el);

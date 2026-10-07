@@ -171,7 +171,10 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   useLayoutEffect(() => {
     const el = ref.current;
     if (!hasFab || !el) return;
-    const ro = new ResizeObserver(() => setNatural([el.offsetWidth, el.offsetHeight]));
+    const measure = () => setNatural([el.offsetWidth, el.offsetHeight]);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, [hasFab]);

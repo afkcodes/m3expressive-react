@@ -6,18 +6,42 @@ export const MotionSchemeContext = createContext<MotionSchemeName>('expressive')
 
 const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
 
+/*
+ * One MediaQueryList for the whole app (not one per component), created lazily and only where
+ * matchMedia exists — server rendering and jsdom have none, and then motion is never "reduced".
+ */
+let reducedQuery: MediaQueryList | null | undefined;
+const reducedListeners = new Set<() => void>();
+const notifyReduced = () => reducedListeners.forEach((listener) => listener());
+
+function reducedMotionQuery(): MediaQueryList | null {
+  if (reducedQuery === undefined) {
+    reducedQuery =
+      typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+        ? window.matchMedia(REDUCED_QUERY)
+        : null;
+  }
+  return reducedQuery;
+}
+
 function subscribeReducedMotion(onChange: () => void) {
-  const mql = window.matchMedia(REDUCED_QUERY);
-  mql.addEventListener('change', onChange);
-  return () => mql.removeEventListener('change', onChange);
+  const query = reducedMotionQuery();
+  if (!query) return () => {};
+  if (reducedListeners.size === 0) query.addEventListener('change', notifyReduced);
+  reducedListeners.add(onChange);
+  return () => {
+    reducedListeners.delete(onChange);
+    if (reducedListeners.size === 0) query.removeEventListener('change', notifyReduced);
+  };
+}
+
+/** Whether the user asked for reduced motion — for event handlers; components use `useReducedMotion`. */
+export function prefersReducedMotion(): boolean {
+  return reducedMotionQuery()?.matches ?? false;
 }
 
 export function useReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_QUERY).matches,
-    () => false,
-  );
+  return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
 }
 
 /**
