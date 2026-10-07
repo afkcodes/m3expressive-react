@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
@@ -18,9 +18,24 @@ import { useForcedState } from '../../testing/ForceState.tsx';
  *   Error: error stroke / fill, on-error glyph.  Disabled: whole control at 38%, on-surface box,
  *   surface glyph.  State layer: type colour at 8 / 10 / 10 %.  Pressed: the ripple uses the
  *   *opposite* role (primary when unselected, on-surface when selected) at 20%.
+ *
+ * Motion — Compose material3 Checkbox.kt (CheckboxImpl, colorAnimationSpecForState):
+ *   box + border colour: DefaultEffects into checked / indeterminate, FastEffects back to
+ *   unchecked; snaps while disabled (and when `disabled` itself changes).
+ *   Check draw (checkDrawFraction): DefaultSpatial from unchecked; to unchecked it snaps after
+ *   100ms (SnapAnimationDelay) while the checkmark colour fades to transparent (FastEffects).
+ *   The kit check's strokes run at 45°, so a left → right clip over the glyph's x extent
+ *   (6 → 18) reveals it in proportion to path length, like Compose's PathMeasure segment.
+ *   Check ⇄ indeterminate (checkCenterGravitationShiftFraction): the outline morphs on
+ *   DefaultSpatial; it snaps when coming from unchecked, and after 100ms when going there.
  */
 const CHECK = 'M10 16.4L6 12.4L7.4 11L10 13.6L16.6 7L18 8.4L10 16.4Z';
-const DASH = 'M6 13V11H18V13H6Z';
+// The kit's dash (M6 13V11H18V13H6Z) rewritten as the check's 6-point outline: the same filled
+// rectangle (collinear points at x 12), so CSS can interpolate `d` between the two glyphs.
+// Point for point: elbow → centre, arm ends → the dash's ends (Compose gravitates the check's
+// cross point to the centre and both arm ends to its height).
+const DASH = 'M12 13L6 13L6 11L12 11L18 11L18 13L12 13Z';
+type Visual = 'off' | 'on' | 'indeterminate';
 
 const s = stylex.create({
   root: {
@@ -62,9 +77,11 @@ const s = stylex.create({
     borderWidth: 2,
     borderStyle: 'solid',
     transitionProperty: 'background-color, border-color',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
   },
+  // Colour specs (the destination style carries the transition).
+  boxIn: { transitionDuration: motion.defaultEffectsDuration, transitionTimingFunction: motion.defaultEffectsEasing },
+  boxOut: { transitionDuration: motion.fastEffectsDuration, transitionTimingFunction: motion.fastEffectsEasing },
+  snap: { transitionDuration: '0s' },
   glyph: {
     position: 'absolute',
     left: 8,
@@ -72,13 +89,31 @@ const s = stylex.create({
     width: 24,
     height: 24,
     pointerEvents: 'none',
-    // Draw-on: wipe left → right on the fast spatial spring (Compose draws the check progressively).
-    clipPath: 'inset(0 0 0 0)',
     transitionProperty: 'clip-path, fill',
-    transitionDuration: `${motion.fastSpatialDuration}, ${motion.fastEffectsDuration}`,
-    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.fastEffectsEasing}`,
   },
-  glyphHidden: { clipPath: 'inset(0 100% 0 0)' },
+  // Drawn: the clip spans the glyph's x extent exactly (6 → 18 in the 24 grid).
+  glyphOn: {
+    clipPath: 'inset(0 6px 0 6px)',
+    transitionDuration: `${motion.defaultSpatialDuration}, ${motion.defaultEffectsDuration}`,
+    transitionTimingFunction: `${motion.defaultSpatialEasing}, ${motion.defaultEffectsEasing}`,
+    transitionDelay: '0s',
+  },
+  // Undrawn: zero width at the glyph's left edge; reached by a snap 100ms after the change while
+  // the colour fades out.
+  glyphOff: {
+    clipPath: 'inset(0 18px 0 6px)',
+    transitionDuration: `0s, ${motion.fastEffectsDuration}`,
+    transitionTimingFunction: `linear, ${motion.fastEffectsEasing}`,
+    transitionDelay: '100ms, 0s',
+  },
+  glyphColourSnap: { transitionDuration: `${motion.defaultSpatialDuration}, 0s` },
+  glyphOffColourSnap: { transitionDuration: '0s, 0s' },
+  path: { transitionProperty: 'd' },
+  pathCheck: { d: `path("${CHECK}")` },
+  pathDash: { d: `path("${DASH}")` },
+  pathMorph: { transitionDuration: motion.defaultSpatialDuration, transitionTimingFunction: motion.defaultSpatialEasing, transitionDelay: '0s' },
+  pathSnap: { transitionDuration: '0s', transitionDelay: '0s' },
+  pathSnapLate: { transitionDuration: '0s', transitionDelay: '100ms' },
 });
 
 // Unselected box outline; hover/focus/press darken it to on-surface (kit).
@@ -114,6 +149,8 @@ const glyphFill = stylex.create({
   normal: { fill: color.onPrimary },
   error: { fill: color.onError },
   disabled: { fill: color.surface },
+  // Compose: the unchecked checkmark colour is transparent (disabled keeps one colour throughout).
+  off: { fill: 'transparent' },
 });
 
 export interface CheckboxProps
@@ -132,6 +169,16 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
   const forced = useForcedState();
   const on = checked || indeterminate;
   const interactingForced = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
+  const visual: Visual = indeterminate ? 'indeterminate' : checked ? 'on' : 'off';
+  // Compose picks some specs by the state the transition starts from: remember the last one.
+  const prev = useRef({ visual, disabled });
+  const from = prev.current;
+  useEffect(() => {
+    prev.current = { visual, disabled };
+  });
+  // Compose snaps colours while disabled and across an enabled ⇄ disabled change.
+  const colourSnap = disabled || from.disabled !== disabled;
+  const pathSpec = visual === 'off' ? s.pathSnapLate : from.visual === 'off' ? s.pathSnap : s.pathMorph;
 
   const boxStyle = disabled
     ? on ? filled.disabled : outline.disabled
@@ -166,13 +213,23 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
     >
       <span {...stylex.props(s.circle, forced.focusRing && s.ringForced)}>
         <StateLayer />
-        <span data-part="box" {...stylex.props(s.box, boxStyle, !on && !disabled && !error && interactingForced && outline.normalInteracting)} />
+        <span
+          data-part="box"
+          {...stylex.props(s.box, boxStyle, !on && !disabled && !error && interactingForced && outline.normalInteracting, colourSnap ? s.snap : on ? s.boxIn : s.boxOut)}
+        />
         <svg
           viewBox="0 0 24 24"
           aria-hidden
-          {...stylex.props(s.glyph, disabled ? glyphFill.disabled : error ? glyphFill.error : glyphFill.normal, !on && s.glyphHidden)}
+          {...stylex.props(
+            s.glyph,
+            disabled ? glyphFill.disabled : error ? glyphFill.error : glyphFill.normal,
+            on ? s.glyphOn : s.glyphOff,
+            !on && !disabled && glyphFill.off,
+            colourSnap && (on ? s.glyphColourSnap : s.glyphOffColourSnap),
+          )}
         >
-          <path d={indeterminate ? DASH : CHECK} />
+          {/* The attribute keeps engines without CSS `d` (Safari) right; CSS `d` makes it morph. */}
+          <path d={indeterminate ? DASH : CHECK} {...stylex.props(s.path, indeterminate ? s.pathDash : s.pathCheck, pathSpec)} />
         </svg>
         {/* Kit: the ripple is the top layer of the state layer, over the box and glyph. */}
         <Ripple disabled={disabled} above />
