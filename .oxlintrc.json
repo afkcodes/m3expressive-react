@@ -21,6 +21,9 @@
     "react/set-state-in-effect": "warn",
     "react/immutability": "warn",
     "react/purity": "warn",
+    // A stylesheet import exists for its side effect (the workbench entry loads global.css, which the
+    // StyleX Vite plugin appends to); any other unassigned import still warns.
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
     "jsx-a11y/prefer-tag-over-role": "off",
     "jsx-a11y/interactive-supports-focus": "off",
     "jsx-a11y/no-autofocus": "off",

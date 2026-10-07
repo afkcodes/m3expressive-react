@@ -1,13 +1,13 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import stylex from '@stylexjs/unplugin';
+import stylex from '@stylexjs/unplugin/vite';
 
 const rootDir = fileURLToPath(new URL('../..', import.meta.url));
 
 export default defineConfig({
   plugins: [
-    stylex.vite({
+    stylex({
       useCSSLayers: true,
       unstable_moduleResolution: { type: 'commonJS', rootDir },
     }),
