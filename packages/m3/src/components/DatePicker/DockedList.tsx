@@ -57,15 +57,18 @@ const s = stylex.create({
   },
 });
 
+/** The scroll thumb's minimum length (px). */
+const MIN_THUMB = 32;
+
 /** Places the list's scroll thumb; false when the list doesn't scroll (no thumb). */
 function paintThumb(list: HTMLElement | null, thumb: HTMLElement | null): boolean {
   if (!list) return false;
   const ratio = list.clientHeight / list.scrollHeight;
   if (ratio >= 1) return false;
-  const h = Math.max(32, list.clientHeight * ratio);
+  const height = Math.max(MIN_THUMB, list.clientHeight * ratio);
   if (thumb) {
-    thumb.style.top = `${(list.scrollTop / (list.scrollHeight - list.clientHeight)) * (list.clientHeight - h)}px`;
-    thumb.style.height = `${h}px`;
+    thumb.style.top = `${(list.scrollTop / (list.scrollHeight - list.clientHeight)) * (list.clientHeight - height)}px`;
+    thumb.style.height = `${height}px`;
   }
   return true;
 }

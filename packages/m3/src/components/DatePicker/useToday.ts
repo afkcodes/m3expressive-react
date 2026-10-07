@@ -8,7 +8,7 @@ import { makeDate } from './calendar.ts';
  */
 export function useToday(today?: Date): Date {
   const [mounted] = useState(() => new Date());
-  const t = today ?? mounted;
-  const [y, m, d] = [t.getFullYear(), t.getMonth(), t.getDate()];
-  return useMemo(() => makeDate(y, m, d), [y, m, d]);
+  const day = today ?? mounted;
+  const [year, month, date] = [day.getFullYear(), day.getMonth(), day.getDate()];
+  return useMemo(() => makeDate(year, month, date), [year, month, date]);
 }

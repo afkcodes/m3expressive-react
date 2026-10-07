@@ -35,9 +35,9 @@ const stopInset = (thickness: ProgressThickness) => (thickness === 4 ? 4 : 6);
 
 /** Arc geometry of one half-wavelength (the Figma segment's clamped corner). */
 export function waveArc(wavelength: number) {
-  const q = wavelength / 4;
-  const phi = Math.atan2(6, q); // segment polyline: 6px rise over a quarter wavelength
-  const r = q / Math.sin(phi);
+  const quarter = wavelength / 4;
+  const phi = Math.atan2(6, quarter); // segment polyline: 6px rise over a quarter wavelength
+  const r = quarter / Math.sin(phi);
   return { r, sag: r * (1 - Math.cos(phi)) };
 }
 

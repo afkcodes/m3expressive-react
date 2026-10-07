@@ -293,10 +293,10 @@ export function DockedDatePicker({
         variant="outlined"
         label={label}
         value={text}
-        onValueChange={(t) => {
-          setText(t);
-          const d = parseInputDate(t, locale, yearRange);
-          if (d || t === '') onChange(d);
+        onValueChange={(typed) => {
+          setText(typed);
+          const date = parseInputDate(typed, locale, yearRange);
+          if (date || typed === '') onChange(date);
         }}
         supportingText={supportingText ?? inputFormatHint(locale, true)}
         sx={s.fieldWidth(width)}

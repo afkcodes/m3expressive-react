@@ -138,9 +138,9 @@ export function DateInputPanel({
       placeholder={placeholder}
       autoFocus={focus}
       inputMode="numeric"
-      onValueChange={(t) => {
-        set(t);
-        report?.(parseInputDate(t, locale, yearRange));
+      onValueChange={(typed) => {
+        set(typed);
+        report?.(parseInputDate(typed, locale, yearRange));
       }}
       sx={half ? s.half : s.field}
     />

@@ -22,8 +22,8 @@ export function normalizeTime(t: Time): Time {
  */
 export function dialValue(mode: 'hour' | 'minute', value: number, is24Hour = false): number {
   if (mode === 'minute') return clamp(value, 0, 59);
-  const h = clamp(value, 0, 23);
-  return is24Hour ? h : h % 12 || 12;
+  const hour = clamp(value, 0, 23);
+  return is24Hour ? hour : hour % 12 || 12;
 }
 
 /** The dial's accessible value (Compose's m3c_time_picker_*_suffix strings). */
