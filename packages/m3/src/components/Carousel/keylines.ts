@@ -859,9 +859,11 @@ export class Strategy {
   }
 }
 
-/** carouselItem: the mask size and translation of item `index` at `scrollOffset`. */
-export function itemPlacement(strategy: Strategy, index: number, scrollOffset: number, maxScrollOffset: number) {
-  const keylines = strategy.getKeylineListForScrollOffset(scrollOffset, maxScrollOffset);
+/**
+ * carouselItem: the mask size and translation of item `index` at `scrollOffset`, given the keyline
+ * list for that offset (`strategy.getKeylineListForScrollOffset` — one list serves every item).
+ */
+export function itemPlacement(strategy: Strategy, keylines: KeylineList, index: number, scrollOffset: number) {
   const size = strategy.itemMainAxisSize;
   const withSpacing = size + strategy.itemSpacing;
   const unadjustedCenter = index * withSpacing + size / 2 - scrollOffset;
@@ -871,10 +873,10 @@ export function itemPlacement(strategy: Strategy, index: number, scrollOffset: n
     before === after
       ? 1
       : (unadjustedCenter - before.unadjustedOffset) / (after.unadjustedOffset - before.unadjustedOffset);
-  const k = lerpKeyline(before, after, progress);
-  let translation = k.offset - unadjustedCenter;
-  if (before === after) translation += (unadjustedCenter - k.unadjustedOffset) / k.size;
-  return { maskSize: k.size, translation };
+  const keyline = lerpKeyline(before, after, progress);
+  let translation = keyline.offset - unadjustedCenter;
+  if (before === after) translation += (unadjustedCenter - keyline.unadjustedOffset) / keyline.size;
+  return { maskSize: keyline.size, translation };
 }
 
 export function maxScrollOffset(strategy: Strategy, itemCount: number) {

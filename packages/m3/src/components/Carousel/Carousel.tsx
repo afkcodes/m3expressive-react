@@ -2,31 +2,27 @@ import {
   Children,
   forwardRef,
   isValidElement,
-  useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type KeyboardEvent,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
-import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { PointerVelocityTracker, pointerSlop, suppressNextClick } from '../../motion/gesture.ts';
-import { splineFling } from '../../motion/fling.ts';
-import { prefersReducedMotion } from '../../motion/context.tsx';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import {
   heroKeylineList,
-  itemPlacement,
   maxScrollOffset,
   multiBrowseKeylineList,
   Strategy,
   uncontainedKeylineList,
 } from './keylines.ts';
+import type { CarouselLayout } from './types.ts';
+import { useCarouselScroll } from './useCarouselScroll.ts';
+
+export type { CarouselLayout } from './types.ts';
 
 /*
  * Figma kit, "Carousel" page (Carousel set 53912:27480, full screen 54577:26060, building blocks).
@@ -52,17 +48,6 @@ import {
  * keyline layouts show their items in a plain row at their preferred width.
  * The viewport carries `data-m3-no-drag`: a sheet around it leaves its drags to it.
  */
-export type CarouselLayout = 'multi-browse' | 'hero' | 'center-hero' | 'uncontained' | 'multi-aspect' | 'full-screen';
-
-/** singleAdvanceFlingBehavior's snapAnimationSpec: spring(stiffness = Spring.StiffnessMediumLow). */
-const SNAP_SPRING = { dampingRatio: 1, stiffness: 400 };
-/** SnapFlingBehavior MinFlingVelocityDp. */
-const MIN_FLING_VELOCITY = 400;
-/** PagerDefaults.flingBehavior snapPositionalThreshold. */
-const SNAP_POSITIONAL_THRESHOLD = 0.5;
-/** PagerState DefaultPositionThreshold (56dp). */
-const DEFAULT_POSITION_THRESHOLD = 56;
-
 const s = stylex.create({
   viewport: {
     position: 'relative',
@@ -149,11 +134,12 @@ const s = stylex.create({
   clip: (start: number, end: number) => ({ clipPath: `inset(0 ${end}px 0 ${start}px)` }),
 });
 
-/** The scroll position from the start edge (RTL scrollLeft runs from 0 to negative). */
-const readScroll = (el: HTMLElement, rtl: boolean) => (rtl ? -el.scrollLeft : el.scrollLeft);
-const writeScroll = (el: HTMLElement, rtl: boolean, value: number) => {
-  el.scrollLeft = rtl ? -value : value;
-};
+/** Rendered slides (conditional children leave false / null behind). */
+const itemCount = (children: ReactNode) => Children.toArray(children).length;
+
+/** No keyline layout: nothing to snap to. */
+const NO_SNAP_TARGETS: number[] = [];
+
 /** Slides keep their element (and state) when children are reordered. */
 const keyOf = (child: ReactNode, i: number) => (isValidElement(child) && child.key != null ? child.key : i);
 
@@ -193,16 +179,10 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   forwarded,
 ) {
   const items = Children.toArray(children);
-  const count = items.length;
+  // Counted apart from `items` (an array the render maps over), so the keyline memo depends on a number.
+  const count = itemCount(children);
   const viewport = useRef<HTMLDivElement | null>(null);
-  const setRef = useCallback(
-    (el: HTMLDivElement | null) => {
-      viewport.current = el;
-      if (typeof forwarded === 'function') forwarded(el);
-      else if (forwarded) forwarded.current = el;
-    },
-    [forwarded],
-  );
+  const setRef = useMergedRefs(viewport, forwarded);
   const [geometry, setGeometry] = useState({ width: 0, rtl: false });
   useLayoutEffect(() => {
     const el = viewport.current;
@@ -224,7 +204,8 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   const padEnd = layout === 'uncontained' ? 0 : contentPadding;
   const available = Math.max(0, width - padStart - padEnd);
 
-  const strategy = useMemo(() => {
+  // The keyline layout for the measured width (null: unmeasured, or a layout without keylines).
+  const keylineLayout = useMemo(() => {
     if (!keyed || available === 0) return null;
     const keylines =
       layout === 'uncontained'
@@ -233,263 +214,32 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         : layout === 'multi-browse'
           ? multiBrowseKeylineList(available, preferredItemWidth ?? available / 2, itemSpacing, count)
           : heroKeylineList(available, preferredItemWidth ?? null, itemSpacing, count, layout === 'center-hero');
-    const st = new Strategy(keylines, available, itemSpacing);
-    return st.isValid ? st : null;
+    const strategy = new Strategy(keylines, available, itemSpacing);
+    if (!strategy.isValid) return null;
+    const max = maxScrollOffset(strategy, count);
+    const pitch = strategy.itemMainAxisSize + itemSpacing;
+    const snapTargets = Array.from({ length: count }, (_, i) =>
+      Math.min(max, Math.max(0, i * pitch - strategy.snapPositionOffset(i, count))),
+    );
+    return { strategy, max, pitch, snapTargets };
   }, [keyed, available, layout, itemWidth, preferredItemWidth, itemSpacing, count]);
+  const strategy = keylineLayout?.strategy ?? null;
+  const max = keylineLayout?.max ?? 0;
+  const pitch = keylineLayout?.pitch ?? 0;
+  const snapTargets = keylineLayout?.snapTargets ?? NO_SNAP_TARGETS;
 
-  const max = strategy ? maxScrollOffset(strategy, count) : 0;
-  const pitch = strategy ? strategy.itemMainAxisSize + itemSpacing : 0;
-  const snapTargets = useMemo(
-    () =>
-      strategy
-        ? Array.from({ length: count }, (_, i) =>
-            Math.min(max, Math.max(0, i * pitch - strategy.snapPositionOffset(i, count))),
-          )
-        : [],
-    [strategy, count, max, pitch],
-  );
-
-  const itemEls = useRef<(HTMLDivElement | null)[]>([]);
-  const place = useCallback(() => {
-    const el = viewport.current;
-    if (!el) return;
-    if (!strategy) {
-      // The plain row (unmeasured): drop the keyline geometry.
-      for (const item of itemEls.current) {
-        if (!item) continue;
-        item.style.width = '';
-        item.style.transform = '';
-        item.style.visibility = '';
-      }
-      return;
-    }
-    const scroll = Math.min(max, Math.max(0, readScroll(el, rtl)));
-    const size = strategy.itemMainAxisSize;
-    itemEls.current.forEach((item, i) => {
-      if (!item) return;
-      const { maskSize, translation } = itemPlacement(strategy, i, scroll, max);
-      // Pager position + keyline translation, then centre the visible box on the item's centre
-      // (from the start edge: mirrored in RTL).
-      const left = padStart + i * pitch + translation + (size - maskSize) / 2;
-      item.style.width = `${Math.max(0, maskSize)}px`;
-      item.style.transform = `translateX(${rtl ? -left : left}px)`;
-      item.style.visibility = maskSize <= 0.5 ? 'hidden' : '';
-    });
-  }, [strategy, max, padStart, pitch, rtl]);
-
-  // Rest state: the initial item's snap position.
-  const initialised = useRef(false);
-  useLayoutEffect(() => {
-    const el = viewport.current;
-    if (!el || !strategy) return;
-    if (!initialised.current) {
-      writeScroll(el, rtl, snapTargets[Math.min(initialItem, count - 1)] ?? 0);
-      initialised.current = true;
-    }
-  }, [strategy, snapTargets, initialItem, count, rtl]);
-  // Every commit: items may have been added, removed or reordered (keyed elements move).
-  useLayoutEffect(() => {
-    place();
+  const { onPointerDown, onKeyDown, itemRef } = useCarouselScroll({
+    viewport,
+    layout,
+    strategy,
+    count,
+    max,
+    pitch,
+    padStart,
+    rtl,
+    snapTargets,
+    initialItem,
   });
-
-  // Snap with the Compose snap spring (critically damped, stiffness 400) from `velocity` (px/s).
-  const anim = useRef<SpringAnimation | (() => void) | null>(null);
-  const stop = () => {
-    const a = anim.current;
-    if (typeof a === 'function') a();
-    else a?.stop();
-    anim.current = null;
-  };
-  /** Ends the pointer drag in progress (its window listeners); null when there is none. */
-  const gesture = useRef<(() => void) | null>(null);
-  // Unmounted: no drag, snap or fling may keep running on a detached viewport.
-  useEffect(
-    () => () => {
-      gesture.current?.();
-      const a = anim.current;
-      if (typeof a === 'function') a();
-      else a?.stop();
-      anim.current = null;
-    },
-    [],
-  );
-  const settle = useCallback(
-    (target?: number, velocity = 0) => {
-      const el = viewport.current;
-      if (!el || snapTargets.length === 0) return;
-      const from = readScroll(el, rtl);
-      const to =
-        target ??
-        snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
-      stop();
-      if (Math.abs(to - from) < 0.5) return;
-      if (prefersReducedMotion()) {
-        writeScroll(el, rtl, to);
-        place();
-        return;
-      }
-      anim.current = animateSpring({
-        spring: SNAP_SPRING,
-        from,
-        to,
-        velocity,
-        onUpdate: (v) => {
-          writeScroll(el, rtl, v);
-          place();
-        },
-        onComplete: () => {
-          anim.current = null;
-        },
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [snapTargets, place, rtl],
-  );
-
-  /**
-   * PagerSnapLayoutInfoProvider calculateFinalSnappingBound for a release at `scroll` with scroll
-   * velocity `velocity` (px/s, + forward) after a drag of `dragDelta` px (up − down, pointer x).
-   */
-  const singleAdvanceTarget = (scroll: number, velocity: number, dragDelta: number) => {
-    let lower = -Infinity;
-    let upper = Infinity;
-    for (const t of snapTargets) {
-      if (t <= scroll && t > lower) lower = t;
-      if (t >= scroll && t < upper) upper = t;
-    }
-    if (lower === -Infinity) lower = upper;
-    if (upper === Infinity) upper = lower;
-    const notGesture = Math.trunc(dragDelta) === 0;
-    const forward = !((notGesture ? -velocity : dragDelta) > 0);
-    if (scroll >= max) {
-      upper = scroll;
-      if (forward) lower = scroll;
-    }
-    if (scroll <= 0) {
-      lower = scroll;
-      if (!forward) upper = scroll;
-    }
-    if (Math.abs(velocity) >= MIN_FLING_VELOCITY) return velocity > 0 ? upper : lower;
-    const pageSize = strategy!.itemMainAxisSize;
-    const offset = pageSize === 0 ? 0 : dragDelta / pageSize;
-    const overflow = offset - Math.trunc(offset);
-    const positionThresholdFraction = Math.min(DEFAULT_POSITION_THRESHOLD, pageSize / 2) / pageSize;
-    if (Math.abs(overflow) > SNAP_POSITIONAL_THRESHOLD) return forward ? upper : lower;
-    if (Math.abs(offset) >= Math.abs(positionThresholdFraction)) return forward ? lower : upper;
-    return Math.abs(lower - scroll) < Math.abs(upper - scroll) ? lower : upper;
-  };
-
-  const dragging = useRef(false);
-  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const el = viewport.current;
-    if (!el || !strategy || e.button !== 0) return;
-    // Uncontained keeps the browser's touch scrolling (its momentum is the decay).
-    if (layout === 'uncontained' && e.pointerType === 'touch') return;
-    gesture.current?.();
-    // Pointer x → logical scroll: dragging towards the end edge scrolls back.
-    const toward = rtl ? -1 : 1;
-    const id = e.pointerId;
-    const downX = e.clientX;
-    let x0 = e.clientX;
-    let scroll0 = readScroll(el, rtl);
-    let active = false;
-    const slop = pointerSlop(e.pointerType);
-    const tracker = new PointerVelocityTracker();
-    tracker.down(e);
-    const move = (ev: PointerEvent) => {
-      if (ev.pointerId !== id) return;
-      tracker.move(ev);
-      if (!active) {
-        const dx = ev.clientX - x0;
-        if (Math.abs(dx) <= slop) return;
-        active = true;
-        dragging.current = true;
-        stop();
-        scroll0 = readScroll(el, rtl);
-        x0 += Math.sign(dx) * slop; // Compose's overSlop
-      }
-      writeScroll(el, rtl, Math.min(max, Math.max(0, scroll0 - toward * (ev.clientX - x0))));
-      place();
-    };
-    const up = (ev: PointerEvent) => {
-      if (ev.pointerId !== id) return;
-      end();
-      if (!active) return;
-      dragging.current = false;
-      tracker.up(ev);
-      suppressNextClick();
-      const velocity = -toward * tracker.velocity().x;
-      if (layout === 'uncontained') {
-        // noSnapFlingBehavior: decay, no snap.
-        if (velocity === 0 || prefersReducedMotion()) return;
-        const from = readScroll(el, rtl);
-        const fling = splineFling(velocity);
-        let start: number | undefined;
-        let frame = requestAnimationFrame(function tick(now) {
-          start ??= now;
-          const t = now - start;
-          const scroll = Math.min(max, Math.max(0, from + fling.position(t)));
-          writeScroll(el, rtl, scroll);
-          place();
-          const atBound = scroll <= 0 || scroll >= max;
-          if (t < fling.duration && !atBound) frame = requestAnimationFrame(tick);
-          else anim.current = null;
-        });
-        anim.current = () => cancelAnimationFrame(frame);
-        return;
-      }
-      settle(singleAdvanceTarget(readScroll(el, rtl), velocity, toward * (ev.clientX - downX)), velocity);
-    };
-    const end = () => {
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
-      if (gesture.current === end) gesture.current = null;
-      dragging.current = false;
-    };
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
-    window.addEventListener('pointercancel', up);
-    gesture.current = end;
-  };
-
-  useLayoutEffect(() => {
-    const el = viewport.current;
-    if (!el || !strategy) return undefined;
-    const onScroll = () => place();
-    // Wheel / trackpad / keyboard scrolling (not our drags or snaps) settles on the nearest item;
-    // uncontained doesn't snap.
-    const onEnd = () => {
-      if (anim.current == null && !dragging.current && layout !== 'uncontained') settle();
-    };
-    el.addEventListener('scroll', onScroll, { passive: true });
-    el.addEventListener('scrollend', onEnd);
-    return () => {
-      el.removeEventListener('scroll', onScroll);
-      el.removeEventListener('scrollend', onEnd);
-    };
-  }, [strategy, place, settle, layout]);
-
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    const el = viewport.current;
-    if (!el) return;
-    if (layout === 'full-screen') return;
-    // Screen direction: in RTL the right arrow goes back towards the start.
-    const right = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-    if (!right) return;
-    e.preventDefault();
-    if (strategy) {
-      const pos = readScroll(el, rtl);
-      const current = snapTargets.reduce(
-        (bi, t, i) => (Math.abs(t - pos) < Math.abs(snapTargets[bi]! - pos) ? i : bi),
-        0,
-      );
-      const next = Math.min(count - 1, Math.max(0, current + (rtl ? -right : right)));
-      settle(snapTargets[next]);
-    } else {
-      el.scrollBy({ left: right * 200, behavior: 'smooth' });
-    }
-  };
 
   const common = {
     ref: setRef,
@@ -562,9 +312,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         {items.map((child, i) => (
           <div
             key={keyOf(child, i)}
-            ref={(el) => {
-              itemEls.current[i] = el;
-            }}
+            ref={itemRef(i)}
             {...slide(i)}
             {...stylex.props(strategy ? s.item : [s.itemStatic, s.itemWidth(staticWidth)])}
           >
