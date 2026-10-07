@@ -6,7 +6,7 @@ import { color } from '../../tokens/color.stylex';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from './ButtonFrame.tsx';
-import { base, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
+import { base, containerMotion, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from './buttonStyles.ts';
 
 export type ButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated' | 'text';
 export type { ButtonShape, ButtonSize };
@@ -63,6 +63,8 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
         focusRing={!!forced.focusRing}
         icon={icon}
         container={[
+          // Shape morph on DefaultEffects (Compose: no bounce); XL elevated also tweens its shadow.
+          variant === 'elevated' && !isDisabled && size === 'xlarge' ? containerMotion.effectsElevated : containerMotion.effects,
           variants[variant],
           variant === 'elevated' && !isDisabled && elevatedShadow[size],
           variant === 'elevated' && !isDisabled && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,

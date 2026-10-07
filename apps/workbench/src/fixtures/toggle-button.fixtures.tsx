@@ -1,4 +1,4 @@
-import { ToggleButton, type ButtonShape, type ButtonSize, type ToggleButtonVariant } from '@m3x/react';
+import { ToggleButton, ToolbarScope, type ButtonShape, type ButtonSize, type ToggleButtonVariant } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toggle-button/manifest.json';
 import assets from '../../../../figma/toggle-button/assets.json';
@@ -27,6 +27,19 @@ const fixture: FixtureModule = {
         ),
       },
     ]),
+    // In a toolbar: hover lifts the toggle to level 1 (motion tests).
+    [
+      'toolbar-live',
+      {
+        render: () => (
+          <ToolbarScope color="standard">
+            <ToggleButton size="medium" icon={<Icon d={assets.icon} />} selectedIcon={<Icon d={assets.selectedIcon} />}>
+              Label
+            </ToggleButton>
+          </ToolbarScope>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [variant, selection, shape, size, state] = name.split('-') as [ToggleButtonVariant, 'selected' | 'unselected', ButtonShape, ButtonSize, string];
       const forced: ForcedState | undefined =

@@ -7,7 +7,8 @@ import { elevation } from '../../tokens/elevation.stylex';
 import { stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonFrame } from '../Button/ButtonFrame.tsx';
-import { base, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { base, containerMotion, elevatedShadow, sizes, strokeWidths, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { motion } from '../../tokens/motion.stylex';
 import { ToolbarColorContext } from '../Toolbar/context.ts';
 
 export type ToggleButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';
@@ -51,6 +52,22 @@ const inToolbar = stylex.create({
     },
   },
   lifted: { boxShadow: elevation.level1 },
+});
+
+/*
+ * Outlined: selecting animates the stroke away instead of dropping it — Compose
+ * `animateBorderStrokeAsState` (ToggleButton.kt): width → 0 on FastSpatial, colour → transparent
+ * on DefaultEffects (and back when unselected).
+ */
+const strokeMotion = stylex.create({
+  outlined: {
+    '::after': {
+      transitionProperty: 'border-width, border-color',
+      transitionDuration: `${motion.fastSpatialDuration}, ${motion.defaultEffectsDuration}`,
+      transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.defaultEffectsEasing}`,
+    },
+  },
+  selected: { '::after': { borderWidth: 0, borderColor: 'transparent' } },
 });
 
 const selected = stylex.create({
@@ -129,13 +146,18 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
         focusRing={!!forced.focusRing}
         icon={isSelected ? (selectedIcon ?? icon) : icon}
         container={[
+          // Selection / press morph on FastSpatial (Compose ToggleButton); a shadow that changes with
+          // the interaction (toolbar lift, XL elevated) tweens like Compose animateElevation.
+          !isDisabled && (tool || (variant === 'elevated' && size === 'xlarge')) ? containerMotion.spatialElevated : containerMotion.spatial,
           tool ? inToolbar[isSelected ? (`${tool}Selected` as const) : tool] : isSelected ? selected[variant] : unselected[variant],
           tool && !isDisabled && inToolbar.lift,
           tool && !isDisabled && forced.state === 'hovered' && inToolbar.lifted,
           variant === 'elevated' && !isDisabled && elevatedShadow[size],
           variant === 'elevated' && !isDisabled && size === 'xlarge' && !!forced.state && elevatedShadow.xlargeInteracting,
-          variant === 'outlined' && !isSelected && base.stroke,
-          variant === 'outlined' && !isSelected && strokeWidths[size],
+          variant === 'outlined' && base.stroke,
+          variant === 'outlined' && strokeWidths[size],
+          variant === 'outlined' && strokeMotion.outlined,
+          variant === 'outlined' && isSelected && strokeMotion.selected,
         ]}
       >
         {children}

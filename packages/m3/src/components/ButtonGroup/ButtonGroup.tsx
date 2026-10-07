@@ -8,7 +8,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { base, containerSizes, disabled, gaps, iconSizes, labelRole, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
+import { base, containerMotion, containerSizes, disabled, gaps, iconSizes, labelRole, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
 import { ButtonGroupContext } from './context.ts';
 
 /*
@@ -270,6 +270,8 @@ export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedB
       <span
         {...stylex.props(
           base.container,
+          // Connected segments are ToggleButtons with connected shapes: corners morph on FastSpatial.
+          containerMotion.spatial,
           containerSizes[size],
           s.container,
           dyn.height(H[size]),

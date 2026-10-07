@@ -3,6 +3,7 @@ import { color } from '../../tokens/color.stylex';
 import { elevation } from '../../tokens/elevation.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { state } from '../../tokens/state.stylex';
+import { tween } from '../../primitives/tweens.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
@@ -52,9 +53,6 @@ export const base = stylex.create({
     outlineColor: color.secondary,
     outlineWidth: state.focusIndicatorThickness,
     outlineOffset: state.focusIndicatorOuterOffset,
-    transitionProperty: 'border-radius',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
   },
   ringForced: { outlineStyle: 'solid' },
   content: {
@@ -80,6 +78,86 @@ export const base = stylex.create({
       borderStyle: 'solid',
       borderColor: color.outlineVariant,
       pointerEvents: 'none',
+    },
+  },
+});
+
+/*
+ * Container motion (Compose material3, androidx-main):
+ *   - Button, SplitButton (and IconButton, see IconButtonFrame): the press / checked shape morph
+ *     runs on MotionSchemeKeyTokens.DefaultEffects — "intentional here to prevent any bounce"
+ *     (Button.kt `Button`, SplitButton.kt `LeadingButton` / `TrailingButton`).
+ *   - ToggleButton and the connected group segments (ToggleButtons with connected shapes):
+ *     FastSpatial (ToggleButton.kt `ToggleButton`).
+ *   - A shadow that changes with the interaction follows Compose `animateElevation`
+ *     (internal/Elevation.kt): 120 ms FastOutSlowIn into hover / focus / press, the out tween
+ *     back to rest. The "in" tween sits on the state conditions (a CSS transition takes the
+ *     destination style's timing). Disabled snaps: use the radius-only variant there.
+ * stylex.when must stay inline, hence the repetition.
+ */
+export const containerMotion = stylex.create({
+  effects: {
+    transitionProperty: 'border-radius',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
+  },
+  spatial: {
+    transitionProperty: 'border-radius',
+    transitionDuration: motion.fastSpatialDuration,
+    transitionTimingFunction: motion.fastSpatialEasing,
+  },
+  effectsElevated: {
+    transitionProperty: 'border-radius, box-shadow',
+    transitionDuration: {
+      default: `${motion.defaultEffectsDuration}, ${tween.elevationOutDuration}`,
+      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}` },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
+        '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
+        '@media (hover: hover)': `${motion.defaultEffectsDuration}, ${tween.elevationInDuration}`,
+      },
+    },
+    transitionTimingFunction: {
+      default: `${motion.defaultEffectsEasing}, ${tween.elevationOutEasing}`,
+      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}` },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
+        '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
+        '@media (hover: hover)': `${motion.defaultEffectsEasing}, ${tween.elevationInEasing}`,
+      },
+    },
+  },
+  spatialElevated: {
+    transitionProperty: 'border-radius, box-shadow',
+    transitionDuration: {
+      default: `${motion.fastSpatialDuration}, ${tween.elevationOutDuration}`,
+      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}` },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
+        '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
+        '@media (hover: hover)': `${motion.fastSpatialDuration}, ${tween.elevationInDuration}`,
+      },
+    },
+    transitionTimingFunction: {
+      default: `${motion.fastSpatialEasing}, ${tween.elevationOutEasing}`,
+      [stylex.when.ancestor(':hover')]: { default: null, '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}` },
+      [stylex.when.ancestor(':focus-visible')]: {
+        default: `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
+        '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
+      },
+      [stylex.when.ancestor(':active')]: {
+        default: `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
+        '@media (hover: hover)': `${motion.fastSpatialEasing}, ${tween.elevationInEasing}`,
+      },
     },
   },
 });
