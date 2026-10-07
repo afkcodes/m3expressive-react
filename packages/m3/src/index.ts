@@ -28,7 +28,14 @@ export {
   CardText,
   CardActions,
 } from './components/Card/index.ts';
-export type { CardHeaderProps, CardMediaProps, CardHeadlineProps } from './components/Card/index.ts';
+export type {
+  CardHeaderProps,
+  CardMediaProps,
+  CardContentProps,
+  CardHeadlineProps,
+  CardTextProps,
+  CardActionsProps,
+} from './components/Card/index.ts';
 export type { CardProps, CardVariant } from './components/Card/index.ts';
 export { IconButton } from './components/IconButton/index.ts';
 export type { IconButtonProps, IconButtonVariant, IconButtonWidth } from './components/IconButton/index.ts';
