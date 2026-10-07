@@ -1,4 +1,12 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode, type RefObject } from 'react';
+import {
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
@@ -113,6 +121,8 @@ interface Motion {
   c: number;
   /** Docked: the dropdown's slide (0 = −height/2, 1 = in place). */
   slide: number;
+  /** Docked: the results' height for the slide, measured once per slide (not every frame). */
+  slideHeight: number | null;
   dropdown: boolean;
   spring: SpringAnimation | null;
   slideSpring: SpringAnimation | null;
@@ -150,9 +160,12 @@ export function SearchView({
   const bar = useRef<HTMLDivElement>(null);
   const results = useRef<HTMLDivElement>(null);
   const m = useRef<Motion | null>(null);
-  // Animation callbacks outlive renders: they read everything through refs.
+  // Animation callbacks outlive renders: they read the latest props here (updated before the
+  // effects below run).
   const props = useRef({ full, expandSpec, collapseSpec, onCollapsed });
-  props.current = { full, expandSpec, collapseSpec, onCollapsed };
+  useLayoutEffect(() => {
+    props.current = { full, expandSpec, collapseSpec, onCollapsed };
+  });
 
   const apply = () => {
     const st = m.current;
@@ -179,8 +192,13 @@ export function SearchView({
       res.style.opacity = String(st.c);
       res.style.visibility = st.dropdown || st.slideSpring ? '' : 'hidden';
       const list = res.firstElementChild as HTMLElement | null;
-      if (list)
-        list.style.transform = st.slide === 1 ? '' : `translateY(${(-res.offsetHeight / 2) * (1 - st.slide)}px)`;
+      if (list) {
+        if (st.slide === 1) list.style.transform = '';
+        else {
+          st.slideHeight ??= res.offsetHeight;
+          list.style.transform = `translateY(${(-st.slideHeight / 2) * (1 - st.slide)}px)`;
+        }
+      }
     }
   };
   const clear = () => {
@@ -216,6 +234,7 @@ export function SearchView({
     const st = m.current;
     if (!st || props.current.full || st.dropdown === visible) return;
     st.dropdown = visible;
+    st.slideHeight = null;
     const spec = visible ? props.current.expandSpec : props.current.collapseSpec;
     const to = visible ? 1 : 0;
     if (!spec) {
@@ -285,8 +304,8 @@ export function SearchView({
     }
   };
 
-  useLayoutEffect(() => {
-    if (!mounted) return;
+  // Each change of `open` (and the mount) starts the motion towards it, from wherever it is.
+  const startMotion = useEffectEvent((open: boolean) => {
     // Without a bar to expand from (static layouts), the view starts expanded.
     const animateIn = m.current == null && open && expandedFrom?.current != null;
     const st = (m.current ??= {
@@ -294,6 +313,7 @@ export function SearchView({
       p: animateIn ? 0 : 1,
       c: animateIn ? 0 : 1,
       slide: animateIn ? 0 : 1,
+      slideHeight: null,
       dropdown: !animateIn,
       spring: null,
       slideSpring: null,
@@ -362,7 +382,9 @@ export function SearchView({
       });
     apply();
     settled();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+  useLayoutEffect(() => {
+    if (mounted) startMotion(open);
   }, [open, mounted]);
 
   useLayoutEffect(
