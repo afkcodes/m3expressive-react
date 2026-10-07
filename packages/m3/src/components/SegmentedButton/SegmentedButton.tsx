@@ -1,4 +1,4 @@
-import { Children, createContext, forwardRef, isValidElement, useContext, useState, type ReactNode } from 'react';
+import { Children, createContext, forwardRef, isValidElement, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Toggle as BaseToggle } from '@base-ui/react/toggle';
@@ -25,6 +25,9 @@ export type SegmentedButtonDensity = 0 | -1 | -2 | -3;
  *   Disabled: outline on-surface 10%, content 38%.
  */
 const CHECK = 'M9.55 18L3.85 12.3L5.275 10.875L9.55 15.15L18.725 5.975L20.15 7.4L9.55 18Z';
+
+const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
+const scaleIn = stylex.keyframes({ from: { scale: 0 } });
 
 const s = stylex.create({
   group: { display: 'inline-flex', verticalAlign: 'middle' },
@@ -65,9 +68,7 @@ const s = stylex.create({
     outlineColor: color.secondary,
     outlineWidth: state.focusIndicatorThickness,
     outlineOffset: state.focusIndicatorOuterOffset,
-    transitionProperty: 'background-color',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
+    // No colour transition: Compose snaps the container colour (SegmentedButtonColors.containerColor).
     // Inside stroke, drawn above the state layer (kit order).
     '::after': {
       content: '""',
@@ -89,6 +90,33 @@ const s = stylex.create({
   contentDisabled: { opacity: state.disabledContentOpacity },
   icon: { width: 18, height: 18, flexShrink: 0 },
   label: { color: 'inherit' },
+  // The 18px icon slot is always reserved (Compose SegmentedButtonContentMeasurePolicy: content
+  // width = icon size + 8 + label), so the content width never changes.
+  slot: { position: 'relative', display: 'inline-flex', width: 18, height: 18, flexShrink: 0 },
+  // With nothing in the slot the label sits half the slot to the start, i.e. centred; it slides
+  // to 0 when the check appears (FastSpatial, both ways).
+  main: {
+    transitionProperty: 'translate',
+    transitionDuration: motion.fastSpatialDuration,
+    transitionTimingFunction: motion.fastSpatialEasing,
+  },
+  mainOffset: { translate: '-13px 0' },
+  // Icon ⇄ check crossfade (Compose `Crossfade`, DefaultEffects) when there is an icon and a label.
+  fade: {
+    transitionProperty: 'opacity',
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
+  },
+  over: { position: 'absolute', inset: 0 },
+  transparent: { opacity: 0 },
+  // Check appearing on its own (Compose AnimatedVisibility): fadeIn on DefaultEffects + scaleIn
+  // from 0 about the bottom-start corner on FastSpatial; no exit animation.
+  checkEnter: {
+    transformOrigin: '0 100%',
+    animationName: `${fadeIn}, ${scaleIn}`,
+    animationDuration: `${motion.defaultEffectsDuration}, ${motion.fastSpatialDuration}`,
+    animationTimingFunction: `${motion.defaultEffectsEasing}, ${motion.fastSpatialEasing}`,
+  },
 });
 
 const dyn = stylex.create({
@@ -192,14 +220,22 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
   const full = `${box / 2}px`;
   const start = position === 'start' || position === 'only' ? full : '0px';
   const end = position === 'end' || position === 'only' ? full : '0px';
-  const check = (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...stylex.props(s.icon)}>
-      <path d={CHECK} />
-    </svg>
-  );
-  const iconNode = icon != null ? <span {...stylex.props(s.icon)}>{icon}</span> : null;
-  // Selected: check replaces the icon next to a label; it is added in front of icon-only / label-only content.
-  const leading = isSelected ? (iconNode && children != null ? [check] : [check, iconNode]) : [iconNode];
+  // Compose SegmentedButtonContent: [icon slot | 8 | label]. The slot shows the check when selected;
+  // with an icon and a label it crossfades icon ⇄ check, otherwise the check enters on its own.
+  const hasLabel = children != null;
+  const crossfade = icon != null && hasLabel;
+  // Empty slot (no check, no icon in it) → the content shifts back by half the slot.
+  const offset = !crossfade && !isSelected && s.mainOffset;
+  const main = hasLabel ? (
+    <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label, s.main, offset)}>{children}</span>
+  ) : icon != null ? (
+    <span {...stylex.props(s.icon, s.main, offset)}>{icon}</span>
+  ) : null;
+  // The enter animation plays only for a selection made after mount (AnimatedVisibility starts visible).
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+  }, []);
 
   return (
     <BaseToggle
@@ -234,10 +270,33 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
       >
         <StateLayer />
         <span {...stylex.props(s.content, isDisabled && s.contentDisabled)}>
-          {leading.map((n, i) => (n ? <span key={i} style={{ display: 'contents' }}>{n}</span> : null))}
-          {children != null && <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{children}</span>}
+          <span {...stylex.props(s.slot)}>
+            {crossfade ? (
+              <>
+                <span {...stylex.props(s.icon, s.fade, isSelected && s.transparent)}>{icon}</span>
+                <CheckIcon sx={[s.fade, s.over, !isSelected && s.transparent]} />
+              </>
+            ) : (
+              isSelected && <EnteringCheck animate={mounted.current} />
+            )}
+          </span>
+          {main}
         </span>
       </span>
     </BaseToggle>
   );
 });
+
+function CheckIcon({ sx }: { sx?: StyleXStyles }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...stylex.props(s.icon, sx)}>
+      <path d={CHECK} />
+    </svg>
+  );
+}
+
+/** A check that plays the enter animation if `animate` was set when it mounted. */
+function EnteringCheck({ animate }: { animate: boolean }) {
+  const [enter] = useState(animate);
+  return <CheckIcon sx={enter ? s.checkEnter : undefined} />;
+}

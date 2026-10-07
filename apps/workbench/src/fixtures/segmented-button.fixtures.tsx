@@ -29,6 +29,20 @@ const fixture: FixtureModule = {
         ),
       },
     ],
+    [
+      'live-icons',
+      {
+        render: () => (
+          <SegmentedButton defaultValue={['1']} aria-label="View" sx={w.px(360)}>
+            {['1', '2', '3'].map((v) => (
+              <SegmentedButtonItem key={v} value={v} icon={<Stars />}>
+                Label
+              </SegmentedButtonItem>
+            ))}
+          </SegmentedButton>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const parts = name.split('-');
       if (parts[0] === 'set') {
