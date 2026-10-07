@@ -24,8 +24,6 @@ const s = stylex.create({
   toolbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' },
   status: { margin: 0, color: color.onSurfaceVariant },
   stack: { display: 'flex', flexDirection: 'column', gap: 16, width: '100%' },
-  // Workaround (library): Tab takes `disabled` but draws no disabled style; M3 dims it to 38%.
-  disabledTab: { opacity: 0.38, cursor: 'default' },
 });
 
 const MEDIA = [
@@ -133,13 +131,7 @@ function Controlled() {
           ))}
         >
           {STEPS.map((t, i) => (
-            <Tab
-              key={t}
-              value={i}
-              label={t}
-              disabled={i === 3 && value < 2}
-              sx={i === 3 && value < 2 ? s.disabledTab : undefined}
-            />
+            <Tab key={t} value={i} label={t} disabled={i === 3 && value < 2} />
           ))}
         </Tabs>
       </div>

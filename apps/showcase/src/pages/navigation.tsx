@@ -49,10 +49,6 @@ const s = stylex.create({
   control: { display: 'flex', alignItems: 'center', gap: 12, color: color.onSurface, cursor: 'pointer' },
   railSlot: { display: 'flex', flexShrink: 0 },
   floatingPad: { padding: 12 },
-  // Workaround (library): a horizontal item's label box hugs at ceil(advance − tracking) but also
-  // ellipsises, so Chrome cuts most labels ("Ho…"). A 1px zero-height float widens the hug box
-  // without taking room from the line.
-  hugFix: { float: 'right', width: 1, height: 0 },
 });
 
 interface Destination {
@@ -82,21 +78,12 @@ const SHORT_BAR: readonly Destination[] = [
 ];
 
 /** One destination: outlined icon, filled when selected, with an optional badge. */
-function item(d: Destination, value: number, hugFix = false) {
+function item(d: Destination, value: number) {
   return (
     <NavigationItem
       key={d.label}
       value={value}
-      label={
-        hugFix ? (
-          <>
-            {d.label}
-            <span aria-hidden {...stylex.props(s.hugFix)} />
-          </>
-        ) : (
-          d.label
-        )
-      }
+      label={d.label}
       icon={<Icon name={d.icon} />}
       selectedIcon={<Icon name={d.icon} filled />}
       badge={d.badge}
@@ -123,7 +110,7 @@ function BarDemo({
         <p {...stylex.props(typescale.bodyMedium, s.text)}>{note}</p>
       </div>
       <NavigationBar value={value} onValueChange={setValue} layout={layout} aria-label="Main">
-        {destinations.map((d, i) => item(d, i, layout === 'horizontal'))}
+        {destinations.map((d, i) => item(d, i))}
       </NavigationBar>
     </div>
   );

@@ -6,10 +6,7 @@ import { Demo, Page, Section } from '../ui/Page.tsx';
 import { Icon } from '../ui/Icon.tsx';
 
 const s = stylex.create({
-  // The pickers' day / dial labels carry z-index 1 with no stacking context of their own: isolate
-  // them, or they paint over every popup on the page.
   stack: {
-    isolation: 'isolate',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
