@@ -61,6 +61,7 @@ export function MenuPlayground() {
   const [log, setLog] = useState('—');
   const [sort, setSort] = useState<unknown>('name');
   const [hidden, setHidden] = useState(false);
+  const [wrap, setWrap] = useState(true);
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   const leading = (name: string) => (variant === 'baseline' ? <Icon name="content_cut-24" /> : <Icon name={name} />);
   return (
@@ -102,7 +103,7 @@ export function MenuPlayground() {
           <span {...stylex.props(typescale.bodyMedium, s.muted)}>Last action: {log}</span>
         </section>
         <div {...stylex.props(s.stage)}>
-          <Section title="Actions" note="Groups 2px apart; arrows / Home / End move, Enter runs, Escape closes. Opens with scale 0.8 → 1 on the fast spatial spring.">
+          <Section title="Actions" note="Groups 2px apart; arrows / Home / End move, Enter runs, Escape closes. Opens with scale 0.8 → 1 on the fast spatial spring, growing from the middle of the button it hangs from (Compose transform origin).">
             <Menu trigger={<Button variant="tonal">Edit</Button>} variant={variant} density={density}>
               <MenuGroup>
                 <MenuItem leading={leading('stars-20')} trailingText="Ctrl+X" onClick={() => setLog('Cut')}>
@@ -125,7 +126,7 @@ export function MenuPlayground() {
               </MenuGroup>
             </Menu>
           </Section>
-          <Section title="Selection" note="Radio and checkbox items keep the menu open; the chosen item takes the selected shape (12px corners) and container.">
+          <Section title="Selection" note="Radio and checkbox items keep the menu open; the chosen item takes the selected shape (12px corners) and container. “Word wrap” has only a selected icon: the check expands in and fades (fast spatial / fast effects).">
             <Menu trigger={<Button variant="outlined">Sort &amp; filter</Button>} variant={variant} density={density}>
               <MenuRadioGroup label={variant === 'baseline' ? undefined : 'Sort by'} value={sort} onValueChange={setSort}>
                 {['name', 'date', 'size'].map((v) => (
@@ -139,10 +140,13 @@ export function MenuPlayground() {
                 <MenuCheckboxItem checked={hidden} onCheckedChange={setHidden} leading={leading('stars-20')}>
                   Show hidden files
                 </MenuCheckboxItem>
+                <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap} selectedLeading={<Icon name={variant === 'baseline' ? 'check_small-24' : 'check-20'} />}>
+                  Word wrap
+                </MenuCheckboxItem>
               </MenuGroup>
             </Menu>
           </Section>
-          <Section title="Submenu" note="The trigger item keeps its hover layer while its submenu is open (kit “Active”).">
+          <Section title="Submenu" note="The trigger item keeps its hover layer while its submenu is open (kit “Active”); the submenu grows from the trigger's vertical middle.">
             <Menu
               trigger={
                 <IconButton aria-label="More">
