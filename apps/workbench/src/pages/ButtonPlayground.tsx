@@ -139,6 +139,7 @@ export function ButtonPlayground() {
   const [contrast, setContrast] = useState<ContrastLevel>('standard');
   const [motion, setMotion] = useState<'expressive' | 'standard'>('expressive');
   const [clicks, setClicks] = useState(0);
+  const [fabExpanded, setFabExpanded] = useState(true);
 
   const props = [
     variant !== 'filled' && `variant="${variant}"`,
@@ -249,15 +250,20 @@ export function ButtonPlayground() {
         </section>
 
         <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>FABs — hover lifts to level 4</h2>
+        <section {...stylex.props(s.panel)}>
+          <Field label="Extended FABs expanded">
+            <input type="checkbox" checked={fabExpanded} onChange={(e) => setFabExpanded(e.target.checked)} />
+          </Field>
+        </section>
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'max-content repeat(6, max-content)' }}>
           {FAB_COLORS.map((c) => (
             <Row key={c} label={c}>
               <Fab aria-label={`${c} fab`} color={c}><StarsFilled /></Fab>
               <Fab aria-label={`${c} medium fab`} color={c} size="medium"><StarsFilled /></Fab>
               <Fab aria-label={`${c} large fab`} color={c} size="large"><StarsFilled /></Fab>
-              <ExtendedFab color={c} icon={<StarsFilled />}>{label || 'Label'}</ExtendedFab>
-              <ExtendedFab color={c} size="medium" icon={<StarsFilled />}>{label || 'Label'}</ExtendedFab>
-              <ExtendedFab color={c} size="large" icon={<StarsFilled />}>{label || 'Label'}</ExtendedFab>
+              <ExtendedFab color={c} icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
+              <ExtendedFab color={c} size="medium" icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
+              <ExtendedFab color={c} size="large" icon={<StarsFilled />} expanded={fabExpanded}>{label || 'Label'}</ExtendedFab>
             </Row>
           ))}
         </section>
@@ -273,7 +279,7 @@ export function ButtonPlayground() {
           ))}
         </section>
 
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Button groups ({size}, {shape})</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>Button groups ({size}, {shape}) — press and hold a button in the standard groups to widen it</h2>
         <section {...stylex.props(s.stage)} style={{ minHeight: 0, padding: 24 }}>
           <ConnectedButtonGroup size={size} shape={shape} defaultValue={['day']} aria-label="Range" disabled={disabled}>
             {['day', 'week', 'month'].map((v) => (
@@ -282,6 +288,13 @@ export function ButtonPlayground() {
               </ConnectedButtonGroupItem>
             ))}
           </ConnectedButtonGroup>
+          <ButtonGroup size={size}>
+            {['Archive', 'Move', 'Delete'].map((l) => (
+              <Button key={l} variant="tonal" size={size} shape={shape} disabled={disabled}>
+                {l}
+              </Button>
+            ))}
+          </ButtonGroup>
           <ButtonGroup size={size}>
             {(['filled', 'tonal', 'outlined'] as const).map((v) => (
               <ToggleIconButton key={v} aria-label={v} variant={v} size={size} width="wide" shape={shape} selectedIcon={<Stars selected />} disabled={disabled}>
