@@ -26,7 +26,10 @@ const asForced = (s: string): ForcedState | undefined =>
   s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 const badgeFor = (b: string) => (b === 'small' ? <Badge /> : b === 'large' ? <Badge>3</Badge> : undefined);
 
-const item = (i: number, extra: Partial<React.ComponentProps<typeof NavigationItem>> = {}) => (
+const item = (
+  i: number,
+  extra: Partial<Omit<React.ComponentProps<typeof NavigationItem>, 'label' | 'aria-label'>> = {},
+) => (
   <NavigationItem
     key={i}
     value={i}
@@ -157,10 +160,26 @@ function LiveRail() {
   );
 }
 
+/** Live (a11y): a collapsed rail without labels; the last destination is icon-only (aria-label). */
+function LiveRailNoLabels() {
+  const [value, setValue] = useState<unknown>(0);
+  return (
+    <div style={{ width: 96, height: 400, display: 'flex' }}>
+      <NavigationRail value={value} onValueChange={setValue} showLabels={false} aria-label="Primary">
+        {['Home', 'Activity'].map((t, i) => (
+          <NavigationItem key={t} value={i} icon={<Icon name="stars-24" />} label={t} />
+        ))}
+        <NavigationItem value={2} icon={<Icon name="stars-24" />} aria-label="Saved" />
+      </NavigationRail>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'navigation',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 64, render: () => <LiveBar /> } satisfies FixtureVariant],
+    ['live-rail-nolabels', { width: 96, height: 400, render: () => <LiveRailNoLabels /> } satisfies FixtureVariant],
     ['live-rail', { width: 280, height: 800, render: () => <LiveRail /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
