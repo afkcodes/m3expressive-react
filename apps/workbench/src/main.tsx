@@ -1,11 +1,13 @@
 import './global.css';
-import { lazy, type ComponentType } from 'react';
+import { type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { findDemo } from './demos.ts';
-import { Boundary } from './pages/Boundary.tsx';
+import { findDemo, type Demo } from './demos.ts';
+import { importBeforeLoad } from './load.ts';
+import { Boundary, ErrorMessage } from './pages/Boundary.tsx';
 import { Compare } from './pages/Compare.tsx';
 import { Fixture } from './pages/Fixture.tsx';
 import { Gallery } from './pages/Gallery.tsx';
+import { loadAllFixtures, loadFixture } from './registry.ts';
 
 // /fixture/:component/:variant — isolated render used by the Playwright parity suite
 // /fixture/:component          — every variant of a component (console spec)
@@ -20,26 +22,29 @@ const playgrounds = import.meta.glob<Record<string, ComponentType>>([
   './pages/*Playground.tsx',
   './pages/ShapesDemo.tsx',
 ]);
-const demo = page === 'demo' ? findDemo(component) : undefined;
-const Demo =
-  demo &&
-  lazy(async () => {
-    const load = playgrounds[`./pages/${demo.page}.tsx`];
-    if (!load) throw new Error(`No module pages/${demo.page}.tsx`);
-    const Page = (await load())[demo.page];
-    if (!Page) throw new Error(`pages/${demo.page}.tsx exports no ${demo.page}`);
-    return { default: Page };
-  });
 
-function App() {
-  if (page === 'fixture') return <Fixture component={component} variant={variant} />;
-  if (page === 'compare') return <Compare component={component} />;
-  if (Demo) return <Demo />;
-  return <Gallery />;
+async function loadDemo(demo: Demo): Promise<ComponentType> {
+  const path = `./pages/${demo.page}.tsx`;
+  const load = playgrounds[path];
+  if (!load) throw new Error(`No module pages/${demo.page}.tsx`);
+  const Page = (await importBeforeLoad(load, new URL(path, import.meta.url)))[demo.page];
+  if (!Page) throw new Error(`pages/${demo.page}.tsx exports no ${demo.page}`);
+  return Page;
 }
 
-createRoot(document.getElementById('root')!).render(
-  <Boundary>
-    <App />
-  </Boundary>,
-);
+/** This URL's page, once the modules it needs have loaded. */
+async function route(): Promise<ReactNode> {
+  if (page === 'fixture') return <Fixture mod={await loadFixture(component)} component={component} variant={variant} />;
+  if (page === 'compare') return <Compare mod={await loadFixture(component)} component={component} />;
+  const demo = page === 'demo' ? findDemo(component) : undefined;
+  if (demo) {
+    const Page = await loadDemo(demo);
+    return <Page />;
+  }
+  return <Gallery all={await loadAllFixtures()} />;
+}
+
+const root = createRoot(document.getElementById('root')!);
+void route()
+  .catch((error: unknown) => <ErrorMessage error={error} />)
+  .then((content) => root.render(<Boundary>{content}</Boundary>));

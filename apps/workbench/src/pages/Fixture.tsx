@@ -1,6 +1,5 @@
-import { use, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { M3Provider } from '@m3x/react';
-import { loadFixture } from '../registry.ts';
 import type { FixtureModule, FixtureVariant } from '../fixtures/types.ts';
 import { Boundary } from './Boundary.tsx';
 
@@ -11,8 +10,7 @@ import { Boundary } from './Boundary.tsx';
 export const FIXTURE_PADDING = 32;
 
 /** /fixture/<component>/<variant>; without a variant, every variant of the component (the console spec). */
-export function Fixture({ component, variant }: { component: string; variant: string }) {
-  const mod = use(loadFixture(component));
+export function Fixture({ mod, component, variant }: { mod?: FixtureModule; component: string; variant: string }) {
   if (!mod) return <p>Unknown fixture {component}</p>;
   if (!variant) return <AllVariants mod={mod} />;
   const v = mod.variants[variant];
@@ -36,10 +34,9 @@ function FixtureFrame({ v }: { v: FixtureVariant }) {
 }
 
 /**
- * The captured node. It only carries [data-fixture-node], which the specs wait for, once the fonts its
- * first layout requested are ready: a fixture module loads after the page's load event, so the specs'
- * own `document.fonts.ready` can run before any text exists. The variant is rendered by the parent,
- * so this re-render doesn't render it again.
+ * The captured node. It carries [data-fixture-node], which the specs wait for, only once the fonts its
+ * first layout requested are ready, so a spec that waits for the node never measures text set in a
+ * fallback font. The variant is rendered by the parent, so this re-render doesn't render it again.
  */
 function FixtureNode({ v, children }: { v: FixtureVariant; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);

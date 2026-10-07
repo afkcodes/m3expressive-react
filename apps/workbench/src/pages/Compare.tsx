@@ -1,6 +1,6 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { M3Provider } from '@m3x/react';
-import { loadFixture } from '../registry.ts';
+import type { FixtureModule } from '../fixtures/types.ts';
 
 type Mode = 'side' | 'difference' | 'onion';
 
@@ -16,8 +16,7 @@ interface ManifestVariant {
  * the Figma background with the ref offset by its render bounds (shadows etc.).
  * "difference" blends the two — any non-black pixel is drift.
  */
-export function Compare({ component }: { component: string }) {
-  const mod = use(loadFixture(component));
+export function Compare({ mod, component }: { mod?: FixtureModule; component: string }) {
   const [mode, setMode] = useState<Mode>('difference');
   const [mix, setMix] = useState(0.5);
   const [zoom, setZoom] = useState(2);
