@@ -1,14 +1,12 @@
 import {
-  Children,
   createContext,
-  isValidElement,
+  useCallback,
   useContext,
   useLayoutEffect,
-  useRef,
+  useMemo,
   useState,
   type ReactElement,
   type ReactNode,
-  type RefObject,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
@@ -23,6 +21,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { usePortalContainer } from '../../theme/portal.tsx';
+import { countGroupElements, MENU_GROUP } from './groups.ts';
 
 export type MenuVariant = 'standard' | 'vibrant' | 'baseline';
 export type MenuDensity = 0 | -2 | -4;
@@ -36,6 +35,11 @@ interface MenuContextValue {
 const MenuContext = createContext<MenuContextValue>({ variant: 'standard', density: 0, live: false });
 /** Number of groups in the enclosing menu (shadow spread depends on it). */
 const GroupCountContext = createContext(1);
+/**
+ * Provided by an expressive menu: its groups register (returns the unregister), so groups rendered
+ * by wrapper components count too. A group resets it for its own contents (no nested groups).
+ */
+const GroupRegistryContext = createContext<(() => () => void) | null>(null);
 
 /*
  * Figma kit, "Menu" page.
@@ -253,18 +257,36 @@ export interface MenuSurfaceProps {
   sx?: StyleXStyles;
 }
 
-/** Wraps loose items of an expressive menu in a single group (a menu is always ≥ 1 group). */
-function grouped(variant: MenuVariant, children: ReactNode) {
+/**
+ * Wraps loose items of an expressive menu in a single group (a menu is always ≥ 1 group). Groups
+ * among the children (fragments looked through) are known at once; groups rendered by wrapper
+ * components register on mount, and the implicit group then steps aside (before paint).
+ */
+function Grouped({ variant, children }: { variant: MenuVariant; children: ReactNode }) {
+  const [registered, setRegistered] = useState(0);
+  const register = useCallback(() => {
+    setRegistered((n) => n + 1);
+    return () => setRegistered((n) => n - 1);
+  }, []);
   if (variant === 'baseline') return children;
-  const list = Children.toArray(children);
-  const groups = list.filter((c) => isValidElement(c) && (c.type === MenuGroup || c.type === MenuRadioGroup)).length;
-  return groups > 0 ? (
-    <GroupCountContext value={groups}>{children}</GroupCountContext>
-  ) : (
-    <GroupCountContext value={1}>
-      <MenuGroup>{children}</MenuGroup>
-    </GroupCountContext>
+  const groups = Math.max(countGroupElements(children), registered);
+  return (
+    <GroupRegistryContext value={register}>
+      {groups > 0 ? (
+        <GroupCountContext value={groups}>{children}</GroupCountContext>
+      ) : (
+        <GroupCountContext value={1}>
+          <GroupFrame implicit>{children}</GroupFrame>
+        </GroupCountContext>
+      )}
+    </GroupRegistryContext>
   );
+}
+
+/** A real group counts itself in its menu (see Grouped). */
+function useRegisterGroup(enabled: boolean) {
+  const register = useContext(GroupRegistryContext);
+  useLayoutEffect(() => (enabled && register ? register() : undefined), [enabled, register]);
 }
 
 const surfaceStyles = (variant: MenuVariant, width?: number) => [
@@ -278,9 +300,12 @@ const surfaceStyles = (variant: MenuVariant, width?: number) => [
  * It carries no menu semantics or keyboard behaviour: for an interactive menu use `<Menu>`.
  */
 export function MenuSurface({ variant = 'standard', density = 0, width, children, sx }: MenuSurfaceProps) {
+  const ctx = useMemo(() => ({ variant, density, live: false }), [variant, density]);
   return (
-    <MenuContext value={{ variant, density, live: false }}>
-      <div {...stylex.props(surfaceStyles(variant, width), sx)}>{grouped(variant, children)}</div>
+    <MenuContext value={ctx}>
+      <div {...stylex.props(surfaceStyles(variant, width), sx)}>
+        <Grouped variant={variant}>{children}</Grouped>
+      </div>
     </MenuContext>
   );
 }
@@ -295,7 +320,8 @@ export function MenuScope({
   density?: MenuDensity;
   children: ReactNode;
 }) {
-  return <MenuContext value={{ variant, density, live: false }}>{children}</MenuContext>;
+  const ctx = useMemo(() => ({ variant, density, live: false }), [variant, density]);
+  return <MenuContext value={ctx}>{children}</MenuContext>;
 }
 
 /** A group's section label (kit "Label-basic" / "Label-vibrant"): 32px, label-large. */
@@ -339,25 +365,34 @@ function useGroup(label: ReactNode, sx: StyleXStyles | undefined) {
   return { variant, live, labelEl, props };
 }
 
-/** A segment of an expressive menu (baseline menus render their items directly). */
-export function MenuGroup({ label, children, sx }: MenuGroupProps) {
+/** A group's frame; `implicit`: the group a menu wraps loose items in (not counted as a group). */
+function GroupFrame({ label, children, sx, implicit = false }: MenuGroupProps & { implicit?: boolean }) {
   const { variant, live, labelEl, props } = useGroup(label, sx);
+  useRegisterGroup(!implicit);
   if (variant === 'baseline') return <>{children}</>;
+  // Groups inside a group aren't the menu's groups; the implicit one lets wrapped groups through.
+  const content = implicit ? children : <GroupRegistryContext value={null}>{children}</GroupRegistryContext>;
   if (live) {
     return (
       <BaseMenu.Group {...props}>
         {labelEl}
-        {children}
+        {content}
       </BaseMenu.Group>
     );
   }
   return (
     <div role="group" {...props}>
       {labelEl}
-      {children}
+      {content}
     </div>
   );
 }
+
+/** A segment of an expressive menu (baseline menus render their items directly). */
+export function MenuGroup(props: MenuGroupProps) {
+  return <GroupFrame {...props} />;
+}
+(MenuGroup as unknown as Record<symbol, boolean>)[MENU_GROUP] = true;
 
 export interface MenuRadioGroupProps extends MenuGroupProps {
   value?: unknown;
@@ -368,13 +403,15 @@ export interface MenuRadioGroupProps extends MenuGroupProps {
 /** Single-choice options (`MenuRadioItem`); renders as a menu group. */
 export function MenuRadioGroup({ value, defaultValue, onValueChange, label, children, sx }: MenuRadioGroupProps) {
   const { variant, live, labelEl, props } = useGroup(label, sx);
+  useRegisterGroup(true);
+  const content = <GroupRegistryContext value={null}>{children}</GroupRegistryContext>;
   if (!live)
     return variant === 'baseline' ? (
       <>{children}</>
     ) : (
       <div role="group" {...props}>
         {labelEl}
-        {children}
+        {content}
       </div>
     );
   return (
@@ -385,10 +422,11 @@ export function MenuRadioGroup({ value, defaultValue, onValueChange, label, chil
       {...(variant === 'baseline' ? {} : props)}
     >
       {labelEl}
-      {children}
+      {content}
     </BaseMenu.RadioGroup>
   );
 }
+(MenuRadioGroup as unknown as Record<symbol, boolean>)[MENU_GROUP] = true;
 
 // ── Items ─────────────────────────────────────────────────────────────────────────────────────
 
@@ -642,17 +680,17 @@ function pivot(anchorStart: number, anchorEnd: number, menuStart: number, menuEn
  * edge offset by the side gap).
  */
 function useComposeOrigin(): {
-  anchor: RefObject<HTMLElement | null>;
+  anchorRef: (el: HTMLElement | null) => void;
   positionerRef: (el: HTMLDivElement | null) => void;
 } {
-  const anchor = useRef<HTMLElement | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [positioner, setPositioner] = useState<HTMLDivElement | null>(null);
   useLayoutEffect(() => {
     if (!positioner) return;
     const update = () => {
       const popup = positioner.querySelector<HTMLElement>(':scope > [role="menu"]');
-      if (!anchor.current || !popup) return;
-      const a = anchor.current.getBoundingClientRect();
+      if (!anchor || !popup) return;
+      const a = anchor.getBoundingClientRect();
       // The positioner isn't scaled: its box is the menu's laid-out bounds.
       const m = positioner.getBoundingClientRect();
       popup.style.setProperty(
@@ -664,8 +702,8 @@ function useComposeOrigin(): {
     const observer = new MutationObserver(update);
     observer.observe(positioner, { attributes: true, attributeFilter: ['style'] });
     return () => observer.disconnect();
-  }, [positioner]);
-  return { anchor, positionerRef: setPositioner };
+  }, [positioner, anchor]);
+  return { anchorRef: setAnchor, positionerRef: setPositioner };
 }
 
 export interface MenuProps extends Omit<MenuSurfaceProps, 'sx'> {
@@ -701,7 +739,8 @@ export function Menu({
   sx,
 }: MenuProps) {
   const portalContainer = usePortalContainer();
-  const origin = useComposeOrigin();
+  const { anchorRef, positionerRef } = useComposeOrigin();
+  const ctx = useMemo(() => ({ variant, density, live: true }), [variant, density]);
   return (
     <BaseMenu.Root
       open={open}
@@ -709,17 +748,19 @@ export function Menu({
       onOpenChange={onOpenChange ? (o) => onOpenChange(o) : undefined}
       modal={modal}
     >
-      <BaseMenu.Trigger ref={origin.anchor as React.Ref<HTMLButtonElement>} render={trigger} />
+      <BaseMenu.Trigger ref={anchorRef} render={trigger} />
       <BaseMenu.Portal container={portalContainer}>
         <BaseMenu.Positioner
-          ref={origin.positionerRef}
+          ref={positionerRef}
           side={side}
           align={align}
           sideOffset={sideOffset}
           alignOffset={alignOffset}
         >
           <BaseMenu.Popup {...stylex.props(surfaceStyles(variant, width), s.popupMotion, sx)}>
-            <MenuContext value={{ variant, density, live: true }}>{grouped(variant, children)}</MenuContext>
+            <MenuContext value={ctx}>
+              <Grouped variant={variant}>{children}</Grouped>
+            </MenuContext>
           </BaseMenu.Popup>
         </BaseMenu.Positioner>
       </BaseMenu.Portal>
@@ -737,7 +778,7 @@ export interface SubmenuProps extends Omit<MenuItemProps, 'onClick' | 'closeOnCl
 export function Submenu({ items, width, ...item }: SubmenuProps) {
   const ctx = useContext(MenuContext);
   const portalContainer = usePortalContainer();
-  const origin = useComposeOrigin();
+  const { anchorRef, positionerRef } = useComposeOrigin();
   const { rootProps, body } = useItemVisual({ ...item, variant: ctx.variant, density: ctx.density });
   if (!ctx.live) {
     return (
@@ -749,7 +790,7 @@ export function Submenu({ items, width, ...item }: SubmenuProps) {
   return (
     <BaseMenu.SubmenuRoot>
       <BaseMenu.SubmenuTrigger
-        ref={origin.anchor}
+        ref={anchorRef}
         disabled={item.disabled}
         {...rootProps}
         data-ripple-host={item.disabled ? undefined : ''}
@@ -757,9 +798,11 @@ export function Submenu({ items, width, ...item }: SubmenuProps) {
         {body}
       </BaseMenu.SubmenuTrigger>
       <BaseMenu.Portal container={portalContainer}>
-        <BaseMenu.Positioner ref={origin.positionerRef} side="inline-end" align="start" sideOffset={4} alignOffset={-4}>
+        <BaseMenu.Positioner ref={positionerRef} side="inline-end" align="start" sideOffset={4} alignOffset={-4}>
           <BaseMenu.Popup {...stylex.props(surfaceStyles(ctx.variant, width), s.popupMotion)}>
-            <MenuContext value={ctx}>{grouped(ctx.variant, items)}</MenuContext>
+            <MenuContext value={ctx}>
+              <Grouped variant={ctx.variant}>{items}</Grouped>
+            </MenuContext>
           </BaseMenu.Popup>
         </BaseMenu.Positioner>
       </BaseMenu.Portal>

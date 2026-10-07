@@ -384,9 +384,68 @@ function LiveMotionMenu() {
   );
 }
 
+/** Two groups rendered by a wrapper component (not direct children of the menu). */
+function WrappedGroups() {
+  return (
+    <>
+      <MenuGroup>
+        <MenuItem>Cut</MenuItem>
+        <MenuItem>Copy</MenuItem>
+      </MenuGroup>
+      <MenuGroup>
+        <MenuItem>Paste</MenuItem>
+      </MenuGroup>
+    </>
+  );
+}
+
+/** Live (a11y): group detection — direct children, a wrapper component, a fragment, loose items. */
+function LiveWrapped() {
+  return (
+    <div style={{ display: 'flex', columnGap: 16, alignItems: 'flex-start' }}>
+      <div data-case="direct">
+        <MenuSurface>
+          <MenuGroup>
+            <MenuItem>Cut</MenuItem>
+            <MenuItem>Copy</MenuItem>
+          </MenuGroup>
+          <MenuGroup>
+            <MenuItem>Paste</MenuItem>
+          </MenuGroup>
+        </MenuSurface>
+      </div>
+      <div data-case="wrapped">
+        <MenuSurface>
+          <WrappedGroups />
+        </MenuSurface>
+      </div>
+      <div data-case="fragment">
+        <MenuSurface>
+          <>
+            <MenuGroup>
+              <MenuItem>Cut</MenuItem>
+              <MenuItem>Copy</MenuItem>
+            </MenuGroup>
+            <MenuGroup>
+              <MenuItem>Paste</MenuItem>
+            </MenuGroup>
+          </>
+        </MenuSurface>
+      </div>
+      <div data-case="loose">
+        <MenuSurface>
+          <MenuItem>Cut</MenuItem>
+          <MenuItem>Copy</MenuItem>
+        </MenuSurface>
+      </div>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'menu',
   variants: Object.fromEntries([
+    ['live-wrapped', { render: () => <LiveWrapped /> } satisfies FixtureVariant],
     ['live', { width: 208, height: 40, render: () => <LiveMenu /> } satisfies FixtureVariant],
     ['live-select', { width: 208, height: 40, render: () => <LiveSelectMenu /> } satisfies FixtureVariant],
     ['live-motion', { width: 208, height: 48, render: () => <LiveMotionMenu /> } satisfies FixtureVariant],
