@@ -4,10 +4,10 @@ import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { shape } from '../../tokens/shape.stylex.ts';
-import { state } from '../../tokens/state.stylex.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { elevationMotion } from '../../primitives/elevationMotion.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { cardVars } from './card.stylex.ts';
@@ -37,15 +37,8 @@ const styles = stylex.create({
     color: color.onSurface,
     [interaction.layerColor]: color.onSurface,
   },
-  interactive: {
-    cursor: 'pointer',
-    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
-    WebkitTapHighlightColor: 'transparent',
-  },
-  ringForced: { outlineStyle: 'solid' },
+  // Focus indicator: focusRing.host, listed right after this style.
+  interactive: { cursor: 'pointer', WebkitTapHighlightColor: 'transparent' },
   horizontal: { flexDirection: 'row', alignItems: 'center' },
   // Figma strokeAlign INSIDE. Like the kit, the outline belongs to the card's background layer:
   // above the fill and state layer, beneath content (full-bleed media covers it).
@@ -102,7 +95,7 @@ const live = stylex.create({
 });
 
 // Static states (visual tests / controlled `dragged`).
-const forced = stylex.create({
+const staticShadows = stylex.create({
   outlinedHovered: { boxShadow: elevation.level1 },
   outlinedFocused: { boxShadow: 'none' },
   outlinedPressed: { boxShadow: 'none' },
@@ -146,11 +139,11 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   },
   ref,
 ) {
-  const force = useForcedState();
+  const forced = useForcedState();
   const isInteractive = interactive ?? onClick !== undefined;
-  const visualState = dragged ? 'dragged' : force.state;
-  const key = visualState
-    ? (`${variant}${visualState[0]!.toUpperCase()}${visualState.slice(1)}` as keyof typeof forced)
+  const visualState = dragged ? 'dragged' : forced.state;
+  const shadowKey = visualState
+    ? (`${variant}${visualState[0]!.toUpperCase()}${visualState.slice(1)}` as keyof typeof staticShadows)
     : null;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -180,16 +173,14 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
         variant === 'outlined' && isInteractive && styles.strokeUnderLayerOnFocus,
         variant === 'outlined' && visualState === 'focused' && styles.strokeUnderLayer,
         isInteractive && styles.interactive,
+        isInteractive && focusRing.host,
         isInteractive && live[variant],
         isInteractive && elevationMotion.host,
         // Static states always show their layer, interactive or not (Figma building blocks).
         (isInteractive || visualState) && stateLayerHost.hostPressExclusive,
-        visualState === 'hovered' && stateLayerHost.forceHover,
-        visualState === 'focused' && stateLayerHost.forceFocus,
-        visualState === 'pressed' && stateLayerHost.forcePressed,
-        visualState === 'dragged' && stateLayerHost.forceDragged,
-        key && forced[key],
-        force.focusRing && styles.ringForced,
+        forcedStateLayer(visualState, 'pressed'),
+        shadowKey && staticShadows[shadowKey],
+        forced.focusRing && focusRing.forced,
         sx,
       )}
     >
