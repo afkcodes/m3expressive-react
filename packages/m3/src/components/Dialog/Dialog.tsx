@@ -1,12 +1,13 @@
-import { forwardRef, useId, type ReactNode } from 'react';
+import { useId, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { Divider } from '../Divider/Divider.tsx';
 import { InheritSurfaceContext } from '../List/surface.ts';
-import { ModalShell } from '../../primitives/ModalShell.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { ModalShell, type ModalOpenChangeDetails } from '../../primitives/ModalShell.tsx';
 import { dialogMotion } from '../../primitives/dialogMotion.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, "Dialogs" page (Basic dialog 50723:10929, List dialog 52112:28937, Scrollable list
@@ -67,7 +68,8 @@ const s = stylex.create({
   },
 });
 
-export interface DialogSurfaceProps {
+/** `ref`, native props and `sx` go to the surface `<div>`. */
+export interface DialogSurfaceProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
   /** A 24px icon above the headline (centres the headline). */
   icon?: ReactNode;
   headline?: ReactNode;
@@ -78,19 +80,27 @@ export interface DialogSurfaceProps {
   divider?: boolean;
   /** Content under the header (lists, fields); scrolls when the dialog is height-bound. */
   children?: ReactNode;
-  headlineId?: string;
-  descriptionId?: string;
-  sx?: StyleXStyles;
 }
 
-/** The dialog surface (see `Dialog` for the modal). */
-export const DialogSurface = forwardRef<HTMLDivElement, DialogSurfaceProps>(function DialogSurface(
-  { icon, headline, supportingText, actions, divider = false, children, headlineId, descriptionId, sx },
-  ref,
-) {
+type DialogParts = Pick<
+  DialogSurfaceProps,
+  'icon' | 'headline' | 'supportingText' | 'actions' | 'divider' | 'children'
+>;
+
+/** The surface's parts (header, content, divider, actions); the modal ids name its popup. */
+function DialogBody({
+  icon,
+  headline,
+  supportingText,
+  actions,
+  divider = false,
+  children,
+  headlineId,
+  descriptionId,
+}: DialogParts & { headlineId?: string; descriptionId?: string }) {
   const hasHeader = icon != null || headline != null || supportingText != null;
   return (
-    <div ref={ref} {...stylex.props(s.surface, sx)}>
+    <>
       {hasHeader && (
         <div {...stylex.props(s.header, children != null && s.headerWithContent)}>
           {icon != null && <span {...stylex.props(s.icon)}>{icon}</span>}
@@ -113,30 +123,78 @@ export const DialogSurface = forwardRef<HTMLDivElement, DialogSurfaceProps>(func
       )}
       {divider && <Divider />}
       {actions != null && <div {...stylex.props(s.actions)}>{actions}</div>}
+    </>
+  );
+}
+
+/** The dialog surface on its own (see `Dialog` for the modal). */
+export function DialogSurface({
+  icon,
+  headline,
+  supportingText,
+  actions,
+  divider,
+  children,
+  sx,
+  ...rest
+}: DialogSurfaceProps) {
+  return (
+    <div {...rest} {...stylex.props(s.surface, sx)}>
+      <DialogBody icon={icon} headline={headline} supportingText={supportingText} actions={actions} divider={divider}>
+        {children}
+      </DialogBody>
     </div>
   );
-});
+}
 
-export interface DialogProps extends Omit<DialogSurfaceProps, 'headlineId' | 'descriptionId'> {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+/** The surface's props; `ref`, native props and `sx` go to the popup, which is the dialog surface. */
+export interface DialogProps extends Omit<DialogSurfaceProps, 'role'> {
+  open?: boolean;
+  defaultOpen?: boolean;
+  /** Base UI's change details (reason, event, `cancel()`) come second. */
+  onOpenChange?: (open: boolean, details: ModalOpenChangeDetails) => void;
   /** `alertdialog` for decisions that interrupt (no outside-click dismiss). */
   role?: 'dialog' | 'alertdialog';
 }
 
 /** A modal dialog: scrim, focus trap, Escape (and, for `dialog`, scrim click) to dismiss. */
-export function Dialog({ open, onOpenChange, role = 'dialog', ...surface }: DialogProps) {
+export function Dialog({
+  open,
+  defaultOpen = false,
+  onOpenChange,
+  role = 'dialog',
+  icon,
+  headline,
+  supportingText,
+  actions,
+  divider,
+  children,
+  sx,
+  ...rest
+}: DialogProps) {
   const id = useId();
+  const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange);
   return (
     <ModalShell
-      open={open}
-      onOpenChange={onOpenChange}
+      open={isOpen}
+      onOpenChange={setOpen}
       role={role}
-      aria-labelledby={surface.headline != null ? `${id}-h` : undefined}
-      aria-describedby={surface.supportingText != null ? `${id}-d` : undefined}
-      sx={[s.popup, dialogMotion.fadeScale]}
+      aria-labelledby={headline != null ? `${id}-h` : undefined}
+      aria-describedby={supportingText != null ? `${id}-d` : undefined}
+      {...rest}
+      sx={[s.surface, s.popup, dialogMotion.fadeScale, sx]}
     >
-      <DialogSurface headlineId={`${id}-h`} descriptionId={`${id}-d`} {...surface} />
+      <DialogBody
+        icon={icon}
+        headline={headline}
+        supportingText={supportingText}
+        actions={actions}
+        divider={divider}
+        headlineId={`${id}-h`}
+        descriptionId={`${id}-d`}
+      >
+        {children}
+      </DialogBody>
     </ModalShell>
   );
 }
