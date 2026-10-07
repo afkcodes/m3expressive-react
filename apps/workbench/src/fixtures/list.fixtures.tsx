@@ -179,16 +179,19 @@ function listComposition(name: string): ReactNode {
           i === 2 ? (
             <li key={i} style={{ listStyle: 'none' }}>
               <DraggedSlot height={multi ? 76 : 52}>
-                <ListItem
-                  dragged
-                  leading={<Icon name="stars-20" />}
-                  trailingText={<Shortcut />}
-                  trailing={<Icon name="drag_handle-20" />}
-                  supportingText={support(i)}
-                  supportingMaxLines={1}
-                >
-                  Label text
-                </ListItem>
+                {/* Its own list: a ListItem in a List renders an <li>, which can't nest in this one. */}
+                <List aria-label="Dragged item">
+                  <ListItem
+                    dragged
+                    leading={<Icon name="stars-20" />}
+                    trailingText={<Shortcut />}
+                    trailing={<Icon name="drag_handle-20" />}
+                    supportingText={support(i)}
+                    supportingMaxLines={1}
+                  >
+                    Label text
+                  </ListItem>
+                </List>
               </DraggedSlot>
             </li>
           ) : (
