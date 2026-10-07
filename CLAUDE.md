@@ -253,6 +253,30 @@ navigation drawer (out of scope).
   slots above it (z-index 1), host the ripple on that button and show its focus on the surface with
   `:has(...:focus-visible)`.
 
+## 7b. Robustness rules (production refactor, 2026-10-07 — each fixed a real bug)
+- Environment: never touch `window` / `document` / `matchMedia` at module scope or during render; feature-detect
+  `ResizeObserver`, `document.fonts`, `Element.animate` (jsdom / SSR). Reduced motion: `useReducedMotion()` in
+  components, `prefersReducedMotion()` in handlers (one shared MediaQueryList). `tests/dom` renders every playground
+  in jsdom and on the server.
+- State: controlled when the prop `!== undefined` (`hooks/useControllableState`). Modal drafts reset when `open`
+  goes false→true (checked during render), never in an effect on `[open, value]`. Compare dates by value; date
+  arithmetic only via `makeDate` / `addDays` (never ±86400000); Intl formatters through the cached `dateFormat()`.
+- Refs: no reading or writing refs during render — "previous value" logic is state adjusted during render; latest-
+  value refs are updated in `useLayoutEffect`. Context values are memoised or module constants (item positions in a
+  number-valued context). `ListItem` is `memo`.
+- Animation / gestures: per-frame springs write to the element, not React state. Every spring, tween, gesture and
+  window listener is stopped in an unmount effect; gesture teardown lives in a ref and also runs on a new press or a
+  close. Drag containers use `isNoDragTarget` (input / textarea / select / contenteditable / slider /
+  `[data-m3-no-drag]` / pointer capture) and read `nativeEvent.defaultPrevented`.
+- Keyboard: every grid / listbox / radio group / toolbar has exactly one `tabIndex=0` plus arrow keys (mirrored in
+  RTL; text fields keep their arrows until the caret can't move). Parts leaving under an overlay become `inert`; a
+  bar scrolled away is `inert`. Pointer gestures (swipe, drag) need a keyboard path. Popups move focus in on open and
+  restore it on close.
+- Groups: a group's `disabled` goes in its context and items OR it in (Base UI only disables behaviour).
+- Names: icon-only controls keep a name (visually hidden label); constant names use the self-reference pattern
+  (`aria-labelledby="<self> <label>"` with a verb `aria-label`), not names that flip with state.
+- Static building blocks (`MenuSurface`, kit frames) are presentational: no live widget roles on unfocusable parts.
+
 ## 8. Per-component procedure (Figma → code → proof)
 1. **Survey** the page read-only (`use_figma`): sections, component sets, variant properties.
 2. **Spec** every variant programmatically (padding, gap, radius, fills + variable names, strokes,

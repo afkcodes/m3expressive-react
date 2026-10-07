@@ -54,7 +54,13 @@
           }
         ],
         "react/globals": "off",
-        "vitest/valid-title": "off"
+        "vitest/valid-title": "off",
+        "vitest/valid-expect": [
+          "error",
+          {
+            "maxArgs": 2
+          }
+        ]
       }
     },
     {

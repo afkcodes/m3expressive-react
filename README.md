@@ -230,6 +230,25 @@ line to flip if you'd rather follow the M3 guidelines:
 | Shape "4-leaf clover" | component frame 381px wide (vector unaffected) | n/a |
 
 
+### Behaviour and accessibility additions (beyond the kit, which draws static frames)
+| Component | Behaviour |
+|---|---|
+| Date fields | Only full 4-digit years are accepted (typing "1/5/2" no longer becomes 1902); the format hint comes from the locale (`inputFormatHint`) — identical for en-US, which the fixtures use |
+| Modal / docked pickers | A pick survives parent re-renders (drafts reset only when the picker opens) |
+| Calendars, year grids, month / year lists | One tab stop with arrow keys (± rows, Home / End, Page Up / Down); the range picker is one tab stop across months; disabled days never take focus |
+| Time picker | Period selector is a radio group with arrow keys; the dial announces "7 o'clock" / "30 minutes" (Compose strings); out-of-range times are clamped |
+| Sheets | Content drags stay with the content (text fields, sliders, `[data-m3-no-drag]` — the escape hatch, set by Carousel); the bottom-sheet handle's hit target is 48 × 36 centred on it (Compose's minimum interactive size) |
+| Carousel | Supports right-to-left; renders its slides before it has measured (SSR) |
+| Toolbars | Text fields keep their arrow keys; arrows mirror in RTL; the bottom app bar roves like a toolbar and is `inert` while scrolled away |
+| Search view | Focus moves into the view from the bar and back to it on close; Tab stays inside the full-screen view; `onOpenChange` |
+| Swipeable list item | Keyboard path: ArrowLeft reveals the actions and focuses the first, ArrowRight / Escape hides them |
+| FAB menu | Focus moves to the first item, one tab stop (roving), Escape returns to the toggle |
+| Split button | `aria-haspopup` only with a menu attached; as a menu trigger it follows the menu's state |
+| Navigation | Destinations without a visible label keep it as visually hidden text (`label` or `aria-label` required) |
+| Expandable item / input chip | Constant names: "Expand <label>" (with `aria-expanded`), "Remove <label>" |
+| Slider | Per-thumb names (`getAriaLabel`) and value text (`getAriaValueText`); reversed ranges are ordered; ticks drawn up to 200 steps |
+| Segmented / connected / radio groups | A group's `disabled` disables and draws every item disabled |
+
 ### Motion: where we knowingly differ from Compose
 | Component | Compose | Ours |
 |---|---|---|
