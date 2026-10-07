@@ -55,7 +55,8 @@ export interface SnackbarProviderProps {
 }
 
 export interface ShowSnackbarOptions {
-  action?: { label: string; onClick?: () => void };
+  /** The action button; `onAction` runs when it is chosen (the snackbar then dismisses). */
+  action?: { label: string; onAction?: () => void };
   withClose?: boolean;
   stacked?: boolean;
   /** Compose SnackbarDuration. Default: 'indefinite' with an action, 'short' otherwise. */
@@ -71,12 +72,15 @@ interface PendingSnackbar {
   data: SnackbarData;
 }
 
-interface SnackbarQueueApi {
+/** What `useSnackbar()` returns. */
+export interface SnackbarApi {
+  /** Queues a snackbar; returns its id. */
   show: (message: ReactNode, options?: ShowSnackbarOptions) => string;
+  /** Dismisses a shown snackbar or drops a queued one. */
   close: (id: string) => void;
 }
 
-const SnackbarQueueContext = createContext<SnackbarQueueApi | null>(null);
+const SnackbarQueueContext = createContext<SnackbarApi | null>(null);
 let snackbarCount = 0;
 
 /** Queues snackbars (Base UI Toast: aria-live, focus handling, escape). */
@@ -103,7 +107,7 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
   const { add, close } = Toast.useToastManager();
   const state = useRef<{ queue: PendingSnackbar[]; current: string | null }>({ queue: [], current: null });
 
-  const api = useMemo<SnackbarQueueApi>(() => {
+  const api = useMemo<SnackbarApi>(() => {
     const pump = () => {
       const st = state.current;
       if (st.current != null) return;
@@ -137,7 +141,7 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
           timeout: ms,
           data: {
             actionLabel: options.action?.label,
-            onAction: options.action?.onClick,
+            onAction: options.action?.onAction,
             withClose: options.withClose,
             stacked: options.stacked,
           },
@@ -196,7 +200,7 @@ function SnackbarList() {
  * `const snackbar = useSnackbar(); snackbar.show('Message sent', { action: { label: 'Undo' } })`.
  * Snackbars queue (first in, first out) and show one at a time.
  */
-export function useSnackbar(): SnackbarQueueApi {
+export function useSnackbar(): SnackbarApi {
   const api = useContext(SnackbarQueueContext);
   if (!api) throw new Error('useSnackbar() must be used inside <SnackbarProvider>.');
   return api;

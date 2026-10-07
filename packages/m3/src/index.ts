@@ -59,6 +59,7 @@ export { Switch } from './components/Switch/index.ts';
 export { Divider } from './components/Divider/index.ts';
 export { Snackbar, SnackbarAction, SnackbarClose, SnackbarProvider, useSnackbar } from './components/Snackbar/index.ts';
 export type {
+  SnackbarApi,
   SnackbarProps,
   SnackbarActionProps,
   SnackbarCloseProps,
