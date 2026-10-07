@@ -37,19 +37,19 @@ const s = stylex.create({
   muted: { color: color.onSurfaceVariant },
 });
 
-const LAYOUTS: CarouselLayout[] = ['multi-browse', 'hero', 'center-hero', 'uncontained', 'multi-aspect', 'full-screen'];
+const LAYOUTS: CarouselLayout[] = ['multiBrowse', 'hero', 'centeredHero', 'uncontained', 'multiAspect', 'fullScreen'];
 const RATIOS = [16 / 9, 4 / 3, 1, 3 / 4, 9 / 16, 16 / 9, 1, 4 / 3];
 
 /** All carousel layouts; drag / scroll / arrow keys to watch items move through the keylines. */
 export function CarouselPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
-  const [layout, setLayout] = useState<CarouselLayout>('multi-browse');
+  const [layout, setLayout] = useState<CarouselLayout>('multiBrowse');
   const [tablet, setTablet] = useState(false);
   const [art, setArt] = useState(true);
   const [rtl, setRtl] = useState(false);
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   const width = tablet ? 600 : 412;
-  const full = layout === 'full-screen';
+  const full = layout === 'fullScreen';
   return (
     <M3Provider colorScheme={scheme}>
       <main {...stylex.props(s.page)}>
@@ -94,7 +94,7 @@ export function CarouselPlayground() {
             aria-label="Gallery"
             layout={layout}
             preferredItemWidth={
-              layout === 'multi-browse'
+              layout === 'multiBrowse'
                 ? tablet
                   ? 184
                   : 188
@@ -102,7 +102,7 @@ export function CarouselPlayground() {
                   ? tablet
                     ? undefined
                     : 316
-                  : layout === 'center-hero'
+                  : layout === 'centeredHero'
                     ? tablet
                       ? undefined
                       : 252
@@ -110,7 +110,7 @@ export function CarouselPlayground() {
             }
             itemWidth={tablet ? 512 / 3 - 8 : 154}
             aspectRatios={RATIOS}
-            initialItem={layout === 'center-hero' ? 1 : 0}
+            defaultItem={layout === 'centeredHero' ? 1 : 0}
           >
             {RATIOS.map((_, i) => (
               <CarouselItem key={i} sx={art ? undefined : s.tint(30 + i * 40)}>

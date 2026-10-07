@@ -4,7 +4,7 @@ import { Carousel, CarouselItem, type CarouselLayout } from '../../packages/m3/s
 
 /** Keyline carousels can't measure on the server: they render their slides in a plain row. */
 describe('carousel on the server', () => {
-  for (const layout of ['multi-browse', 'hero', 'center-hero', 'uncontained'] satisfies CarouselLayout[]) {
+  for (const layout of ['multiBrowse', 'hero', 'centeredHero', 'uncontained'] satisfies CarouselLayout[]) {
     it(layout, () => {
       const markup = renderToString(
         <Carousel aria-label="Photos" layout={layout}>

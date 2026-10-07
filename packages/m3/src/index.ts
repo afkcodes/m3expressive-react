@@ -173,7 +173,7 @@ export type {
 export { Dialog, DialogSurface } from './components/Dialog/index.ts';
 export type { DialogProps, DialogSurfaceProps } from './components/Dialog/index.ts';
 export { Carousel, CarouselItem } from './components/Carousel/index.ts';
-export type { CarouselLayout, CarouselProps } from './components/Carousel/index.ts';
+export type { CarouselItemProps, CarouselLayout, CarouselProps } from './components/Carousel/index.ts';
 export * from './components/DatePicker/index.ts';
 export * from './components/TimePicker/index.ts';
 export type { TextFieldProps, TextFieldVariant } from './components/TextField/index.ts';

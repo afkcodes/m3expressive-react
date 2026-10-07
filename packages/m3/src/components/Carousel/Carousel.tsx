@@ -1,17 +1,21 @@
 import {
   Children,
-  forwardRef,
   isValidElement,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
+  type DragEvent,
+  type KeyboardEvent,
+  type PointerEvent,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import {
   heroKeylineList,
   maxScrollOffset,
@@ -143,7 +147,12 @@ const NO_SNAP_TARGETS: number[] = [];
 /** Slides keep their element (and state) when children are reordered. */
 const keyOf = (child: ReactNode, i: number) => (isValidElement(child) && child.key != null ? child.key : i);
 
-export interface CarouselProps {
+/**
+ * `ref` and the native props go to the scrolling viewport (`role="region"`, the root); handlers
+ * you pass run before the carousel's own (keys, drags).
+ */
+export interface CarouselProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
+  /** Default `'multiBrowse'`. */
   layout?: CarouselLayout;
   /** Multi-browse / hero: the preferred large item width (Compose preferredItemWidth). */
   preferredItemWidth?: number;
@@ -155,34 +164,41 @@ export interface CarouselProps {
   itemSpacing?: number;
   /** Side padding (default 16; uncontained has none at the end). */
   contentPadding?: number;
-  /** Item to bring into focus on mount (e.g. 1 for a centred hero's resting state). */
-  initialItem?: number;
+  /**
+   * Item to bring into focus on mount (e.g. 1 for a centred hero's resting state). Uncontrolled:
+   * scrolling, dragging and arrow keys move on from it.
+   */
+  defaultItem?: number;
   'aria-label': string;
   children: ReactNode;
-  sx?: StyleXStyles;
+  /** Overrides for the built-in strings (`carousel`, `slide`, `slidePosition`). */
+  labels?: Partial<M3Labels>;
 }
 
 /** A carousel of `CarouselItem`s. */
-export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carousel(
-  {
-    layout = 'multi-browse',
-    preferredItemWidth,
-    itemWidth,
-    aspectRatios = [],
-    itemSpacing = 8,
-    contentPadding = 16,
-    initialItem = 0,
-    'aria-label': ariaLabel,
-    children,
-    sx,
-  },
-  forwarded,
-) {
+export function Carousel({
+  ref,
+  layout = 'multiBrowse',
+  preferredItemWidth,
+  itemWidth,
+  aspectRatios = [],
+  itemSpacing = 8,
+  contentPadding = 16,
+  defaultItem = 0,
+  labels: labelsProp,
+  children,
+  sx,
+  onKeyDown: onKeyDownProp,
+  onPointerDown: onPointerDownProp,
+  onDragStart: onDragStartProp,
+  ...rest
+}: CarouselProps) {
+  const labels = useLabels(labelsProp);
   const items = Children.toArray(children);
   // Counted apart from `items` (an array the render maps over), so the keyline memo depends on a number.
   const count = itemCount(children);
   const viewport = useRef<HTMLDivElement | null>(null);
-  const setRef = useMergedRefs(viewport, forwarded);
+  const setRef = useMergedRefs(viewport, ref);
   const [geometry, setGeometry] = useState({ width: 0, rtl: false });
   useLayoutEffect(() => {
     const el = viewport.current;
@@ -199,7 +215,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   }, []);
   const { width, rtl } = geometry;
 
-  const keyed = layout === 'multi-browse' || layout === 'hero' || layout === 'center-hero' || layout === 'uncontained';
+  const keyed = layout === 'multiBrowse' || layout === 'hero' || layout === 'centeredHero' || layout === 'uncontained';
   const padStart = contentPadding;
   const padEnd = layout === 'uncontained' ? 0 : contentPadding;
   const available = Math.max(0, width - padStart - padEnd);
@@ -211,9 +227,9 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       layout === 'uncontained'
         ? // The visible item width (Compose adds the spacing to itemWidth for the keyline).
           uncontainedKeylineList(available, (itemWidth ?? available) - itemSpacing, itemSpacing)
-        : layout === 'multi-browse'
+        : layout === 'multiBrowse'
           ? multiBrowseKeylineList(available, preferredItemWidth ?? available / 2, itemSpacing, count)
-          : heroKeylineList(available, preferredItemWidth ?? null, itemSpacing, count, layout === 'center-hero');
+          : heroKeylineList(available, preferredItemWidth ?? null, itemSpacing, count, layout === 'centeredHero');
     const strategy = new Strategy(keylines, available, itemSpacing);
     if (!strategy.isValid) return null;
     const max = maxScrollOffset(strategy, count);
@@ -238,22 +254,32 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     padStart,
     rtl,
     snapTargets,
-    initialItem,
+    initialItem: defaultItem,
   });
 
   const common = {
     ref: setRef,
     role: 'region',
-    'aria-roledescription': 'carousel',
-    'aria-label': ariaLabel,
+    'aria-roledescription': labels.carousel,
     tabIndex: 0,
     'data-m3-no-drag': '',
-    onKeyDown,
-  } as const;
+    ...rest,
+    // The keyline layouts add their drags (below); the others scroll natively.
+    onPointerDown: onPointerDownProp,
+    onDragStart: onDragStartProp,
+    onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      onKeyDownProp?.(e);
+      onKeyDown(e);
+    },
+  };
   const slide = (i: number) =>
-    ({ role: 'group', 'aria-roledescription': 'slide', 'aria-label': `${i + 1} of ${count}` }) as const;
+    ({
+      role: 'group',
+      'aria-roledescription': labels.slide,
+      'aria-label': labels.slidePosition(i + 1, count),
+    }) as const;
 
-  if (layout === 'full-screen') {
+  if (layout === 'fullScreen') {
     return (
       <div {...common} {...stylex.props(s.viewport, s.pager, sx)}>
         <div {...stylex.props(s.pageGap)}>
@@ -267,7 +293,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     );
   }
 
-  if (layout === 'multi-aspect') {
+  if (layout === 'multiAspect') {
     return (
       <div {...common} {...stylex.props(s.viewport, sx)}>
         <div {...stylex.props(s.row)}>
@@ -290,15 +316,21 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         : `calc(100cqw - ${padStart + itemSpacing}px)`
       : preferredItemWidth != null
         ? `${preferredItemWidth}px`
-        : layout === 'multi-browse'
+        : layout === 'multiBrowse'
           ? `calc((100cqw - ${padStart + padEnd + itemSpacing}px) / 2)`
           : `calc(100cqw - ${padStart + padEnd}px)`;
   const track = stylex.props(s.track, !strategy && s.trackStatic(padStart, padEnd, itemSpacing));
   return (
     <div
       {...common}
-      onPointerDown={onPointerDown}
-      onDragStart={(e) => e.preventDefault()}
+      onPointerDown={(e: PointerEvent<HTMLDivElement>) => {
+        onPointerDownProp?.(e);
+        onPointerDown(e);
+      }}
+      onDragStart={(e: DragEvent<HTMLDivElement>) => {
+        onDragStartProp?.(e);
+        e.preventDefault();
+      }}
       {...stylex.props(
         s.viewport,
         layout !== 'uncontained' && s.ownDrag,
@@ -322,13 +354,15 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       </div>
     </div>
   );
-});
+}
 
 const itemStyles = stylex.create({
   fill: { position: 'absolute', inset: 0, display: 'block' },
 });
 
+export type CarouselItemProps = SxProps<ComponentPropsWithRef<'div'>>;
+
 /** Carousel content: fills the item (images: use object-fit). */
-export function CarouselItem({ children, sx }: { children?: ReactNode; sx?: StyleXStyles }) {
-  return <div {...stylex.props(itemStyles.fill, sx)}>{children}</div>;
+export function CarouselItem({ sx, ...rest }: CarouselItemProps) {
+  return <div {...rest} {...stylex.props(itemStyles.fill, sx)} />;
 }
