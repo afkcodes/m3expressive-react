@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { M3Provider } from '@m3x/react';
-import { fixtures } from '../registry.ts';
+import { loadFixture } from '../registry.ts';
 
 type Mode = 'side' | 'difference' | 'onion';
 
@@ -17,7 +17,7 @@ interface ManifestVariant {
  * "difference" blends the two — any non-black pixel is drift.
  */
 export function Compare({ component }: { component: string }) {
-  const mod = fixtures[component];
+  const mod = use(loadFixture(component));
   const [mode, setMode] = useState<Mode>('difference');
   const [mix, setMix] = useState(0.5);
   const [zoom, setZoom] = useState(2);
