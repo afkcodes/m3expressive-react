@@ -1,4 +1,4 @@
-import { useContext, type HTMLAttributes, type ReactNode } from 'react';
+import { useContext, type ComponentPropsWithRef, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
@@ -11,6 +11,7 @@ import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/S
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { useControllableState } from '../../hooks/useControllableState.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { MenuContext, type MenuDensity, type MenuVariant } from './context.ts';
 
 /* Menu items (expressive and baseline rows) — kit geometry and motion in ./Menu.tsx. */
@@ -128,7 +129,8 @@ const BASELINE_HEIGHT: Record<MenuDensity, number> = { 0: 56, [-2]: 48, [-4]: 40
 
 // ── Items ─────────────────────────────────────────────────────────────────────────────────────
 
-export interface MenuItemProps {
+/** An item's own (visual) props; the rest are the row's native props. */
+interface MenuItemOwnProps {
   /** The label. */
   children: ReactNode;
   /** Leading icon (20px expressive, 24px baseline). */
@@ -146,12 +148,15 @@ export interface MenuItemProps {
   supportingText?: ReactNode;
   selected?: boolean;
   disabled?: boolean;
-  onClick?: () => void;
+}
+
+/** Native props, `ref` and `sx` go to the item's row (Base UI's menu item `<div>` inside `<Menu>`). */
+export interface MenuItemProps
+  extends MenuItemOwnProps, SxProps<Omit<ComponentPropsWithRef<'div'>, keyof MenuItemOwnProps | 'onClick'>> {
+  /** Runs the item (inside `<Menu>`; static rows in a `<MenuSurface>` don't handle clicks). */
+  onClick?: MouseEventHandler<HTMLDivElement>;
   /** Close the menu when activated (default true). */
   closeOnClick?: boolean;
-  /** Visual-test hook: the kit's "Active" state (submenu open). */
-  active?: boolean;
-  sx?: StyleXStyles;
 }
 
 interface ItemVisualProps extends Omit<MenuItemProps, 'onClick' | 'closeOnClick'> {
@@ -185,15 +190,14 @@ export function useItemVisual({
   supportingText,
   selected = false,
   disabled = false,
-  active = false,
   sx,
   variant,
   density,
+  ...native
 }: ItemVisualProps) {
   const forced = useForcedState();
   const interactive = !disabled;
-  // The kit's "Active" item (submenu open) keeps the hover layer.
-  const forcedStyles = [active && stateLayerHost.forceHover, forcedStateLayer(forced.state, 'hover')];
+  const forcedStyles = forcedStateLayer(forced.state, 'hover');
   if (variant === 'baseline') {
     const rootProps = stylex.props(
       s.bItem,
@@ -221,7 +225,7 @@ export function useItemVisual({
         </span>
       </>
     );
-    return { rootProps, body };
+    return { rootProps, body, native };
   }
   const vibrant = variant === 'vibrant';
   const rootProps = stylex.props(
@@ -258,14 +262,14 @@ export function useItemVisual({
       )}
     </span>
   );
-  return { rootProps, body };
+  return { rootProps, body, native };
 }
 
 /** A menu item: a real menu item inside `<Menu>`, a static (presentational) row inside `<MenuSurface>`. */
 export function MenuItem({ onClick, closeOnClick = true, ...props }: MenuItemProps) {
   const ctx = useContext(MenuContext);
-  const { rootProps, body } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
-  const common = { ...rootProps, 'data-ripple-host': props.disabled ? undefined : '' };
+  const { rootProps, body, native } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
+  const common = { ...native, ...rootProps, 'data-ripple-host': props.disabled ? undefined : '' };
   if (ctx.live) {
     return (
       <BaseMenu.Item disabled={props.disabled} onClick={onClick} closeOnClick={closeOnClick} {...common}>
@@ -279,7 +283,8 @@ export function MenuItem({ onClick, closeOnClick = true, ...props }: MenuItemPro
 export interface MenuCheckboxItemProps extends Omit<MenuItemProps, 'selected' | 'onClick'> {
   checked?: boolean;
   defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
+  /** Base UI's change details (reason, event, `cancel()`) come second. */
+  onCheckedChange?: (checked: boolean, details: BaseMenu.CheckboxItem.ChangeEventDetails) => void;
 }
 
 /** A toggleable item: checked items take the selected look (Compose CheckableDropdownMenuItem). */
@@ -292,13 +297,18 @@ export function MenuCheckboxItem({
 }: MenuCheckboxItemProps) {
   const ctx = useContext(MenuContext);
   const [on, setOn] = useControllableState(checked, defaultChecked, onCheckedChange);
-  const { rootProps, body } = useItemVisual({ ...props, selected: on, variant: ctx.variant, density: ctx.density });
-  const common = { ...rootProps, 'data-ripple-host': props.disabled ? undefined : '' };
+  const { rootProps, body, native } = useItemVisual({
+    ...props,
+    selected: on,
+    variant: ctx.variant,
+    density: ctx.density,
+  });
+  const common = { ...native, ...rootProps, 'data-ripple-host': props.disabled ? undefined : '' };
   if (ctx.live) {
     return (
       <BaseMenu.CheckboxItem
         checked={on}
-        onCheckedChange={(next) => setOn(next)}
+        onCheckedChange={setOn}
         disabled={props.disabled}
         closeOnClick={closeOnClick}
         {...common}
@@ -312,20 +322,38 @@ export function MenuCheckboxItem({
 
 export interface MenuRadioItemProps extends Omit<MenuItemProps, 'selected' | 'onClick'> {
   value: unknown;
-  /** Static rendering only (inside `<MenuSurface>`): whether this option is the chosen one. */
+  /**
+   * Static rendering only (inside `<MenuSurface>`, a documented static surface): whether this
+   * option is the chosen one. Inside `<Menu>` the `MenuRadioGroup` value decides.
+   */
   checked?: boolean;
 }
 
 /** One option of a `MenuRadioGroup`; the chosen option takes the selected look. */
-export function MenuRadioItem({ value, checked = false, closeOnClick = false, ...props }: MenuRadioItemProps) {
+export function MenuRadioItem({
+  value,
+  checked = false,
+  closeOnClick = false,
+  children,
+  leading,
+  selectedLeading,
+  trailing,
+  trailingText,
+  supportingText,
+  disabled,
+  sx,
+  ...native
+}: MenuRadioItemProps) {
   const ctx = useContext(MenuContext);
-  if (!ctx.live) return <ItemShell {...props} selected={checked} />;
+  const visual = { children, leading, selectedLeading, trailing, trailingText, supportingText, disabled, sx };
+  if (!ctx.live) return <ItemShell htmlProps={native} {...visual} selected={checked} />;
   return (
     <BaseMenu.RadioItem
       value={value}
-      disabled={props.disabled}
+      disabled={disabled}
       closeOnClick={closeOnClick}
-      render={(htmlProps, st) => <ItemShell htmlProps={htmlProps} {...props} selected={st.checked} />}
+      {...native}
+      render={(htmlProps, st) => <ItemShell htmlProps={htmlProps} {...visual} selected={st.checked} />}
     />
   );
 }
@@ -334,7 +362,7 @@ export function MenuRadioItem({ value, checked = false, closeOnClick = false, ..
 function ItemShell({
   htmlProps,
   ...props
-}: Omit<MenuItemProps, 'onClick' | 'closeOnClick'> & { htmlProps?: HTMLAttributes<HTMLElement> }) {
+}: MenuItemOwnProps & { sx?: StyleXStyles; htmlProps?: ComponentPropsWithRef<'div'> }) {
   const ctx = useContext(MenuContext);
   const { rootProps, body } = useItemVisual({ ...props, variant: ctx.variant, density: ctx.density });
   return (
@@ -344,10 +372,13 @@ function ItemShell({
   );
 }
 
+/** `ref`, native props and `sx` go to the `<span role="separator">`. */
+export type MenuDividerProps = SxProps<Omit<ComponentPropsWithRef<'span'>, 'children'>>;
+
 /** Divider between items (baseline) or within a group. */
-export function MenuDivider({ sx }: { sx?: StyleXStyles }) {
+export function MenuDivider({ sx, ...rest }: MenuDividerProps) {
   return (
-    <span role="separator" {...stylex.props(s.divider, sx)}>
+    <span role="separator" {...rest} {...stylex.props(s.divider, sx)}>
       <span {...stylex.props(s.dividerLine)} />
     </span>
   );
