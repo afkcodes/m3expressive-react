@@ -7,7 +7,13 @@ export type TopAppBarSize = 'small' | 'medium' | 'large';
 
 /** Top app bar heights: expanded per size, and the 64px every bar collapses to. */
 export const EXPANDED_HEIGHT = { small: 64, medium: 112, large: 120 } as const;
+/** Expanded heights with a subtitle (Compose Medium / LargeFlexibleAppBarWithSubtitleExpandedHeight). */
+export const EXPANDED_HEIGHT_WITH_SUBTITLE = { small: 64, medium: 136, large: 152 } as const;
 export const COLLAPSED_HEIGHT = 64;
+
+/** The expanded height of a bar of `size`, taller when it shows a subtitle. */
+export const expandedHeight = (size: TopAppBarSize, subtitle = false): number =>
+  (subtitle ? EXPANDED_HEIGHT_WITH_SUBTITLE : EXPANDED_HEIGHT)[size];
 
 /** settleAppBar: a bar collapsed less than this fraction is left as it is. */
 const SETTLE_MIN_FRACTION = 0.01;
@@ -21,6 +27,8 @@ export interface AppBarScrollOptions {
    * on the shrinking bar's edge, and a scroll that stops part-way snaps to the nearer end.
    */
   exitUntilCollapsed?: boolean;
+  /** The bar shows a subtitle: two-row bars are taller expanded (136 / 152), so they collapse further. */
+  subtitle?: boolean;
 }
 
 export interface AppBarScrollState {
@@ -38,7 +46,7 @@ export interface AppBarScrollState {
 export function useAppBarScrollEvents(
   target: RefObject<HTMLElement | null> | undefined,
   size: TopAppBarSize,
-  { exitUntilCollapsed = false }: AppBarScrollOptions,
+  { exitUntilCollapsed = false, subtitle = false }: AppBarScrollOptions,
   onChange: (state: AppBarScrollState) => void,
 ) {
   const latest = useRef(onChange);
@@ -50,7 +58,7 @@ export function useAppBarScrollEvents(
   useEffect(() => {
     const el = target?.current;
     if (!el) return undefined;
-    const range = EXPANDED_HEIGHT[size] - COLLAPSED_HEIGHT;
+    const range = expandedHeight(size, subtitle) - COLLAPSED_HEIGHT;
     const exit = exitUntilCollapsed && range > 0;
     const restore = { paddingTop: el.style.paddingTop, overflowAnchor: el.style.overflowAnchor };
     const basePadding = exit ? parseFloat(getComputedStyle(el).paddingTop) || 0 : 0;
@@ -107,7 +115,7 @@ export function useAppBarScrollEvents(
         el.style.setProperty('overflow-anchor', restore.overflowAnchor);
       }
     };
-  }, [target, size, exitUntilCollapsed, snapSpring]);
+  }, [target, size, exitUntilCollapsed, subtitle, snapSpring]);
 }
 
 /** Scroll position → { overlapped, collapsedFraction } for a bar of `size` over `target`. */

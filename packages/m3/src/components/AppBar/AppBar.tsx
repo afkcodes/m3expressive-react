@@ -10,7 +10,7 @@ import { cubicBezier, fastOutLinearIn } from '../../motion/easing.ts';
 import { StandardIconTintContext } from '../IconButton/context.ts';
 import {
   COLLAPSED_HEIGHT,
-  EXPANDED_HEIGHT,
+  expandedHeight,
   useAppBarScrollEvents,
   type AppBarScrollState,
   type TopAppBarSize,
@@ -185,12 +185,13 @@ export function AppBarTitle({ size = 'small', centered = false, children, subtit
 
 /** Compose TopTitleAlphaEasing: cubic-bezier(0.8, 0, 0.8, 0.15). */
 const topTitleAlpha = cubicBezier(0.8, 0, 0.8, 0.15);
-/** A two-row bar's frame at collapsed `fraction` (Compose TwoRowsTopAppBar). */
-function twoRowFrame(size: Exclude<TopAppBarSize, 'small'>, fraction: number) {
-  const collapsed = fraction * (EXPANDED_HEIGHT[size] - COLLAPSED_HEIGHT);
+/** A two-row bar's frame at collapsed `fraction` (Compose TwoRowsTopAppBar); taller with a subtitle. */
+function twoRowFrame(size: Exclude<TopAppBarSize, 'small'>, fraction: number, subtitle: boolean) {
+  const expanded = expandedHeight(size, subtitle);
+  const collapsed = fraction * (expanded - COLLAPSED_HEIGHT);
   return {
     collapsed,
-    height: EXPANDED_HEIGHT[size] - collapsed,
+    height: expanded - collapsed,
     /** % of the scrolled container colour: lerp(container, scrolled, FastOutLinearIn(fraction)). */
     containerMix: Math.round(fastOutLinearIn(fraction) * 1000) / 10,
     rowTitleAlpha: topTitleAlpha(fraction),
@@ -272,7 +273,7 @@ export function TopAppBar({
 
   const paint = (fraction: number) => {
     if (size === 'small' || !header.current || !rowTitle.current || !bigTitle.current) return;
-    const frame = twoRowFrame(size, fraction);
+    const frame = twoRowFrame(size, fraction, subtitle != null);
     header.current.style.height = `${frame.height}px`;
     if (scrolledProp == null) header.current.style.backgroundColor = containerColor(frame.containerMix);
     rowTitle.current.style.opacity = String(frame.rowTitleAlpha);
@@ -286,7 +287,8 @@ export function TopAppBar({
       big.removeProperty('clip-path');
     }
   };
-  useAppBarScrollEvents(scrollTarget, size, { exitUntilCollapsed: twoRows && fractionProp == null }, (next) => {
+  const scrollOptions = { exitUntilCollapsed: twoRows && fractionProp == null, subtitle: subtitle != null };
+  useAppBarScrollEvents(scrollTarget, size, scrollOptions, (next) => {
     if (scrollDriven) {
       latestFraction.current = next.fraction;
       paint(next.fraction);
@@ -342,7 +344,7 @@ export function TopAppBar({
       </header>
     );
   }
-  const frame = twoRowFrame(size, fraction);
+  const frame = twoRowFrame(size, fraction, subtitle != null);
   // Scroll-driven two-row bars: the container follows the collapse (Compose containerColor(
   // collapsedFraction)); an explicit `scrolled` keeps the kit's on-scroll fill.
   const driven = fractionProp != null || scrollTarget != null;

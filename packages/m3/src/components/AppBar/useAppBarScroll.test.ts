@@ -7,6 +7,7 @@ import { motionSchemes } from '../../motion/tokens.ts';
 import {
   COLLAPSED_HEIGHT,
   EXPANDED_HEIGHT,
+  EXPANDED_HEIGHT_WITH_SUBTITLE,
   useAppBarScrollEvents,
   type AppBarScrollOptions,
   type AppBarScrollState,
@@ -84,6 +85,19 @@ describe('useAppBarScrollEvents', () => {
   it('bar heights: medium 112, large 120, every bar collapses to 64', () => {
     expect(EXPANDED_HEIGHT).toEqual({ small: 64, medium: 112, large: 120 });
     expect(COLLAPSED_HEIGHT).toBe(64);
+    // Compose Medium / LargeFlexibleAppBarWithSubtitleExpandedHeight.
+    expect(EXPANDED_HEIGHT_WITH_SUBTITLE).toEqual({ small: 64, medium: 136, large: 152 });
+  });
+
+  it('a bar with a subtitle collapses over its taller range (medium: 72px)', async () => {
+    const t = await mount('medium', { subtitle: true });
+    await t.scroll(36);
+    await t.scroll(72);
+    expect(t.states.slice(1)).toEqual([
+      { overlapped: true, fraction: 0.5 },
+      { overlapped: true, fraction: 1 },
+    ]);
+    await t.unmount();
   });
 
   it('reports once on attach, then the fraction scroll / range (clamped) and overlap per scroll', async () => {
