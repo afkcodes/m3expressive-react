@@ -1,13 +1,11 @@
 import { forwardRef, useId, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { InheritSurfaceContext } from '../List/surface.ts';
-import { scrim } from '../../primitives/scrim.ts';
+import { ModalShell } from '../../primitives/ModalShell.tsx';
 import { dialogMotion } from '../../primitives/dialogMotion.ts';
 
 /*
@@ -21,7 +19,7 @@ import { dialogMotion } from '../../primitives/dialogMotion.ts';
  * Motion: Compose dialogs use the platform window animation; Material Components' M3 dialog
  *   (MaterialAlertDialog.Material3.Animation → m3_motion_fade_enter / _exit) fades in while
  *   scaling 0.8 → 1 over medium4 (400ms) emphasized-decelerate, and fades out over short3
- *   (150ms) emphasized-accelerate — see ./dialogMotion.ts.
+ *   (150ms) emphasized-accelerate — see primitives/dialogMotion.ts.
  */
 
 const s = stylex.create({
@@ -128,25 +126,17 @@ export interface DialogProps extends Omit<DialogSurfaceProps, 'headlineId' | 'de
 
 /** A modal dialog: scrim, focus trap, Escape (and, for `dialog`, scrim click) to dismiss. */
 export function Dialog({ open, onOpenChange, role = 'dialog', ...surface }: DialogProps) {
-  const portal = usePortalContainer();
   const id = useId();
   return (
-    <BaseDialog.Root
+    <ModalShell
       open={open}
-      onOpenChange={(next) => onOpenChange(next)}
-      disablePointerDismissal={role === 'alertdialog'}
+      onOpenChange={onOpenChange}
+      role={role}
+      aria-labelledby={surface.headline != null ? `${id}-h` : undefined}
+      aria-describedby={surface.supportingText != null ? `${id}-d` : undefined}
+      sx={[s.popup, dialogMotion.fadeScale]}
     >
-      <BaseDialog.Portal container={portal}>
-        <BaseDialog.Backdrop {...stylex.props(scrim.backdrop)} />
-        <BaseDialog.Popup
-          role={role}
-          aria-labelledby={surface.headline != null ? `${id}-h` : undefined}
-          aria-describedby={surface.supportingText != null ? `${id}-d` : undefined}
-          {...stylex.props(s.popup, dialogMotion.fadeScale)}
-        >
-          <DialogSurface headlineId={`${id}-h`} descriptionId={`${id}-d`} {...surface} />
-        </BaseDialog.Popup>
-      </BaseDialog.Portal>
-    </BaseDialog.Root>
+      <DialogSurface headlineId={`${id}-h`} descriptionId={`${id}-d`} {...surface} />
+    </ModalShell>
   );
 }
