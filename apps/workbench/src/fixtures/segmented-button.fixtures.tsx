@@ -33,6 +33,34 @@ const fixture: FixtureModule = {
       },
     ],
     [
+      'live-group-disabled',
+      {
+        // A disabled group vs. the same group with every item disabled: they must draw identically.
+        render: () => (
+          <div style={{ display: 'grid', rowGap: 16 }}>
+            <div data-row="group">
+              <SegmentedButton defaultValue={['1']} aria-label="Group disabled" disabled sx={w.px(310)}>
+                {['1', '2', '3'].map((v) => (
+                  <SegmentedButtonItem key={v} value={v}>
+                    Label
+                  </SegmentedButtonItem>
+                ))}
+              </SegmentedButton>
+            </div>
+            <div data-row="items">
+              <SegmentedButton defaultValue={['1']} aria-label="Items disabled" sx={w.px(310)}>
+                {['1', '2', '3'].map((v) => (
+                  <SegmentedButtonItem key={v} value={v} disabled>
+                    Label
+                  </SegmentedButtonItem>
+                ))}
+              </SegmentedButton>
+            </div>
+          </div>
+        ),
+      },
+    ],
+    [
       'live-icons',
       {
         render: () => (

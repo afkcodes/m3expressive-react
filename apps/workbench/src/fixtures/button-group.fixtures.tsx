@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import {
   Button,
@@ -32,9 +33,31 @@ const DISABLED_W: Partial<Record<ButtonSize, number>> = { xsmall: 85, small: 97,
 const asForced = (s: string): ForcedState | undefined =>
   s === 'hovered' || s === 'focused' || s === 'pressed' ? s : undefined;
 
+/** Live (cleanup): a standard group that the button unmounts, e.g. mid-press. */
+function LiveUnmount() {
+  const [mounted, setMounted] = useState(true);
+  return (
+    <div style={{ display: 'grid', rowGap: 16 }}>
+      {mounted && (
+        <div data-animated>
+          <ButtonGroup size="small" aria-label="Actions">
+            <Button variant="tonal">Archive</Button>
+            <Button variant="tonal">Move</Button>
+            <Button variant="tonal">Delete</Button>
+          </ButtonGroup>
+        </div>
+      )}
+      <button type="button" data-unmount onClick={() => setMounted(false)}>
+        Unmount
+      </button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'button-group',
   variants: Object.fromEntries([
+    ['live-unmount', { render: () => <LiveUnmount /> } satisfies FixtureVariant],
     [
       'standard-live',
       {
@@ -44,6 +67,39 @@ const fixture: FixtureModule = {
             <Button variant="tonal">Move to folder</Button>
             <Button variant="tonal">Delete</Button>
           </ButtonGroup>
+        ),
+      },
+    ],
+    [
+      'live-group-disabled',
+      {
+        // A disabled group vs. the same group with every segment disabled: they must draw identically.
+        render: () => (
+          <div style={{ display: 'grid', rowGap: 16 }}>
+            {(['group', 'items'] as const).map((row) => (
+              <div key={row} data-row={row}>
+                <ConnectedButtonGroup
+                  size="medium"
+                  defaultValue={['1']}
+                  aria-label={row}
+                  disabled={row === 'group'}
+                  sx={w.px(GROUP_W.medium)}
+                >
+                  {['1', '2', '3'].map((v) => (
+                    <ConnectedButtonGroupItem
+                      key={v}
+                      value={v}
+                      icon={stars}
+                      selectedIcon={starsFilled}
+                      disabled={row === 'items'}
+                    >
+                      Label
+                    </ConnectedButtonGroupItem>
+                  ))}
+                </ConnectedButtonGroup>
+              </div>
+            ))}
+          </div>
         ),
       },
     ],

@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, forwardRef, useContext, useMemo, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Radio as BaseRadio } from '@base-ui/react/radio';
@@ -109,7 +109,8 @@ const roles = stylex.create({
   disabled: { color: color.onSurface },
 });
 
-const GroupContext = createContext<{ value: unknown } | null>(null);
+/** The group's value and `disabled` (radios draw disabled too; Base UI only disables their behaviour). */
+const GroupContext = createContext<{ value: unknown; disabled: boolean } | null>(null);
 
 export interface RadioGroupProps extends Omit<BaseRadioGroup.Props, 'className' | 'style' | 'render'> {
   sx?: StyleXStyles;
@@ -117,13 +118,23 @@ export interface RadioGroupProps extends Omit<BaseRadioGroup.Props, 'className' 
 
 const groupStyles = stylex.create({ group: { display: 'flex', flexDirection: 'column' } });
 
-export function RadioGroup({ value: valueProp, defaultValue, onValueChange, sx, children, ...rest }: RadioGroupProps) {
+export function RadioGroup({
+  value: valueProp,
+  defaultValue,
+  onValueChange,
+  disabled = false,
+  sx,
+  children,
+  ...rest
+}: RadioGroupProps) {
   const [inner, setInner] = useState<unknown>(defaultValue ?? null);
   const value = valueProp !== undefined ? valueProp : inner;
+  const group = useMemo(() => ({ value, disabled }), [value, disabled]);
   return (
-    <GroupContext value={{ value }}>
+    <GroupContext value={group}>
       <BaseRadioGroup
         value={value}
+        disabled={disabled}
         onValueChange={(next, details) => {
           if (valueProp === undefined) setInner(next);
           onValueChange?.(next, details);
@@ -144,19 +155,21 @@ export interface RadioProps extends Omit<BaseRadio.Root.Props, 'className' | 'st
 }
 
 export const Radio = forwardRef<HTMLElement, RadioProps>(function Radio(
-  { value, checked: checkedProp, disabled = false, sx, ...rest },
+  { value, checked: checkedProp, disabled: disabledProp = false, sx, ...rest },
   ref,
 ) {
   const group = useContext(GroupContext);
   const forced = useForcedState();
   const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
   const selected = group ? Object.is(group.value, value) : !!checkedProp;
-  // Compose snaps the colour while disabled and across an enabled ⇄ disabled change.
-  const wasDisabled = useRef(disabled);
-  const colourSnap = disabled || wasDisabled.current !== disabled;
-  useEffect(() => {
-    wasDisabled.current = disabled;
-  });
+  const disabled = disabledProp || (group?.disabled ?? false);
+  // Compose snaps the colour while disabled and across an enabled ⇄ disabled change: decided when
+  // the colour inputs change, and kept until they next change.
+  const [colour, setColour] = useState({ disabled, selected, snap: disabled });
+  if (colour.disabled !== disabled || colour.selected !== selected) {
+    setColour({ disabled, selected, snap: disabled || colour.disabled !== disabled });
+  }
+  const colourSnap = colour.snap;
   const root = (
     <BaseRadio.Root
       ref={ref}
