@@ -67,9 +67,11 @@ export const base = stylex.create({
     outlineColor: color.secondary,
     outlineWidth: state.focusIndicatorThickness,
     outlineOffset: state.focusIndicatorOuterOffset,
+    // Press / checked morph on DefaultEffects — Compose IconButton.kt `shapeForInteraction`:
+    // "DefaultEffects is intentional here to prevent any bounce" (IconButton and IconToggleButton).
     transitionProperty: 'border-radius',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
   },
   ringForced: { outlineStyle: 'solid' },
   icon: { position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },

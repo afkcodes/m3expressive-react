@@ -14,8 +14,18 @@ function StarsFilled() {
 
 const fixture: FixtureModule = {
   component: 'icon-button',
-  variants: Object.fromEntries(
-    Object.entries(manifest.variants).map(([name, v]) => {
+  variants: Object.fromEntries([
+    [
+      'live',
+      {
+        render: () => (
+          <IconButton aria-label="Favourite" variant="filled" size="medium">
+            <StarsFilled />
+          </IconButton>
+        ),
+      },
+    ],
+    ...Object.entries(manifest.variants).map(([name, v]) => {
       const [variant, shape, size, width, state] = name.split('-') as [IconButtonVariant, ButtonShape, ButtonSize, IconButtonWidth, string];
       const forced: ForcedState | undefined = state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
       const ripples = assets.ripple as Record<string, Record<string, Record<string, string>>>;
@@ -33,6 +43,6 @@ const fixture: FixtureModule = {
         },
       ];
     }),
-  ),
+  ]),
 };
 export default fixture;

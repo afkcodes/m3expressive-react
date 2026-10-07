@@ -11,7 +11,7 @@ import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { base, disabled, gaps, iconSizes, labelRole, sizes, type ButtonSize } from '../Button/buttonStyles.ts';
+import { base, containerMotion, disabled, gaps, iconSizes, labelRole, sizes, type ButtonSize } from '../Button/buttonStyles.ts';
 
 export type SplitButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';
 
@@ -73,23 +73,28 @@ const s = stylex.create({
     zIndex: -1,
     pointerEvents: 'none',
     boxShadow: elevation.level3NoSpread,
+    // Follows the container's corners (same spring).
     transitionProperty: 'border-radius',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
   },
+  // The chevron's optical offset follows the morphing shape (Compose horizontalCenterOptically
+  // reads the animated corners), so it shares the DefaultEffects spring.
   chevron: {
     display: 'block',
     flexShrink: 0,
     transitionProperty: 'translate',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
   },
+  // Compose sample (SplitButtonSamples.kt): rotation via animateFloatAsState's default spring —
+  // no bounce (ζ 1, stiffness 1500); DefaultEffects (ζ 1, 1600) is the matching scheme token.
   chevronPath: {
     transformBox: 'fill-box',
     transformOrigin: 'center',
     transitionProperty: 'rotate',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
+    transitionDuration: motion.defaultEffectsDuration,
+    transitionTimingFunction: motion.defaultEffectsEasing,
   },
 });
 
@@ -199,6 +204,8 @@ function usePart() {
 
 function containerStyles(variant: SplitButtonVariant, size: ButtonSize, isDisabled: boolean) {
   return [
+    // Inner-corner / checked morph on DefaultEffects (Compose SplitButtonDefaults Leading / TrailingButton).
+    containerMotion.effects,
     variants[variant],
     variant === 'outlined' && base.stroke,
     variant === 'outlined' && s.stroke,

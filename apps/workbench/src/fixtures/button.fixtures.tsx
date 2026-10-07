@@ -15,8 +15,12 @@ function StarsFilled() {
 
 const fixture: FixtureModule = {
   component: 'button',
-  variants: Object.fromEntries(
-    Object.entries(manifest.variants).map(([name, v]) => {
+  variants: Object.fromEntries([
+    // Live (motion tests).
+    ['live', { render: () => <Button size="medium" icon={<StarsFilled />}>Label</Button> }],
+    ['elevated-xlarge-live', { render: () => <Button variant="elevated" size="xlarge">Label</Button> }],
+    ['elevated-xlarge-disabled-live', { render: () => <Button variant="elevated" size="xlarge" disabled>Label</Button> }],
+    ...Object.entries(manifest.variants).map(([name, v]) => {
       const [variant, shape, size, state] = name.split('-') as [ButtonVariant, ButtonShape, ButtonSize, string];
       const forced: ForcedState | undefined =
         state === 'hovered' || state === 'focused' || state === 'pressed' ? state : undefined;
@@ -35,6 +39,6 @@ const fixture: FixtureModule = {
         },
       ];
     }),
-  ),
+  ]),
 };
 export default fixture;
