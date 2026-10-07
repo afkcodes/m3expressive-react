@@ -6,8 +6,10 @@ import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { StateLayer, forcedStateLayer, isInteractionState, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 
 /*
@@ -60,14 +62,10 @@ const s = stylex.create({
     justifyContent: 'center',
     width: 40,
     height: 40,
+    // The focus ring (focusRing.part) follows it: 3px secondary 2px outside the 40px circle (kit
+    // "Focus indicator" 44px r100).
     borderRadius: '50%',
-    // Focus indicator: 3px secondary ring 2px outside the 40px circle (kit "Focus indicator" 44px r100).
-    outlineStyle: { default: 'none', [stylex.when.ancestor(':focus-visible')]: 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
   },
-  ringForced: { outlineStyle: 'solid' },
   box: {
     position: 'relative',
     boxSizing: 'border-box',
@@ -176,11 +174,10 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
   },
   ref,
 ) {
-  const [inner, setInner] = useState(defaultChecked);
-  const checked = checkedProp ?? inner;
+  const [checked, setChecked] = useControllableState(checkedProp, defaultChecked, onCheckedChange);
   const forced = useForcedState();
   const on = checked || indeterminate;
-  const interactingForced = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
+  const interactingForced = isInteractionState(forced.state);
   const visual: Visual = indeterminate ? 'indeterminate' : checked ? 'on' : 'off';
   // Compose picks some specs by the state the transition starts from: remember the one before the
   // last change of the inputs that drive the box and glyph (kept until they next change).
@@ -212,10 +209,7 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
       indeterminate={indeterminate}
       disabled={disabled}
       aria-invalid={error || undefined}
-      onCheckedChange={(next, details) => {
-        if (checkedProp === undefined) setInner(next);
-        onCheckedChange?.(next, details);
-      }}
+      onCheckedChange={setChecked}
       data-ripple-host=""
       {...rest}
       {...stylex.props(
@@ -223,16 +217,14 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
         stylex.defaultMarker(),
         stateLayerHost.hostPressLayer,
         disabled && stateLayerHost.disabled,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
+        forcedStateLayer(forced.state, 'pressed'),
         error ? roles.error : on ? roles.selected : roles.unselected,
         roles.ripple20,
         disabled && s.disabled,
         sx,
       )}
     >
-      <span {...stylex.props(s.circle, forced.focusRing && s.ringForced)}>
+      <span {...stylex.props(s.circle, focusRing.part, forced.focusRing && focusRing.forced)}>
         <StateLayer />
         <span
           data-part="box"
