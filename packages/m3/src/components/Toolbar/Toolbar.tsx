@@ -5,7 +5,7 @@ import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './context.ts';
-import { useRovingTabStop } from './roving.ts';
+import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
 
 /*
  * Figma kit, "Toolbars" page (Toolbar set 58467:8206; Compose HorizontalFloatingToolbar /

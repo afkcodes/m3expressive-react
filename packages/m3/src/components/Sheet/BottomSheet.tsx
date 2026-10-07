@@ -28,7 +28,7 @@ import {
   TOUCH_SLOP,
 } from '../../motion/gesture.ts';
 import { isNoDragTarget } from './dragGuard.ts';
-import { scrim } from './scrim.ts';
+import { scrim } from '../../primitives/scrim.ts';
 
 /*
  * Figma kit, "Sheets" page (Bottom sheet set 51827:5859; Compose ModalBottomSheet /

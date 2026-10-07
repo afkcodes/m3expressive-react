@@ -9,7 +9,7 @@ import { StandardIconTintContext } from '../IconButton/context.ts';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import { cubicBezier } from '../../motion/gesture.ts';
-import { useRovingTabStop } from '../Toolbar/roving.ts';
+import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
 import { onScrollEnd, onUserScroll } from './scrollEvents.ts';
 
 export type TopAppBarSize = 'small' | 'medium' | 'large';

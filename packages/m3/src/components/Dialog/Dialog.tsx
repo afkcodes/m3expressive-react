@@ -7,8 +7,8 @@ import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { InheritSurfaceContext } from '../List/surface.ts';
-import { scrim } from '../Sheet/scrim.ts';
-import { dialogMotion } from './dialogMotion.ts';
+import { scrim } from '../../primitives/scrim.ts';
+import { dialogMotion } from '../../primitives/dialogMotion.ts';
 
 /*
  * Figma kit, "Dialogs" page (Basic dialog 50723:10929, List dialog 52112:28937, Scrollable list

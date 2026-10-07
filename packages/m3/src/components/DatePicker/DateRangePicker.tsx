@@ -8,7 +8,7 @@ import { textBox } from '../../primitives/textBox.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
-import { dialogMotion } from '../Dialog/dialogMotion.ts';
+import { dialogMotion } from '../../primitives/dialogMotion.ts';
 import { CalendarMonth } from './CalendarMonth.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { dateFormat, defaultFormatter, makeDate, type DatePickerFormatter } from './calendar.ts';

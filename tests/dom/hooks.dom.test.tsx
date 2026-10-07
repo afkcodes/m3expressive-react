@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { describe, expect, it, vi } from 'vitest';
 import { useControllableState } from '../../packages/m3/src/hooks/useControllableState.ts';
 import { useMergedRefs } from '../../packages/m3/src/hooks/useMergedRefs.ts';
+import { useSpringChannel, type SpringChannel } from '../../packages/m3/src/motion/useSpringChannel.ts';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -80,5 +81,36 @@ describe('useMergedRefs', () => {
     expect(seen[0]).toBe(objectRef.current);
     await unmount();
     expect(objectRef.current).toBeNull();
+  });
+});
+
+describe('useSpringChannel', () => {
+  const SPRING = { dampingRatio: 1, stiffness: 1600 };
+  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  it('springs to the target, reports rest, jumps without a spring, stops on unmount', async () => {
+    const seen: number[] = [];
+    const rested: number[] = [];
+    let channel!: SpringChannel;
+    function Probe() {
+      channel = useSpringChannel((v) => seen.push(v), { onRest: (v) => rested.push(v) });
+      return null;
+    }
+    const { unmount } = await mount(<Probe />);
+    await act(async () => channel.to(10, SPRING));
+    await act(async () => wait(600));
+    expect(seen.at(-1)).toBe(10);
+    expect(rested).toEqual([10]);
+    expect(seen.length).toBeGreaterThan(2); // animated, not jumped
+
+    await act(async () => channel.to(3, null));
+    expect(seen.at(-1)).toBe(3);
+    expect(channel.animating).toBe(false);
+
+    await act(async () => channel.to(50, SPRING));
+    const count = seen.length;
+    await unmount();
+    await wait(200);
+    expect(seen.length - count).toBeLessThanOrEqual(1); // stopped on unmount
   });
 });

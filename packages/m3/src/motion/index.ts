@@ -5,3 +5,6 @@ export type { MotionScheme, MotionSchemeName, SpringToken, SpringSpeed, SpringTy
 export { animateSpring } from './animate.ts';
 export type { SpringAnimation, SpringAnimationOptions } from './animate.ts';
 export { MotionSchemeContext, prefersReducedMotion, useReducedMotion, useSpringToken } from './context.tsx';
+export { useSpringChannel } from './useSpringChannel.ts';
+export type { SpringChannel, SpringChannelOptions } from './useSpringChannel.ts';
+export * from './easing.ts';

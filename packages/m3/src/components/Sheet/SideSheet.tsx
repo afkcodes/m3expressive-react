@@ -15,7 +15,7 @@ import { typescale } from '../../tokens/typescale.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { isNoDragTarget } from './dragGuard.ts';
-import { scrim } from './scrim.ts';
+import { scrim } from '../../primitives/scrim.ts';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   MAX_FLING_VELOCITY,

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { rovingIndex, rovingMove } from './roving.ts';
+import { rovingIndex, rovingMove } from './useRovingTabStop.ts';
 
 describe('rovingMove (WAI-ARIA toolbar keys)', () => {
   test('horizontal: right is next, left is previous; RTL mirrors them', () => {
