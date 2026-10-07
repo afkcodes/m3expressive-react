@@ -7,5 +7,8 @@ export type { ForcedState, ForceStateValue, ForcedProgressFrame, ForcedPosition 
 // — Actions, bars, communication (buttons, chips, toolbar, tabs, search, snackbar…)
 
 // — Lists, menus, navigation, surfaces
+export { SwipeActions } from '../components/List/SwipeActions.tsx';
+export type { SwipeActionsProps } from '../components/List/SwipeActions.tsx';
+export { swipeOffset } from '../components/List/swipeGeometry.ts';
 
 // — Selection, pickers, inputs, media

@@ -132,7 +132,7 @@ export function ListPlayground() {
             title="Selectable"
             note="Hover rounds the corners to 12px, press / focus / selected to 16px (fast spatial spring)."
           >
-            <List type={type} aria-label="Folders">
+            <List variant={type} aria-label="Folders">
               {FOLDERS.map((f, i) => (
                 <ListItem
                   key={f}
@@ -153,12 +153,12 @@ export function ListPlayground() {
             title="Expandable"
             note="The accordion button toggles nested items: the panel grows on the fast spatial spring with its items sliding down from the header (Compose expandVertically)."
           >
-            <List type="segmented" aria-label="Settings">
+            <List variant="segmented" aria-label="Settings">
               <ExpandableListItem
                 leading={<Icon name="stars-20" />}
                 supportingText="3 items"
                 supportingMaxLines={1}
-                defaultExpanded
+                defaultOpen
                 items={['Display', 'Sound', 'Storage'].map((t) => (
                   <ListItem
                     key={t}
@@ -188,7 +188,7 @@ export function ListPlayground() {
             title="Swipeable"
             note={`Drag a row left: peek → revealed actions → a full swipe archives. A flick (≥ 125px/s) or 56px of travel decides where it settles (300ms). Last action: ${log}`}
           >
-            <List type={type} aria-label="Messages">
+            <List variant={type} aria-label="Messages">
               {messages.map((t) => (
                 <SwipeableListItem
                   key={t}

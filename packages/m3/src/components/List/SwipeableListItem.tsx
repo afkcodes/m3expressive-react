@@ -5,20 +5,22 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type ComponentPropsWithRef,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { isNoDragTarget } from '../../motion/dragGuard.ts';
 import { pointerSlop } from '../../motion/gesture.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { state as stateTokens } from '../../tokens/state.stylex.ts';
 import { ListContext } from './context.ts';
-import { ListItem, type ListItemProps } from './ListItem.tsx';
+import { ListItem, type ListItemOwnProps } from './ListItem.tsx';
 import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';
 import { SwipeActions, type SwipeAction, type SwipeActionsProps } from './SwipeActions.tsx';
 import { SETTLE_MS, swipeMode, swipeOffset, swipeTarget, type SwipeRevealState } from './swipeGeometry.ts';
@@ -100,28 +102,75 @@ function LiveSwipeActions({ store, ...props }: Omit<SwipeActionsProps, 'offset'>
   return <SwipeActions offset={offset} {...props} />;
 }
 
-export interface SwipeableListItemProps extends ListItemProps {
+/**
+ * The row's content props (as `ListItem`'s; `onClick` / `href` make the row itself the button /
+ * link) plus the swipe. Native props, `ref` and `sx` go to the root `<div>` that holds the row and
+ * its actions (pointer and key handlers run before the swipe's own).
+ */
+export interface SwipeableListItemProps
+  extends ListItemOwnProps, SxProps<Omit<ComponentPropsWithRef<'div'>, keyof ListItemOwnProps>> {
   /** Revealed actions, left → right; the last is the primary. */
   actions: SwipeAction[];
   /** Run by a full swipe (defaults to the primary action). */
   swipeAction?: SwipeAction;
   revealState?: SwipeRevealState;
+  defaultRevealState?: SwipeRevealState;
   onRevealStateChange?: (state: SwipeRevealState) => void;
-  sx?: StyleXStyles;
 }
 
 export function SwipeableListItem({
   actions,
   swipeAction,
   revealState,
+  defaultRevealState = 'closed',
   onRevealStateChange,
   sx,
-  ...item
+  ref,
+  onKeyDown: onKeyDownProp,
+  onPointerDown: onPointerDownProp,
+  onPointerMove: onPointerMoveProp,
+  onPointerUp: onPointerUpProp,
+  onPointerCancel: onPointerCancelProp,
+  children,
+  overline,
+  supportingText,
+  supportingMaxLines,
+  leading,
+  trailing,
+  trailingText,
+  variant,
+  lines,
+  alignment,
+  selected,
+  disabled,
+  dragged,
+  divider,
+  onClick,
+  href,
+  ...rest
 }: SwipeableListItemProps) {
+  const item = {
+    children,
+    overline,
+    supportingText,
+    supportingMaxLines,
+    leading,
+    trailing,
+    trailingText,
+    variant,
+    lines,
+    alignment,
+    selected,
+    disabled,
+    dragged,
+    divider,
+    onClick,
+    href,
+  };
   const list = useContext(ListContext);
   const reduced = useReducedMotion();
   const actionCount = actions.length;
-  const [state, setState] = useControllableState(revealState, 'closed', onRevealStateChange);
+  const [state, setState] = useControllableState(revealState, defaultRevealState, onRevealStateChange);
   const [offsetStore] = useState(() => createOffsetStore(swipeOffset(actionCount, state)));
   // The item's transform at mount (also the server render); later offsets are written to the DOM.
   const [initialTransform] = useState(() => translate(swipeOffset(actionCount, state)));
@@ -133,6 +182,7 @@ export function SwipeableListItem({
   const tracker = useRef(new VelocityTracker1D());
   const rowWidth = useRef(DEFAULT_ROW_WIDTH);
   const root = useRef<HTMLDivElement | null>(null);
+  const rootRef = useMergedRefs(root, ref);
   const itemBox = useRef<HTMLDivElement | null>(null);
   const itemRef = useRef<HTMLElement | null>(null);
   const itemList = useMemo(() => ({ ...list, inList: false }), [list]);
@@ -190,7 +240,8 @@ export function SwipeableListItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  const onKeyDown = (e: ReactKeyboardEvent<HTMLElement>) => {
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    onKeyDownProp?.(e);
     if (e.defaultPrevented) return;
     const target = e.target as HTMLElement;
     const index = actionButtons().indexOf(target);
@@ -217,14 +268,16 @@ export function SwipeableListItem({
     }
   };
 
-  const onPointerDown = (e: ReactPointerEvent) => {
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    onPointerDownProp?.(e);
     if (e.button !== 0 || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
     rowWidth.current = root.current?.getBoundingClientRect().width ?? DEFAULT_ROW_WIDTH;
     drag.current = { x: e.clientX, start: offsetStore.get(), moved: false };
     tracker.current.reset();
     tracker.current.add(e.timeStamp, e.clientX);
   };
-  const onPointerMove = (e: ReactPointerEvent) => {
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    onPointerMoveProp?.(e);
     const gesture = drag.current;
     if (!gesture) return;
     // Compose Lsq2VelocityTracker: every MOVE, with its historical (coalesced) samples.
@@ -247,7 +300,8 @@ export function SwipeableListItem({
     setOffset(next);
     updateMode(swipeMode(actionCount, next));
   };
-  const onPointerUp = (e: ReactPointerEvent) => {
+  const onPointerUp = (e: ReactPointerEvent<HTMLDivElement>) => {
+    (e.type === 'pointercancel' ? onPointerCancelProp : onPointerUpProp)?.(e);
     const gesture = drag.current;
     drag.current = null;
     if (!gesture?.moved) return;
@@ -265,7 +319,8 @@ export function SwipeableListItem({
   return (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- swipe gesture and its keyboard path, delegated from the row and its actions
     <div
-      ref={root}
+      {...rest}
+      ref={rootRef}
       role={list.inList ? 'listitem' : undefined}
       tabIndex={ownTarget ? undefined : 0}
       data-swipe-item=""

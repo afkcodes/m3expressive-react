@@ -1,12 +1,12 @@
 export { List } from './List.tsx';
 export type { ListProps } from './List.tsx';
-export { ListItem, ListContext } from './ListItem.tsx';
-export type { ListItemProps, ListItemVariant } from './ListItem.tsx';
+export type { ListVariant } from './context.ts';
+export { ListItem } from './ListItem.tsx';
+export type { ListItemProps } from './ListItem.tsx';
 export { ListItemImage, ListItemVideo, ListItemMonogram } from './ListMedia.tsx';
+export type { ListItemImageProps, ListItemVideoProps, ListItemMonogramProps } from './ListMedia.tsx';
 export { ExpandableListItem, AccordionButton } from './ExpandableListItem.tsx';
 export type { ExpandableListItemProps, AccordionButtonProps } from './ExpandableListItem.tsx';
 export { SwipeableListItem } from './SwipeableListItem.tsx';
-export { SwipeActions } from './SwipeActions.tsx';
-export { swipeLayout, swipeOffset } from './swipeGeometry.ts';
 export type { SwipeableListItemProps, SwipeRevealState } from './SwipeableListItem.tsx';
-export type { SwipeActionsProps, SwipeAction } from './SwipeActions.tsx';
+export type { SwipeAction } from './SwipeActions.tsx';

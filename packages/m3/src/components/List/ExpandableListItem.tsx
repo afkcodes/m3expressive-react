@@ -1,6 +1,14 @@
-import { forwardRef, useContext, useId, useMemo, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import {
+  useContext,
+  useId,
+  useMemo,
+  useState,
+  type ComponentPropsWithRef,
+  type HTMLAttributes,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -8,9 +16,11 @@ import { useControllableState } from '../../hooks/useControllableState.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
-import { useForcedState, type ForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
+import { useForcedState } from '../../testing/ForceState.tsx';
 import { ListContext } from './context.ts';
-import { ListItem, type ListItemProps } from './ListItem.tsx';
+import { ListItem, type ListItemOwnProps } from './ListItem.tsx';
 import { expandPanelMarker } from './list.stylex.ts';
 
 const CHEVRON_DOWN = 'M10 12.8334L5 7.83341L6.16667 6.66675L10 10.5001L13.8333 6.66675L15 7.83341L10 12.8334Z';
@@ -115,30 +125,26 @@ const s = stylex.create({
   li: { listStyle: 'none', margin: 0, padding: 0 },
 });
 
-export interface AccordionButtonProps {
-  expanded: boolean;
-  'aria-label'?: string;
-  /** Visual-test hook (the kit's state variants). */
-  forcedState?: ForcedState;
+/** Native props, `ref` and `sx` go to the `<button>`. */
+export interface AccordionButtonProps extends SxProps<ComponentPropsWithRef<'button'>> {
+  /** Whether the content it controls is shown (mirrored to `aria-expanded`; the chevron points up). */
+  open: boolean;
 }
 
 /** The kit's accordion toggle (used by ExpandableListItem; exported for custom headers). */
-export const AccordionButton = forwardRef<
-  HTMLButtonElement,
-  AccordionButtonProps & ButtonHTMLAttributes<HTMLButtonElement>
->(function AccordionButton({ expanded, forcedState, ...rest }, ref) {
+export function AccordionButton({ open, sx, ...rest }: AccordionButtonProps) {
+  const forcedState = useForcedState().state;
   // The chevron flips on every toggle after mount (not on the first render).
-  const [initial] = useState(expanded);
+  const [initial] = useState(open);
   const [toggled, setToggled] = useState(false);
-  if (!toggled && expanded !== initial) setToggled(true);
+  if (!toggled && open !== initial) setToggled(true);
   return (
     <button
-      ref={ref}
       type="button"
-      aria-expanded={expanded}
+      aria-expanded={open}
       data-ripple-host=""
       {...rest}
-      {...stylex.props(stylex.defaultMarker(), s.button, expanded && s.expanded, forcedState != null && s.unfilled)}
+      {...stylex.props(stylex.defaultMarker(), s.button, open && s.expanded, forcedState != null && s.unfilled, sx)}
     >
       <span
         aria-hidden
@@ -155,7 +161,7 @@ export const AccordionButton = forwardRef<
         <Ripple />
       </span>
       <svg
-        key={String(expanded)}
+        key={String(open)}
         width={20}
         height={20}
         viewBox="0 0 20 20"
@@ -163,75 +169,110 @@ export const AccordionButton = forwardRef<
         aria-hidden
         {...stylex.props(s.chevron, toggled && s.chevronFlip)}
       >
-        <path d={expanded ? CHEVRON_UP : CHEVRON_DOWN} />
+        <path d={open ? CHEVRON_UP : CHEVRON_DOWN} />
       </svg>
     </button>
   );
-});
+}
 
-export interface ExpandableListItemProps extends Omit<ListItemProps, 'trailing' | 'onClick' | 'href' | 'selected'> {
-  expanded?: boolean;
-  defaultExpanded?: boolean;
-  onExpandedChange?: (expanded: boolean) => void;
-  /** The nested items revealed when expanded. */
+/**
+ * The header's content props (as `ListItem`'s) plus the disclosure. Native props, `ref` and `sx` go
+ * to the root: the `<li>` inside a `List`, otherwise a `<div>`.
+ */
+export interface ExpandableListItemProps
+  extends
+    Omit<ListItemOwnProps, 'trailing' | 'onClick' | 'href' | 'selected'>,
+    SxProps<Omit<HTMLAttributes<HTMLElement>, keyof ListItemOwnProps>> {
+  ref?: Ref<HTMLElement>;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean, details: Collapsible.Root.ChangeEventDetails) => void;
+  /** The nested items revealed when open. */
   items?: ReactNode;
   /**
-   * The accordion button's verb (default "Expand"). Its accessible name is this verb followed by the
-   * item's label, the same in both states; aria-expanded announces whether it is open.
+   * `expand`: the accordion button's verb. Its accessible name is the verb followed by the item's
+   * label, the same in both states; `aria-expanded` announces whether it is open.
    */
-  toggleLabel?: string;
-  sx?: StyleXStyles;
+  labels?: Partial<M3Labels>;
 }
 
 /** List item with an accordion toggle that reveals nested items (kit "Expandable" list). */
 export function ExpandableListItem({
-  expanded,
-  defaultExpanded = false,
-  onExpandedChange,
+  open,
+  defaultOpen = false,
+  onOpenChange,
   items,
-  toggleLabel = 'Expand',
+  labels,
   sx,
-  ...item
+  ref,
+  children,
+  overline,
+  supportingText,
+  supportingMaxLines,
+  leading,
+  trailingText,
+  variant,
+  lines,
+  alignment,
+  disabled,
+  dragged,
+  divider,
+  ...rest
 }: ExpandableListItemProps) {
-  const forced = useForcedState();
   const list = useContext(ListContext);
+  const { expand } = useLabels(labels);
   const headerList = useMemo(() => ({ ...list, inList: false }), [list]);
   const panelList = useMemo(() => ({ ...list, inList: true }), [list]);
-  const [open, setOpen] = useControllableState(expanded, defaultExpanded, onExpandedChange);
+  const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange);
   // Name = verb (the button's own aria-label) + the item's label text.
   const buttonId = useId();
   const labelId = useId();
   const header = (
     <ListItem
-      {...item}
-      sx={[open && s.headerOpen, sx]}
+      overline={overline}
+      supportingText={supportingText}
+      supportingMaxLines={supportingMaxLines}
+      leading={leading}
+      trailingText={trailingText}
+      variant={variant}
+      lines={lines}
+      alignment={alignment}
+      disabled={disabled}
+      dragged={dragged}
+      divider={divider}
+      sx={isOpen && s.headerOpen}
       trailing={
         <Collapsible.Trigger
           render={
             <AccordionButton
-              expanded={open}
-              forcedState={forced.state}
+              open={isOpen}
               id={buttonId}
-              aria-label={toggleLabel}
+              aria-label={expand}
               aria-labelledby={`${buttonId} ${labelId}`}
             />
           }
         />
       }
     >
-      <span id={labelId}>{item.children}</span>
+      <span id={labelId}>{children}</span>
     </ListItem>
   );
   return (
     <Collapsible.Root
-      open={open}
-      onOpenChange={(next) => setOpen(next)}
-      render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}
+      open={isOpen}
+      onOpenChange={setOpen}
+      render={
+        list.inList ? (
+          <li ref={ref as Ref<HTMLLIElement>} {...rest} {...stylex.props(s.li, sx)} />
+        ) : (
+          <div ref={ref as Ref<HTMLDivElement>} {...rest} {...stylex.props(sx)} />
+        )
+      }
     >
       <ListContext value={headerList}>{header}</ListContext>
       <Collapsible.Panel {...stylex.props(expandPanelMarker, s.panel)}>
         <ListContext value={panelList}>
-          <ul {...stylex.props(s.panelList, list.segmented && s.panelListGap)}>{items}</ul>
+          <ul {...stylex.props(s.panelList, list.variant === 'segmented' && s.panelListGap)}>{items}</ul>
         </ListContext>
       </Collapsible.Panel>
     </Collapsible.Root>
