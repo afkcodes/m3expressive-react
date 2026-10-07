@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
@@ -182,12 +182,13 @@ export const Checkbox = forwardRef<HTMLElement, CheckboxProps>(function Checkbox
   const on = checked || indeterminate;
   const interactingForced = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
   const visual: Visual = indeterminate ? 'indeterminate' : checked ? 'on' : 'off';
-  // Compose picks some specs by the state the transition starts from: remember the last one.
-  const prev = useRef({ visual, disabled });
-  const from = prev.current;
-  useEffect(() => {
-    prev.current = { visual, disabled };
-  });
+  // Compose picks some specs by the state the transition starts from: remember the one before the
+  // last change of the inputs that drive the box and glyph (kept until they next change).
+  const [track, setTrack] = useState({ visual, disabled, error, from: { visual, disabled } });
+  if (track.visual !== visual || track.disabled !== disabled || track.error !== error) {
+    setTrack({ visual, disabled, error, from: { visual: track.visual, disabled: track.disabled } });
+  }
+  const from = track.from;
   // Compose snaps colours while disabled and across an enabled ⇄ disabled change.
   const colourSnap = disabled || from.disabled !== disabled;
   const pathSpec = visual === 'off' ? s.pathSnapLate : from.visual === 'off' ? s.pathSnap : s.pathMorph;

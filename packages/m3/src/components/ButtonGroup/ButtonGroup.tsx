@@ -5,6 +5,8 @@ import {
   isValidElement,
   useContext,
   useEffect,
+  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -166,6 +168,8 @@ const segment = stylex.create({
 });
 
 // ── Standard ──────────────────────────────────────────────────────────────────────────────────
+const IN_GROUP = { inGroup: true };
+
 export interface ButtonGroupProps {
   size?: ButtonSize;
   /** Buttons, toggle buttons or icon buttons. */
@@ -179,7 +183,7 @@ export function ButtonGroup({ size = 'small', children, sx, ...rest }: ButtonGro
   const ref = useRef<HTMLDivElement>(null);
   const handlers = useEnlargeOnPress(ref, useSpringToken('fast-spatial'));
   return (
-    <ButtonGroupContext value={{ inGroup: true }}>
+    <ButtonGroupContext value={IN_GROUP}>
       <div ref={ref} role="group" {...rest} {...handlers} {...stylex.props(s.standard, dyn.spacing(gap, pad), sx)}>
         {children}
       </div>
@@ -218,8 +222,13 @@ function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: Spring
   const states = useRef(new Map<Element, PressState>());
   const base = useRef<number[] | null>(null);
   const springRef = useRef(spring);
-  springRef.current = spring;
+  useLayoutEffect(() => {
+    springRef.current = spring;
+  }, [spring]);
   const keyItem = useRef<Element | null>(null);
+  // Window listeners that end a pointer press; removed on release or unmount.
+  const pointerEnds = useRef(new Set<() => void>());
+  const disposed = useRef(false);
 
   const layout = () => {
     const root = ref.current;
@@ -283,6 +292,7 @@ function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: Spring
   };
 
   const animate = (item: Element, st: PressState, to: number) => {
+    if (disposed.current) return;
     const sp = springRef.current;
     if (!sp) {
       st.anim?.stop();
@@ -325,7 +335,7 @@ function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: Spring
 
   const release = (item: Element) => {
     const st = states.current.get(item);
-    if (!st?.pressed) return;
+    if (!st?.pressed || disposed.current) return;
     st.pressed = false;
     const start = performance.now();
     const check = (now: number) => {
@@ -336,15 +346,26 @@ function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: Spring
     st.wait = requestAnimationFrame(check);
   };
 
-  useEffect(
-    () => () => {
-      for (const st of states.current.values()) {
+  // Unmount: stop every press spring and pending release wait, drop the window listeners.
+  useEffect(() => {
+    disposed.current = false;
+    const ends = pointerEnds.current;
+    const all = states.current;
+    return () => {
+      disposed.current = true;
+      for (const st of all.values()) {
         st.anim?.stop();
+        st.anim = null;
         cancelAnimationFrame(st.wait);
       }
-    },
-    [],
-  );
+      all.clear();
+      for (const end of ends) {
+        window.removeEventListener('pointerup', end);
+        window.removeEventListener('pointercancel', end);
+      }
+      ends.clear();
+    };
+  }, []);
 
   const itemOf = (target: EventTarget | null): Element | null => {
     const root = ref.current;
@@ -366,7 +387,9 @@ function useEnlargeOnPress(ref: RefObject<HTMLDivElement | null>, spring: Spring
         release(item);
         window.removeEventListener('pointerup', up);
         window.removeEventListener('pointercancel', up);
+        pointerEnds.current.delete(up);
       };
+      pointerEnds.current.add(up);
       window.addEventListener('pointerup', up);
       window.addEventListener('pointercancel', up);
     },
@@ -395,10 +418,13 @@ interface ConnectedContextValue {
   size: ButtonSize;
   shape: ButtonShape;
   selected: readonly string[];
-  index: number;
   count: number;
+  /** The group's `disabled`: segments draw disabled too (Base UI only disables their behaviour). */
+  disabled: boolean;
 }
 const ConnectedContext = createContext<ConnectedContextValue | null>(null);
+/** The segment's position in its group (a number, so the provider value is stable). */
+const ConnectedIndexContext = createContext(0);
 
 export interface ConnectedButtonGroupProps {
   size?: ButtonSize;
@@ -430,6 +456,17 @@ export function ConnectedButtonGroup({
   const [inner, setInner] = useState<readonly string[]>(defaultValue);
   const selected = valueProp ?? inner;
   const items = Children.toArray(children).filter(isValidElement);
+  // Each segment learns its position from a number-valued context (a stable provider value).
+  const positioned = items.map((child, index) => (
+    <ConnectedIndexContext key={child.key ?? index} value={index}>
+      {child}
+    </ConnectedIndexContext>
+  ));
+  const count = items.length;
+  const group = useMemo(
+    () => ({ size, shape, selected, count, disabled: isDisabled }),
+    [size, shape, selected, count, isDisabled],
+  );
   return (
     <BaseToggleGroup
       value={selected}
@@ -442,11 +479,7 @@ export function ConnectedButtonGroup({
       {...rest}
       {...stylex.props(s.connected, (size === 'xsmall' || size === 'small') && dyn.minHeight(48), sx)}
     >
-      {items.map((child, index) => (
-        <ConnectedContext key={child.key ?? index} value={{ size, shape, selected, index, count: items.length }}>
-          {child}
-        </ConnectedContext>
-      ))}
+      <ConnectedContext value={group}>{positioned}</ConnectedContext>
     </BaseToggleGroup>
   );
 }
@@ -482,17 +515,14 @@ export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedB
     ref,
   ) {
     const group = useContext(ConnectedContext);
-    const ctx = group ?? {
-      size: sizeProp,
-      shape: 'square' as ButtonShape,
-      selected: selectedProp ? [value] : [],
-      index: 0,
-      count: 1,
-    };
-    const { size, shape, index, count } = ctx;
+    const groupIndex = useContext(ConnectedIndexContext);
+    const size = group?.size ?? sizeProp;
+    const shape: ButtonShape = group?.shape ?? 'square';
+    const index = group ? groupIndex : 0;
+    const count = group?.count ?? 1;
     const forced = useForcedState();
-    const isSelected = ctx.selected.includes(value);
-    const isDisabled = !!disabledProp;
+    const isSelected = group ? group.selected.includes(value) : selectedProp;
+    const isDisabled = !!disabledProp || !!group?.disabled;
     const [restR, activeR] = RADII[size].map((r) => `${r}px`) as [string, string];
     const full = `${H[size] / 2}px`;
     const interacting = forced.state === 'hovered' || forced.state === 'focused' || forced.state === 'pressed';
@@ -520,7 +550,7 @@ export const ConnectedButtonGroupItem = forwardRef<HTMLButtonElement, ConnectedB
         ref={ref}
         value={value}
         {...(group ? {} : { pressed: isSelected })}
-        disabled={disabledProp}
+        disabled={isDisabled}
         data-ripple-host=""
         {...rest}
         {...stylex.props(

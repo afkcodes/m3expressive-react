@@ -18,6 +18,24 @@ const fixture: FixtureModule = {
         ),
       },
     ],
+    [
+      'live-group-disabled',
+      {
+        // A disabled group vs. the same group with every radio disabled: they must draw identically.
+        render: () => (
+          <div style={{ display: 'grid', rowGap: 16 }}>
+            {(['group', 'items'] as const).map((row) => (
+              <div key={row} data-row={row}>
+                <RadioGroup defaultValue="a" aria-label={row} disabled={row === 'group'}>
+                  <Radio value="a" aria-label="A" disabled={row === 'items'} />
+                  <Radio value="b" aria-label="B" disabled={row === 'items'} />
+                </RadioGroup>
+              </div>
+            ))}
+          </div>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [sel, state] = name.split('-') as ['selected' | 'unselected', string];
       const forced =

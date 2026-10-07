@@ -4,8 +4,7 @@ import {
   forwardRef,
   isValidElement,
   useContext,
-  useEffect,
-  useRef,
+  useMemo,
   useState,
   type ReactNode,
 } from 'react';
@@ -156,10 +155,13 @@ const dyn = stylex.create({
 interface SegmentedContextValue {
   density: SegmentedButtonDensity;
   selected: readonly string[];
-  index: number;
   count: number;
+  /** The group's `disabled`: items draw disabled too (Base UI only disables their behaviour). */
+  disabled: boolean;
 }
 const SegmentedContext = createContext<SegmentedContextValue | null>(null);
+/** The item's position in its group (a number, so the provider value is stable). */
+const SegmentedIndexContext = createContext(0);
 
 export interface SegmentedButtonProps {
   density?: SegmentedButtonDensity;
@@ -188,6 +190,18 @@ export function SegmentedButton({
   const [inner, setInner] = useState<readonly string[]>(defaultValue);
   const selected = valueProp ?? inner;
   const items = Children.toArray(children).filter(isValidElement);
+  // Each item learns its position from a number-valued context (a stable provider value).
+  const positioned = items.map((child, index) => (
+    <SegmentedIndexContext key={child.key ?? index} value={index}>
+      {child}
+    </SegmentedIndexContext>
+  ));
+  const count = items.length;
+  const isDisabled = !!disabled;
+  const group = useMemo(
+    () => ({ density, selected, count, disabled: isDisabled }),
+    [density, selected, count, isDisabled],
+  );
   return (
     <BaseToggleGroup
       value={selected}
@@ -200,11 +214,7 @@ export function SegmentedButton({
       {...rest}
       {...stylex.props(s.group, sx)}
     >
-      {items.map((child, index) => (
-        <SegmentedContext key={child.key ?? index} value={{ density, selected, index, count: items.length }}>
-          {child}
-        </SegmentedContext>
-      ))}
+      <SegmentedContext value={group}>{positioned}</SegmentedContext>
     </BaseToggleGroup>
   );
 }
@@ -239,19 +249,20 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
   ref,
 ) {
   const group = useContext(SegmentedContext);
+  const index = useContext(SegmentedIndexContext);
   const forced = useForcedState();
   const density = group?.density ?? densityProp;
   const isSelected = group ? group.selected.includes(value) : selectedProp;
   const position = group
     ? group.count === 1
       ? 'only'
-      : group.index === 0
+      : index === 0
         ? 'start'
-        : group.index === group.count - 1
+        : index === group.count - 1
           ? 'end'
           : 'middle'
     : positionProp;
-  const isDisabled = !!disabled;
+  const isDisabled = !!disabled || !!group?.disabled;
   const box = 40 + 4 * density;
   const full = `${box / 2}px`;
   const start = position === 'start' || position === 'only' ? full : '0px';
@@ -267,17 +278,17 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
   ) : icon != null ? (
     <span {...stylex.props(s.icon, s.main, offset)}>{icon}</span>
   ) : null;
-  // The enter animation plays only for a selection made after mount (AnimatedVisibility starts visible).
-  const mounted = useRef(false);
-  useEffect(() => {
-    mounted.current = true;
-  }, []);
+  // The enter animation plays only for a selection made after mount (AnimatedVisibility starts
+  // visible): latched once the selection first differs from the initial one.
+  const [initiallySelected] = useState(isSelected);
+  const [selectionChanged, setSelectionChanged] = useState(false);
+  if (!selectionChanged && isSelected !== initiallySelected) setSelectionChanged(true);
 
   return (
     <BaseToggle
       ref={ref}
       value={value}
-      disabled={disabled}
+      disabled={isDisabled}
       {...(group ? {} : { pressed: isSelected })}
       {...rest}
       {...stylex.props(
@@ -313,7 +324,7 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
                 <CheckIcon sx={[s.fade, s.over, !isSelected && s.transparent]} />
               </>
             ) : (
-              isSelected && <EnteringCheck animate={mounted.current} />
+              isSelected && <EnteringCheck animate={selectionChanged} />
             )}
           </span>
           {main}
