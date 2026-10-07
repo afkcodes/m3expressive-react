@@ -1,18 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
+import { hexToRgb } from './capture.ts';
+import { openFixture } from './helpers/page.ts';
 
 /** Dynamic colour: <M3Provider colors> re-points every colour var; image seeds are extracted in-browser. */
 
-const rgb = (hex: string) => {
-  const n = Number.parseInt(hex.slice(1), 16);
-  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
-};
-
-async function open(page: Page, variant: string) {
-  await page.goto(`/fixture/dynamic-color/${variant}`);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
-  return node;
-}
+const rgb = (hex: string) => `rgb(${hexToRgb(hex).join(', ')})`;
+const open = (page: Page, variant: string) => openFixture(page, `/fixture/dynamic-color/${variant}`);
 
 /** The filled button's container colour (its first painted layer carries color.primary). */
 const buttonFill = (page: Page, name: string) =>

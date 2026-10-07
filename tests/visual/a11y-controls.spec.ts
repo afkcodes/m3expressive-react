@@ -3,17 +3,12 @@
  * disabled, accessible names, keyboard paths for pointer gestures, popup semantics, focus
  * management and cleanup after unmount.
  */
-import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 import { compareImages } from './compare.ts';
-
-async function open(page: Page, path: string) {
-  await page.goto(path);
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
-  return node;
-}
+import { enableMotion, openFixture } from './helpers/page.ts';
+import { centre } from './helpers/pointer.ts';
+import { countFrames, settle } from './helpers/settle.ts';
+import { computedStyle } from './helpers/styles.ts';
 
 /** Drift pixels between two element screenshots (same size), on white. */
 async function drift(a: Locator, b: Locator) {
@@ -24,19 +19,19 @@ async function drift(a: Locator, b: Locator) {
 // ── 1. A disabled group draws its items disabled (not just behaves so) ─────────────────────────
 for (const component of ['segmented-button', 'button-group', 'radio'] as const) {
   test(`${component}: a disabled group renders exactly like disabled items; no hover layer`, async ({ page }) => {
-    const node = await open(page, `/fixture/${component}/live-group-disabled`);
+    const node = await openFixture(page, `/fixture/${component}/live-group-disabled`);
     const group = node.locator('[data-row="group"]');
     const items = node.locator('[data-row="items"]');
     expect(await drift(group, items), 'group disabled = every item disabled').toBe(0);
     const before = await group.screenshot();
     const first = group.locator('button, [role="radio"]').first();
-    const b = (await first.boundingBox())!;
-    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-    await page.waitForTimeout(300);
+    const { x, y } = await centre(first);
+    await page.mouse.move(x, y);
+    await settle(page);
     const after = compareImages(before, await group.screenshot(), { background: [255, 255, 255] });
     expect(after.diffPixels, 'hover changes nothing').toBe(0);
     await page.mouse.down();
-    await page.waitForTimeout(150);
+    await settle(page);
     const pressed = compareImages(before, await group.screenshot(), { background: [255, 255, 255] });
     await page.mouse.up();
     expect(pressed.diffPixels, 'press draws no layer or ripple').toBe(0);
@@ -45,7 +40,7 @@ for (const component of ['segmented-button', 'button-group', 'radio'] as const) 
 
 // ── 2. Navigation items keep their name when the label isn't shown ─────────────────────────────
 test('navigation: a rail without labels still names every destination', async ({ page }) => {
-  const node = await open(page, '/fixture/navigation/live-rail-nolabels');
+  const node = await openFixture(page, '/fixture/navigation/live-rail-nolabels');
   for (const name of ['Home', 'Activity', 'Saved']) {
     await expect(node.getByRole('button', { name, exact: true })).toBeVisible();
   }
@@ -56,7 +51,7 @@ test('navigation: a rail without labels still names every destination', async ({
 
 // ── 3. Swipe actions have a keyboard path ──────────────────────────────────────────────────────
 test('swipeable list item: arrows reveal and hide the actions, Escape returns to the item', async ({ page }) => {
-  const node = await open(page, '/fixture/list/live-swipe');
+  const node = await openFixture(page, '/fixture/list/live-swipe');
   const state = page.locator('[data-state]');
   const row = node.locator('[data-swipe-item]');
   const edit = page.locator('button[aria-label="Edit"]');
@@ -98,7 +93,7 @@ test('swipeable list item: arrows reveal and hide the actions, Escape returns to
 test('slider: range thumbs are named apart, the value label is the value text, reversed values keep the track', async ({
   page,
 }) => {
-  const node = await open(page, '/fixture/slider/live-a11y');
+  const node = await openFixture(page, '/fixture/slider/live-a11y');
   const thumbs = node.locator('[data-slider="range"] input[type="range"]');
   await expect(thumbs.nth(0)).toHaveAttribute('aria-label', 'Minimum price');
   await expect(thumbs.nth(1)).toHaveAttribute('aria-label', 'Maximum price');
@@ -121,17 +116,13 @@ test('slider: range thumbs are named apart, the value label is the value text, r
 
 // ── 5. Split button trailing: popup semantics follow the menu ──────────────────────────────────
 test('split button: haspopup only with a menu; the trailing state follows the real menu', async ({ page }) => {
-  const node = await open(page, '/fixture/split-button/live-menu');
+  const node = await openFixture(page, '/fixture/split-button/live-menu');
   const plain = node.locator('[data-row="plain"] button').nth(1);
   await expect(plain).not.toHaveAttribute('aria-haspopup');
   const trigger = node.locator('[data-row="menu"] button').nth(1);
   await expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-  const radius = () =>
-    trigger
-      .locator('> span')
-      .last()
-      .evaluate((e) => getComputedStyle(e).borderStartStartRadius);
+  const radius = () => computedStyle(trigger.locator('> span').last(), 'border-start-start-radius');
   const rest = await radius();
   await trigger.click();
   await expect(page.getByRole('menu')).toBeVisible();
@@ -155,7 +146,7 @@ test('split button: haspopup only with a menu; the trailing state follows the re
 test('fab menu: focus moves to the first item, items rove with one tab stop, Escape restores the toggle', async ({
   page,
 }) => {
-  const node = await open(page, '/fixture/fab-menu/live');
+  const node = await openFixture(page, '/fixture/fab-menu/live');
   const fab = node.getByRole('button', { name: 'Actions' });
   await fab.focus();
   await page.keyboard.press('Enter');
@@ -184,24 +175,12 @@ test('fab menu: focus moves to the first item, items rove with one tab stop, Esc
 });
 
 // ── 7. Springs stop when their component unmounts ──────────────────────────────────────────────
-/** Counts requestAnimationFrame calls from now on. */
-async function countFrames(page: Page) {
-  await page.evaluate(() => {
-    const w = window as unknown as { rafCount: number };
-    w.rafCount = 0;
-    const raf = window.requestAnimationFrame.bind(window);
-    window.requestAnimationFrame = (cb) => {
-      w.rafCount++;
-      return raf(cb);
-    };
-  });
-  return () => page.evaluate(() => (window as unknown as { rafCount: number }).rafCount);
-}
-
+// The fixed waits below are deliberate: catching springs mid-flight, and watching for frames after
+// an unmount over a window of time.
 test('tabs: unmounting mid-spring (indicator + scroll) stops the frame loop', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  const node = await open(page, '/fixture/tabs/live-unmount');
-  await page.waitForTimeout(800); // first-layout centring has settled
+  await enableMotion(page);
+  const node = await openFixture(page, '/fixture/tabs/live-unmount');
+  await settle(page); // first-layout centring has settled
   const frames = await countFrames(page);
   await node.locator('[data-animated]').evaluate((n) => n.querySelectorAll<HTMLElement>('[role=tab]')[8]!.click());
   await page.waitForTimeout(48);
@@ -214,11 +193,11 @@ test('tabs: unmounting mid-spring (indicator + scroll) stops the frame loop', as
 });
 
 test('button group: a press ending after unmount starts nothing; no window listeners leak', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  const node = await open(page, '/fixture/button-group/live-unmount');
+  await enableMotion(page);
+  const node = await openFixture(page, '/fixture/button-group/live-unmount');
   const button = node.locator('[data-animated] button').first();
-  const b = (await button.boundingBox())!;
-  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+  const { x, y } = await centre(button);
+  await page.mouse.move(x, y);
   await page.mouse.down();
   await page.waitForTimeout(32);
   await node.locator('[data-unmount]').evaluate((e: HTMLElement) => e.click());
@@ -231,7 +210,7 @@ test('button group: a press ending after unmount starts nothing; no window liste
 
 // ── 8. Names that don't flip and that say what they act on ─────────────────────────────────────
 test('expandable list item: the toggle has one name (verb + item), state in aria-expanded', async ({ page }) => {
-  const node = await open(page, '/fixture/list/live-accordion');
+  const node = await openFixture(page, '/fixture/list/live-accordion');
   const toggle = node.getByRole('button', { name: 'Expand Label text', exact: true });
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await toggle.click();
@@ -240,7 +219,7 @@ test('expandable list item: the toggle has one name (verb + item), state in aria
 });
 
 test('input chip: the remove button names its chip', async ({ page }) => {
-  const node = await open(page, '/fixture/chips/live');
+  const node = await openFixture(page, '/fixture/chips/live');
   const remove = node.getByRole('button', { name: /^Remove / });
   await expect(remove).toHaveCount(1);
   const name = await remove.evaluate((e) => {
@@ -254,7 +233,7 @@ test('input chip: the remove button names its chip', async ({ page }) => {
 
 // ── 9. Menus: groups inside wrapper components are not grouped again ───────────────────────────
 test('menu: wrapped groups and fragments are detected (no group inside a group)', async ({ page }) => {
-  const node = await open(page, '/fixture/menu/live-wrapped');
+  const node = await openFixture(page, '/fixture/menu/live-wrapped');
   for (const sel of ['[data-case="wrapped"]', '[data-case="fragment"]']) {
     const surface = node.locator(sel);
     await expect(surface.locator('[role="group"]')).toHaveCount(2);
@@ -262,10 +241,7 @@ test('menu: wrapped groups and fragments are detected (no group inside a group)'
   }
   // Two groups: no single-group shadow spread (the solo style), as with direct children.
   const spread = (sel: string) =>
-    node
-      .locator(`${sel} [role="group"]`)
-      .first()
-      .evaluate((e) => getComputedStyle(e, '::before').boxShadow);
+    computedStyle(node.locator(`${sel} [role="group"]`).first(), 'box-shadow', '::before');
   expect(await spread('[data-case="wrapped"]')).toBe(await spread('[data-case="direct"]'));
   // Loose items still get their implicit group.
   await expect(node.locator('[data-case="loose"] [role="group"]')).toHaveCount(1);

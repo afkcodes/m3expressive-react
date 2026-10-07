@@ -4,11 +4,8 @@
  * tab stop and full arrow-key navigation, and out-of-range input is clamped.
  */
 import { expect, test, type Locator, type Page } from '@playwright/test';
-
-async function open(page: Page, path: string) {
-  await page.goto(path);
-  await page.evaluate(() => document.fonts.ready);
-}
+import { enableMotion, load } from './helpers/page.ts';
+import { countFrames } from './helpers/settle.ts';
 
 /** Re-render the churn fixture's parent (fresh Date / Time objects with the same values). */
 async function churn(page: Page, times = 3) {
@@ -39,7 +36,7 @@ test.describe('date input (en-US)', () => {
   test.use({ locale: 'en-US' });
 
   test('docked field: typing is kept character by character; only a full four-digit year parses', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live-churn');
+    await load(page, '/fixture/date-picker/live-churn');
     const field = page.getByRole('textbox', { name: 'Date' });
     await expect(page.getByText('MM/DD/YYYY', { exact: true })).toBeVisible();
     await expect(field).toHaveValue('7/17/2025');
@@ -71,7 +68,7 @@ test.describe('date input (en-US)', () => {
   test('modal input mode: locale placeholder, character-by-character typing, partial years rejected', async ({
     page,
   }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: 'Switch to text input' }).click();
@@ -96,7 +93,7 @@ test.describe('date input (en-GB)', () => {
   test.use({ locale: 'en-GB' });
 
   test('day / month order in the hint, parsing and the formatted field', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await expect(page.getByText('DD/MM/YYYY', { exact: true })).toBeVisible();
     const field = page.getByRole('textbox', { name: 'Date' });
     await field.click();
@@ -123,7 +120,7 @@ test.describe('date input (en-GB)', () => {
 
 test.describe('picks survive parent re-renders', () => {
   test('modal date picker: the draft is kept until OK', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live-churn');
+    await load(page, '/fixture/date-picker/live-churn');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: 'July 3, 2025' }).click();
@@ -144,7 +141,7 @@ test.describe('picks survive parent re-renders', () => {
   });
 
   test('range picker: start / end picks are kept until Save', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live-churn');
+    await load(page, '/fixture/date-picker/live-churn');
     await page.getByRole('button', { name: 'Pick range' }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: 'July 20, 2025' }).click();
@@ -157,7 +154,7 @@ test.describe('picks survive parent re-renders', () => {
   });
 
   test('docked panel: the day picked in the panel is kept until OK', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live-churn');
+    await load(page, '/fixture/date-picker/live-churn');
     await expect(out(page, 'docked')).toHaveText('2025-7-17');
     await page.getByRole('button', { name: 'Open calendar' }).click();
     const panel = page.getByRole('dialog', { name: 'Choose date' });
@@ -168,7 +165,7 @@ test.describe('picks survive parent re-renders', () => {
   });
 
   test('time picker: the dial pick is kept until OK', async ({ page }) => {
-    await open(page, '/fixture/time-picker/live-churn');
+    await load(page, '/fixture/time-picker/live-churn');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
     const dial = dialog.getByRole('slider', { name: 'Hour' });
@@ -187,7 +184,7 @@ test.describe('calendar keyboard', () => {
   test.use({ timezoneId: 'Europe/London' });
 
   test('Home / End land on the week edges across DST changes', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     const focused = (name: string) => expect(dialog.getByRole('button', { name, exact: true })).toBeFocused();
@@ -214,7 +211,7 @@ test.describe('calendar keyboard', () => {
   });
 
   test('after a month change, keys move from the focused day (not the last one focused)', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: 'July 17, 2025' }).focus();
@@ -231,7 +228,7 @@ test.describe('calendar keyboard', () => {
   });
 
   test('disabled days never hold the tab stop or take focus', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live-disabled');
+    await load(page, '/fixture/date-picker/live-disabled');
     const grid = page.getByRole('grid', { name: 'July 2025' });
     // The value and today (Sat 5 July) are disabled: the tab stop is the first enabled day.
     const stops = grid.locator('button[tabindex="0"]');
@@ -254,7 +251,7 @@ test.describe('calendar keyboard', () => {
   });
 
   test('year grid: a listbox of options with one tab stop and arrow / Home / End keys', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick date' }).click();
     const dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: /select year/ }).click();
@@ -289,7 +286,7 @@ test.describe('calendar keyboard', () => {
   });
 
   test('docked month / year lists: one tab stop, arrows, Home / End, PageUp / PageDown', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Open calendar' }).click();
     const panel = page.getByRole('dialog', { name: 'Choose date' });
     await panel.getByRole('button', { name: /select year/ }).click();
@@ -323,7 +320,7 @@ test.describe('calendar keyboard', () => {
   });
 
   test('range picker: one tab stop for all months; arrows cross month boundaries', async ({ page }) => {
-    await open(page, '/fixture/date-picker/live');
+    await load(page, '/fixture/date-picker/live');
     await page.getByRole('button', { name: 'Pick range' }).click();
     const dialog = page.getByRole('dialog');
     const stops = dialog.locator('[role="grid"] button[tabindex="0"]');
@@ -359,7 +356,7 @@ test.describe('calendar keyboard', () => {
 
 test.describe('time picker keyboard and input', () => {
   test('period selector: a radio group with arrow keys; the dial reads its value', async ({ page }) => {
-    await open(page, '/fixture/time-picker/live');
+    await load(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
     const pm = dialog.getByRole('radio', { name: 'PM' });
@@ -386,7 +383,7 @@ test.describe('time picker keyboard and input', () => {
   test('out-of-range times are clamped instead of crashing', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
-    await open(page, '/fixture/time-picker/live-invalid');
+    await load(page, '/fixture/time-picker/live-invalid');
     await expect(page.getByRole('slider', { name: 'Minute 60' })).toHaveAttribute('aria-valuenow', '59');
     await expect(page.getByRole('slider', { name: 'Hour -1' })).toHaveAttribute('aria-valuenow', '12');
     await expect(page.getByRole('slider', { name: 'Hour NaN' })).toHaveAttribute('aria-valuenow', '0');
@@ -400,30 +397,21 @@ test.describe('time picker keyboard and input', () => {
   });
 
   test('the dial spring stops when the picker unmounts', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await open(page, '/fixture/time-picker/live');
+    await enableMotion(page);
+    await load(page, '/fixture/time-picker/live');
     await page.getByRole('button', { name: 'Pick time' }).click();
     const dialog = page.getByRole('dialog', { name: 'Select time' });
     await expect.poll(() => dialog.evaluate((el) => getComputedStyle(el).scale)).toBe('1');
     // Count animation frames requested from now on.
-    await page.evaluate(() => {
-      const w = window as unknown as { __raf: number };
-      w.__raf = 0;
-      const raf = window.requestAnimationFrame.bind(window);
-      window.requestAnimationFrame = (cb) => {
-        w.__raf++;
-        return raf(cb);
-      };
-    });
+    const frames = await countFrames(page);
     // Swing the hand half way round (a long spring), then close at once.
     await dialog.getByRole('slider', { name: 'Hour' }).focus();
     for (let i = 0; i < 6; i++) await page.keyboard.press('ArrowUp');
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    const before = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
-    await page.waitForTimeout(300);
-    const after = await page.evaluate(() => (window as unknown as { __raf: number }).__raf);
-    expect(after - before).toBeLessThanOrEqual(1);
+    const before = await frames();
+    await page.waitForTimeout(300); // an observation window: a spring left running requests frames in it
+    expect((await frames()) - before).toBeLessThanOrEqual(1);
   });
 });
 
@@ -431,8 +419,8 @@ test.describe('time picker keyboard and input', () => {
 // browsers) must stay a click: it selects the day, keeps the month and never shows the neighbouring
 // month's grid on top (Compose's ~0.06px mouse slop turned such clicks into swipes / flings).
 test('date picker: a slightly wobbly click selects the day; no swipe, no overlapping month', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await open(page, '/fixture/date-picker/live');
+  await enableMotion(page);
+  await load(page, '/fixture/date-picker/live');
   await page.getByRole('button', { name: 'Pick date' }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();

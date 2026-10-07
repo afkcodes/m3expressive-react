@@ -4,40 +4,18 @@
  * keyboard roving in toolbars (text fields, RTL), focus management of the search view, RTL and
  * reordering in the carousel.
  */
-import { expect, test, type CDPSession, type Locator, type Page } from '@playwright/test';
-
-async function openFixture(page: Page, path: string) {
-  await page.goto(path);
-  await page.evaluate(() => document.fonts.ready);
-}
-
-/** The element's CSS `translate` (the sheets' drag offset), [x, y] px. */
-const translateOf = (l: Locator) =>
-  l.evaluate((el) => {
-    const t = getComputedStyle(el).translate;
-    if (!t || t === 'none') return [0, 0];
-    const [x = '0', y = '0'] = t.split(' ');
-    return [parseFloat(x), parseFloat(y)];
-  });
-
-const centre = async (l: Locator) => {
-  const b = (await l.boundingBox())!;
-  return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
-};
+import { expect, test, type Page } from '@playwright/test';
+import { enableMotion, load } from './helpers/page.ts';
+import { centre, pointerDrag, touchDrag, type Point } from './helpers/pointer.ts';
+import { translateOf } from './helpers/styles.ts';
 
 /** Press at `from`, move by (dx, dy) in steps, read `read`, rest 120ms (no fling) and release. */
-async function dragAndRead<T>(
-  page: Page,
-  from: { x: number; y: number },
-  dx: number,
-  dy: number,
-  read: () => Promise<T>,
-) {
+async function dragAndRead<T>(page: Page, from: Point, dx: number, dy: number, read: () => Promise<T>) {
   await page.mouse.move(from.x, from.y);
   await page.mouse.down();
   await page.mouse.move(from.x + dx, from.y + dy, { steps: 10 });
   const value = await read();
-  await page.waitForTimeout(120);
+  await page.waitForTimeout(120); // rest before the release: no fling
   await page.mouse.up();
   return value;
 }
@@ -73,23 +51,11 @@ const pointerListeners = (page: Page) =>
   page.evaluate(() => (window as unknown as { __pointerListeners: () => number }).__pointerListeners());
 const unmountFixture = (page: Page) => page.evaluate(() => window.dispatchEvent(new Event('m3-fixture-unmount')));
 
-/** A touch drag through CDP: start at `from`, `n` moves of (dx, dy) / n, 16ms apart. Returns the release. */
-async function touchDrag(cdp: CDPSession, from: { x: number; y: number }, dx: number, dy: number, n = 10) {
-  const send = (type: 'touchStart' | 'touchMove' | 'touchEnd', x: number, y: number) =>
-    cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
-  await send('touchStart', from.x, from.y);
-  for (let i = 1; i <= n; i++) {
-    await send('touchMove', from.x + (dx * i) / n, from.y + (dy * i) / n);
-    await new Promise((r) => setTimeout(r, 16));
-  }
-  return () => send('touchEnd', 0, 0);
-}
-
 test.describe('sheets: content with its own pointer handling', () => {
   test('side sheet: slider, text field, carousel and data-m3-no-drag keep their drags; plain content still drags', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/sheets/live-guards');
+    await load(page, '/fixture/sheets/live-guards');
     await page.getByRole('button', { name: 'Open side sheet' }).click();
     const side = page.getByRole('dialog', { name: 'Filters' });
     await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
@@ -121,7 +87,7 @@ test.describe('sheets: content with its own pointer handling', () => {
     // Plain content still drags the sheet (and settles back from a short drag at rest).
     const row = side.getByText('Copy link');
     const moved = await dragAndRead(page, await centre(row), 120, 0, async () => {
-      await page.waitForTimeout(120);
+      await page.waitForTimeout(120); // held still mid-drag, then read
       return x();
     });
     expect(moved).toBeGreaterThan(100);
@@ -129,7 +95,7 @@ test.describe('sheets: content with its own pointer handling', () => {
   });
 
   test('bottom sheet: the same with a mouse; a 48×36 target around the handle', async ({ page }) => {
-    await openFixture(page, '/fixture/sheets/live-guards');
+    await load(page, '/fixture/sheets/live-guards');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Controls' });
     await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
@@ -166,32 +132,30 @@ test.describe('sheets: content with its own pointer handling', () => {
     test('bottom sheet: touch on a slider or data-m3-no-drag stays with them; the latest onOpenChange is called', async ({
       page,
     }) => {
-      await openFixture(page, '/fixture/sheets/live-guards');
+      await load(page, '/fixture/sheets/live-guards');
       await page.getByRole('button', { name: 'Open bottom sheet' }).click();
       const sheet = page.getByRole('dialog', { name: 'Controls' });
       await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
-      const cdp = await page.context().newCDPSession(page);
       for (const part of [sheet.getByRole('slider', { name: 'Amount' }), sheet.getByTestId('pad')]) {
-        const release = await touchDrag(cdp, await centre(part), 0, 100);
+        const release = await touchDrag(page, await centre(part), 0, 100);
         expect((await translateOf(sheet))[1]).toBe(0);
         await release();
       }
       // A new handler after a re-render (version 1) is the one a touch dismissal calls.
       await sheet.getByRole('button', { name: 'Bump version' }).click();
-      const release = await touchDrag(cdp, await centre(sheet.getByText('Copy link')), 0, 320, 16);
+      const release = await touchDrag(page, await centre(sheet.getByText('Copy link')), 0, 320, 16);
       expect((await translateOf(sheet))[1]).toBeGreaterThan(280);
-      await page.waitForTimeout(120);
+      await page.waitForTimeout(120); // rest before the release: no fling
       await release(); // at rest past half way: Hidden
       await expect(sheet).toHaveCount(0);
       await expect(page.locator('[data-log]')).toHaveText('bottom:false:v1');
     });
 
     test('bottom sheet open on mount (portal mounted later): touch on the content drags it', async ({ page }) => {
-      await openFixture(page, '/fixture/sheets/live-initial-open');
+      await load(page, '/fixture/sheets/live-initial-open');
       const sheet = page.getByRole('dialog', { name: 'Controls' });
       await expect.poll(async () => (await translateOf(sheet))[1]).toBe(0);
-      const cdp = await page.context().newCDPSession(page);
-      const release = await touchDrag(cdp, await centre(sheet.getByText('Email')), 0, 100);
+      const release = await touchDrag(page, await centre(sheet.getByText('Email')), 0, 100);
       expect((await translateOf(sheet))[1]).toBeGreaterThan(60);
       await release();
     });
@@ -206,7 +170,7 @@ test.describe('sheets / carousel: unmounting mid-gesture', () => {
   test('side sheet closed under a held pointer: no error, no listeners left', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(String(e)));
-    await openFixture(page, '/fixture/sheets/live-guards');
+    await load(page, '/fixture/sheets/live-guards');
     await page.getByRole('button', { name: 'Open side sheet' }).click();
     const side = page.getByRole('dialog', { name: 'Filters' });
     await expect.poll(async () => (await translateOf(side))[0]).toBe(0);
@@ -223,47 +187,26 @@ test.describe('sheets / carousel: unmounting mid-gesture', () => {
   });
 
   test('sheets unmounted mid-drag and mid-settle: listeners removed, no late onOpenChange', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await enableMotion(page);
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(String(e)));
-    await openFixture(page, '/fixture/sheets/live-guards');
+    await load(page, '/fixture/sheets/live-guards');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Controls' });
     await expect.poll(async () => (await translateOf(sheet))[1], { timeout: 3000 }).toBe(0);
-    const at = await centre(sheet.getByText('Email'));
-    // A fast flick down settles towards Hidden (dismissing when the spring ends); unmount first.
-    await page.evaluate(
-      ({ x, y }) => {
-        const target = document.elementFromPoint(x, y)!;
-        const fire = (type: string, cy: number) =>
-          target.dispatchEvent(
-            new PointerEvent(type, {
-              bubbles: true,
-              cancelable: true,
-              pointerId: 9,
-              pointerType: 'mouse',
-              isPrimary: true,
-              button: 0,
-              buttons: type === 'pointerup' ? 0 : 1,
-              clientX: x,
-              clientY: cy,
-            }),
-          );
-        const busy = (ms: number) => {
-          const t = performance.now();
-          while (performance.now() - t < ms);
-        };
-        fire('pointerdown', y);
-        for (let i = 1; i <= 4; i++) {
-          busy(8);
-          fire('pointermove', y + i * 10);
-        }
-        fire('pointerup', y + 40);
-        setTimeout(() => window.dispatchEvent(new Event('m3-fixture-unmount')), 30);
-      },
-      { x: at.x, y: at.y },
+    // A fast flick down settles towards Hidden (dismissing when the spring ends); unmount first,
+    // about 30ms into the settle.
+    await pointerDrag(
+      page,
+      await centre(sheet.getByText('Email')),
+      [1, 2, 3, 4].map((i) => [0, i * 10, 8] as const),
+      { pointerId: 9 },
     );
+    await page.evaluate(() => {
+      setTimeout(() => window.dispatchEvent(new Event('m3-fixture-unmount')), 30);
+    });
     await expect(sheet).toHaveCount(0);
+    // An observation window (fixed on purpose): a spring left running would call onOpenChange in it.
     await page.waitForTimeout(800);
     await expect(page.locator('[data-log]')).toHaveText('');
 
@@ -286,46 +229,23 @@ test.describe('sheets / carousel: unmounting mid-gesture', () => {
   });
 
   test('carousel unmounted mid-fling and mid-drag: the fling stops, listeners are removed', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await openFixture(page, '/fixture/carousel/live-uncontained');
+    await enableMotion(page);
+    await load(page, '/fixture/carousel/live-uncontained');
     const carousel = page.getByRole('region', { name: 'Photos' });
     const b = (await carousel.boundingBox())!;
     const [x, y] = [b.x + 300, b.y + b.height / 2];
-    await page.evaluate(
-      ({ x, y }) => {
-        const target = document.elementFromPoint(x, y)!;
-        const fire = (type: string, cx: number) =>
-          target.dispatchEvent(
-            new PointerEvent(type, {
-              bubbles: true,
-              cancelable: true,
-              pointerId: 9,
-              pointerType: 'mouse',
-              isPrimary: true,
-              button: 0,
-              buttons: type === 'pointerup' ? 0 : 1,
-              clientX: cx,
-              clientY: y,
-            }),
-          );
-        const busy = (ms: number) => {
-          const t = performance.now();
-          while (performance.now() - t < ms);
-        };
-        fire('pointerdown', x);
-        for (let i = 1; i <= 6; i++) {
-          busy(8);
-          fire('pointermove', x - i * 25);
-        }
-        fire('pointerup', x - 150);
-      },
+    await pointerDrag(
+      page,
       { x, y },
+      [1, 2, 3, 4, 5, 6].map((i) => [-i * 25, 0, 8] as const),
+      { pointerId: 9 },
     );
     // The fling is running …
     await expect.poll(() => carousel.evaluate((el) => el.scrollLeft)).toBeGreaterThan(150);
     await unmountFixture(page);
     await expect(carousel).toHaveCount(0);
-    // … and stops with the carousel: no more frames are requested.
+    // … and stops with the carousel: no more frames are requested (fixed windows on purpose: the
+    // unmount lands, then frames are counted over 300ms).
     await page.waitForTimeout(50);
     await page.evaluate(() => ((window as unknown as { __rafCalls: number }).__rafCalls = 0));
     await page.waitForTimeout(300);
@@ -347,7 +267,7 @@ test.describe('sheets / carousel: unmounting mid-gesture', () => {
 
 test.describe('toolbar keyboard', () => {
   test('a text field keeps the arrows while its caret can move; RTL mirrors the arrows', async ({ page }) => {
-    await openFixture(page, '/fixture/toolbar/live-input');
+    await load(page, '/fixture/toolbar/live-input');
     const bar = page.getByRole('toolbar', { name: 'Find tools' });
     const share = bar.getByRole('button', { name: 'Share' });
     const find = bar.getByRole('textbox', { name: 'Find' });
@@ -391,7 +311,7 @@ test.describe('toolbar keyboard', () => {
   });
 
   test('re-renders leave unchanged tabindex values alone', async ({ page }) => {
-    await openFixture(page, '/fixture/toolbar/live-input');
+    await load(page, '/fixture/toolbar/live-input');
     const node = page.locator('[data-fixture-node]');
     await node.evaluate((el) => {
       const w = window as unknown as { __tabindexWrites: number };
@@ -424,7 +344,7 @@ test.describe('toolbar keyboard', () => {
       delete (window as { onscrollend?: unknown }).onscrollend;
       window.addEventListener('scrollend', (e) => e.stopImmediatePropagation(), true);
     });
-    await openFixture(page, '/demo/toolbar');
+    await load(page, '/demo/toolbar');
     expect(await page.evaluate(() => 'onscrollend' in window)).toBe(false);
     await page.getByLabel('on scroll').selectOption('exit');
     const scroller = page.getByText('Row 1 —').locator('xpath=..');
@@ -440,7 +360,7 @@ test.describe('toolbar keyboard', () => {
 
 test.describe('bottom app bar', () => {
   test('a toolbar with one tab stop and arrow keys; inert while scrolled away', async ({ page }) => {
-    await openFixture(page, '/fixture/app-bar/live-bottom');
+    await load(page, '/fixture/app-bar/live-bottom');
     const bar = page.getByRole('toolbar');
     const search = bar.getByRole('button', { name: 'search' });
     const del = bar.getByRole('button', { name: 'delete' });
@@ -481,7 +401,7 @@ test.describe('search view focus', () => {
   test('full screen: focus moves to the input, Tab stays in the view, Escape returns it to the bar', async ({
     page,
   }) => {
-    await openFixture(page, '/fixture/search/live-full');
+    await load(page, '/fixture/search/live-full');
     const node = page.locator('[data-fixture-node]');
     const trigger = node.getByRole('button', { name: 'Hinted search text' });
     await trigger.click();
@@ -515,7 +435,7 @@ test.describe('search view focus', () => {
 
 test.describe('carousel', () => {
   test('RTL: items start at the right edge; the left arrow and a drag to the right go forward', async ({ page }) => {
-    await openFixture(page, '/fixture/carousel/live-rtl');
+    await load(page, '/fixture/carousel/live-rtl');
     const carousel = page.getByRole('region', { name: 'Photos' });
     const slides = carousel.locator('[aria-roledescription="slide"]');
     const geo = async () => {
@@ -545,13 +465,13 @@ test.describe('carousel', () => {
     await page.mouse.move(b.x + 100, b.y + b.height / 2);
     await page.mouse.down();
     await page.mouse.move(b.x + 210, b.y + b.height / 2, { steps: 10 });
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(120); // rest before the release: no fling
     await page.mouse.up();
     await expect.poll(scroll).toBe(-196);
   });
 
   test('reordering keeps each slide element (and its state) and re-places it', async ({ page }) => {
-    await openFixture(page, '/fixture/carousel/live-reorder');
+    await load(page, '/fixture/carousel/live-reorder');
     const carousel = page.getByRole('region', { name: 'Photos' });
     const mark = (k: string) =>
       page.evaluate((k) => {
