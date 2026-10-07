@@ -19,7 +19,16 @@ export interface ForceStateValue {
   caret?: boolean;
   /** Frozen progress-indicator frame (the kit's still frames of animated indicators). */
   progress?: ForcedProgressFrame;
+  /**
+   * A single part drawn outside its container (the kit's building-block sheets): its selection
+   * (tab, navigation item, segment, connected-group item) …
+   */
+  selected?: boolean;
+  /** … and its place in a row of segments. */
+  position?: ForcedPosition;
 }
+
+export type ForcedPosition = 'start' | 'middle' | 'end' | 'only';
 
 export interface ForcedProgressFrame {
   /** Render the live animation at this time (ms) instead of a still frame. */

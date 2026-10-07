@@ -10,8 +10,8 @@ The package is unpublished (`0.0.0`); these are the breaking changes made while 
   interactive menu.
 - Rich tooltips dismiss when the pointer leaves the trigger and the tooltip; pass `persistent` for the old
   "stays until Escape / outside click" behaviour.
-- Drag gestures (sheets, carousel, date-picker month swipe, time-picker dial) start after 8px for every
-  pointer type.
+- Drag gestures (sheets, carousel, date-picker month swipe, time-picker dial, swipeable list items) start after
+  8px for every pointer type; presses on text entry, sliders or `[data-m3-no-drag]` content never start one.
 - Dynamic colour moved to `@m3x/react/dynamic-color`; `M3Provider` takes the generated scheme as `colors`.
 
 ### API renames

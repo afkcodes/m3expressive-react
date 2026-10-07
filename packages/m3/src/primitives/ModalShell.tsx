@@ -5,12 +5,15 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { usePortalContainer } from '../theme/portal.tsx';
 import { scrim } from './scrim.ts';
 
+export type ModalOpenChangeDetails = BaseDialog.Root.ChangeEventDetails;
+
 export interface ModalShellProps extends Omit<
   ComponentPropsWithRef<'div'>,
   'className' | 'style' | 'role' | 'children'
 > {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  /** Base UI's event details (reason, event, `cancel()`) come second (docs/API-CONVENTIONS.md §3). */
+  onOpenChange: (open: boolean, details: ModalOpenChangeDetails) => void;
   /** `alertdialog`: a decision that interrupts — the scrim doesn't dismiss (Escape still does). */
   role?: 'dialog' | 'alertdialog';
   /** Draw the 32% scrim (default true; full-screen surfaces cover the page instead). */
@@ -40,11 +43,7 @@ export function ModalShell({
 }: ModalShellProps) {
   const portal = usePortalContainer();
   return (
-    <BaseDialog.Root
-      open={open}
-      onOpenChange={(next) => onOpenChange(next)}
-      disablePointerDismissal={role === 'alertdialog'}
-    >
+    <BaseDialog.Root open={open} onOpenChange={onOpenChange} disablePointerDismissal={role === 'alertdialog'}>
       <BaseDialog.Portal container={portal}>
         {withScrim && <BaseDialog.Backdrop ref={backdropRef} {...stylex.props(scrim.backdrop)} />}
         <BaseDialog.Popup role={role} {...popupProps} {...stylex.props(sx)}>

@@ -146,21 +146,21 @@ describe('labels', () => {
   it('defaults in English; M3Provider labels override app-wide; a component override wins', async () => {
     function Probe({ own }: { own?: Partial<M3Labels> }) {
       const labels = useLabels(own);
-      return <output>{`${labels.ok}|${labels.cancel}|${labels.remove('Ada')}`}</output>;
+      return <output>{`${labels.ok}|${labels.cancel}|${labels.slidePosition(3, 8)}`}</output>;
     }
     const { host, unmount } = await mount(
       <>
         <Probe />
-        <M3Provider labels={{ ok: 'D’accord', remove: (item) => `Supprimer ${item}` }}>
+        <M3Provider labels={{ ok: 'D’accord', slidePosition: (index, count) => `${index} sur ${count}` }}>
           <Probe />
           <Probe own={{ ok: 'Valider' }} />
         </M3Provider>
       </>,
     );
     expect([...host.querySelectorAll('output')].map((o) => o.textContent)).toEqual([
-      'OK|Cancel|Remove Ada',
-      'D’accord|Cancel|Supprimer Ada',
-      'Valider|Cancel|Supprimer Ada',
+      'OK|Cancel|3 of 8',
+      'D’accord|Cancel|3 sur 8',
+      'Valider|Cancel|3 sur 8',
     ]);
     await unmount();
   });
