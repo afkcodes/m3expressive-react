@@ -1,26 +1,26 @@
-import { useEffect, useRef, useState, type SVGProps } from 'react';
+import { useEffect, useRef, useState, type ComponentPropsWithRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../tokens/color.stylex.ts';
 import { animateSpring, type SpringAnimation } from '../motion/animate.ts';
 import { useSpringToken } from '../motion/context.tsx';
 import type { SpringToken } from '../motion/tokens.ts';
 import { SHAPE_FRAME, figmaShapes, type ShapeName } from './figmaPaths.ts';
 import { createShapeMorph, polygonFromCubics, shapeMorphPath } from './shapeMorph.ts';
+import { isNamed } from './isNamed.ts';
+import type { SxProps } from '../primitives/types.ts';
 import type { Morph } from './graphics/morph.ts';
 
 const styles = stylex.create({
   root: { display: 'block', flexShrink: 0, color: color.primary, fill: 'currentColor' },
 });
 
-export interface MorphingShapeProps extends Omit<SVGProps<SVGSVGElement>, 'style' | 'className' | 'children'> {
+export interface MorphingShapeProps extends SxProps<Omit<ComponentPropsWithRef<'svg'>, 'children'>> {
   /** Target shape. Changing it morphs from wherever the outline currently is. */
   shape: ShapeName;
+  /** Edge length: px (a free size) or a CSS length. Default 48. */
   size?: number | string;
   /** Spring for the morph progress. Shape is spatial motion; Compose uses spatial specs. */
   spring?: Extract<SpringToken, `${string}-spatial`>;
-  sx?: StyleXStyles;
-  label?: string;
 }
 
 /**
@@ -28,14 +28,7 @@ export interface MorphingShapeProps extends Omit<SVGProps<SVGSVGElement>, 'style
  * path; while moving, frames come from the AndroidX Morph between Figma-derived polygons.
  * Interruptions restart from the current in-between outline (no jump). Reduced motion: instant.
  */
-export function MorphingShape({
-  shape,
-  size = 48,
-  spring = 'default-spatial',
-  sx,
-  label,
-  ...rest
-}: MorphingShapeProps) {
+export function MorphingShape({ shape, size = 48, spring = 'default-spatial', sx, ...rest }: MorphingShapeProps) {
   const pathRef = useRef<SVGPathElement>(null);
   const current = useRef<{ morph: Morph | null; progress: number; target: ShapeName; anim: SpringAnimation | null }>({
     morph: null,
@@ -93,14 +86,14 @@ export function MorphingShape({
   useEffect(() => () => current.current.anim?.stop(), []);
 
   const initial = figmaShapes[mountShape];
+  const named = isNamed(rest);
   return (
     <svg
       viewBox={`0 0 ${SHAPE_FRAME} ${SHAPE_FRAME}`}
       width={size}
       height={size}
-      role={label ? 'img' : undefined}
-      aria-label={label}
-      aria-hidden={label ? undefined : true}
+      role={named ? 'img' : undefined}
+      aria-hidden={named ? undefined : true}
       {...rest}
       {...stylex.props(styles.root, sx)}
     >
