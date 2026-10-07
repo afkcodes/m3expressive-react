@@ -339,11 +339,8 @@ export function SnackbarProvider({ children, timeout }: SnackbarProviderProps) {
  * current snackbar (plus the one fading out) — so each timer starts when its snackbar is shown.
  */
 function SnackbarQueue({ timeout, children }: { timeout?: number; children: ReactNode }) {
-  const manager = Toast.useToastManager();
-  const managerRef = useRef(manager);
-  managerRef.current = manager;
-  const timeoutRef = useRef(timeout);
-  timeoutRef.current = timeout;
+  // The store's add / close are stable (the manager object changes with every toast).
+  const { add, close } = Toast.useToastManager();
   const state = useRef<{ queue: PendingSnackbar[]; current: string | null }>({ queue: [], current: null });
 
   const api = useMemo<SnackbarQueueApi>(() => {
@@ -353,7 +350,7 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
       const next = st.queue.shift();
       if (!next) return;
       st.current = next.id;
-      managerRef.current.add({
+      add({
         id: next.id,
         description: next.message,
         timeout: next.timeout,
@@ -373,7 +370,7 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
           options.timeout ??
           (options.duration
             ? DURATION_MS[options.duration]
-            : (timeoutRef.current ?? DURATION_MS[options.action ? 'indefinite' : 'short']));
+            : (timeout ?? DURATION_MS[options.action ? 'indefinite' : 'short']));
         state.current.queue.push({
           id,
           message,
@@ -392,10 +389,10 @@ function SnackbarQueue({ timeout, children }: { timeout?: number; children: Reac
         const st = state.current;
         const queued = st.queue.findIndex((p) => p.id === id);
         if (queued >= 0) st.queue.splice(queued, 1);
-        else managerRef.current.close(id);
+        else close(id);
       },
     };
-  }, []);
+  }, [add, close, timeout]);
 
   return <SnackbarQueueContext value={api}>{children}</SnackbarQueueContext>;
 }

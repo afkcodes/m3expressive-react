@@ -1,4 +1,4 @@
-import { forwardRef, useState, type ReactNode } from 'react';
+import { forwardRef, useId, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -289,6 +289,8 @@ interface ContentProps {
   checkSlot?: boolean;
   trailingIcon?: ReactNode;
   label: ReactNode;
+  /** id of the label (the input chip's remove button is named after it). */
+  labelId?: string;
 }
 
 function ChipContent({
@@ -301,6 +303,7 @@ function ChipContent({
   checkSlot = false,
   trailingIcon,
   label,
+  labelId,
 }: ContentProps) {
   // Colours (kit): label on-surface (assist) / on-surface-variant; icons primary; trailing
   // on-surface-variant; selected → on-secondary-container (suggestion / input keep a primary icon).
@@ -323,7 +326,9 @@ function ChipContent({
       ) : icon != null ? (
         <span style={{ display: 'contents', color: disabled ? undefined : iconTone }}>{icon}</span>
       ) : null}
-      <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{label}</span>
+      <span id={labelId} {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>
+        {label}
+      </span>
       {trailingIcon != null && (
         <span style={{ display: 'contents', color: disabled ? undefined : trailingTone }}>{trailingIcon}</span>
       )}
@@ -534,6 +539,7 @@ export interface InputChipProps
   avatar?: ReactNode;
   /** Shows the trailing remove button. */
   onRemove?: () => void;
+  /** Accessible name of the remove button. Default: "Remove" followed by the chip's label. */
   removeLabel?: string;
 }
 
@@ -561,7 +567,7 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
     icon,
     avatar,
     onRemove,
-    removeLabel = 'Remove',
+    removeLabel,
     dragged = false,
     disabled = false,
     selected: selectedProp,
@@ -586,6 +592,9 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
     )
   ) : undefined;
   const trailing = onRemove != null;
+  // Default name "Remove <label>": the button's own aria-label (the verb), then the chip's label.
+  const removeId = useId();
+  const labelId = useId();
   return (
     <span {...stylex.props(s.inputWrap)}>
       <BaseToggle
@@ -620,12 +629,15 @@ export const InputChip = forwardRef<HTMLButtonElement, InputChipProps>(function 
           // Space for the remove button, which sits on top (it can't be nested in a button).
           trailingIcon={trailing ? <span style={{ width: 18, height: 18, flexShrink: 0 }} /> : undefined}
           label={children}
+          labelId={labelId}
         />
       </BaseToggle>
       {trailing && (
         <button
           type="button"
-          aria-label={removeLabel}
+          id={removeId}
+          aria-label={removeLabel ?? 'Remove'}
+          aria-labelledby={removeLabel == null ? `${removeId} ${labelId}` : undefined}
           disabled={disabled}
           onClick={onRemove}
           {...stylex.props(s.remove)}
