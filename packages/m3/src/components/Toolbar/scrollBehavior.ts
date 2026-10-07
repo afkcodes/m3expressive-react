@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { onScrollEnd } from '../AppBar/scrollEvents.ts';
 
 /** FloatingToolbarDefaults.ScrollDistanceThreshold (40dp). */
 export const SCROLL_DISTANCE_THRESHOLD = 40;
@@ -11,7 +12,9 @@ export const SCROLL_DISTANCE_THRESHOLD = 40;
  */
 function useScrollDeltas(onDelta: (delta: number) => void, onEnd?: () => void) {
   const latest = useRef({ onDelta, onEnd });
-  latest.current = { onDelta, onEnd };
+  useLayoutEffect(() => {
+    latest.current = { onDelta, onEnd };
+  });
   const cleanup = useRef<(() => void) | null>(null);
   useEffect(() => () => cleanup.current?.(), []);
   return useCallback((el: HTMLElement | null) => {
@@ -25,12 +28,12 @@ function useScrollDeltas(onDelta: (delta: number) => void, onEnd?: () => void) {
       last = top;
       if (delta !== 0) latest.current.onDelta(delta);
     };
-    const end = () => latest.current.onEnd?.();
     el.addEventListener('scroll', scroll, { passive: true });
-    el.addEventListener('scrollend', end);
+    // Browsers without `scrollend`: a 150ms pause in scrolling.
+    const offEnd = onScrollEnd(el, () => latest.current.onEnd?.());
     cleanup.current = () => {
       el.removeEventListener('scroll', scroll);
-      el.removeEventListener('scrollend', end);
+      offEnd();
     };
   }, []);
 }

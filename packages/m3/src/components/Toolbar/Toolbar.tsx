@@ -1,19 +1,11 @@
-import {
-  forwardRef,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type FocusEvent,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { forwardRef, useCallback, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './context.ts';
+import { useRovingTabStop } from './roving.ts';
 
 /*
  * Figma kit, "Toolbars" page (Toolbar set 58467:8206; Compose HorizontalFloatingToolbar /
@@ -113,9 +105,6 @@ const s = stylex.create({
   fabSlot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
 });
 
-const FOCUSABLE =
-  'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])';
-
 export interface ToolbarProps {
   /** Floating (a rounded, elevated bar) or docked (full width, flat). */
   type?: 'floating' | 'docked';
@@ -135,7 +124,10 @@ export interface ToolbarProps {
   sx?: StyleXStyles;
 }
 
-/** A row (or column) of actions. Arrow keys move between items; Tab enters and leaves it once. */
+/**
+ * A row (or column) of actions. Arrow keys move between items (mirrored in RTL; a text field keeps
+ * them while its caret can move); Tab enters and leaves it once.
+ */
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
   {
     type = 'floating',
@@ -170,49 +162,17 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   const hasFab = floating && fab != null;
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!hasFab || !el) return;
+    if (!hasFab || !el) return undefined;
     const measure = () => setNatural([el.offsetWidth, el.offsetHeight]);
     measure();
-    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
+    if (typeof ResizeObserver === 'undefined') return undefined; // jsdom / very old engines: measured once
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, [hasFab]);
 
   // Roving tab stop (WAI-ARIA toolbar): exactly one item is in the tab order.
-  const items = () =>
-    [...(ref.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])].filter((el) => !el.closest('[inert]'));
-  const rove = (to: HTMLElement | undefined) => {
-    for (const el of items()) el.tabIndex = el === to ? 0 : -1;
-  };
-  useLayoutEffect(() => {
-    const list = items();
-    rove(list.find((el) => el.dataset.toolbarActive != null) ?? list[0]);
-  });
-  const onFocus = (e: FocusEvent<HTMLDivElement>) => {
-    const list = items();
-    const target = list.find((el) => el === e.target);
-    if (!target) return;
-    for (const el of list) delete el.dataset.toolbarActive;
-    target.dataset.toolbarActive = '';
-    rove(target);
-  };
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    const next = vertical ? 'ArrowDown' : 'ArrowRight';
-    const prev = vertical ? 'ArrowUp' : 'ArrowLeft';
-    if (![next, prev, 'Home', 'End'].includes(e.key)) return;
-    const list = items();
-    const i = list.indexOf(document.activeElement as HTMLElement);
-    if (i < 0) return;
-    e.preventDefault();
-    const to =
-      e.key === 'Home'
-        ? 0
-        : e.key === 'End'
-          ? list.length - 1
-          : (i + (e.key === next ? 1 : -1) + list.length) % list.length;
-    list[to]?.focus();
-  };
+  const { onFocus, onKeyDown } = useRovingTabStop(ref, vertical);
 
   const collapsible = (content: ReactNode, side: 'lead' | 'trail') => {
     // Horizontal: leading expandFrom Start / shrinkTowards End, trailing End / Start.
