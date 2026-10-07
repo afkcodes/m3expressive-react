@@ -266,7 +266,8 @@ navigation drawer (out of scope).
   number-valued context). `ListItem` is `memo`.
 - Animation / gestures: per-frame springs write to the element, not React state. Every spring, tween, gesture and
   window listener is stopped in an unmount effect; gesture teardown lives in a ref and also runs on a new press or a
-  close. Drag containers use `isNoDragTarget` (input / textarea / select / contenteditable / slider /
+  close. Drag slop is Android's 8px touch slop for every pointer type — Compose's ~0.06px mouse slop turns web clicks
+  (sub-pixel jitter) into drags / flings. Drag containers use `isNoDragTarget` (input / textarea / select / contenteditable / slider /
   `[data-m3-no-drag]` / pointer capture) and read `nativeEvent.defaultPrevented`.
 - Keyboard: every grid / listbox / radio group / toolbar has exactly one `tabIndex=0` plus arrow keys (mirrored in
   RTL; text fields keep their arrows until the caret can't move). Parts leaving under an overlay become `inert`; a

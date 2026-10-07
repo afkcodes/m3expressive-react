@@ -252,6 +252,7 @@ line to flip if you'd rather follow the M3 guidelines:
 ### Motion: where we knowingly differ from Compose
 | Component | Compose | Ours |
 |---|---|---|
+| Drag slop (mouse) | touchSlop × 0.125dp / 18dp (~0.06px) | Android's 8px touch slop for every pointer — browsers report sub-pixel jitter, so a click with a 1–2px wobble became a swipe (a date click flung the month) |
 | Snackbar timer | runs while visible (Android lengthens it via the accessibility manager) | pauses while hovered or focused (WCAG 2.2.1) |
 | Snackbar exit | removed when the 150ms fade ends | stays in the DOM, invisible and without pointer events, until its scale spring ends (Base UI waits for every animation) |
 | Rich tooltip | no click toggle; a non-persistent one closes on anchor exit; opens on keyboard focus | Base UI Popover behaviour: a click toggles it, the pointer can move into it, no open on focus |
