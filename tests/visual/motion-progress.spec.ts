@@ -152,3 +152,27 @@ test.describe('progress motion', () => {
     }
   });
 });
+
+// ── Slider ──────────────────────────────────────────────────────────────────────────────────
+test('slider value indicator: appears / disappears with no transition (Compose Label); press and keyboard focus, not hover', async ({ page }) => {
+  await page.goto('/fixture/slider/live');
+  await page.mouse.move(0, 0);
+  const volume = page.getByRole('slider', { name: 'Volume' });
+  const indicator = volume.locator('xpath=..').locator('> span[aria-hidden]', { hasText: /^\d+$/ });
+  const state = () =>
+    indicator.evaluate((el) => ({ opacity: getComputedStyle(el).opacity, animations: el.getAnimations().length }));
+  expect(await state()).toEqual({ opacity: '0', animations: 0 });
+  const box = (await page.locator('[data-fixture-node]').boundingBox())!;
+  await page.mouse.move(box.x + 177, box.y + 26);
+  await page.waitForTimeout(100);
+  expect(await state(), 'hover: the kit’s Hovered variants draw no indicator').toEqual({ opacity: '0', animations: 0 });
+  await page.mouse.down();
+  expect(await state(), 'pressed: shown at once').toEqual({ opacity: '1', animations: 0 });
+  await page.mouse.up();
+  expect(await state(), 'released: hidden at once').toEqual({ opacity: '0', animations: 0 });
+  await page.mouse.move(0, 0);
+  await page.mouse.click(1, 1);
+  await page.keyboard.press('Tab');
+  await expect(volume).toBeFocused();
+  expect(await state(), 'keyboard focus: shown at once').toEqual({ opacity: '1', animations: 0 });
+});

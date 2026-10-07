@@ -4,7 +4,6 @@ import type { StyleXStyles } from '@stylexjs/stylex';
 import { Slider as BaseSlider } from '@base-ui/react/slider';
 import { color } from '../../tokens/color.stylex';
 import { state } from '../../tokens/state.stylex';
-import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex';
@@ -132,23 +131,19 @@ const s = stylex.create({
     backgroundColor: color.inverseSurface,
     color: color.inverseOnSurface,
     pointerEvents: 'none',
+    // Compose's slider value indicator is a `Label` (internal Label.kt): a BasicTooltipBox popup
+    // that appears and disappears with no transition. It shows while pressed / dragged (the kit's
+    // Pressed variants) and, as our accessibility choice, while keyboard-focused. Compose's Label
+    // also shows on hover; the kit's Hovered variants draw no indicator, so the kit wins there.
     opacity: {
       default: 0,
       [stylex.when.ancestor(':is([data-dragging])')]: 1,
       [stylex.when.ancestor(':has(:focus-visible)')]: 1,
     },
-    transform: {
-      default: 'scale(0.6)',
-      [stylex.when.ancestor(':is([data-dragging])')]: 'none',
-      [stylex.when.ancestor(':has(:focus-visible)')]: 'none',
-    },
-    transitionProperty: 'opacity, transform',
-    transitionDuration: motion.fastSpatialDuration,
-    transitionTimingFunction: motion.fastSpatialEasing,
   },
-  indicatorH: { bottom: 'calc(100% + 4px)', left: '50%', translate: '-50% 0', transformOrigin: '50% 100%' },
-  indicatorV: { right: 'calc(100% + 4px)', top: '50%', translate: '0 -50%', transformOrigin: '100% 50%' },
-  indicatorShown: { opacity: 1, transform: 'none', transitionDuration: '0s' },
+  indicatorH: { bottom: 'calc(100% + 4px)', left: '50%', translate: '-50% 0' },
+  indicatorV: { right: 'calc(100% + 4px)', top: '50%', translate: '0 -50%' },
+  indicatorShown: { opacity: 1 },
 });
 
 type Mode = 'standard' | 'centered' | 'range';
