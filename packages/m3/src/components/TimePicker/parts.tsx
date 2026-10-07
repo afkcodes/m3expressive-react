@@ -1,4 +1,12 @@
-import { forwardRef, useRef, useState, type KeyboardEvent } from 'react';
+import {
+  useId,
+  useRef,
+  useState,
+  type ComponentPropsWithRef,
+  type FocusEventHandler,
+  type KeyboardEvent,
+  type Ref,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
@@ -6,9 +14,8 @@ import { textBox, textCentred } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-
-export { ClockFace, ClockNumber } from './ClockFace.tsx';
-export type { ClockFaceProps } from './ClockFace.tsx';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 
 /*
  * Figma kit, "Date & time pickers" time building blocks (52949:28082; Compose TimePicker /
@@ -155,41 +162,49 @@ const s = stylex.create({
 
 // ── Time selector (the dial picker's hour / minute boxes) ─────────────────────────────────────
 
-export interface TimeSelectorProps {
+export interface TimeSelectorProps extends SxProps<Omit<ComponentPropsWithRef<'button'>, 'children' | 'value'>> {
+  /**
+   * The digits shown ("07"). They are the button's description: its name stays constant (the
+   * picker passes `aria-label` "Hour" / "Minute") and `aria-pressed` says which one the dial edits.
+   */
   value: string;
   selected?: boolean;
   wide?: boolean;
-  onClick?: () => void;
-  'aria-label'?: string;
 }
 
-export const TimeSelector = forwardRef<HTMLButtonElement, TimeSelectorProps>(function TimeSelector(
-  { value, selected = false, wide = false, onClick, 'aria-label': ariaLabel },
-  ref,
-) {
+export function TimeSelector({ ref, value, selected = false, wide = false, sx, ...rest }: TimeSelectorProps) {
   const forced = useForcedState();
+  const valueId = useId();
   return (
     <button
       ref={ref}
       type="button"
       aria-pressed={selected}
-      aria-label={ariaLabel}
-      onClick={onClick}
+      aria-describedby={valueId}
+      {...rest}
       {...stylex.props(
         s.selector,
         wide && s.selector24,
         selected && s.selectorOn,
         stateLayerHost.host,
         forcedStateLayer(forced.state, 'pressed'),
+        sx,
       )}
     >
       <StateLayer />
-      <span {...stylex.props(typescale.displayLarge, s.centred, textCentred.trimTracking)}>{value}</span>
+      <span id={valueId} {...stylex.props(typescale.displayLarge, s.centred, textCentred.trimTracking)}>
+        {value}
+      </span>
     </button>
   );
-});
+}
 
-export function TimeSeparator({ height = 80 }: { height?: number }) {
+export interface TimeSeparatorProps {
+  /** The row's height (80 beside the selectors, 72 beside the keyboard fields). */
+  height?: number;
+}
+
+export function TimeSeparator({ height = 80 }: TimeSeparatorProps) {
   return (
     <span aria-hidden {...stylex.props(typescale.displayLarge, s.separator)} style={{ height }}>
       :
@@ -200,20 +215,21 @@ export function TimeSeparator({ height = 80 }: { height?: number }) {
 // ── Keyboard field (the keyboard picker's hour / minute inputs) ───────────────────────────────
 
 export interface TimeFieldProps {
+  /** The input element. */
+  ref?: Ref<HTMLInputElement>;
   value: string;
   onValueChange: (value: string) => void;
+  /** The visible label under the field, and the input's name. */
   label: string;
   /** Focus styling (Primary Container + outline); follows focus when omitted. */
   selected?: boolean;
-  onFocus?: () => void;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  /** Two digits were typed (the keyboard picker moves on to the minute). */
   onCommit?: () => void;
   max: number;
 }
 
-export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(function TimeField(
-  { value, onValueChange, label, selected, onFocus, onCommit, max },
-  ref,
-) {
+export function TimeField({ ref, value, onValueChange, label, selected, onFocus, onCommit, max }: TimeFieldProps) {
   const forced = useForcedState();
   const [focused, setFocused] = useState(false);
   const on = selected ?? (focused || forced.state === 'focused');
@@ -230,7 +246,7 @@ export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(function T
           onFocus={(e) => {
             setFocused(true);
             e.currentTarget.select();
-            onFocus?.();
+            onFocus?.(e);
           }}
           onBlur={() => setFocused(false)}
           onChange={(e) => {
@@ -251,26 +267,31 @@ export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(function T
       <span {...stylex.props(typescale.bodySmall, s.kbLabel)}>{label}</span>
     </span>
   );
-});
+}
 
 // ── Period selector ───────────────────────────────────────────────────────────────────────────
 
+export type Period = 'am' | 'pm';
+
 export interface PeriodSelectorProps {
-  pm: boolean;
-  onChange: (pm: boolean) => void;
+  value: Period;
+  onValueChange: (value: Period) => void;
   orientation?: 'vertical' | 'horizontal';
   /** Beside the keyboard fields (72px tall). */
   compact?: boolean;
-  labels?: { am?: string; pm?: string };
+  /** Overrides for the built-in strings (`am`, `pm`, `period`). */
+  labels?: Partial<M3Labels>;
 }
 
 export function PeriodSelector({
-  pm,
-  onChange,
+  value,
+  onValueChange,
   orientation = 'vertical',
   compact = false,
-  labels = {},
+  labels: labelsProp,
 }: PeriodSelectorProps) {
+  const labels = useLabels(labelsProp);
+  const pm = value === 'pm';
   const forced = useForcedState();
   const horizontal = orientation === 'horizontal';
   const am = useRef<HTMLButtonElement>(null);
@@ -279,7 +300,7 @@ export function PeriodSelector({
   const onKey = (e: KeyboardEvent<HTMLButtonElement>, isPm: boolean) => {
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
     e.preventDefault();
-    onChange(!isPm);
+    onValueChange(isPm ? 'am' : 'pm');
     (isPm ? am : pmRef).current?.focus();
   };
   const half = (isPm: boolean, text: string) => {
@@ -291,7 +312,7 @@ export function PeriodSelector({
         role="radio"
         aria-checked={on}
         tabIndex={on ? 0 : -1}
-        onClick={() => onChange(isPm)}
+        onClick={() => onValueChange(isPm ? 'pm' : 'am')}
         onKeyDown={(e) => onKey(e, isPm)}
         {...stylex.props(
           s.half,
@@ -309,12 +330,12 @@ export function PeriodSelector({
   return (
     <span
       role="radiogroup"
-      aria-label="Period"
+      aria-label={labels.period}
       aria-orientation={orientation}
       {...stylex.props(s.period, compact && s.periodKb, horizontal && s.periodH)}
     >
-      {half(false, labels.am ?? 'AM')}
-      {half(true, labels.pm ?? 'PM')}
+      {half(false, labels.am)}
+      {half(true, labels.pm)}
     </span>
   );
 }

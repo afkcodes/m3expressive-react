@@ -15,6 +15,7 @@ import { textBox } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { useSpringChannel } from '../../motion/useSpringChannel.ts';
 import { pointerSlop } from '../../motion/gesture.ts';
@@ -111,7 +112,12 @@ const s = stylex.create({
 
 // ── Clock number (a dial cell on its own: the kit's Hour building block) ─────────────────────
 
-export function ClockNumber({ label, selected = false }: { label: string; selected?: boolean }) {
+export interface ClockNumberProps {
+  label: string;
+  selected?: boolean;
+}
+
+export function ClockNumber({ label, selected = false }: ClockNumberProps) {
   const forced = useForcedState();
   return (
     <span
@@ -159,12 +165,15 @@ export interface ClockFaceProps {
   /** 0–23 (hour) or 0–59 (minute). */
   value: number;
   is24Hour?: boolean;
-  onChange: (value: number) => void;
+  onValueChange: (value: number) => void;
   /** A tap / drag on the dial finished (Compose autoSwitchToMinute). */
   onCommit?: () => void;
+  /** Default: the `hour` / `minute` label. */
   'aria-label'?: string;
-  /** The value as read out (default "7 o'clock" / "20 hours" / "30 minutes", as Compose). */
+  /** The value as read out (default `hourValue` / `minuteValue`: "7 o'clock" / "20 hours" / "30 minutes", as Compose). */
   'aria-valuetext'?: string;
+  /** Overrides for the built-in strings (`hour`, `minute`, `hourValue`, `minuteValue`). */
+  labels?: Partial<M3Labels>;
 }
 
 interface DragState {
@@ -180,11 +189,13 @@ export function ClockFace({
   mode,
   value: valueProp,
   is24Hour = false,
-  onChange,
+  onValueChange: onChange,
   onCommit,
   'aria-label': ariaLabel,
   'aria-valuetext': valueText,
+  labels: labelsProp,
 }: ClockFaceProps) {
+  const labels = useLabels(labelsProp);
   // Out-of-range input lands on the nearest dial value (never off the kit's cells).
   const value = dialValue(mode, valueProp, is24Hour);
   const hand = handFor(mode, value, is24Hour);
@@ -327,11 +338,11 @@ export function ClockFace({
       ref={face}
       role="slider"
       tabIndex={0}
-      aria-label={ariaLabel ?? (mode === 'hour' ? 'Hour' : 'Minute')}
+      aria-label={ariaLabel ?? (mode === 'hour' ? labels.hour : labels.minute)}
       aria-valuemin={mode === 'minute' ? 0 : is24Hour ? 0 : 1}
       aria-valuemax={mode === 'minute' ? 59 : is24Hour ? 23 : 12}
       aria-valuenow={value}
-      aria-valuetext={valueText ?? dialValueText(mode, value, is24Hour)}
+      aria-valuetext={valueText ?? dialValueText(mode, value, is24Hour, labels)}
       onKeyDown={onKey}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

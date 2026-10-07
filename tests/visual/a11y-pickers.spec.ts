@@ -176,7 +176,8 @@ test.describe('picks survive parent re-renders', () => {
     await page.mouse.click(b.x + 128 + 101, b.y + 128);
     await expect(dialog.getByRole('slider', { name: 'Minute' })).toBeVisible();
     await churn(page);
-    await expect(dialog.getByRole('button', { name: 'Hour 3' })).toBeVisible();
+    // The selector's name stays "Hour"; the digits are its description.
+    await expect(dialog.getByRole('button', { name: 'Hour', exact: true })).toHaveAccessibleDescription('03');
     await dialog.getByRole('button', { name: 'OK' }).click();
     await expect(out(page, 'time')).toHaveText('15:00');
   });
@@ -391,7 +392,7 @@ test.describe('time picker keyboard and input', () => {
     await expect(page.getByRole('slider', { name: 'Hour NaN' })).toHaveAttribute('aria-valuenow', '0');
     // 25:75 → 23:59 (11 PM on the 12-hour dial).
     await expect(page.getByRole('slider', { name: 'Hour', exact: true })).toHaveAttribute('aria-valuenow', '11');
-    await expect(page.getByRole('button', { name: 'Minute 59' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Minute', exact: true })).toHaveAccessibleDescription('59');
     await expect(page.getByRole('radio', { name: 'PM' }).first()).toHaveAttribute('aria-checked', 'true');
     await expect(page.getByRole('textbox', { name: 'Hour' })).toHaveValue('12');
     await expect(page.getByRole('textbox', { name: 'Minute' })).toHaveValue('59');
