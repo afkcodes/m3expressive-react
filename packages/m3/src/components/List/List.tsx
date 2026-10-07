@@ -1,7 +1,7 @@
 import { forwardRef, useMemo, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { ListContext, type ListItemVariant } from './ListItem.tsx';
+import { ListContext, type ListItemVariant } from './context.ts';
 
 const s = stylex.create({
   root: { display: 'flex', flexDirection: 'column', margin: 0, padding: 0, listStyle: 'none', boxSizing: 'border-box' },
@@ -29,7 +29,7 @@ export const List = forwardRef<HTMLUListElement, ListProps>(function List(
   const ctx = useMemo(() => ({ inList: true, segmented, variant }), [segmented, variant]);
   return (
     <ListContext value={ctx}>
-      <ul ref={ref} {...aria} {...stylex.props(s.root, type === 'segmented' && s.segmented, sx)}>
+      <ul ref={ref} {...aria} {...stylex.props(s.root, segmented && s.segmented, sx)}>
         {children}
       </ul>
     </ListContext>
