@@ -6,7 +6,7 @@ import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { StateLayer, forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 
@@ -45,7 +45,8 @@ const s = stylex.create({
     [interaction.rippleColor]: color.primary,
     [interaction.rippleOpacity]: '0.16',
   },
-  // Press shows the 10% layer under the ripple (the kit's Pressed cells).
+  // Press shows the 10% layer under the ripple (the kit's Pressed cells): stateLayerHost.hostPressLayer
+  // without its `isolation` — a day's circle must stack above its neighbours' range bands.
   pressLayer: {
     [interaction.layerOpacity]: {
       default: '0',
@@ -212,9 +213,7 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
         text,
         kind !== 'range' && !fromRange && s.contentAnimated,
         interactive && s.pressLayer,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
+        forcedStateLayer(forced.state, 'pressed'),
         disabled && s.dim,
       )}
     >
@@ -269,10 +268,8 @@ export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function Ye
         {...stylex.props(
           s.yearPill,
           selected && s.yearSelected,
-          !disabled && s.pressLayer,
-          forced.state === 'hovered' && stateLayerHost.forceHover,
-          forced.state === 'focused' && stateLayerHost.forceFocus,
-          forced.state === 'pressed' && stateLayerHost.forcePressed,
+          !disabled && stateLayerHost.hostPressLayer,
+          forcedStateLayer(forced.state, 'pressed'),
           disabled && s.dim,
         )}
       >
@@ -311,13 +308,7 @@ export const PickerMenuButton = forwardRef<HTMLButtonElement, PickerMenuButtonPr
       aria-label={ariaLabel}
       onClick={onClick}
       data-ripple-host=""
-      {...stylex.props(
-        s.menu,
-        !disabled && s.pressLayer,
-        forced.state === 'hovered' && stateLayerHost.forceHover,
-        forced.state === 'focused' && stateLayerHost.forceFocus,
-        forced.state === 'pressed' && stateLayerHost.forcePressed,
-      )}
+      {...stylex.props(s.menu, !disabled && stateLayerHost.hostPressLayer, forcedStateLayer(forced.state, 'pressed'))}
     >
       {!disabled && <StateLayer />}
       <span {...stylex.props(typescale.labelLarge, textBox.hug, disabled && s.dim)}>{children}</span>

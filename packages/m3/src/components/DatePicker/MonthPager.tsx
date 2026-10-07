@@ -30,6 +30,37 @@ const MIN_FLING_VELOCITY = 400;
 
 const monthIndex = (d: Date) => d.getFullYear() * 12 + d.getMonth();
 
+/** The pager's moving parts and the measurements a frame needs. */
+interface Parts {
+  /** The shown month's week rows (not the weekday headings). */
+  main: HTMLElement[];
+  /** The other (outgoing / neighbouring) month's week rows. */
+  copy: HTMLElement[];
+  copyHeader: HTMLElement | null;
+  /** One month's width and its left edge inside the pager (the first row). */
+  width: number;
+  left: number;
+  pagerWidth: number;
+}
+
+function measureParts(pager: HTMLElement | null): Parts | null {
+  if (!pager) return null;
+  const main = pager.querySelector<HTMLElement>(':scope > [role="grid"]');
+  const copy = pager.querySelector<HTMLElement>(':scope > [data-month-copy] > [role="grid"]');
+  const rows = (grid: HTMLElement | null) =>
+    grid ? [...grid.querySelectorAll<HTMLElement>(':scope > [role="row"]')] : [];
+  const mainRows = rows(main);
+  const copyRows = rows(copy);
+  return {
+    main: mainRows.slice(1),
+    copy: copyRows.slice(1),
+    copyHeader: copyRows[0] ?? null,
+    width: mainRows[0]?.offsetWidth ?? 0,
+    left: mainRows[0]?.offsetLeft ?? 0,
+    pagerWidth: pager.clientWidth,
+  };
+}
+
 interface Other {
   month: Date;
   /** +1: the other month sits after (to the right of) the shown one. */
@@ -59,37 +90,27 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
   const offset = useRef(0);
   const swipeCommit = useRef(false);
 
-  /** The shown month's and the other month's week rows (not the weekday headings). */
-  const parts = () => {
-    const el = pager.current;
-    if (!el) return null;
-    const main = el.querySelector<HTMLElement>(':scope > [role="grid"]');
-    const copy = el.querySelector<HTMLElement>(':scope > [data-month-copy] > [role="grid"]');
-    const rows = (g: HTMLElement | null) =>
-      g ? [...g.querySelectorAll<HTMLElement>(':scope > [role="row"]')].slice(1) : [];
-    const firstRow = main?.querySelector<HTMLElement>(':scope > [role="row"]');
-    return {
-      main: rows(main),
-      copy: rows(copy),
-      copyHeader: copy?.querySelector<HTMLElement>(':scope > [role="row"]'),
-      width: firstRow?.offsetWidth ?? 0,
-      left: firstRow?.offsetLeft ?? 0,
-    };
-  };
+  // The rows and sizes are queried once per commit (a commit may bring new rows: a new month, the
+  // other month's copy) and reused by every frame of a slide or drag.
+  const measured = useRef<Parts | null>(null);
+  useLayoutEffect(() => {
+    measured.current = null;
+  });
+  const parts = () => (measured.current ??= measureParts(pager.current));
   const apply = (dx: number, side: 1 | -1) => {
     const p = parts();
     const el = pager.current;
     if (!p || !el) return;
     offset.current = dx;
-    for (const r of p.main) r.style.transform = dx ? `translateX(${dx}px)` : '';
-    for (const r of p.copy) r.style.transform = `translateX(${dx + side * p.width}px)`;
+    for (const row of p.main) row.style.transform = dx ? `translateX(${dx}px)` : '';
+    for (const row of p.copy) row.style.transform = `translateX(${dx + side * p.width}px)`;
     if (p.copyHeader) p.copyHeader.style.visibility = 'hidden';
     // Compose clips the list to its own width (inside the picker's side padding).
-    el.style.clipPath = `inset(0 ${el.clientWidth - p.left - p.width}px 0 ${p.left}px)`;
+    el.style.clipPath = `inset(0 ${p.pagerWidth - p.left - p.width}px 0 ${p.left}px)`;
   };
   const clear = () => {
     const p = parts();
-    if (p) for (const r of p.main) r.style.transform = '';
+    if (p) for (const row of p.main) row.style.transform = '';
     if (pager.current) pager.current.style.clipPath = '';
     offset.current = 0;
   };
@@ -170,17 +191,17 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
     const move = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
       tracker.move(ev);
-      const dx = ev.clientX - x0;
+      const moved = ev.clientX - x0;
       if (!active) {
-        if (Math.abs(dx) <= slop) return;
+        if (Math.abs(moved) <= slop) return;
         active = true;
-        x0 += Math.sign(dx) * slop; // Compose's overSlop
+        x0 += Math.sign(moved) * slop; // Compose's overSlop
       }
-      const w = parts()?.width ?? 0;
-      const d = Math.max(-w, Math.min(w, ev.clientX - x0));
+      const monthWidth = parts()?.width ?? 0;
+      const dx = Math.max(-monthWidth, Math.min(monthWidth, ev.clientX - x0));
       // Dragging left reveals the next month on the right.
-      setSide(d < 0 ? 1 : -1);
-      apply(d, drag.current!.side);
+      setSide(dx < 0 ? 1 : -1);
+      apply(dx, drag.current!.side);
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
@@ -194,12 +215,12 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
       tracker.up(ev);
       suppressNextClick();
       const side = drag.current.side;
-      const w = parts()?.width ?? 0;
+      const monthWidth = parts()?.width ?? 0;
       const dx = offset.current;
       // LazyList snap: the bounds around the scroll position (scroll = −dx), in scroll units.
       const scrollVelocity = -tracker.velocity().x;
-      const lower = side > 0 ? dx : dx - w; // ≤ 0: the snap behind
-      const upper = side > 0 ? dx + w : dx; // ≥ 0: the snap ahead
+      const lower = side > 0 ? dx : dx - monthWidth; // ≤ 0: the snap behind
+      const upper = side > 0 ? dx + monthWidth : dx; // ≥ 0: the snap ahead
       const toUpper =
         Math.abs(scrollVelocity) >= MIN_FLING_VELOCITY ? scrollVelocity > 0 : Math.abs(upper) <= Math.abs(lower);
       const target = toUpper ? dx - upper : dx - lower; // the shown month's resting dx

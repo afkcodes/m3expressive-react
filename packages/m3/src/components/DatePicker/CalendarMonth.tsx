@@ -66,7 +66,7 @@ function CalendarMonthGrid({
   value = null,
   range,
   today,
-  formatter: f,
+  formatter,
   firstDayOfWeek = 0,
   outsideDays = false,
   weekdays = true,
@@ -77,23 +77,23 @@ function CalendarMonthGrid({
   onActiveDayChange,
   sx,
 }: CalendarMonthProps) {
-  const y = month.getFullYear();
-  const m = month.getMonth();
-  let weeks = monthWeeks(y, m, firstDayOfWeek);
+  const year = month.getFullYear();
+  const monthOfYear = month.getMonth();
+  let weeks = monthWeeks(year, monthOfYear, firstDayOfWeek);
   if (outsideDays) {
     // Fill the leading / trailing blanks with the neighbouring months and pad to six weeks.
     const first = weeks[0]!.findIndex((d) => d != null);
-    const start = makeDate(y, m, 1 - first);
+    const start = makeDate(year, monthOfYear, 1 - first);
     weeks = Array.from({ length: 6 }, (_, w) => Array.from({ length: 7 }, (_, i) => addDays(start, w * 7 + i)));
   }
-  const inMonth = (d: Date) => d.getMonth() === m && d.getFullYear() === y;
+  const inMonth = (d: Date) => d.getMonth() === monthOfYear && d.getFullYear() === year;
   const grid = useRef<HTMLDivElement>(null);
   const controlled = !!onActiveDayChange;
   const [focusDay, setFocusDay] = useState<Date | null>(null);
   // The tab stop: a day of this month that can take focus (a disabled day can't).
   const usable = (d: Date | null | undefined): d is Date => !!d && inMonth(d) && !isDisabled?.(d);
   const firstUsable = () => {
-    const d = firstEnabled(makeDate(y, m, 1), 1, isDisabled, daysInMonth(y, m) - 1);
+    const d = firstEnabled(makeDate(year, monthOfYear, 1), 1, isDisabled, daysInMonth(year, monthOfYear) - 1);
     return d && inMonth(d) ? d : null;
   };
   const tabDay = controlled
@@ -140,18 +140,18 @@ function CalendarMonthGrid({
   const hasRange = !!range?.start && !!range?.end;
 
   return (
-    <div ref={grid} role="grid" aria-label={f.monthYear(month)} onKeyDown={onKey} {...stylex.props(s.grid, sx)}>
+    <div ref={grid} role="grid" aria-label={formatter.monthYear(month)} onKeyDown={onKey} {...stylex.props(s.grid, sx)}>
       {weekdays && (
         <div role="row" {...stylex.props(s.week)}>
           {Array.from({ length: 7 }, (_, i) => (
             <span
               key={i}
               role="columnheader"
-              aria-label={f.weekdayLong(firstDayOfWeek + i)}
+              aria-label={formatter.weekdayLong(firstDayOfWeek + i)}
               {...stylex.props(s.weekday)}
             >
               <span aria-hidden {...stylex.props(typescale.bodyLarge, textBox.hug)}>
-                {f.weekdayNarrow(firstDayOfWeek + i)}
+                {formatter.weekdayNarrow(firstDayOfWeek + i)}
               </span>
             </span>
           ))}
@@ -168,7 +168,7 @@ function CalendarMonthGrid({
                   rangeStart={hasRange && sameDay(d, range.start)}
                   rangeEnd={hasRange && sameDay(d, range.end)}
                   disabled={isDisabled?.(d)}
-                  aria-label={f.fullDate(d)}
+                  aria-label={formatter.fullDate(d)}
                   aria-current={sameDay(d, today) ? 'date' : undefined}
                   tabIndex={sameDay(d, tabDay) ? 0 : -1}
                   data-date={d.toDateString()}
