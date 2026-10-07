@@ -1,10 +1,11 @@
-import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useLayoutEffect, useRef, useState, type ComponentPropsWithRef, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { legacyLeading } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { cubicBezier, fastOutLinearIn } from '../../motion/easing.ts';
 import { StandardIconTintContext } from '../IconButton/context.ts';
 import {
@@ -16,7 +17,7 @@ import {
 } from './useAppBarScroll.ts';
 
 export { useAppBarScroll } from './useAppBarScroll.ts';
-export type { TopAppBarSize } from './useAppBarScroll.ts';
+export type { AppBarScrollOptions, AppBarScrollState, TopAppBarSize } from './useAppBarScroll.ts';
 export { BottomAppBar } from './BottomAppBar.tsx';
 export type { BottomAppBarProps } from './BottomAppBar.tsx';
 
@@ -148,18 +149,19 @@ const LEGACY_SUBTITLE = {
 // subtitle 1px below it (every other title / subtitle lands exactly on it).
 const nudge = stylex.create({ up: { transform: 'translateY(-1px)' }, down: { transform: 'translateY(1px)' } });
 
-export interface AppBarTitleProps {
+export interface AppBarTitleProps extends SxProps<ComponentPropsWithRef<'div'>> {
   size?: TopAppBarSize;
   centered?: boolean;
+  /** The headline (an `<h1>`). */
   children: ReactNode;
   subtitle?: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /** An app bar's title (and optional subtitle), sized per bar (kit "Text Small / Medium / Large"). */
-export function AppBarTitle({ size = 'small', centered = false, children, subtitle, sx }: AppBarTitleProps) {
+export function AppBarTitle({ size = 'small', centered = false, children, subtitle, sx, ...rest }: AppBarTitleProps) {
   return (
     <div
+      {...rest}
       {...stylex.props(
         s.title,
         centered && s.titleCentered,
@@ -208,17 +210,23 @@ const containerColor = (mix: number) =>
 const sameRender = (a: AppBarScrollState, b: AppBarScrollState) =>
   a.overlapped === b.overlapped && a.fraction > 0 === b.fraction > 0 && a.fraction >= 0.5 === b.fraction >= 0.5;
 
-export interface TopAppBarProps {
+/**
+ * The root is the `<header>` (`ref`, native props, `sx`). The text is `headline` (not the native
+ * `title` attribute); `content` replaces it in small bars (the native `content` attribute is omitted).
+ */
+export interface TopAppBarProps extends SxProps<
+  Omit<ComponentPropsWithRef<'header'>, 'title' | 'content' | 'children'>
+> {
   size?: TopAppBarSize;
-  /** Small bars: centre the title across the bar. */
+  /** Small bars: centre the headline across the bar. */
   centered?: boolean;
-  title?: ReactNode;
+  headline?: ReactNode;
   subtitle?: ReactNode;
   /** Leading icon button (navigation / menu). */
   navigationIcon?: ReactNode;
   /** Trailing icon buttons / avatar. */
   actions?: ReactNode;
-  /** Small bars: custom content in the title's place (e.g. an image). */
+  /** Small bars: custom content in the headline's place (e.g. an image). */
   content?: ReactNode;
   /** Small bars: a search field between the icons. */
   search?: ReactNode;
@@ -233,13 +241,12 @@ export interface TopAppBarProps {
    * shut when scrolling stops.
    */
   scrollTarget?: RefObject<HTMLElement | null>;
-  sx?: StyleXStyles;
 }
 
 export function TopAppBar({
   size = 'small',
   centered = false,
-  title,
+  headline,
   subtitle,
   navigationIcon,
   actions,
@@ -249,12 +256,15 @@ export function TopAppBar({
   collapsedFraction: fractionProp,
   scrollTarget,
   sx,
+  ref,
+  ...rest
 }: TopAppBarProps) {
   const twoRows = size !== 'small';
   // Two-row bars collapsed by `scrollTarget`: every scroll event writes the bar's frame (height,
   // fades, title ride, colour) to the elements; React renders only when `sameRender` says so.
   const scrollDriven = twoRows && fractionProp == null && scrollTarget != null;
   const header = useRef<HTMLElement>(null);
+  const setHeader = useMergedRefs(header, ref);
   const rowTitle = useRef<HTMLSpanElement>(null);
   const bigTitle = useRef<HTMLDivElement>(null);
   const latestFraction = useRef(0);
@@ -301,7 +311,7 @@ export function TopAppBar({
 
   if (size === 'small') {
     return (
-      <header {...stylex.props(s.bar, scrolled && s.scrolled, sx)}>
+      <header ref={setHeader} {...rest} {...stylex.props(s.bar, scrolled && s.scrolled, sx)}>
         <div {...stylex.props(s.row, search != null && s.rowSearch)}>
           {navigationIcon != null && (
             <span {...stylex.props(s.slot)}>
@@ -317,7 +327,7 @@ export function TopAppBar({
             <span {...stylex.props(s.centre)} />
           ) : (
             <span {...stylex.props(s.centre)}>
-              <AppBarTitle subtitle={subtitle}>{title}</AppBarTitle>
+              <AppBarTitle subtitle={subtitle}>{headline}</AppBarTitle>
             </span>
           )}
           {actions != null && <span {...stylex.props(s.trailing)}>{actions}</span>}
@@ -325,7 +335,7 @@ export function TopAppBar({
         {centered && search == null && content == null && (
           <div {...stylex.props(s.centredTitle)}>
             <AppBarTitle centered subtitle={subtitle}>
-              {title}
+              {headline}
             </AppBarTitle>
           </div>
         )}
@@ -345,7 +355,7 @@ export function TopAppBar({
           : s.containerMix(frame.containerMix)
       : scrolledProp && s.scrolled;
   return (
-    <header ref={header} {...stylex.props(s.bar, container, driven ? s.height(frame.height) : null, sx)}>
+    <header ref={setHeader} {...rest} {...stylex.props(s.bar, container, driven ? s.height(frame.height) : null, sx)}>
       <div {...stylex.props(s.row, s.rowTwoRows)}>
         {navigationIcon != null && (
           <span {...stylex.props(s.slot)}>
@@ -354,7 +364,7 @@ export function TopAppBar({
           </span>
         )}
         <span ref={rowTitle} {...stylex.props(s.centre, s.fade(frame.rowTitleAlpha))} aria-hidden={fraction < 0.5}>
-          {fraction > 0 && <AppBarTitle>{title}</AppBarTitle>}
+          {fraction > 0 && <AppBarTitle>{headline}</AppBarTitle>}
         </span>
         {actions != null && <span {...stylex.props(s.trailing)}>{actions}</span>}
       </div>
@@ -364,7 +374,7 @@ export function TopAppBar({
         aria-hidden={fraction >= 0.5}
       >
         <AppBarTitle size={size} centered={centered} subtitle={subtitle}>
-          {title}
+          {headline}
         </AppBarTitle>
       </div>
     </header>

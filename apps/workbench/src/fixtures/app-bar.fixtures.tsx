@@ -79,7 +79,7 @@ function render(name: string): ReactNode {
       return (
         <TopAppBar
           centered
-          title="Label"
+          headline="Label"
           scrolled={scrolled}
           navigationIcon={<Btn icon="menu-24" label="Menu" />}
           actions={<AvatarSlot />}
@@ -106,7 +106,7 @@ function render(name: string): ReactNode {
     return (
       <TopAppBar
         size={config as TopAppBarSize}
-        title="Label"
+        headline="Label"
         scrolled={scrolled}
         navigationIcon={<Btn icon="arrow_back-24" label="Back" />}
         actions={<Btn icon="search-24" label="Search" />}
@@ -154,7 +154,7 @@ function LiveAppBar() {
     <div style={{ width: 412, height: 400, display: 'flex', flexDirection: 'column' }}>
       <TopAppBar
         size="medium"
-        title="Label"
+        headline="Label"
         navigationIcon={<Btn icon="arrow_back-24" label="Back" />}
         actions={<Btn icon="search-24" label="Search" />}
         scrollTarget={ref}

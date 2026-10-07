@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ComponentPropsWithRef, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { useSpringToken } from '../../motion/context.tsx';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useExitAlwaysOffset } from './exitAlways.ts';
 import { onScrollEnd, onUserScroll } from './scrollEvents.ts';
 
@@ -30,11 +31,13 @@ const s = stylex.create({
   bottomFab: { marginInlineStart: 'auto', display: 'flex' },
 });
 
-export interface BottomAppBarProps {
+/**
+ * `ref`, native props and `sx` go to the root: the `role="toolbar"` bar, or — with a
+ * `scrollTarget` — the clip that hides it. `aria-label` / `aria-labelledby` always name the bar.
+ */
+export interface BottomAppBarProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
   /** Icon buttons, from the start. */
   actions?: ReactNode;
-  /** The toolbar's accessible name. */
-  'aria-label'?: string;
   /** A FAB at the end (use `Fab elevated={false}`: the kit's bottom-bar FAB has no shadow). */
   fab?: ReactNode;
   /**
@@ -42,7 +45,6 @@ export interface BottomAppBarProps {
    * shows it again (Compose BottomAppBarDefaults.exitAlwaysScrollBehavior).
    */
   scrollTarget?: RefObject<HTMLElement | null>;
-  sx?: StyleXStyles;
 }
 
 const hiddenLimit = () => -BOTTOM_HEIGHT;
@@ -100,26 +102,48 @@ function useBottomBarExitAlways(target: RefObject<HTMLElement | null> | undefine
  * toolbar: one tab stop, arrow keys move between its buttons. Hidden by the scroll, it leaves the
  * tab order (inert) until it shows again.
  */
-export function BottomAppBar({ actions, fab, scrollTarget, 'aria-label': ariaLabel, sx }: BottomAppBarProps) {
+export function BottomAppBar({
+  actions,
+  fab,
+  scrollTarget,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  sx,
+  ref: refProp,
+  ...rest
+}: BottomAppBarProps) {
   const { clipRef, hidden } = useBottomBarExitAlways(scrollTarget);
+  const clipped = scrollTarget != null;
   const ref = useRef<HTMLDivElement>(null);
+  // Without a scroll target the bar is the root.
+  const setRef = useMergedRefs(ref, clipped ? null : refProp);
+  const setClip = useMergedRefs(clipRef, clipped ? refProp : null);
   const { onFocus, onKeyDown } = useRovingTabStop(ref, false);
   const bar = (
     <div
-      ref={ref}
+      ref={setRef}
       role="toolbar"
       aria-label={ariaLabel}
-      onFocus={onFocus}
-      onKeyDown={onKeyDown}
-      {...stylex.props(s.bottom, scrollTarget == null && sx)}
+      aria-labelledby={ariaLabelledBy}
+      {...(clipped ? null : rest)}
+      // The roving tab stop runs after the app's own handlers (on the bar when it is the root).
+      onFocus={(e) => {
+        if (!clipped) rest.onFocus?.(e);
+        onFocus(e);
+      }}
+      onKeyDown={(e) => {
+        if (!clipped) rest.onKeyDown?.(e);
+        onKeyDown(e);
+      }}
+      {...stylex.props(s.bottom, !clipped && sx)}
     >
       {actions != null && <div {...stylex.props(s.bottomActions)}>{actions}</div>}
       {fab != null && <div {...stylex.props(s.bottomFab)}>{fab}</div>}
     </div>
   );
-  if (scrollTarget == null) return bar;
+  if (!clipped) return bar;
   return (
-    <div ref={clipRef} inert={hidden || undefined} {...stylex.props(s.bottomClip, sx)}>
+    <div ref={setClip} inert={hidden || undefined} {...rest} {...stylex.props(s.bottomClip, sx)}>
       {bar}
     </div>
   );
