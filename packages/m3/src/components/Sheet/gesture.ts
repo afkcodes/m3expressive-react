@@ -250,3 +250,21 @@ export function cubicBezier(x1: number, y1: number, x2: number, y2: number): (fr
     return bez(y1, y2, t);
   };
 }
+
+/**
+ * After a drag, the browser still fires a click on the element under the pointer: swallow it
+ * (Compose cancels a child's tap once a parent drag passes its slop).
+ */
+export function suppressNextClick() {
+  const swallow = (e: MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    done();
+  };
+  const done = () => {
+    window.removeEventListener('click', swallow, true);
+    clearTimeout(timer);
+  };
+  window.addEventListener('click', swallow, true);
+  const timer = setTimeout(done, 100);
+}

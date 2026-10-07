@@ -1,4 +1,4 @@
-import { forwardRef, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
+import { forwardRef, useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog } from '@base-ui/react/dialog';
@@ -6,6 +6,9 @@ import { color } from '../../tokens/color.stylex';
 import { elevation } from '../../tokens/elevation.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { usePortalContainer } from '../../theme/portal.tsx';
+import { useSpringToken } from '../../motion/context.tsx';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { computeAnchorTarget, closestAnchor, MAX_FLING_VELOCITY, PointerVelocityTracker, pointerSlop, suppressNextClick, TOUCH_SLOP } from './gesture.ts';
 import { scrim } from './scrim.ts';
 
 /*
@@ -14,9 +17,19 @@ import { scrim } from './scrim.ts';
  *   Surface Container Low, 28px top corners, a 36px header holding the 32×4 Outline drag handle
  *   (16px padding), then the content. Standard sheets cast elevation 3; modal sheets sit flat on a
  *   32% Scrim.
- * Motion (Compose BottomSheet): shows on the default spatial spring, hides on fast effects, drags
- *   settle on default spatial; the scrim fades on default effects. Dragging dismisses past 56px or
- *   faster than 125px/s (BottomSheetDefaults.PositionalThreshold / VelocityThreshold).
+ * Motion (Compose BottomSheet / ModalBottomSheet / AnchoredDraggable):
+ *   - show on the default spatial spring (showMotionSpec), hide on fast effects (hideMotionSpec);
+ *     the spring's overshoot lifts the sheet above its rest, so the surface continues below its
+ *     bottom edge (Compose scales the layer up: SheetDefaults verticalScaleUp);
+ *   - the whole surface drags (the handle and, while it isn't scrolled, the content), clamped to
+ *     Expanded…Hidden (AnchoredDraggableState.newOffsetForDelta — no rubber band);
+ *   - release: Compose's VelocityTracker (Lsq2), the boundary dampening near Hidden (125dp zone),
+ *     then AnchoredDraggable.computeTarget with 56dp / 125dp/s (PositionalThreshold /
+ *     VelocityThreshold) and a default spatial spring from the release velocity
+ *     (anchoredDraggableMotionSpec, both directions); a sheet that settles at Hidden is dismissed
+ *     once the spring ends;
+ *   - the scrim follows targetValue != Hidden (the closest anchor while dragging, the target while
+ *     settling), fading on default effects.
  */
 const s = stylex.create({
   sheet: {
@@ -47,7 +60,8 @@ const s = stylex.create({
   },
   handle: { display: 'block', width: 32, height: 4, borderRadius: 2, backgroundColor: color.outline },
   content: { flexGrow: 1, minHeight: 0, overflowY: 'auto' },
-  // Modal placement and motion.
+  // Modal placement and motion. The popup spans the width; only the sheet takes pointer input, so a
+  // press beside a narrower sheet reaches the scrim.
   popup: {
     position: 'fixed',
     left: 0,
@@ -57,12 +71,27 @@ const s = stylex.create({
     justifyContent: 'center',
     maxHeight: 'calc(100% - 72px)',
     outlineStyle: 'none',
+    pointerEvents: 'none',
     translate: { default: '0 0', ':is([data-starting-style], [data-ending-style])': '0 100%' },
     transitionProperty: 'translate',
     transitionDuration: { default: motion.defaultSpatialDuration, ':is([data-ending-style])': motion.fastEffectsDuration },
     transitionTimingFunction: { default: motion.defaultSpatialEasing, ':is([data-ending-style])': motion.fastEffectsEasing },
+    // The surface continued below the sheet: the show spring overshoots (~1.5% of the travel on
+    // expressive default spatial) and a fling settles past Expanded, which would open a gap.
+    '::after': {
+      content: '""',
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      width: '100%',
+      maxWidth: 640,
+      height: '100%',
+      marginInline: 'auto',
+      backgroundColor: color.surfaceContainerLow,
+    },
   },
-  popupSheet: { maxHeight: '100%' },
+  popupSheet: { maxHeight: '100%', pointerEvents: 'auto' },
 });
 
 export interface BottomSheetProps {
@@ -75,19 +104,23 @@ export interface BottomSheetProps {
   /** Activating the handle (click / Enter) dismisses the sheet. */
   onHandleActivate?: () => void;
   onHandlePointerDown?: (e: ReactPointerEvent<HTMLElement>) => void;
+  /** Pointer down anywhere on the sheet (a modal sheet drags from its whole surface). */
+  onSurfacePointerDown?: (e: ReactPointerEvent<HTMLDivElement>) => void;
+  /** The scrolling content element. */
+  contentRef?: Ref<HTMLDivElement>;
   children?: ReactNode;
   sx?: StyleXStyles;
 }
 
 /** The bottom sheet surface (standard sheets sit in the layout; see `ModalBottomSheet`). */
 export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function BottomSheet(
-  { modal = false, dragHandle = true, handleLabel = 'Close sheet', onHandleActivate, onHandlePointerDown, children, sx },
+  { modal = false, dragHandle = true, handleLabel = 'Close sheet', onHandleActivate, onHandlePointerDown, onSurfacePointerDown, contentRef, children, sx },
   ref,
 ) {
   return (
-    <div ref={ref} {...stylex.props(s.sheet, !modal && s.standard, sx)}>
+    <div ref={ref} onPointerDown={onSurfacePointerDown} {...stylex.props(s.sheet, !modal && s.standard, sx)}>
       {dragHandle && (
-        <div onPointerDown={onHandlePointerDown} {...stylex.props(s.header)}>
+        <div data-sheet-header="" onPointerDown={onHandlePointerDown} {...stylex.props(s.header)}>
           {onHandleActivate ? (
             <button type="button" aria-label={handleLabel} onClick={onHandleActivate} {...stylex.props(s.handleButton, s.handle)} />
           ) : (
@@ -95,13 +128,17 @@ export const BottomSheet = forwardRef<HTMLDivElement, BottomSheetProps>(function
           )}
         </div>
       )}
-      <div {...stylex.props(s.content)}>{children}</div>
+      <div ref={contentRef} {...stylex.props(s.content)}>
+        {children}
+      </div>
     </div>
   );
 });
 
-const POSITIONAL = 56;
-const VELOCITY = 0.125; // px / ms
+/** BottomSheetDefaults.PositionalThreshold (56dp) / VelocityThreshold (125dp/s) / BoundaryDampeningZone (125dp). */
+const POSITIONAL_THRESHOLD = 56;
+const VELOCITY_THRESHOLD = 125;
+const BOUNDARY_DAMPENING_ZONE = 125;
 
 export interface ModalBottomSheetProps {
   open: boolean;
@@ -112,75 +149,223 @@ export interface ModalBottomSheetProps {
   sx?: StyleXStyles;
 }
 
+interface Drag {
+  y0: number;
+  start: number;
+  active: boolean;
+  slop: number;
+  tracker: PointerVelocityTracker;
+}
+
 /** A modal bottom sheet: scrim, focus trap, Escape / scrim / handle / drag to dismiss. */
 export function ModalBottomSheet({ open, onOpenChange, dragHandle = true, 'aria-label': ariaLabel, children, sx }: ModalBottomSheetProps) {
   const portal = usePortalContainer();
   const popup = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ id: number; y0: number; dy: number; t: number; v: number; active: boolean } | null>(null);
+  const backdrop = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement>(null);
+  const settleSpec = useSpringToken('default-spatial');
+  const settle = useRef<SpringAnimation | null>(null);
+  const offset = useRef(0);
 
-  const onPointerDown = (e: ReactPointerEvent<HTMLElement>) => {
-    if (e.button !== 0 || !popup.current) return;
-    drag.current = { id: e.pointerId, y0: e.clientY, dy: 0, t: e.timeStamp, v: 0, active: false };
-    const target = e.currentTarget;
-    const move = (ev: PointerEvent) => {
-      const d = drag.current;
-      if (!d || ev.pointerId !== d.id || !popup.current) return;
-      const raw = ev.clientY - d.y0;
-      // Start dragging past a 4px slop, so a tap still clicks the handle.
-      if (!d.active) {
-        if (Math.abs(raw) < 4) return;
-        d.active = true;
-        target.setPointerCapture(d.id);
-        popup.current.style.transition = 'none';
+  const hiddenAnchor = () => popup.current?.offsetHeight ?? 0;
+  const place = (y: number) => {
+    offset.current = y;
+    if (popup.current) popup.current.style.translate = `0 ${y}px`;
+  };
+  const showScrim = (visible: boolean) => {
+    if (backdrop.current) backdrop.current.style.opacity = visible ? '' : '0';
+  };
+  const reset = () => {
+    settle.current?.stop();
+    settle.current = null;
+    offset.current = 0;
+    const el = popup.current;
+    if (el) {
+      el.style.translate = '';
+      el.style.transition = '';
+    }
+    showScrim(true);
+  };
+
+  /** A drag begins (after the slop, or at once over a settling sheet — startDragImmediately). */
+  const begin = (d: Drag) => {
+    d.active = true;
+    const el = popup.current;
+    if (!el) return;
+    if (settle.current) {
+      settle.current.stop();
+      settle.current = null;
+    } else {
+      // Take over from the CSS show transition wherever it is (offsetTop ignores the translate).
+      offset.current = el.getBoundingClientRect().top - el.offsetTop;
+    }
+    d.start = offset.current;
+    el.style.transition = 'none';
+    place(offset.current);
+  };
+
+  const moveTo = (d: Drag, clientY: number) => {
+    const H = hiddenAnchor();
+    place(Math.min(H, Math.max(0, d.start + clientY - d.y0)));
+    // targetValue while dragging: the closest anchor.
+    showScrim(closestAnchor([0, H], offset.current) !== H);
+  };
+
+  const release = (d: Drag) => {
+    const H = hiddenAnchor();
+    const initial = d.tracker.velocity(MAX_FLING_VELOCITY).y;
+    // modalBottomSheetFlingBehavior: dampen a downward fling within 125dp of Hidden.
+    let v = initial;
+    if (v > 0) {
+      const distanceToFloor = Math.max(0, H - offset.current);
+      if (distanceToFloor < BOUNDARY_DAMPENING_ZONE) {
+        const factor = distanceToFloor / BOUNDARY_DAMPENING_ZONE;
+        v *= factor * factor;
+        if (initial >= VELOCITY_THRESHOLD) v = Math.max(v, VELOCITY_THRESHOLD);
       }
-      // Above the expanded anchor the sheet resists (Compose boundary dampening).
-      const dy = raw < 0 ? raw / 4 : raw;
-      d.v = (dy - d.dy) / Math.max(1, ev.timeStamp - d.t);
-      d.dy = dy;
-      d.t = ev.timeStamp;
-      popup.current.style.translate = `0 ${dy}px`;
+    }
+    const target = computeAnchorTarget([0, H], offset.current, v, () => POSITIONAL_THRESHOLD, VELOCITY_THRESHOLD);
+    const hide = target === H;
+    showScrim(!hide);
+    const done = () => {
+      settle.current = null;
+      // Settled at Hidden: dismiss (the sheet stays there through the dialog's exit).
+      if (hide) onOpenChange(false);
+      else reset();
+    };
+    if (!settleSpec) {
+      place(target);
+      done();
+      return;
+    }
+    settle.current = animateSpring({ spring: settleSpec, from: offset.current, to: target, velocity: v, onUpdate: place, onComplete: done });
+  };
+
+  // Mouse / pen anywhere on the sheet, touch on the handle (touch on the content: below).
+  const onSurfacePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 || !popup.current) return;
+    const target = e.target as Element;
+    const inHeader = !!target.closest('[data-sheet-header]');
+    if (e.pointerType === 'touch' && !inHeader) return;
+    if (!inHeader && (content.current?.scrollTop ?? 0) > 0) return;
+    const tracker = new PointerVelocityTracker();
+    tracker.down(e);
+    const d: Drag = { y0: e.clientY, start: offset.current, active: false, slop: pointerSlop(e.pointerType), tracker };
+    if (settle.current) begin(d);
+    const id = e.pointerId;
+    const move = (ev: PointerEvent) => {
+      if (ev.pointerId !== id) return;
+      d.tracker.move(ev);
+      if (!d.active) {
+        const dy = ev.clientY - d.y0;
+        if (Math.abs(dy) <= d.slop) return;
+        // The drag starts from the slop's edge (Compose's overSlop).
+        d.y0 += Math.sign(dy) * d.slop;
+        begin(d);
+      }
+      moveTo(d, ev.clientY);
     };
     const up = (ev: PointerEvent) => {
-      const d = drag.current;
-      if (!d || ev.pointerId !== d.id) return;
+      if (ev.pointerId !== id) return;
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       window.removeEventListener('pointercancel', up);
-      drag.current = null;
-      const el = popup.current;
-      if (!d.active || !el) return;
-      // A pointer that rested before release has no fling velocity (VelocityTracker horizon).
-      const v = ev.timeStamp - d.t > 100 ? 0 : d.v;
-      const dismiss = v > VELOCITY || (v > -VELOCITY && d.dy > POSITIONAL);
-      // Settles on the default spatial spring either way (anchoredDraggableMotionSpec).
-      el.style.transition = `translate ${motion.defaultSpatialDuration} ${motion.defaultSpatialEasing}`;
-      el.style.translate = dismiss ? '0 100%' : '0 0';
-      if (dismiss) onOpenChange(false);
-      else
-        el.addEventListener(
-          'transitionend',
-          () => {
-            el.style.transition = '';
-            el.style.translate = '';
-          },
-          { once: true },
-        );
+      if (!d.active) return;
+      d.tracker.up(ev);
+      suppressNextClick();
+      release(d);
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
   };
 
+  // Touch on the content drags the sheet while the content is at its top and the finger moves
+  // down (or the content can't scroll); otherwise the content scrolls natively.
+  useEffect(() => {
+    if (!open) return;
+    let el: HTMLDivElement | null = null;
+    let d: (Drag & { id: number }) | null = null;
+    const onStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1 || !el || el.scrollTop > 0) return;
+      const t = e.touches[0]!;
+      const tracker = new PointerVelocityTracker();
+      tracker.down({ timeStamp: e.timeStamp, clientX: t.clientX, clientY: t.clientY });
+      d = { id: t.identifier, y0: t.clientY, start: offset.current, active: false, slop: TOUCH_SLOP, tracker };
+      if (settle.current) begin(d);
+    };
+    const onMove = (e: TouchEvent) => {
+      const t = d && [...e.changedTouches].find((c) => c.identifier === d!.id);
+      if (!d || !t || !el) return;
+      d.tracker.move({ timeStamp: e.timeStamp, clientX: t.clientX, clientY: t.clientY });
+      if (!d.active) {
+        const dy = t.clientY - d.y0;
+        const scrollable = el.scrollHeight > el.clientHeight;
+        if (dy < 0 && scrollable) {
+          d = null; // scrolling the content
+          return;
+        }
+        if (e.cancelable) e.preventDefault();
+        if (Math.abs(dy) <= d.slop) return;
+        d.y0 += Math.sign(dy) * d.slop;
+        begin(d);
+      }
+      if (e.cancelable) e.preventDefault();
+      moveTo(d, t.clientY);
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (!d || ![...e.changedTouches].some((c) => c.identifier === d!.id)) return;
+      const ended = d;
+      d = null;
+      if (!ended.active) return;
+      ended.tracker.up({ timeStamp: e.timeStamp });
+      release(ended);
+    };
+    // The popup mounts with the portal; attach on the next frame.
+    const frame = requestAnimationFrame(() => {
+      el = content.current;
+      el?.addEventListener('touchstart', onStart, { passive: true });
+      el?.addEventListener('touchmove', onMove, { passive: false });
+      el?.addEventListener('touchend', onEnd);
+      el?.addEventListener('touchcancel', onEnd);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      el?.removeEventListener('touchstart', onStart);
+      el?.removeEventListener('touchmove', onMove);
+      el?.removeEventListener('touchend', onEnd);
+      el?.removeEventListener('touchcancel', onEnd);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => onOpenChange(next)}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        // Escape / scrim / handle: hand the sheet back to the CSS hide (fast effects) from wherever
+        // a drag or settle left it.
+        if (!next) {
+          const el = popup.current;
+          settle.current?.stop();
+          settle.current = null;
+          if (el && el.style.translate) {
+            el.style.transition = '';
+            el.style.translate = '';
+          }
+        }
+        onOpenChange(next);
+      }}
+    >
       <Dialog.Portal container={portal}>
-        <Dialog.Backdrop {...stylex.props(scrim.backdrop)} />
+        <Dialog.Backdrop ref={backdrop} {...stylex.props(scrim.backdrop)} />
         <Dialog.Popup ref={popup} aria-label={ariaLabel} {...stylex.props(s.popup)}>
           <BottomSheet
             modal
             dragHandle={dragHandle}
             onHandleActivate={() => onOpenChange(false)}
-            onHandlePointerDown={onPointerDown}
+            onSurfacePointerDown={onSurfacePointerDown}
+            contentRef={content}
             sx={[s.popupSheet, sx]}
           >
             {children}
