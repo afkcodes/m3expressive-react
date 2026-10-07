@@ -8,12 +8,10 @@ import { useForcedState } from '../../testing/ForceState.tsx';
 import { CIRCULAR, circularFrame, circularShapes, type CircularFrame, type ProgressThickness, type ProgressType } from './geometry.ts';
 import {
   PROGRESS_SPRING,
-  WAVY_PROGRESS_TWEEN,
   circularIndeterminate,
   circularWaveAmplitude,
   useFrameLoop,
   useSpringNumber,
-  useTweenNumber,
   useWaveAmplitude,
 } from './motion.ts';
 
@@ -46,9 +44,10 @@ export interface CircularProgressProps {
  * Circular progress indicator (kit sets "Circular-determinate / -indeterminate progress
  * indicator"): 40 / 44px flat, 48 / 52px wavy. The active arc starts just right of 12 o'clock and
  * the track continues after a gap. Arc lengths follow the kit's samples (0 / 10 / 30 / 50 / 80 /
- * 100%), interpolated in between; the gaps grow from 0 as the value leaves 0. Value changes spring
- * (flat) or tween linearly over 500ms (wave), as in Compose. The wave is flat below 10% (the kit
- * draws 10% and 100% wavy) and ramps its amplitude over 500ms; it travels while it has one.
+ * 100%), interpolated in between; the gaps grow from 0 as the value leaves 0. Value changes use
+ * Compose's progress spring for both types (the circular wavy KDoc recommends it). The wave is flat
+ * below 10% (the kit draws 10% and 100% wavy) and ramps its amplitude over 500ms; it travels while
+ * it has one.
  * Indeterminate: Compose's M3 Expressive motion (6s cycle: spin, 90° steps, 10% ↔ 87% sweep); the
  * kit's Step frames (its 10% / 50% arcs, rotated) are reproduced as still frames.
  */
@@ -66,9 +65,9 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
   const clock = forced?.time ?? ms;
   const still = !!forced || reduced;
   const wave = type === 'wave';
-  const sprung = useSpringNumber(p, still || wave ? null : PROGRESS_SPRING);
-  const tweened = useTweenNumber(p, still || !wave ? null : WAVY_PROGRESS_TWEEN);
-  const shown = wave ? tweened : sprung;
+  // Compose's circular wavy indicator recommends ProgressIndicatorDefaults.ProgressAnimationSpec
+  // (the flat spring, WavyProgressIndicator.kt:249); only the linear wavy one uses the 500ms tween.
+  const shown = useSpringNumber(p, still ? null : PROGRESS_SPRING);
   // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
   const amp = useWaveAmplitude(!wave ? 0 : indeterminate ? 1 : circularWaveAmplitude(shown), !still);
   // The wave travels while it has an amplitude (Compose stops the offset animation at 0).
