@@ -128,7 +128,7 @@ test.describe('sheets: content with its own pointer handling', () => {
     await expect.poll(x).toBe(0);
   });
 
-  test('bottom sheet: the same with a mouse; the whole header is the handle', async ({ page }) => {
+  test('bottom sheet: the same with a mouse; a 48×36 target around the handle', async ({ page }) => {
     await openFixture(page, '/fixture/sheets/live-guards');
     await page.getByRole('button', { name: 'Open bottom sheet' }).click();
     const sheet = page.getByRole('dialog', { name: 'Controls' });
@@ -146,15 +146,16 @@ test.describe('sheets: content with its own pointer handling', () => {
     expect(await dragAndRead(page, await centre(sheet.getByText('Email')), 0, 60, y)).toBeGreaterThan(40);
     await expect.poll(y).toBe(0);
 
-    // The drawn handle stays 32×4; a click anywhere on the header (here 100px beside the handle)
-    // activates it.
+    // The drawn handle stays 32×4; its hit target is a 48×36 area centred on it (Compose's 48dp
+    // minimum interactive size, the kit's 36px header) — not the whole header width.
     const handle = sheet.getByRole('button', { name: 'Close sheet' });
     const hb = (await handle.boundingBox())!;
     expect([hb.width, hb.height]).toEqual([32, 4]);
-    const hit = { x: hb.x - 100, y: hb.y - 12 };
-    expect(await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.getAttribute('aria-label'), hit)).toBe(
-      'Close sheet',
-    );
+    const labelAt = (p: { x: number; y: number }) =>
+      page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.getAttribute('aria-label') ?? null, p);
+    expect(await labelAt({ x: hb.x - 100, y: hb.y + 2 }), '100px beside the handle').not.toBe('Close sheet');
+    const hit = { x: hb.x - 6, y: hb.y - 12 }; // inside the 48×36 target, outside the drawn handle
+    expect(await labelAt(hit)).toBe('Close sheet');
     await page.mouse.click(hit.x, hit.y);
     await expect(sheet).toHaveCount(0);
   });

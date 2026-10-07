@@ -12,6 +12,7 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
@@ -73,6 +74,7 @@ const s = stylex.create({
     touchAction: 'none',
   },
   handleButton: {
+    position: 'relative',
     margin: 0,
     borderWidth: 0,
     borderStyle: 'none',
@@ -80,11 +82,11 @@ const s = stylex.create({
     cursor: 'grab',
     outlineStyle: { default: 'none', ':focus-visible': 'solid' },
     outlineColor: color.secondary,
-    outlineWidth: 3,
-    outlineOffset: 2,
-    // The whole header is the handle's hit target (Compose gives the handle a 48dp interactive
-    // size; the kit's header is 36px tall). The drawn handle and its focus ring stay 32×4.
-    '::after': { content: '""', position: 'absolute', inset: 0 },
+    outlineWidth: state.focusIndicatorThickness,
+    outlineOffset: state.focusIndicatorOuterOffset,
+    // Hit target centred on the handle, like Compose's DragHandle with its 48dp minimum interactive
+    // size: 48px wide × the kit's 36px header. The drawn handle and its focus ring stay 32×4.
+    '::after': { content: '""', position: 'absolute', top: -16, bottom: -16, left: -8, right: -8 },
   },
   handle: { display: 'block', width: 32, height: 4, borderRadius: 2, backgroundColor: color.outline },
   content: { flexGrow: 1, minHeight: 0, overflowY: 'auto' },
