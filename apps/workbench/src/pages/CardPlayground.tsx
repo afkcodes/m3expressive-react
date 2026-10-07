@@ -22,6 +22,8 @@ import media from '../../../../figma/card/assets/media.png';
 import cardAssets from '../../../../figma/card/assets.json';
 
 const s = stylex.create({
+  // The kit's placeholder art: a luminosity blend over the media surface.
+  placeholderArt: { mixBlendMode: 'luminosity' },
   page: {
     minHeight: '100vh',
     backgroundColor: color.surface,
@@ -108,9 +110,9 @@ export function CardPlayground() {
                 </IconButton>
               }
             />
-            <CardMedia src={media} fit="contain" blend="luminosity" />
+            <CardMedia src={media} fit="contain" imageSx={s.placeholderArt} />
             <CardContent>
-              <CardHeadline title="Title" subtitle="Subtitle" />
+              <CardHeadline headline="Title" subhead="Subtitle" />
               <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</CardText>
               <CardActions>
                 <Button variant="outlined">Secondary</Button>
@@ -122,7 +124,7 @@ export function CardPlayground() {
           <div style={{ display: 'grid', gap: 24 }}>
             <Card variant={variant} orientation="horizontal" sx={s.w360}>
               <CardHeader avatar={<Avatar>A</Avatar>} headline="Header" subhead="Subhead" sx={s.grow} />
-              <CardMedia src={media} fit="contain" blend="luminosity" width={80} height={80} />
+              <CardMedia src={media} fit="contain" imageSx={s.placeholderArt} width={80} height={80} />
             </Card>
             <Card variant={variant} interactive dragged={dragged} onClick={() => setClicks((c) => c + 1)} sx={s.tile}>
               <span {...stylex.props(typescale.titleMedium)}>Interactive card</span>

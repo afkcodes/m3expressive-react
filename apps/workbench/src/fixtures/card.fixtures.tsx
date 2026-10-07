@@ -21,6 +21,8 @@ import type { FixtureModule, FixtureVariant } from './types.ts';
 const s = stylex.create({
   width: { width: 360 },
   headerFill: { flexGrow: 1 },
+  // The kit draws its placeholder art with a luminosity blend over the media surface.
+  placeholderArt: { mixBlendMode: 'luminosity' },
 });
 
 function MoreVert() {
@@ -46,9 +48,9 @@ function Stacked({ variant }: { variant: CardVariant }) {
           </IconButton>
         }
       />
-      <CardMedia src={media} fit="contain" blend="luminosity" height={188} />
+      <CardMedia src={media} fit="contain" imageSx={s.placeholderArt} height={188} />
       <CardContent>
-        <CardHeadline title="Title" subtitle="Subtitle" />
+        <CardHeadline headline="Title" subhead="Subtitle" />
         <CardText>{SUPPORTING}</CardText>
         <CardActions>
           <Button variant="outlined">Secondary</Button>
@@ -63,7 +65,7 @@ function Horizontal({ variant }: { variant: CardVariant }) {
   return (
     <Card variant={variant} orientation="horizontal" sx={s.width}>
       <CardHeader avatar={<Avatar>A</Avatar>} headline="Header" subhead="Subhead" sx={s.headerFill} />
-      <CardMedia src={media} fit="contain" blend="luminosity" width={80} height={80} />
+      <CardMedia src={media} fit="contain" imageSx={s.placeholderArt} width={80} height={80} />
     </Card>
   );
 }

@@ -1,6 +1,5 @@
-import { forwardRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, KeyboardEvent } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { shape } from '../../tokens/shape.stylex.ts';
@@ -10,6 +9,7 @@ import { focusRing } from '../../primitives/focusRing.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { cardVars } from './card.stylex.ts';
 
 export type CardVariant = 'outlined' | 'elevated' | 'filled';
@@ -110,7 +110,7 @@ const staticShadows = stylex.create({
   filledDragged: { boxShadow: elevation.level3 },
 });
 
-export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'style'> {
+export interface CardProps extends SxProps<ComponentPropsWithRef<'div'>> {
   variant?: CardVariant;
   /** 'horizontal' lays parts out in a row (kit "Horizontal card"). */
   orientation?: 'vertical' | 'horizontal';
@@ -121,24 +121,20 @@ export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'classNa
   interactive?: boolean;
   /** Being dragged (controlled): raises the card and applies the 16% drag layer. */
   dragged?: boolean;
-  children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
-  {
-    variant = 'filled',
-    orientation = 'vertical',
-    interactive,
-    dragged = false,
-    onClick,
-    onKeyDown,
-    children,
-    sx,
-    ...rest
-  },
+export function Card({
   ref,
-) {
+  variant = 'filled',
+  orientation = 'vertical',
+  interactive,
+  dragged = false,
+  onClick,
+  onKeyDown,
+  children,
+  sx,
+  ...rest
+}: CardProps) {
   const forced = useForcedState();
   const isInteractive = interactive ?? onClick !== undefined;
   const visualState = dragged ? 'dragged' : forced.state;
@@ -189,4 +185,4 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
       {children}
     </div>
   );
-});
+}

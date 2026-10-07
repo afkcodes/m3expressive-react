@@ -1,8 +1,9 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typeface } from '../../tokens/typeface.stylex.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit "Generic avatar" (used by cards, lists…): 40px circle.
@@ -30,24 +31,24 @@ const styles = stylex.create({
 
 const sizes = stylex.create({ size: (px: number) => ({ width: px, height: px }) });
 
-export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'className' | 'style' | 'children'> {
+export interface AvatarProps extends SxProps<ComponentPropsWithRef<'span'>> {
   /** Monogram content (e.g. an initial). Ignored when `src` is set. */
   children?: ReactNode;
   src?: string;
   alt?: string;
+  /**
+   * Diameter in px (default 40). A number, not the `xsmall`…`xlarge` scale: M3 has no avatar size
+   * scale — avatars take whatever size their slot gives them (24 in a chip, 32 in an app bar, 40 in a list).
+   */
   size?: number;
-  sx?: StyleXStyles;
   /** Styles for the `src` image (e.g. a blend mode). */
   imageSx?: StyleXStyles;
 }
 
-export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
-  { children, src, alt = '', size = 40, sx, imageSx, ...rest },
-  ref,
-) {
+export function Avatar({ ref, children, src, alt = '', size = 40, sx, imageSx, ...rest }: AvatarProps) {
   return (
     <span ref={ref} {...rest} {...stylex.props(styles.root, sizes.size(size), sx)}>
       {src ? <img src={src} alt={alt} {...stylex.props(styles.image, imageSx)} /> : children}
     </span>
   );
-});
+}

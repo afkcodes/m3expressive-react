@@ -1,8 +1,9 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Card layout parts, spaced like the kit's Stacked / Horizontal "Media & text" cards.
@@ -10,7 +11,7 @@ import { typescale } from '../../tokens/typescale.ts';
  *            padding 12 4 12 16 with an action (icon button's 48px target), 16 without.
  *   Media    surface-container-high behind the image (188px tall in the stacked card).
  *   Content  padding 16, 32 between blocks:
- *              headline: title (body-large, on-surface) + subtitle (body-medium, on-surface-variant)
+ *              headline: headline (body-large, on-surface) + subhead (body-medium, on-surface-variant)
  *              text:     body-medium, on-surface-variant
  *              actions:  end-aligned, 8 apart, 40px row (buttons' 48px targets overhang it)
  */
@@ -35,12 +36,6 @@ const s = stylex.create({
   actions: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', columnGap: 8, height: 40 },
 });
 
-// The kit draws placeholder art with a luminosity blend over the surface tint.
-const blends = stylex.create({
-  normal: {},
-  luminosity: { mixBlendMode: 'luminosity' },
-});
-
 const fit = stylex.create({
   cover: { objectFit: 'cover' },
   contain: { objectFit: 'contain' },
@@ -48,9 +43,7 @@ const fit = stylex.create({
 
 const dims = stylex.create({ box: (w: number | string, h: number | string) => ({ width: w, height: h }) });
 
-type DivProps = Omit<HTMLAttributes<HTMLDivElement>, 'className' | 'style'> & { sx?: StyleXStyles };
-
-export interface CardHeaderProps extends Omit<DivProps, 'children'> {
+export interface CardHeaderProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
   avatar?: ReactNode;
   headline: ReactNode;
   subhead?: ReactNode;
@@ -58,10 +51,7 @@ export interface CardHeaderProps extends Omit<DivProps, 'children'> {
   action?: ReactNode;
 }
 
-export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(function CardHeader(
-  { avatar, headline, subhead, action, sx, ...rest },
-  ref,
-) {
+export function CardHeader({ ref, avatar, headline, subhead, action, sx, ...rest }: CardHeaderProps) {
   return (
     <div ref={ref} {...rest} {...stylex.props(s.header, action ? s.headerWithAction : s.headerPlain, sx)}>
       <div {...stylex.props(s.headerContent)}>
@@ -74,59 +64,68 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(function C
       {action}
     </div>
   );
-});
+}
 
-export interface CardMediaProps extends Omit<DivProps, 'children'> {
+export interface CardMediaProps extends SxProps<ComponentPropsWithRef<'div'>> {
   src?: string;
   alt?: string;
   /** Default 'cover'; the kit's placeholder artwork uses 'contain'. */
   fit?: 'cover' | 'contain';
-  /** 'luminosity' tints the image with the media surface colour (the kit's placeholder treatment). */
-  blend?: 'normal' | 'luminosity';
+  /** Styles for the `src` image (e.g. the kit placeholder's luminosity blend over the media surface). */
+  imageSx?: StyleXStyles;
   width?: number | string;
   height?: number | string;
+  /** Media content when there is no `src` (a video, a canvas…). */
   children?: ReactNode;
 }
 
-export const CardMedia = forwardRef<HTMLDivElement, CardMediaProps>(function CardMedia(
-  { src, alt = '', fit: fitMode = 'cover', blend = 'normal', width = '100%', height = 188, children, sx, ...rest },
+export function CardMedia({
   ref,
-) {
+  src,
+  alt = '',
+  fit: fitMode = 'cover',
+  imageSx,
+  width = '100%',
+  height = 188,
+  children,
+  sx,
+  ...rest
+}: CardMediaProps) {
   return (
     <div ref={ref} {...rest} {...stylex.props(s.media, dims.box(width, height), sx)}>
-      {src ? <img src={src} alt={alt} {...stylex.props(s.mediaImg, fit[fitMode], blends[blend])} /> : children}
+      {src ? <img src={src} alt={alt} {...stylex.props(s.mediaImg, fit[fitMode], imageSx)} /> : children}
     </div>
   );
-});
-
-export const CardContent = forwardRef<HTMLDivElement, DivProps>(function CardContent({ sx, ...rest }, ref) {
-  return <div ref={ref} {...rest} {...stylex.props(s.content, sx)} />;
-});
-
-export interface CardHeadlineProps extends Omit<DivProps, 'children' | 'title'> {
-  title: ReactNode;
-  subtitle?: ReactNode;
 }
 
-export const CardHeadline = forwardRef<HTMLDivElement, CardHeadlineProps>(function CardHeadline(
-  { title, subtitle, sx, ...rest },
-  ref,
-) {
+export type CardContentProps = SxProps<ComponentPropsWithRef<'div'>>;
+
+export function CardContent({ sx, ...rest }: CardContentProps) {
+  return <div {...rest} {...stylex.props(s.content, sx)} />;
+}
+
+export interface CardHeadlineProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>> {
+  headline: ReactNode;
+  subhead?: ReactNode;
+}
+
+export function CardHeadline({ ref, headline, subhead, sx, ...rest }: CardHeadlineProps) {
   return (
     <div ref={ref} {...rest} {...stylex.props(s.headline, sx)}>
-      <p {...stylex.props(typescale.bodyLarge, s.onSurface)}>{title}</p>
-      {subtitle != null && <p {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant)}>{subtitle}</p>}
+      <p {...stylex.props(typescale.bodyLarge, s.onSurface)}>{headline}</p>
+      {subhead != null && <p {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant)}>{subhead}</p>}
     </div>
   );
-});
+}
 
-export const CardText = forwardRef<
-  HTMLParagraphElement,
-  Omit<HTMLAttributes<HTMLParagraphElement>, 'className' | 'style'> & { sx?: StyleXStyles }
->(function CardText({ sx, ...rest }, ref) {
-  return <p ref={ref} {...rest} {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant, sx)} />;
-});
+export type CardTextProps = SxProps<ComponentPropsWithRef<'p'>>;
 
-export const CardActions = forwardRef<HTMLDivElement, DivProps>(function CardActions({ sx, ...rest }, ref) {
-  return <div ref={ref} {...rest} {...stylex.props(s.actions, sx)} />;
-});
+export function CardText({ sx, ...rest }: CardTextProps) {
+  return <p {...rest} {...stylex.props(typescale.bodyMedium, s.onSurfaceVariant, sx)} />;
+}
+
+export type CardActionsProps = SxProps<ComponentPropsWithRef<'div'>>;
+
+export function CardActions({ sx, ...rest }: CardActionsProps) {
+  return <div {...rest} {...stylex.props(s.actions, sx)} />;
+}
