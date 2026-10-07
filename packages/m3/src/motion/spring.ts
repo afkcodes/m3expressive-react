@@ -193,7 +193,10 @@ export function estimateDurationMs(
       : dampingRatio < 1
         ? estimateUnderDamped(firstRootReal, firstRootImaginary, p0, v0, delta)
         : estimateCriticallyDamped(firstRootReal, p0, v0, delta);
-  return Math.trunc(seconds * 1000);
+  // Kotlin `Double.toLong()` maps NaN to 0 (the spring ends on its first frame); Math.trunc keeps NaN,
+  // and a NaN duration would never end.
+  const ms = Math.trunc(seconds * 1000);
+  return Number.isNaN(ms) ? 0 : ms;
 }
 
 function estimateUnderDamped(r: number, imaginary: number, p0: number, v0: number, delta: number) {

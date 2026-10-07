@@ -177,9 +177,9 @@ describe('animateSpring', () => {
   // Bug: estimateDurationMs returns NaN where Compose's Newton iteration hits a zero derivative —
   // critically damped (effects) springs started exactly one threshold out at rest (slow effects),
   // or ~1.3–1.4 thresholds out moving away at 30–45 thresholds/s (fast effects). Kotlin's
-  // Double.toLong() maps NaN to 0, so Compose ends on the first frame; the port's Math.trunc keeps
-  // NaN, `elapsed >= NaN` is never true and the rAF loop runs forever without onComplete.
-  it.fails('a segment whose duration estimate is NaN still ends (Kotlin toLong: NaN → 0)', () => {
+  // Double.toLong() maps NaN to 0, so Compose ends on the first frame; a NaN duration (Math.trunc
+  // keeps NaN) would never end: `elapsed >= NaN` is never true.
+  it('a segment whose duration estimate is NaN still ends (Kotlin toLong: NaN → 0)', () => {
     const slowEffects = motionSchemes.expressive['slow-effects'];
     const { onComplete } = record({ spring: slowEffects, from: 0, to: 1, precision: 1 });
     frame(0);
