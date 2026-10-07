@@ -105,7 +105,9 @@ const s = stylex.create({
   fillOn: { width: '100%', opacity: 1 },
   // Icons carry their colour in both states (Compose: icon colour isn't animated).
   icon: { position: 'relative', display: 'flex', width: 24, height: 24, flexShrink: 0, color: color.onSurfaceVariant },
-  // Rail labels fade on default effects (Compose StyledLabel animateColor); bar labels don't.
+  // Rail labels fade on default effects (Compose StyledLabel animateColor); bar labels don't. On the
+  // item root, which the label inherits from (icons carry their own colour), so the fade survives
+  // the switch between rest and morph layouts.
   labelMotion: {
     transitionProperty: 'color',
     transitionDuration: motion.defaultEffectsDuration,
@@ -293,7 +295,6 @@ export function NavigationItem({
             <span
               {...stylex.props(
                 g.label.style === 'top' ? typescale.labelMedium : typescale.labelLarge,
-                s.labelMotion,
                 s.mAt(g.label.x, g.label.y),
                 s.mLabel(Math.min(1, g.label.alpha)),
               )}
@@ -320,7 +321,7 @@ export function NavigationItem({
             <span {...stylex.props(badgeSize === 'small' ? [s.badgeSmall, tall && s.badgeSmallTall] : [s.badgeLarge, tall && s.badgeLargeTall])}>{badge}</span>
           )}
         </span>
-        {showLabel && <span {...stylex.props(typescale.labelMedium, s.label, textCentred.trimTracking, rail && s.labelMotion)}>{label}</span>}
+        {showLabel && <span {...stylex.props(typescale.labelMedium, s.label, textCentred.trimTracking)}>{label}</span>}
       </>
     );
   } else if (ctx.layout === 'horizontal') {
@@ -342,13 +343,13 @@ export function NavigationItem({
         <StateLayer />
         {iconEl}
         {badge != null && badgeSize === 'small' && <span {...stylex.props(s.railHBadgeSmall)}>{badge}</span>}
-        {label != null && <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label, rail && s.labelMotion)}>{label}</span>}
+        {label != null && <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{label}</span>}
         {badge != null && badgeSize === 'large' && <span {...stylex.props(s.railHBadgeLarge)}>{badge}</span>}
       </>
     );
   }
   const props = {
-    ...stylex.props(rootStyles, !disabled && stateLayerHost.hostPressLayer, disabled && s.itemDisabled, forcedLayer, sx),
+    ...stylex.props(rootStyles, rail && s.labelMotion, !disabled && stateLayerHost.hostPressLayer, disabled && s.itemDisabled, forcedLayer, sx),
     'aria-current': selected ? ('page' as const) : undefined,
     onClick: (e: React.MouseEvent<HTMLElement>) => {
       if (disabled) return;

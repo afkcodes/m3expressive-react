@@ -333,6 +333,17 @@ test.describe('tabs motion', () => {
       return Math.min(Math.max(0, el.scrollWidth - visible), Math.max(0, centred));
     });
 
+  test('the indicator springs to the new tab on default spatial (not snapped by the resize observer)', async ({ page }) => {
+    await open(page, '/fixture/tabs/live');
+    const list = page.getByRole('tablist');
+    const indicatorX = `(el) => [...el.querySelectorAll(':scope > span[aria-hidden]')].at(-1).getBoundingClientRect().x - el.getBoundingClientRect().x`;
+    const from = (await sampleFrames<number>(list, indicatorX, 10))[0]!.v;
+    const frames = await sampleFrames<number>(list, indicatorX, 700, `(el) => el.querySelectorAll('[role=tab]')[2].click()`);
+    const to = frames.at(-1)!.v;
+    expect(to).toBeGreaterThan(from + 100);
+    expectSpring(frames, from, to, motionSchemes.expressive['default-spatial']);
+  });
+
   test('scrollable row centres the selected tab on the default spatial spring, also on first layout', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/fixture/tabs/live-scroll');
@@ -480,7 +491,9 @@ test.describe('navigation motion', () => {
     expect(await transitionOf(barItem.locator('svg').locator('xpath=..'), 'color')).toBeNull();
     await open(page, '/fixture/navigation/live-rail');
     const railItem = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(1);
-    expect(await transitionOf(railItem.getByText('Label'), 'color')).toMatchObject({ duration: DEFAULT_EFFECTS });
+    // The label inherits the item's colour, which fades (and keeps fading across the rail morph).
+    expect(await transitionOf(railItem, 'color')).toMatchObject({ duration: DEFAULT_EFFECTS });
+    expect(await railItem.getByText('Label').evaluate((el) => getComputedStyle(el).color)).toBe(await railItem.evaluate((el) => getComputedStyle(el).color));
     expect(await transitionOf(railItem.locator('svg').locator('xpath=..'), 'color')).toBeNull();
     // The icon has its own colour in both states (deselecting doesn't inherit a fading one).
     const icon = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(0).locator('svg').locator('xpath=..');
