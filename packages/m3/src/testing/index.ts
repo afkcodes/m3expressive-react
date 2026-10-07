@@ -14,6 +14,10 @@ export { MenuScope } from '../components/Menu/Menu.tsx';
 export type { MenuScopeProps } from '../components/Menu/Menu.tsx';
 export { NavigationScope } from '../components/Navigation/NavigationItem.tsx';
 export type { NavigationScopeProps } from '../components/Navigation/NavigationItem.tsx';
+export { BottomSheetSurface } from '../components/Sheet/BottomSheet.tsx';
+export type { BottomSheetSurfaceProps } from '../components/Sheet/BottomSheet.tsx';
+export { SideSheetSurface } from '../components/Sheet/SideSheet.tsx';
+export type { SideSheetSurfaceProps } from '../components/Sheet/SideSheet.tsx';
 
 // — Selection, pickers, inputs, media
 export { CalendarDay, PickerMenuButton, YearChip } from '../components/DatePicker/cells.tsx';
