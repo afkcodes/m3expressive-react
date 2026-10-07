@@ -1,4 +1,4 @@
-import { forwardRef, useContext, useRef, useState, type ReactNode } from 'react';
+import { forwardRef, useContext, useId, useMemo, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Collapsible } from '@base-ui/react/collapsible';
@@ -125,8 +125,10 @@ export const AccordionButton = forwardRef<
   HTMLButtonElement,
   AccordionButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 >(function AccordionButton({ expanded, forcedState, ...rest }, ref) {
-  const first = useRef(expanded);
-  const toggled = first.current !== expanded;
+  // The chevron flips on every toggle after mount (not on the first render).
+  const [initial] = useState(expanded);
+  const [toggled, setToggled] = useState(false);
+  if (!toggled && expanded !== initial) setToggled(true);
   return (
     <button
       ref={ref}
@@ -171,6 +173,11 @@ export interface ExpandableListItemProps extends Omit<ListItemProps, 'trailing' 
   onExpandedChange?: (expanded: boolean) => void;
   /** The nested items revealed when expanded. */
   items?: ReactNode;
+  /**
+   * The accordion button's verb (default "Expand"). Its accessible name is this verb followed by the
+   * item's label, the same in both states; aria-expanded announces whether it is open.
+   */
+  toggleLabel?: string;
   sx?: StyleXStyles;
 }
 
@@ -180,17 +187,23 @@ export function ExpandableListItem({
   defaultExpanded = false,
   onExpandedChange,
   items,
+  toggleLabel = 'Expand',
   sx,
   ...item
 }: ExpandableListItemProps) {
   const forced = useForcedState();
   const list = useContext(ListContext);
+  const headerList = useMemo(() => ({ ...list, inList: false }), [list]);
+  const panelList = useMemo(() => ({ ...list, inList: true }), [list]);
   const [inner, setInner] = useState(defaultExpanded);
   const open = expanded ?? inner;
   const setOpen = (v: boolean) => {
     if (expanded === undefined) setInner(v);
     onExpandedChange?.(v);
   };
+  // Name = verb (the button's own aria-label) + the item's label text.
+  const buttonId = useId();
+  const labelId = useId();
   const header = (
     <ListItem
       {...item}
@@ -198,11 +211,19 @@ export function ExpandableListItem({
       trailing={
         <Collapsible.Trigger
           render={
-            <AccordionButton expanded={open} forcedState={forced.state} aria-label={open ? 'Collapse' : 'Expand'} />
+            <AccordionButton
+              expanded={open}
+              forcedState={forced.state}
+              id={buttonId}
+              aria-label={toggleLabel}
+              aria-labelledby={`${buttonId} ${labelId}`}
+            />
           }
         />
       }
-    />
+    >
+      <span id={labelId}>{item.children}</span>
+    </ListItem>
   );
   return (
     <Collapsible.Root
@@ -210,9 +231,9 @@ export function ExpandableListItem({
       onOpenChange={setOpen}
       render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}
     >
-      <ListContext value={{ ...list, inList: false }}>{header}</ListContext>
+      <ListContext value={headerList}>{header}</ListContext>
       <Collapsible.Panel {...stylex.props(expandPanelMarker, s.panel)}>
-        <ListContext value={{ ...list, inList: true }}>
+        <ListContext value={panelList}>
           <ul {...stylex.props(s.panelList, list.segmented && s.panelListGap)}>{items}</ul>
         </ListContext>
       </Collapsible.Panel>

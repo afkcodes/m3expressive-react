@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useMemo, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { ListContext, type ListItemVariant } from './ListItem.tsx';
@@ -25,8 +25,10 @@ export const List = forwardRef<HTMLUListElement, ListProps>(function List(
   { type = 'standard', variant = 'expressive', children, sx, ...aria },
   ref,
 ) {
+  const segmented = type === 'segmented';
+  const ctx = useMemo(() => ({ inList: true, segmented, variant }), [segmented, variant]);
   return (
-    <ListContext value={{ inList: true, segmented: type === 'segmented', variant }}>
+    <ListContext value={ctx}>
       <ul ref={ref} {...aria} {...stylex.props(s.root, type === 'segmented' && s.segmented, sx)}>
         {children}
       </ul>

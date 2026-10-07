@@ -1,11 +1,22 @@
-import { useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
+import { state as stateTokens } from '../../tokens/state.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
 import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';
+import { swipeKey, type SwipeKeyTarget } from './swipeKeys.ts';
 
 export type SwipeRevealState = 'closed' | 'peek' | 'revealed' | 'action';
 
@@ -28,6 +39,8 @@ export interface SwipeAction {
  * slower releases go on once 56dp past the anchor they left; it then settles with
  * AnchoredDraggableDefaults.SnapAnimationSpec — tween(300ms, FastOutSlowIn). A full swipe (the
  * kit's swipe action, engaged 24px past the revealed width) runs the action unless flung back.
+ * Keyboard (swipeKeys.ts): with the item focused ArrowLeft reveals the actions and moves into them,
+ * ArrowRight / Escape hide them; a row without its own click target takes focus itself.
  */
 const GAP = 2;
 const PILL = 8;
@@ -49,6 +62,13 @@ const s = stylex.create({
     listStyle: 'none',
     margin: 0,
     padding: 0,
+  },
+  // A row that isn't itself a button / link is the keyboard focus target: ring drawn inside it.
+  rootFocusable: {
+    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
+    outlineColor: color.secondary,
+    outlineWidth: stateTokens.focusIndicatorThickness,
+    outlineOffset: `calc(-1 * ${stateTokens.focusIndicatorThickness})`,
   },
   item: { position: 'relative', willChange: 'transform' },
   itemSurface: { backgroundColor: color.surface },
@@ -150,7 +170,8 @@ export interface SwipeActionsProps {
   mode: 'drag' | 'action';
   /** Interactive (focusable) — true once revealed. */
   revealed?: boolean;
-  onAction?: (action: SwipeAction) => void;
+  /** `event.detail` is 0 when the action was run from the keyboard. */
+  onAction?: (action: SwipeAction, event: ReactMouseEvent<HTMLButtonElement>) => void;
   sx?: StyleXStyles;
 }
 
@@ -178,7 +199,8 @@ export function SwipeActions({
             type="button"
             aria-label={a.label}
             tabIndex={revealed ? 0 : -1}
-            onClick={() => onAction?.(a)}
+            data-swipe-action=""
+            onClick={(e) => onAction?.(a, e)}
             {...stylex.props(s.action, i === n - 1 && s.primary, s.w(w))}
           >
             {w >= 24 && <span {...stylex.props(s.icon, s.iconOpacity(iconOpacity))}>{a.icon}</span>}
@@ -228,6 +250,15 @@ export function SwipeableListItem({
   const tracker = useRef(new VelocityTracker1D());
   const width = useRef(280);
   const root = useRef<HTMLElement | null>(null);
+  const itemRef = useRef<HTMLElement | null>(null);
+  const itemList = useMemo(() => ({ ...list, inList: false }), [list]);
+  // The keyboard focus target: the item when it is a button / link, otherwise this row.
+  const ownTarget = (item.onClick != null || item.href != null) && !item.disabled;
+  const focusTarget = () => (ownTarget ? itemRef.current : root.current);
+  const actionButtons = () =>
+    Array.from(root.current?.querySelectorAll<HTMLElement>(':scope > div > [data-swipe-action]') ?? []);
+  // Keyboard reveal: the action to focus once the actions are interactive (state "revealed").
+  const pendingFocus = useRef<number | null>(null);
 
   // Settle on a state's offset: tween(300ms, FastOutSlowIn), instant under reduced motion.
   const settle = (next: SwipeRevealState) => {
@@ -258,6 +289,39 @@ export function SwipeableListItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, n]);
   useEffect(() => () => anim.current?.stop(), []);
+  useEffect(() => {
+    if (state !== 'revealed' || pendingFocus.current == null) return;
+    actionButtons()[pendingFocus.current]?.focus();
+    pendingFocus.current = null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLElement>) => {
+    if (e.defaultPrevented) return;
+    const target = e.target as HTMLElement;
+    const index = actionButtons().indexOf(target);
+    let at: SwipeKeyTarget;
+    if (index >= 0) at = { kind: 'action', index };
+    else if (target === focusTarget()) at = { kind: 'item' };
+    else return; // a control inside the item keeps its own keys
+    const r = swipeKey(e.key, at, state, n);
+    if (!r) return;
+    e.preventDefault();
+    pendingFocus.current = null;
+    if (r.reveal) {
+      setState('revealed');
+      settle('revealed');
+    }
+    if (r.close) {
+      setState('closed');
+      settle('closed');
+    }
+    if (r.focus === 'item') focusTarget()?.focus();
+    else if (r.focus != null) {
+      if (r.reveal || state !== 'revealed') pendingFocus.current = r.focus;
+      else actionButtons()[r.focus]?.focus();
+    }
+  };
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
@@ -305,16 +369,20 @@ export function SwipeableListItem({
   };
 
   return (
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- swipe gesture and its keyboard path, delegated from the row and its actions
     <div
       ref={(el) => {
         root.current = el;
       }}
       role={list.inList ? 'listitem' : undefined}
+      tabIndex={ownTarget ? undefined : 0}
+      data-swipe-item=""
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      {...stylex.props(s.root, sx)}
+      onKeyDown={onKeyDown}
+      {...stylex.props(s.root, !ownTarget && s.rootFocusable, sx)}
     >
       <SwipeActions
         actions={actions}
@@ -322,17 +390,21 @@ export function SwipeableListItem({
         offset={offset}
         mode={mode}
         revealed={state === 'revealed'}
-        onAction={(a) => {
+        onAction={(a, e) => {
           a.onAction?.();
           setState('closed');
           // Closed actions leave the tab order and the accessibility tree: don't strand focus there.
+          // From the keyboard focus returns to the item; a pointer press just drops it.
           const active = document.activeElement;
-          if (active instanceof HTMLElement && root.current?.contains(active)) active.blur();
+          if (active instanceof HTMLElement && root.current?.contains(active)) {
+            if (e.detail === 0) focusTarget()?.focus();
+            else active.blur();
+          }
         }}
       />
       <div {...stylex.props(s.item)} style={{ transform: `translateX(${-offset}px)` }}>
-        <ListContext value={{ ...list, inList: false }}>
-          <ListItem {...item} sx={s.itemSurface} />
+        <ListContext value={itemList}>
+          <ListItem ref={itemRef} {...item} sx={s.itemSurface} />
         </ListContext>
       </div>
     </div>
