@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, type MouseEventHandler, type ReactNode } from 'react';
+import { forwardRef, useState, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -179,11 +179,12 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
 ) {
   const forced = useForcedState();
   // A day leaving a range takes its new colour at once (Compose swaps to a fresh animated state).
-  const prevKind = useRef(kind);
-  const fromRange = prevKind.current === 'range';
-  useEffect(() => {
-    prevKind.current = kind;
-  });
+  const [prevKind, setPrevKind] = useState(kind);
+  const [fromRange, setFromRange] = useState(false);
+  if (kind !== prevKind) {
+    setPrevKind(kind);
+    setFromRange(prevKind === 'range');
+  }
   if (kind === 'empty') return <span aria-hidden {...stylex.props(s.day)} />;
   const interactive = !disabled;
   const text =
@@ -240,6 +241,8 @@ export interface YearChipProps {
   year: ReactNode;
   selected?: boolean;
   disabled?: boolean;
+  /** An option of a listbox (the year grid): role="option" + aria-selected instead of a toggle button. */
+  option?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   tabIndex?: number;
   'data-year'?: number;
@@ -247,17 +250,19 @@ export interface YearChipProps {
 
 /** A year in the year selection grid. */
 export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function YearChip(
-  { year, selected = false, disabled = false, onClick, ...rest },
+  { year, selected = false, disabled = false, option = false, onClick, ...rest },
   ref,
 ) {
   const forced = useForcedState();
   return (
-    <span {...stylex.props(s.yearCell)}>
+    <span role={option ? 'presentation' : undefined} {...stylex.props(s.yearCell)}>
       <button
         ref={ref}
         type="button"
         disabled={disabled}
-        aria-pressed={selected}
+        role={option ? 'option' : undefined}
+        aria-selected={option ? selected : undefined}
+        aria-pressed={option ? undefined : selected}
         onClick={onClick}
         data-ripple-host=""
         {...rest}

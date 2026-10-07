@@ -1,11 +1,20 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { memo, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { CalendarDay, type CalendarDayKind } from './cells.tsx';
-import { monthWeeks, sameDay, type DatePickerFormatter } from './calendar.ts';
+import {
+  addDays,
+  dayForKey,
+  daysInMonth,
+  firstEnabled,
+  makeDate,
+  monthWeeks,
+  sameDay,
+  type DatePickerFormatter,
+} from './calendar.ts';
 
 const s = stylex.create({
   grid: { display: 'flex', flexDirection: 'column', flexShrink: 0 },
@@ -39,13 +48,20 @@ export interface CalendarMonthProps {
   /** Keyboard navigation crossed into another month. */
   onNavigate?: (month: Date) => void;
   isDisabled?: (day: Date) => boolean;
+  /**
+   * Shared roving focus (one tab stop across several months, as in the range picker): the day
+   * holding the tab stop, when it is in this month. With `onActiveDayChange` the month keeps no
+   * focus of its own — clicks and calendar keys report the next day there and the owner moves focus.
+   */
+  activeDay?: Date | null;
+  onActiveDayChange?: (day: Date) => void;
   sx?: StyleXStyles;
 }
 
-const DAY = 86400000;
+const KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown']);
 
 /** The weekday row and the weeks of one month, with roving arrow-key focus. */
-export function CalendarMonth({
+function CalendarMonthGrid({
   month,
   value = null,
   range,
@@ -57,6 +73,8 @@ export function CalendarMonth({
   onPick,
   onNavigate,
   isDisabled,
+  activeDay,
+  onActiveDayChange,
   sx,
 }: CalendarMonthProps) {
   const y = month.getFullYear();
@@ -65,25 +83,30 @@ export function CalendarMonth({
   if (outsideDays) {
     // Fill the leading / trailing blanks with the neighbouring months and pad to six weeks.
     const first = weeks[0]!.findIndex((d) => d != null);
-    const start = new Date(y, m, 1 - first);
-    const count = 42;
-    const days = Array.from(
-      { length: count },
-      (_, i) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + i),
-    );
-    weeks = Array.from({ length: 6 }, (_, w) => days.slice(w * 7, w * 7 + 7));
+    const start = makeDate(y, m, 1 - first);
+    weeks = Array.from({ length: 6 }, (_, w) => Array.from({ length: 7 }, (_, i) => addDays(start, w * 7 + i)));
   }
   const inMonth = (d: Date) => d.getMonth() === m && d.getFullYear() === y;
   const grid = useRef<HTMLDivElement>(null);
+  const controlled = !!onActiveDayChange;
   const [focusDay, setFocusDay] = useState<Date | null>(null);
-  const inThisMonth = (d: Date | null | undefined) => !!d && inMonth(d);
-  const tabDay = inThisMonth(focusDay)
-    ? focusDay!
-    : inThisMonth(value)
-      ? value!
-      : inThisMonth(today)
-        ? today
-        : new Date(y, m, 1);
+  // The tab stop: a day of this month that can take focus (a disabled day can't).
+  const usable = (d: Date | null | undefined): d is Date => !!d && inMonth(d) && !isDisabled?.(d);
+  const firstUsable = () => {
+    const d = firstEnabled(makeDate(y, m, 1), 1, isDisabled, daysInMonth(y, m) - 1);
+    return d && inMonth(d) ? d : null;
+  };
+  const tabDay = controlled
+    ? usable(activeDay)
+      ? activeDay
+      : null
+    : usable(focusDay)
+      ? focusDay
+      : usable(value)
+        ? value
+        : usable(today)
+          ? today
+          : firstUsable();
 
   useLayoutEffect(() => {
     if (!focusDay || !grid.current) return;
@@ -91,21 +114,19 @@ export function CalendarMonth({
   }, [focusDay]);
 
   const onKey = (e: KeyboardEvent) => {
-    const step: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
-    if (!(e.key in step) && e.key !== 'PageUp' && e.key !== 'PageDown' && e.key !== 'Home' && e.key !== 'End') return;
+    if (!KEYS.has(e.key)) return;
     e.preventDefault();
-    const base = focusDay ?? tabDay;
-    let next: Date;
-    if (e.key === 'PageUp' || e.key === 'PageDown')
-      next = new Date(
-        base.getFullYear(),
-        base.getMonth() + (e.key === 'PageUp' ? -1 : 1),
-        Math.min(base.getDate(), 28),
-      );
-    else if (e.key === 'Home') next = new Date(base.getTime() - ((base.getDay() - firstDayOfWeek + 7) % 7) * DAY);
-    else if (e.key === 'End') next = new Date(base.getTime() + ((firstDayOfWeek + 6 - base.getDay() + 7) % 7) * DAY);
-    else next = new Date(base.getFullYear(), base.getMonth(), base.getDate() + step[e.key]!);
-    if (!inMonth(next)) onNavigate?.(new Date(next.getFullYear(), next.getMonth(), 1));
+    // From the focused day (a clicked outside day, or the tab stop after a month change).
+    const attr = (e.target as HTMLElement).closest('[data-date]')?.getAttribute('data-date');
+    const focused = attr ? weeks.flat().find((d) => d?.toDateString() === attr) : null;
+    const base = focused ?? (controlled ? activeDay : null) ?? tabDay;
+    const next = base && dayForKey(base, e.key, firstDayOfWeek, isDisabled);
+    if (!base || !next || sameDay(next, base)) return;
+    if (controlled) {
+      onActiveDayChange(next);
+      return;
+    }
+    if (!inMonth(next)) onNavigate?.(makeDate(next.getFullYear(), next.getMonth(), 1));
     setFocusDay(next);
   };
 
@@ -152,7 +173,8 @@ export function CalendarMonth({
                   tabIndex={sameDay(d, tabDay) ? 0 : -1}
                   data-date={d.toDateString()}
                   onClick={() => {
-                    setFocusDay(d);
+                    if (controlled) onActiveDayChange(d);
+                    else setFocusDay(d);
                     onPick(d);
                   }}
                 />
@@ -168,3 +190,27 @@ export function CalendarMonth({
     </div>
   );
 }
+
+const sameTime = (a: Date | null | undefined, b: Date | null | undefined) =>
+  a === b || (!!a && !!b && a.getTime() === b.getTime());
+
+/** Props compare by value: dates by time, the month by year / month, everything else by identity. */
+function sameProps(a: CalendarMonthProps, b: CalendarMonthProps): boolean {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)] as (keyof CalendarMonthProps)[]);
+  for (const k of keys) {
+    if (k === 'month') {
+      if (a.month.getFullYear() !== b.month.getFullYear() || a.month.getMonth() !== b.month.getMonth()) return false;
+    } else if (k === 'value' || k === 'today' || k === 'activeDay') {
+      if (!sameTime(a[k], b[k])) return false;
+    } else if (k === 'range') {
+      if (!sameTime(a.range?.start, b.range?.start) || !sameTime(a.range?.end, b.range?.end)) return false;
+    } else if (a[k] !== b[k]) return false;
+  }
+  return true;
+}
+
+/**
+ * The weekday row and the weeks of one month, with roving arrow-key focus. Memoised on its
+ * props' values (a new Date for the same day doesn't re-render the month's cells).
+ */
+export const CalendarMonth = memo(CalendarMonthGrid, sameProps);

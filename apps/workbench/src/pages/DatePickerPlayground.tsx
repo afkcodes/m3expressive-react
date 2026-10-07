@@ -42,7 +42,7 @@ const fmt = (d: Date | null) =>
 export function DatePickerPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
   const [modal, setModal] = useState(false);
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date | null>(() => new Date());
   const [docked, setDocked] = useState<Date | null>(null);
   const [rangeOpen, setRangeOpen] = useState(false);
   const [range, setRange] = useState<DateRange>({ start: null, end: null });

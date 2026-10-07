@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Popover } from '@base-ui/react/popover';
@@ -15,7 +15,18 @@ import { PickerMenuButton } from './cells.tsx';
 import { CalendarMonth } from './CalendarMonth.tsx';
 import { MonthPager } from './MonthPager.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
-import { addMonths, defaultFormatter, parseInputDate, startOfDay, type DatePickerFormatter } from './calendar.ts';
+import {
+  addMonths,
+  dateFormat,
+  DEFAULT_YEAR_RANGE,
+  defaultFormatter,
+  inputFormatHint,
+  makeDate,
+  parseInputDate,
+  sameDay,
+  type DatePickerFormatter,
+} from './calendar.ts';
+import { useToday } from './useToday.ts';
 
 /*
  * Figma kit, "Docked input date picker [desktop]" (51954:18567).
@@ -121,6 +132,8 @@ const s = stylex.create({
 
 export type DockedView = 'day' | 'month' | 'year';
 
+const noop = () => {};
+
 export interface DockedCalendarProps {
   value: Date | null;
   onChange: (date: Date) => void;
@@ -143,6 +156,19 @@ export interface DockedCalendarProps {
   sx?: StyleXStyles;
 }
 
+/** Places the list's scroll thumb; false when the list doesn't scroll (no thumb). */
+function paintThumb(list: HTMLElement | null, thumb: HTMLElement | null): boolean {
+  if (!list) return false;
+  const ratio = list.clientHeight / list.scrollHeight;
+  if (ratio >= 1) return false;
+  const h = Math.max(32, list.clientHeight * ratio);
+  if (thumb) {
+    thumb.style.top = `${(list.scrollTop / (list.scrollHeight - list.clientHeight)) * (list.clientHeight - h)}px`;
+    thumb.style.height = `${h}px`;
+  }
+  return true;
+}
+
 function ListView({
   items,
   selected,
@@ -155,29 +181,50 @@ function ListView({
   initialScroll: number;
 }) {
   const list = useRef<HTMLUListElement>(null);
-  const [thumb, setThumb] = useState<[number, number] | null>(null);
-  const update = () => {
-    const el = list.current;
-    if (!el) return;
-    const ratio = el.clientHeight / el.scrollHeight;
-    if (ratio >= 1) return setThumb(null);
-    const h = Math.max(32, el.clientHeight * ratio);
-    setThumb([(el.scrollTop / (el.scrollHeight - el.clientHeight)) * (el.clientHeight - h), h]);
-  };
+  const thumb = useRef<HTMLSpanElement | null>(null);
+  // Only whether there is a thumb is state: scrolling moves it directly (no re-render of the rows).
+  const [hasThumb, setHasThumb] = useState(false);
   useLayoutEffect(() => {
     if (list.current) list.current.scrollTop = initialScroll;
-    update();
+    setHasThumb(paintThumb(list.current, thumb.current));
   }, [initialScroll]);
+
+  // A listbox with one tab stop (the selected item) that the arrow keys move; Home / End jump to
+  // the first / last item, PageUp / PageDown by a list height (seven rows).
+  const [focusKey, setFocusKey] = useState<number | null>(null);
+  const keys = items.map((it) => it.key);
+  const tabKey = focusKey ?? (keys.includes(selected) ? selected : keys[0]);
+  const onKey = (e: KeyboardEvent) => {
+    const i = keys.indexOf(tabKey!);
+    const last = keys.length - 1;
+    const steps: Record<string, number> = { ArrowUp: i - 1, ArrowDown: i + 1, Home: 0, End: last };
+    const pages: Record<string, number> = { PageUp: Math.max(0, i - 7), PageDown: Math.min(last, i + 7) };
+    const next = steps[e.key] ?? pages[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    if (next < 0 || next > last) return;
+    setFocusKey(keys[next]!);
+    list.current?.querySelector<HTMLElement>(`[data-key="${keys[next]}"]`)?.focus();
+  };
+
   return (
     <div {...stylex.props(s.listWrap)}>
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role -- a styled list with listbox semantics (options are its <li> buttons) */}
-      <ul ref={list} role="listbox" onScroll={update} {...stylex.props(s.list)}>
+      <ul
+        ref={list}
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role -- a styled list with listbox semantics (options are its <li> buttons)
+        role="listbox"
+        onScroll={() => setHasThumb(paintThumb(list.current, thumb.current))}
+        onKeyDown={onKey}
+        {...stylex.props(s.list)}
+      >
         {items.map((it) => (
           <li key={it.key} role="presentation">
             <button
               type="button"
               role="option"
               aria-selected={it.key === selected}
+              tabIndex={it.key === tabKey ? 0 : -1}
+              data-key={it.key}
               onClick={() => onPick(it.key)}
               {...stylex.props(s.item, it.key === selected && s.itemSelected)}
             >
@@ -187,7 +234,16 @@ function ListView({
           </li>
         ))}
       </ul>
-      {thumb && <span aria-hidden {...stylex.props(s.thumb)} style={{ top: thumb[0], height: thumb[1] }} />}
+      {hasThumb && (
+        <span
+          aria-hidden
+          ref={(el) => {
+            thumb.current = el;
+            paintThumb(list.current, el);
+          }}
+          {...stylex.props(s.thumb)}
+        />
+      )}
     </div>
   );
 }
@@ -201,7 +257,7 @@ export function DockedCalendar({
   view: viewProp,
   onViewChange,
   today: todayProp,
-  yearRange = [1900, 2100],
+  yearRange = DEFAULT_YEAR_RANGE,
   firstDayOfWeek = 0,
   locale,
   formatter: fmt,
@@ -211,15 +267,15 @@ export function DockedCalendar({
   sx,
 }: DockedCalendarProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
-  const monthShort = fmt?.monthShort ?? ((d: Date) => new Intl.DateTimeFormat(locale, { month: 'short' }).format(d));
+  const monthShort = fmt?.monthShort ?? ((d: Date) => dateFormat(locale, { month: 'short' }).format(d));
   const monthLong =
-    fmt?.monthLong ?? ((m: number) => new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2001, m, 1)));
+    fmt?.monthLong ?? ((m: number) => dateFormat(locale, { month: 'long' }).format(makeDate(2001, m, 1)));
   const yearLabel = fmt?.year ?? ((y: number) => String(y));
-  const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
-  const [innerMonth, setInnerMonth] = useState(
-    () => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+  const today = useToday(todayProp);
+  const [innerMonth, setInnerMonth] = useState(() =>
+    makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
   );
-  const month = monthProp ? new Date(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
+  const month = monthProp ? makeDate(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
   const setMonth = (m: Date) => {
     if (!monthProp) setInnerMonth(m);
     onMonthChange?.(m);
@@ -237,7 +293,7 @@ export function DockedCalendar({
       <IconButton
         aria-label={`${dir < 0 ? 'Previous' : 'Next'} ${unit}`}
         tabIndex={list ? -1 : undefined}
-        onClick={() => setMonth(unit === 'month' ? addMonths(month, dir) : new Date(y + dir, month.getMonth(), 1))}
+        onClick={() => setMonth(unit === 'month' ? addMonths(month, dir) : makeDate(y + dir, month.getMonth(), 1))}
       >
         <Glyph d={dir < 0 ? ICONS.prev : ICONS.next} />
       </IconButton>
@@ -283,7 +339,7 @@ export function DockedCalendar({
                 formatter={f}
                 firstDayOfWeek={firstDayOfWeek}
                 outsideDays
-                onPick={copy ? () => {} : onChange}
+                onPick={copy ? noop : onChange}
                 onNavigate={copy ? undefined : setMonth}
                 sx={s.grid}
               />
@@ -309,7 +365,7 @@ export function DockedCalendar({
           selected={month.getMonth()}
           initialScroll={Math.max(0, month.getMonth() - 3) * 48}
           onPick={(m) => {
-            setMonth(new Date(y, m, 1));
+            setMonth(makeDate(y, m, 1));
             setView('day');
           }}
         />
@@ -323,7 +379,7 @@ export function DockedCalendar({
           selected={y}
           initialScroll={(y - yearRange[0]) * 48}
           onPick={(yy) => {
-            setMonth(new Date(yy, month.getMonth(), 1));
+            setMonth(makeDate(yy, month.getMonth(), 1));
             setView('day');
           }}
         />
@@ -339,6 +395,7 @@ export interface DockedDatePickerProps extends Omit<
   value: Date | null;
   onChange: (date: Date | null) => void;
   label?: string;
+  /** Under the field: the expected format (default from the locale, e.g. "MM/DD/YYYY", "DD/MM/YYYY"). */
   supportingText?: ReactNode;
   width?: number;
 }
@@ -348,7 +405,7 @@ export function DockedDatePicker({
   value,
   onChange,
   label = 'Date',
-  supportingText = 'MM/DD/YYYY',
+  supportingText,
   width = 312,
   locale,
   formatter,
@@ -356,13 +413,24 @@ export function DockedDatePicker({
 }: DockedDatePickerProps) {
   const portal = usePortalContainer();
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
+  const yearRange = cal.yearRange ?? DEFAULT_YEAR_RANGE;
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(value ? f.input(value) : '');
   const [draft, setDraft] = useState<Date | null>(value);
-  useLayoutEffect(() => setText(value ? f.input(value) : ''), [value, f]);
-  useLayoutEffect(() => {
-    if (open) setDraft(value);
-  }, [open, value]);
+  // The field follows `value` when it changes to a day other than the one typed (a pick, a reset);
+  // a value that echoes the typing (or a new Date for the same day) leaves the text alone.
+  const time = value && !Number.isNaN(value.getTime()) ? value.getTime() : null;
+  const [synced, setSynced] = useState({ time, locale });
+  if (time !== synced.time || locale !== synced.locale) {
+    setSynced({ time, locale });
+    const typed = parseInputDate(text, locale, yearRange);
+    if (locale !== synced.locale || !(value ? sameDay(typed, value) : !typed)) setText(value ? f.input(value) : '');
+  }
+  const onOpenChange = (next: boolean) => {
+    // Each opening starts from the committed value.
+    if (next && !open) setDraft(value);
+    setOpen(next);
+  };
   const anchor = useRef<HTMLDivElement>(null);
   return (
     <div ref={anchor} {...stylex.props(s.field, s.notch)}>
@@ -372,13 +440,13 @@ export function DockedDatePicker({
         value={text}
         onValueChange={(t) => {
           setText(t);
-          const d = parseInputDate(t, locale);
+          const d = parseInputDate(t, locale, yearRange);
           if (d || t === '') onChange(d);
         }}
-        supportingText={supportingText}
+        supportingText={supportingText ?? inputFormatHint(locale, true)}
         sx={s.fieldWidth(width)}
         trailingIcon={
-          <Popover.Root open={open} onOpenChange={setOpen}>
+          <Popover.Root open={open} onOpenChange={onOpenChange}>
             <Popover.Trigger
               render={
                 <IconButton aria-label="Open calendar">

@@ -9,7 +9,7 @@ import { TextField } from '../TextField/TextField.tsx';
 import { textFieldVars } from '../TextField/textField.stylex.ts';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
-import { defaultFormatter, parseInputDate, type DatePickerFormatter } from './calendar.ts';
+import { defaultFormatter, inputFormatHint, parseInputDate, type DatePickerFormatter } from './calendar.ts';
 
 /*
  * Figma kit, "Input date picker" (51954:18540; Compose DatePicker displayMode = Input).
@@ -85,11 +85,13 @@ export interface DateInputPanelProps {
   onEndChange?: (date: Date | null) => void;
   locale?: string;
   formatter?: Partial<DatePickerFormatter>;
+  /** Years accepted (inclusive); a typed date outside them doesn't parse. */
+  yearRange?: [number, number];
   supportingText?: ReactNode;
   headline?: ReactNode;
   label?: string;
   endLabel?: string;
-  /** Placeholder (the expected format). */
+  /** Placeholder: the expected format (default from the locale, e.g. "mm/dd/yyyy", "dd/mm/yyyy"). */
   placeholder?: string;
   /** Switch back to the calendar. */
   onModeToggle?: () => void;
@@ -109,11 +111,12 @@ export function DateInputPanel({
   onEndChange,
   locale,
   formatter,
+  yearRange,
   supportingText = 'Select date',
   headline,
   label = 'Date',
   endLabel = 'End date',
-  placeholder = 'mm/dd/yyyy',
+  placeholder: placeholderProp,
   onModeToggle,
   onCancel,
   onConfirm,
@@ -122,6 +125,7 @@ export function DateInputPanel({
   sx,
 }: DateInputPanelProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
+  const placeholder = placeholderProp ?? inputFormatHint(locale);
   const [a, setA] = useState(value ? f.input(value) : '');
   const [b, setB] = useState(end ? f.input(end) : '');
   const field = (
@@ -141,7 +145,7 @@ export function DateInputPanel({
       inputMode="numeric"
       onValueChange={(t) => {
         set(t);
-        report?.(parseInputDate(t, locale));
+        report?.(parseInputDate(t, locale, yearRange));
       }}
       sx={half ? s.half : s.field}
     />

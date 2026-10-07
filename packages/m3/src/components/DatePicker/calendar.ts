@@ -3,19 +3,71 @@
 export const sameDay = (a: Date | null | undefined, b: Date | null | undefined) =>
   !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
-export const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+/** A local calendar date at midnight. `setFullYear` keeps years 0–99 (the Date constructor maps them to 1900–1999). */
+export function makeDate(year: number, monthIndex: number, day: number): Date {
+  const d = new Date(2000, 0, 1);
+  d.setFullYear(year, monthIndex, day);
+  return d;
+}
 
-export const addMonths = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth() + n, 1);
+export const startOfDay = (d: Date) => makeDate(d.getFullYear(), d.getMonth(), d.getDate());
 
-export const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
+export const addMonths = (d: Date, n: number) => makeDate(d.getFullYear(), d.getMonth() + n, 1);
+
+/** Calendar arithmetic (local midnight): never ± n × 24h, which lands on the wrong day across a DST change. */
+export const addDays = (d: Date, n: number) => makeDate(d.getFullYear(), d.getMonth(), d.getDate() + n);
+
+export const daysInMonth = (year: number, month: number) => makeDate(year, month + 1, 0).getDate();
+
+/** The first / last day of `d`'s week, for weeks starting on `firstDayOfWeek` (0 = Sunday). */
+export const weekStart = (d: Date, firstDayOfWeek = 0) => addDays(d, -((d.getDay() - firstDayOfWeek + 7) % 7));
+export const weekEnd = (d: Date, firstDayOfWeek = 0) => addDays(d, (firstDayOfWeek + 6 - d.getDay() + 14) % 7);
+
+/** The first enabled day from `from` (inclusive) stepping `dir` days, within `limit` steps (null: none). */
+export function firstEnabled(from: Date, dir: 1 | -1, isDisabled?: (d: Date) => boolean, limit = 366): Date | null {
+  for (let i = 0, d = from; i <= limit; i++, d = addDays(d, dir)) if (!isDisabled?.(d)) return d;
+  return null;
+}
+
+/**
+ * The day a calendar key moves focus to from `base` (the grid pattern): arrows ±1 day / ±1 week,
+ * Home / End the first / last day of the week, PageUp / PageDown the same day of the previous /
+ * next month (clamped to its length). Disabled days are skipped in the direction of travel
+ * (Home / End never pass `base`); null when the key isn't a calendar key or nothing is enabled.
+ */
+export function dayForKey(base: Date, key: string, firstDayOfWeek = 0, isDisabled?: (d: Date) => boolean): Date | null {
+  const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+  const step = steps[key];
+  if (step) {
+    const limit = Math.ceil(366 / Math.abs(step));
+    for (let i = 1, d = addDays(base, step); i <= limit; i++, d = addDays(d, step)) if (!isDisabled?.(d)) return d;
+    return null;
+  }
+  if (key === 'Home' || key === 'End') {
+    const home = key === 'Home';
+    const edge = home ? weekStart(base, firstDayOfWeek) : weekEnd(base, firstDayOfWeek);
+    const span = Math.round(Math.abs(base.getTime() - edge.getTime()) / 86400000);
+    return firstEnabled(edge, home ? 1 : -1, isDisabled, span) ?? base;
+  }
+  if (key === 'PageUp' || key === 'PageDown') {
+    const dir = key === 'PageUp' ? -1 : 1;
+    const y = base.getFullYear();
+    const m = base.getMonth() + dir;
+    return firstEnabled(makeDate(y, m, Math.min(base.getDate(), daysInMonth(y, m))), dir, isDisabled);
+  }
+  return null;
+}
+
+/** The years offered when a picker isn't given a `yearRange`. */
+export const DEFAULT_YEAR_RANGE: [number, number] = [1900, 2100];
 
 /** Weeks of the month (7 cells each, null outside the month), starting on `firstDayOfWeek` (0 = Sunday). */
 export function monthWeeks(year: number, month: number, firstDayOfWeek = 0): (Date | null)[][] {
-  const lead = (new Date(year, month, 1).getDay() - firstDayOfWeek + 7) % 7;
+  const lead = (makeDate(year, month, 1).getDay() - firstDayOfWeek + 7) % 7;
   const total = daysInMonth(year, month);
   const cells: (Date | null)[] = [
     ...Array<null>(lead).fill(null),
-    ...Array.from({ length: total }, (_, i) => new Date(year, month, i + 1)),
+    ...Array.from({ length: total }, (_, i) => makeDate(year, month, i + 1)),
   ];
   while (cells.length % 7) cells.push(null);
   const weeks: (Date | null)[][] = [];
@@ -38,17 +90,36 @@ export interface DatePickerFormatter {
   input: (d: Date) => string;
 }
 
-const sunday = new Date(2023, 0, 1); // a Sunday
+const formats = new Map<string, Intl.DateTimeFormat>();
 
+/** One shared `Intl.DateTimeFormat` per locale and options (constructing one is expensive). */
+export function dateFormat(locale: string | undefined, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  const key = `${locale ?? ''}|${JSON.stringify(options)}`;
+  let f = formats.get(key);
+  if (!f) {
+    f = new Intl.DateTimeFormat(locale, options);
+    formats.set(key, f);
+  }
+  return f;
+}
+
+const INPUT_FORMAT: Intl.DateTimeFormatOptions = { month: 'numeric', day: 'numeric', year: 'numeric' };
+const sunday = makeDate(2023, 0, 1); // a Sunday
+const formatters = new Map<string, DatePickerFormatter>();
+
+/** The `Intl` labels for `locale` (cached: one formatter set per locale). */
 export function defaultFormatter(locale?: string): DatePickerFormatter {
-  const day = (i: number) => new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate() + i);
-  const monthYear = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
-  const selected = new Intl.DateTimeFormat(locale, { weekday: 'short', month: 'short', day: 'numeric' });
-  const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow' });
-  const long = new Intl.DateTimeFormat(locale, { weekday: 'long' });
-  const full = new Intl.DateTimeFormat(locale, { month: 'long', day: 'numeric', year: 'numeric' });
-  const input = new Intl.DateTimeFormat(locale, { month: 'numeric', day: 'numeric', year: 'numeric' });
-  return {
+  const key = locale ?? '';
+  const cached = formatters.get(key);
+  if (cached) return cached;
+  const day = (i: number) => addDays(sunday, i);
+  const monthYear = dateFormat(locale, { month: 'long', year: 'numeric' });
+  const selected = dateFormat(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+  const narrow = dateFormat(locale, { weekday: 'narrow' });
+  const long = dateFormat(locale, { weekday: 'long' });
+  const full = dateFormat(locale, { month: 'long', day: 'numeric', year: 'numeric' });
+  const input = dateFormat(locale, INPUT_FORMAT);
+  const f: DatePickerFormatter = {
     monthYear: (d) => monthYear.format(d),
     selectedDate: (d) => selected.format(d),
     weekdayNarrow: (i) => narrow.format(day(i % 7)),
@@ -56,21 +127,52 @@ export function defaultFormatter(locale?: string): DatePickerFormatter {
     fullDate: (d) => full.format(d),
     input: (d) => input.format(d),
   };
+  formatters.set(key, f);
+  return f;
 }
 
-/** Parses the input format (numeric month / day / year in the locale's order). */
-export function parseInputDate(text: string, locale?: string): Date | null {
-  const parts = text
-    .split(/[^0-9]+/)
-    .filter(Boolean)
-    .map(Number);
+type InputPart = { type: 'month' | 'day' | 'year' } | { type: 'literal'; value: string };
+
+/** The numeric date's parts in the locale's order (e.g. en-US month / day / year, en-GB day / month / year). */
+function inputParts(locale?: string): InputPart[] {
+  return dateFormat(locale, INPUT_FORMAT)
+    .formatToParts(makeDate(2001, 10, 22))
+    .flatMap((p): InputPart[] =>
+      p.type === 'month' || p.type === 'day' || p.type === 'year'
+        ? [{ type: p.type }]
+        : p.type === 'literal'
+          ? [{ type: 'literal', value: p.value }]
+          : [],
+    );
+}
+
+/**
+ * The expected input format for `locale`, e.g. "mm/dd/yyyy" (en-US), "dd/mm/yyyy" (en-GB),
+ * "dd.mm.yyyy" (de-DE); `upper` gives "MM/DD/YYYY".
+ */
+export function inputFormatHint(locale?: string, upper = false): string {
+  const token = { month: 'mm', day: 'dd', year: 'yyyy' } as const;
+  const hint = inputParts(locale)
+    .map((p) => (p.type === 'literal' ? p.value : token[p.type]))
+    .join('');
+  return upper ? hint.toUpperCase() : hint;
+}
+
+/**
+ * Parses the input format (numeric month / day / year in the locale's order). The year must be
+ * typed in full (four digits) — "1/5/2" is incomplete, not 1902 — and, when `yearRange` is given,
+ * lie within it.
+ */
+export function parseInputDate(text: string, locale?: string, yearRange?: [number, number]): Date | null {
+  const parts = text.split(/[^0-9]+/).filter(Boolean);
   if (parts.length !== 3) return null;
-  const order = new Intl.DateTimeFormat(locale, { month: 'numeric', day: 'numeric', year: 'numeric' })
-    .formatToParts(new Date(2001, 10, 22))
-    .filter((p) => p.type === 'month' || p.type === 'day' || p.type === 'year')
-    .map((p) => p.type);
-  const v: Record<string, number> = {};
-  order.forEach((k, i) => (v[k] = parts[i]!));
-  const d = new Date(v.year!, v.month! - 1, v.day);
-  return d.getMonth() === v.month! - 1 && d.getDate() === v.day ? d : null;
+  const order = inputParts(locale).flatMap((p) => (p.type === 'literal' ? [] : [p.type]));
+  const v: Partial<Record<'month' | 'day' | 'year', string>> = {};
+  order.forEach((k, i) => (v[k] = parts[i]));
+  const { year: ys, month: ms, day: ds } = v;
+  if (!ys || !ms || !ds || ys.length !== 4 || ms.length > 2 || ds.length > 2) return null;
+  const [year, month, day] = [Number(ys), Number(ms), Number(ds)];
+  if (yearRange && (year < yearRange[0] || year > yearRange[1])) return null;
+  const d = makeDate(year, month - 1, day);
+  return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day ? d : null;
 }

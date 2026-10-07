@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -11,7 +11,8 @@ import { IconButton } from '../IconButton/IconButton.tsx';
 import { dialogMotion } from '../Dialog/dialogMotion.ts';
 import { CalendarMonth } from './CalendarMonth.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
-import { defaultFormatter, startOfDay, type DatePickerFormatter } from './calendar.ts';
+import { dateFormat, defaultFormatter, makeDate, type DatePickerFormatter } from './calendar.ts';
+import { useToday } from './useToday.ts';
 
 /*
  * Figma kit, "Modal date picker / Full-screen (range)" (51954:18254; Compose DateRangePicker).
@@ -123,7 +124,7 @@ export interface DateRange {
 export interface DateRangePickerProps {
   value: DateRange;
   onChange: (range: DateRange) => void;
-  /** The first month listed. Defaults to the start's month (or today's). */
+  /** The first month listed. Defaults to the start's month (or today's) when the picker mounts. */
   firstMonth?: Date;
   /** How many months to list (default 12). */
   monthCount?: number;
@@ -165,12 +166,18 @@ export function DateRangePicker({
   sx,
 }: DateRangePickerProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
-  const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
-  const short = useMemo(() => new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }), [locale]);
+  const today = useToday(todayProp);
+  const short = dateFormat(locale, { month: 'short', day: 'numeric' });
   const rangeText =
     fmt?.range ?? ((r: DateRange) => (r.start ? `${short.format(r.start)} – ${r.end ? short.format(r.end) : ''}` : ''));
-  const base = firstMonth ?? value.start ?? today;
-  const months = Array.from({ length: monthCount }, (_, i) => new Date(base.getFullYear(), base.getMonth() + i, 1));
+  // The list keeps its first month while days are picked (a new start doesn't shift the months).
+  const [mountBase] = useState(() => value.start ?? today);
+  const base = firstMonth ?? mountBase;
+  const [baseYear, baseMonth] = [base.getFullYear(), base.getMonth()];
+  const months = useMemo(
+    () => Array.from({ length: monthCount }, (_, i) => makeDate(baseYear, baseMonth + i, 1)),
+    [baseYear, baseMonth, monthCount],
+  );
   const scroller = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
   useLayoutEffect(() => {
@@ -183,9 +190,41 @@ export function DateRangePicker({
     setScrolled(true);
   }, [scrolled, value.start]);
 
-  const pick = (d: Date) => {
-    if (!value.start || value.end || d < value.start) onChange({ start: d, end: null });
-    else onChange({ start: value.start, end: d });
+  // Stable callbacks, so a pick re-renders only the months the range touches (CalendarMonth is memoised).
+  const latest = useRef({ value, onChange });
+  useLayoutEffect(() => {
+    latest.current = { value, onChange };
+  });
+  const pick = useCallback((d: Date) => {
+    const { value: v, onChange: change } = latest.current;
+    if (!v.start || v.end || d < v.start) change({ start: d, end: null });
+    else change({ start: v.start, end: d });
+  }, []);
+
+  // One tab stop for all the months: arrows / Home / End / PageUp / PageDown move it across month
+  // boundaries (focus scrolls the day into view); it starts on the start day, today or the first day.
+  const listEnd = makeDate(baseYear, baseMonth + monthCount, 1);
+  const listed = (d: Date | null | undefined): d is Date => !!d && !!months[0] && d >= months[0] && d < listEnd;
+  const [active, setActive] = useState<Date | null>(null);
+  const tabDay = listed(active)
+    ? active
+    : listed(value.start)
+      ? value.start
+      : listed(today)
+        ? today
+        : (months[0] ?? null);
+  const moveTo = useCallback((d: Date) => {
+    const el = scroller.current?.querySelector<HTMLElement>(`[data-date="${d.toDateString()}"]`);
+    if (!el) return; // past the listed months
+    setActive(d);
+    el.focus();
+  }, []);
+  const sameMonth = (a: Date | null, m: Date) =>
+    !!a && a.getFullYear() === m.getFullYear() && a.getMonth() === m.getMonth();
+  // The range only for the months it touches (the others keep their props and skip rendering).
+  const rangeIn = (m: Date) => {
+    const { start, end } = value;
+    return start && start < makeDate(m.getFullYear(), m.getMonth() + 1, 1) && (end ?? start) >= m ? value : undefined;
   };
 
   return (
@@ -232,12 +271,14 @@ export function DateRangePicker({
             <h3 {...stylex.props(typescale.labelLarge, s.monthTitle)}>{f.monthYear(m)}</h3>
             <CalendarMonth
               month={m}
-              range={value}
+              range={rangeIn(m)}
               today={today}
               formatter={f}
               firstDayOfWeek={firstDayOfWeek}
               weekdays={false}
               onPick={pick}
+              activeDay={sameMonth(tabDay, m) ? tabDay : null}
+              onActiveDayChange={moveTo}
             />
           </section>
         ))}
@@ -288,9 +329,12 @@ export function ModalDateRangePicker({
 }: ModalDateRangePickerProps) {
   const portal = usePortalContainer();
   const [draft, setDraft] = useState<DateRange>(value);
-  useLayoutEffect(() => {
+  // Each opening starts from the committed range; a parent re-render while open keeps the picks.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) setDraft(value);
-  }, [open, value]);
+  }
   const commit = () => {
     onChange(draft);
     onOpenChange(false);

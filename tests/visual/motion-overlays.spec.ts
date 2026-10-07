@@ -871,7 +871,7 @@ test.describe('date picker', () => {
     await dialog.getByRole('button', { name: 'July 10, 2025' }).click();
     expect(await circle.evaluate((e) => getComputedStyle(e).transitionDuration)).toBe('0s');
     await dialog.getByRole('button', { name: /select year/ }).click();
-    const year = dialog.getByRole('button', { name: '2025', exact: true });
+    const year = dialog.getByRole('option', { name: '2025', exact: true });
     expect(
       await year.evaluate((e) =>
         [getComputedStyle(e).transitionProperty, getComputedStyle(e).transitionDuration].join(' '),

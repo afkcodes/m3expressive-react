@@ -1,4 +1,13 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
@@ -16,7 +25,8 @@ import { CalendarMonth } from './CalendarMonth.tsx';
 import { MonthPager } from './MonthPager.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { DateInputPanel } from './DateInput.tsx';
-import { addMonths, defaultFormatter, startOfDay, type DatePickerFormatter } from './calendar.ts';
+import { addMonths, DEFAULT_YEAR_RANGE, defaultFormatter, makeDate, type DatePickerFormatter } from './calendar.ts';
+import { useToday } from './useToday.ts';
 
 /*
  * Figma kit, "Modal date picker" (51954:18136; Compose DatePicker / DatePickerDialog).
@@ -177,7 +187,7 @@ export function DatePicker({
   view: viewProp,
   onViewChange,
   today: todayProp,
-  yearRange = [1900, 2100],
+  yearRange = DEFAULT_YEAR_RANGE,
   firstDayOfWeek = 0,
   locale,
   formatter: fmt,
@@ -191,11 +201,11 @@ export function DatePicker({
   sx,
 }: DatePickerProps) {
   const f = useMemo(() => ({ ...defaultFormatter(locale), ...fmt }), [locale, fmt]);
-  const today = useMemo(() => startOfDay(todayProp ?? new Date()), [todayProp]);
-  const [innerMonth, setInnerMonth] = useState(
-    () => new Date((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+  const today = useToday(todayProp);
+  const [innerMonth, setInnerMonth] = useState(() =>
+    makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
   );
-  const month = monthProp ? new Date(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
+  const month = monthProp ? makeDate(monthProp.getFullYear(), monthProp.getMonth(), 1) : innerMonth;
   const setMonth = (m: Date) => {
     if (!monthProp) setInnerMonth(m);
     onMonthChange?.(m);
@@ -217,12 +227,12 @@ export function DatePicker({
   const defaultEffects = useSpringToken('default-effects');
   const fastEffects = useSpringToken('fast-effects');
   useLayoutEffect(() => {
-    if (phase !== 'to-year' && phase !== 'to-day') return;
+    if (phase !== 'to-year' && phase !== 'to-day') return undefined;
     const a = area.current;
     const box = yearsBox.current;
     const years = yearsRef.current;
     const calendar = a?.firstElementChild as HTMLElement | null;
-    if (!a || !box || !years || !calendar || !defaultEffects || !fastEffects) return;
+    if (!a || !box || !years || !calendar || !defaultEffects || !fastEffects) return undefined;
     const entering = phase === 'to-year';
     const calH = calendar.offsetHeight;
     const yearsH = years.offsetHeight;
@@ -274,16 +284,34 @@ export function DatePicker({
 
   const yearLabel = fmt?.year ?? ((y: number) => String(y));
   const yearsRef = useRef<HTMLDivElement>(null);
+  const shownYear = month.getFullYear();
   useLayoutEffect(() => {
     if (view !== 'year' || !yearsRef.current) return;
-    const sel = yearsRef.current.querySelector<HTMLElement>(`[data-year="${month.getFullYear()}"]`);
+    const sel = yearsRef.current.querySelector<HTMLElement>(`[data-year="${shownYear}"]`);
     // Bring the displayed year into view (top-aligned rows, like the kit's list).
     if (sel) {
       const row = sel.closest('span')!;
       const top = row.offsetTop - 8;
       if (top + row.offsetHeight > yearsRef.current.clientHeight) yearsRef.current.scrollTop = top;
     }
-  }, [view, month]);
+  }, [view, shownYear]);
+
+  // The year grid is a listbox with one tab stop (the displayed year, kept inside the range) that
+  // arrows move: ±1 year, ±1 row of three; Home / End jump to the first / last year.
+  const [firstYear, lastYear] = yearRange;
+  const [focusYear, setFocusYear] = useState<number | null>(null);
+  if (view !== 'year' && focusYear !== null) setFocusYear(null);
+  const tabYear = Math.min(lastYear, Math.max(firstYear, focusYear ?? shownYear));
+  const onYearKey = (e: KeyboardEvent) => {
+    const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 };
+    const next =
+      e.key in steps ? tabYear + steps[e.key]! : e.key === 'Home' ? firstYear : e.key === 'End' ? lastYear : null;
+    if (next === null) return;
+    e.preventDefault();
+    if (next < firstYear || next > lastYear) return;
+    setFocusYear(next);
+    yearsRef.current?.querySelector<HTMLElement>(`[data-year="${next}"]`)?.focus();
+  };
 
   return (
     <div {...stylex.props(s.surface, sx)}>
@@ -325,7 +353,7 @@ export function DatePicker({
         </div>
         <div ref={area} {...stylex.props(s.area)}>
           {phase !== 'year' && (
-            <MonthPager month={month} onSwipe={setMonth} instant={jump.current}>
+            <MonthPager month={month} onSwipe={setMonth} instant={jump.current} inert={view === 'year'}>
               {(m, copy) => (
                 <CalendarMonth
                   month={m}
@@ -347,17 +375,18 @@ export function DatePicker({
               {...stylex.props(phase !== 'year' && s.yearsOverlay)}
             >
               <div ref={yearsRef} {...stylex.props(s.years)}>
-                <div role="listbox" aria-label="Year" {...stylex.props(s.yearGrid)}>
-                  {Array.from({ length: yearRange[1] - yearRange[0] + 1 }, (_, i) => yearRange[0] + i).map((y) => (
+                <div role="listbox" aria-label="Year" onKeyDown={onYearKey} {...stylex.props(s.yearGrid)}>
+                  {Array.from({ length: lastYear - firstYear + 1 }, (_, i) => firstYear + i).map((y) => (
                     <YearChip
                       key={y}
+                      option
                       year={yearLabel(y)}
-                      selected={y === month.getFullYear()}
+                      selected={y === shownYear}
                       data-year={y}
-                      tabIndex={y === month.getFullYear() ? 0 : -1}
+                      tabIndex={y === tabYear ? 0 : -1}
                       onClick={() => {
                         jump.current = true;
-                        setMonth(new Date(y, month.getMonth(), 1));
+                        setMonth(makeDate(y, month.getMonth(), 1));
                         setView('day');
                       }}
                     />
@@ -429,12 +458,12 @@ function useModeTransition(
   done.current = onDone;
   useLayoutEffect(() => {
     const w = wrap.current;
-    if (!leaving || !w || !defaultEffects || !fastEffects) return;
+    if (!leaving || !w || !defaultEffects || !fastEffects) return undefined;
     const outSlot = w.querySelector<HTMLElement>(`:scope > [data-mode-slot="${leaving}"]`);
     const inSlot = w.querySelector<HTMLElement>(`:scope > [data-mode-slot]:not([data-mode-slot="${leaving}"])`);
     const outPanel = outSlot?.firstElementChild as HTMLElement | null;
     const inPanel = inSlot?.firstElementChild as HTMLElement | null;
-    if (!outSlot || !inSlot || !outPanel || !inPanel) return;
+    if (!outSlot || !inSlot || !outPanel || !inPanel) return undefined;
     const q = (el: HTMLElement, part: string) => el.querySelector<HTMLElement>(`[data-dp-${part}]`);
     const outBody = q(outPanel, 'body');
     const inBody = q(inPanel, 'body');
@@ -522,7 +551,11 @@ export function ModalDatePicker({ open, onOpenChange, value, onChange, onClear, 
   // The calendar's month and view live here so the leaving copy keeps them.
   const [innerMonth, setInnerMonth] = useState<Date | undefined>(undefined);
   const [innerView, setInnerView] = useState<DatePickerView>('day');
-  useLayoutEffect(() => {
+  // Each opening starts from the confirmed value on the calendar; a parent re-render while open
+  // (a new `value` object) keeps the pick in progress.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) {
       setDraft(value);
       setMode('picker');
@@ -530,7 +563,7 @@ export function ModalDatePicker({ open, onOpenChange, value, onChange, onClear, 
       setInnerMonth(undefined);
       setInnerView('day');
     }
-  }, [open, value]);
+  }
   const wrap = useRef<HTMLDivElement>(null);
   useModeTransition(wrap, leaving, () => setLeaving(null));
   const switchTo = (next: 'picker' | 'input') => {
@@ -585,6 +618,7 @@ export function ModalDatePicker({ open, onOpenChange, value, onChange, onClear, 
                 value={draft}
                 onChange={setDraft}
                 locale={picker.locale}
+                yearRange={picker.yearRange}
                 formatter={picker.formatter}
                 supportingText={picker.supportingText}
                 autoFocus
