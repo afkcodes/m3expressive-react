@@ -1,10 +1,10 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { shape } from '../../tokens/shape.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, Badges page (set "Badges"):
@@ -38,24 +38,20 @@ const styles = stylex.create({
   },
 });
 
-export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'className' | 'style' | 'children'> {
+export interface BadgeProps extends SxProps<Omit<ComponentPropsWithRef<'span'>, 'children'>> {
   /** Badge content. Omit for the small dot badge. */
   children?: ReactNode;
   /** Numeric content; values above `max` render as `${max}+` (M3: at most 4 characters). */
   count?: number;
   max?: number;
-  sx?: StyleXStyles;
 }
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-  { children, count, max = 999, sx, ...rest },
-  ref,
-) {
+export function Badge({ children, count, max = 999, sx, ...rest }: BadgeProps) {
   const content = count !== undefined ? (count > max ? `${max}+` : String(count)) : children;
   const large = content !== undefined && content !== null && content !== false;
   return (
-    <span ref={ref} {...rest} {...stylex.props(styles.base, large ? styles.large : styles.small, sx)}>
+    <span {...rest} {...stylex.props(styles.base, large ? styles.large : styles.small, sx)}>
       {large && <span {...stylex.props(typescale.labelSmall, textBox.hug, styles.label)}>{content}</span>}
     </span>
   );
-});
+}
