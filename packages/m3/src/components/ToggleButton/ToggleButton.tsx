@@ -18,7 +18,7 @@ import {
   type ButtonShape,
   type ButtonSize,
 } from '../Button/buttonStyles.ts';
-import { ToolbarColorContext } from '../Toolbar/context.ts';
+import { ToolbarVariantContext } from '../Toolbar/context.ts';
 
 export type ToggleButtonVariant = 'filled' | 'tonal' | 'outlined' | 'elevated';
 
@@ -117,7 +117,7 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(fun
 ) {
   const [selected, setSelected] = useControllableState(pressed, defaultPressed, onPressedChange);
   const forced = useForcedState();
-  const toolbar = useContext(ToolbarColorContext);
+  const toolbar = useContext(ToolbarVariantContext);
   const tool = toolbar != null && variant === 'filled' ? toolbar : null;
   const effectiveShape: ButtonShape = selected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
   const elevated = variant === 'elevated' && !disabled;

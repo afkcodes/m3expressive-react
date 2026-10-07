@@ -11,7 +11,7 @@ import {
   useFloatingToolbarExitAlways,
   useFloatingToolbarNestedScroll,
   type ColorSchemeMode,
-  type ToolbarColor,
+  type ToolbarVariant,
 } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/toolbar/assets.json';
@@ -92,7 +92,7 @@ const Icon = ({ name, size = 24 }: { name: string; size?: 20 | 24 }) => (
  */
 export function ToolbarPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
-  const [tone, setTone] = useState<ToolbarColor>('standard');
+  const [tone, setTone] = useState<ToolbarVariant>('standard');
   const [type, setType] = useState<'floating-h' | 'floating-v' | 'docked'>('floating-h');
   const [withFab, setWithFab] = useState(true);
   const [expanded, setExpanded] = useState(true);
@@ -100,8 +100,7 @@ export function ToolbarPlayground() {
   const [behavior, setBehavior] = useState<'collapse' | 'exit'>('collapse');
   const nestedScroll = useFloatingToolbarNestedScroll({
     expanded,
-    onExpand: () => setExpanded(true),
-    onCollapse: () => setExpanded(false),
+    onExpandedChange: setExpanded,
   });
   const exitAlways = useFloatingToolbarExitAlways(type === 'floating-v' ? 'end' : 'bottom');
   const scrollRef = behavior === 'collapse' ? nestedScroll : exitAlways.scrollRef;
@@ -142,7 +141,7 @@ export function ToolbarPlayground() {
           </label>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span {...stylex.props(s.muted)}>colour</span>
-            <select value={tone} onChange={(e) => setTone(e.target.value as ToolbarColor)} style={field}>
+            <select value={tone} onChange={(e) => setTone(e.target.value as ToolbarVariant)} style={field}>
               <option value="standard">standard</option>
               <option value="vibrant">vibrant</option>
             </select>
@@ -178,7 +177,7 @@ export function ToolbarPlayground() {
               <div {...stylex.props(s.hit)}>
                 <Toolbar
                   key={type}
-                  color={tone}
+                  variant={tone}
                   orientation={type === 'floating-v' ? 'vertical' : 'horizontal'}
                   expanded={expanded}
                   fab={withFab ? fab : undefined}
@@ -204,7 +203,7 @@ export function ToolbarPlayground() {
               </div>
             </div>
           ) : (
-            <Toolbar type="docked" color={tone} aria-label="Views">
+            <Toolbar layout="docked" variant={tone} aria-label="Views">
               {(['photos', 'memories', 'library'] as const).map((v) => (
                 <ToggleButton
                   key={v}

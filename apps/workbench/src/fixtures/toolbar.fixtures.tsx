@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
-import { Fab, IconButton, ToggleButton, ToggleIconButton, Toolbar, ToolbarScope, type ToolbarColor } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { Fab, IconButton, ToggleButton, ToggleIconButton, Toolbar, type ToolbarVariant } from '@m3x/react';
+import { ForceState, ToolbarScope, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toolbar/manifest.json';
 import assets from '../../../../figma/toolbar/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -47,10 +47,10 @@ const shareRow = (
   </>
 );
 
-function block(name: string, tone: ToolbarColor, kind: string, sel: boolean, state: string): ReactNode {
+function block(name: string, tone: ToolbarVariant, kind: string, sel: boolean, state: string): ReactNode {
   const disabled = state === 'disabled';
   return (
-    <ToolbarScope color={tone}>
+    <ToolbarScope variant={tone}>
       <ForceState
         state={asForced(state)}
         ripplePath={state === 'pressed' ? assets.ripples[name as keyof typeof assets.ripples] : undefined}
@@ -87,12 +87,12 @@ function render(name: string): ReactNode {
   const p = name.split('-');
   if (p[0] === 'toolbar') {
     // toolbar-{floating-h|floating-v|docked}-{standard|vibrant}
-    const tone = p[p.length - 1] as ToolbarColor;
+    const tone = p[p.length - 1] as ToolbarVariant;
     return (
       <Toolbar
-        type={p[1] === 'docked' ? 'docked' : 'floating'}
+        layout={p[1] === 'docked' ? 'docked' : 'floating'}
         orientation={p[2] === 'v' ? 'vertical' : 'horizontal'}
-        color={tone}
+        variant={tone}
         aria-label="Actions"
       >
         {shareRow}
@@ -160,7 +160,7 @@ function render(name: string): ReactNode {
       );
     case 'ex-vib-format':
       return (
-        <Toolbar color="vibrant" aria-label="Text formatting">
+        <Toolbar variant="vibrant" aria-label="Text formatting">
           <Btn icon="format_bold" label="Bold" />
           <Btn icon="format_italic" label="Italic" />
           <Btn icon="format_underlined" label="Underline" />
@@ -168,7 +168,7 @@ function render(name: string): ReactNode {
       );
     case 'ex-vib-call':
       return (
-        <Toolbar color="vibrant" aria-label="Call controls">
+        <Toolbar variant="vibrant" aria-label="Call controls">
           <Btn icon="videocam_off" label="Camera off" />
           <Btn icon="mic" label="Microphone" />
           <Toggle icon="front_hand" label="Raise hand" on />

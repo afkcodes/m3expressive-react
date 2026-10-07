@@ -1,5 +1,5 @@
-import { ToggleButton, ToolbarScope, type ButtonShape, type ButtonSize, type ToggleButtonVariant } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { ToggleButton, type ButtonShape, type ButtonSize, type ToggleButtonVariant } from '@m3x/react';
+import { ForceState, ToolbarScope, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/toggle-button/manifest.json';
 import assets from '../../../../figma/toggle-button/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -37,7 +37,7 @@ const fixture: FixtureModule = {
       'toolbar-live',
       {
         render: () => (
-          <ToolbarScope color="standard">
+          <ToolbarScope variant="standard">
             <ToggleButton size="medium" icon={<Icon d={assets.icon} />} selectedIcon={<Icon d={assets.selectedIcon} />}>
               Label
             </ToggleButton>
