@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { createContext, forwardRef, useContext, useMemo, useRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
@@ -22,6 +22,17 @@ import { usePortalContainer } from '../../theme/portal.tsx';
  *   Action: text button, inverse-primary, 40px, padding 10/12; close: 48px target, 40px circle,
  *   24px icon. State layers in the content colour at 8 / 10 / 10% (press is a flat layer).
  *   Longer actions stack under the text, right-aligned.
+ *
+ * Host motion and queue — Compose material3 SnackbarHost.kt (SnackbarHostState, SnackbarHost,
+ * FadeInFadeOutWithScale, SnackbarDuration.toMillis):
+ *   one snackbar at a time, FIFO: the next waits until the current is dismissed, and its timer
+ *   starts when it becomes current. Durations: short 4000ms, long 10000ms, indefinite; default
+ *   indefinite with an action, short otherwise. The action and the close affordance dismiss it.
+ *   Enter: scale 0.8 → 1 on FastSpatial + alpha 0 → 1 on FastEffects (about the centre).
+ *   Exit: alpha → 0 on FastEffects + scale → 0.8 on FastSpatial; a replacement crossfades in the
+ *   same place, drawn above the leaving one.
+ *   Not Compose: the timer pauses while the snackbar is hovered or focused (WCAG 2.2.1; Android
+ *   lengthens timeouts through the accessibility manager instead).
  */
 const CLOSE = 'M6.4 19L5 17.6L10.6 12L5 6.4L6.4 5L12 10.6L17.6 5L19 6.4L13.4 12L19 17.6L17.6 19L12 13.4L6.4 19Z';
 
@@ -105,24 +116,28 @@ const s = stylex.create({
   icon: { width: 24, height: 24, fill: 'currentColor', position: 'relative' },
   label: { position: 'relative', color: 'inherit' },
   ringForced: { outlineStyle: 'solid' },
+  // One grid cell: a leaving snackbar and its replacement overlap (Compose draws both in a Box).
   viewport: {
     position: 'fixed',
     insetInline: 0,
     bottom: 16,
     zIndex: 1000,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    rowGap: 8,
+    display: 'grid',
+    justifyItems: 'center',
+    alignItems: 'end',
     pointerEvents: 'none',
   },
   toast: {
-    pointerEvents: 'auto',
+    gridArea: '1 / 1',
+    // The current one is drawn above the one fading out (Compose appends it last).
+    zIndex: { default: 1, ':is([data-ending-style])': 0 },
+    pointerEvents: { default: 'auto', ':is([data-ending-style])': 'none' },
+    transformOrigin: 'center',
     opacity: { default: 1, ':is([data-starting-style], [data-ending-style])': 0 },
-    translate: { default: '0 0', ':is([data-starting-style], [data-ending-style])': '0 16px' },
-    transitionProperty: 'opacity, translate',
-    transitionDuration: `${motion.fastEffectsDuration}, ${motion.defaultSpatialDuration}`,
-    transitionTimingFunction: `${motion.fastEffectsEasing}, ${motion.defaultSpatialEasing}`,
+    scale: { default: '1', ':is([data-starting-style], [data-ending-style])': '0.8' },
+    transitionProperty: 'opacity, scale',
+    transitionDuration: `${motion.fastEffectsDuration}, ${motion.fastSpatialDuration}`,
+    transitionTimingFunction: `${motion.fastEffectsEasing}, ${motion.fastSpatialEasing}`,
   },
 });
 
@@ -185,8 +200,16 @@ export interface SnackbarProps {
 }
 
 /** The snackbar surface (static). Use `useSnackbar()` to show one. */
-export function Snackbar({ children, action, onClose, stacked = false, twoLine = false, sx }: SnackbarProps) {
-  const close = onClose ? <SnackbarClose onClick={onClose} /> : null;
+export function Snackbar({ onClose, ...rest }: SnackbarProps) {
+  return <SnackbarSurface {...rest} close={onClose ? <SnackbarClose onClick={onClose} /> : null} />;
+}
+
+interface SnackbarSurfaceProps extends Omit<SnackbarProps, 'onClose'> {
+  /** The close affordance element (the host renders a Toast.Close). */
+  close: ReactNode;
+}
+
+function SnackbarSurface({ children, action, close, stacked = false, twoLine = false, sx }: SnackbarSurfaceProps) {
   if (stacked) {
     return (
       <div {...stylex.props(typescale.bodyMedium, s.surface, s.stacked, sx)}>
@@ -217,6 +240,12 @@ export function Snackbar({ children, action, onClose, stacked = false, twoLine =
 }
 
 // ── Host ──────────────────────────────────────────────────────────────────────────────────────
+/** Compose SnackbarDuration. */
+export type SnackbarDuration = 'short' | 'long' | 'indefinite';
+
+/** SnackbarDuration.toMillis (indefinite = no timer). */
+const DURATION_MS: Record<SnackbarDuration, number> = { short: 4000, long: 10000, indefinite: 0 };
+
 interface SnackbarData {
   actionLabel?: string;
   onAction?: () => void;
@@ -226,16 +255,44 @@ interface SnackbarData {
 
 export interface SnackbarProviderProps {
   children: ReactNode;
-  /** Auto-dismiss after this many ms (M3: 4–10 s). */
+  /**
+   * Auto-dismiss every snackbar after this many ms unless it sets its own `duration` / `timeout`
+   * (0 = never). Default: Compose's durations (indefinite with an action, short otherwise).
+   */
   timeout?: number;
 }
 
-/** Queues snackbars (Base UI Toast: aria-live, focus handling, swipe/escape). */
-export function SnackbarProvider({ children, timeout = 6000 }: SnackbarProviderProps) {
+export interface ShowSnackbarOptions {
+  action?: { label: string; onClick?: () => void };
+  withClose?: boolean;
+  stacked?: boolean;
+  /** Compose SnackbarDuration. Default: 'indefinite' with an action, 'short' otherwise. */
+  duration?: SnackbarDuration;
+  /** Exact auto-dismiss time in ms (overrides `duration`; 0 = never). */
+  timeout?: number;
+}
+
+interface PendingSnackbar {
+  id: string;
+  message: ReactNode;
+  timeout: number;
+  data: SnackbarData;
+}
+
+interface SnackbarQueueApi {
+  show: (message: ReactNode, options?: ShowSnackbarOptions) => string;
+  close: (id: string) => void;
+}
+
+const SnackbarQueueContext = createContext<SnackbarQueueApi | null>(null);
+let snackbarCount = 0;
+
+/** Queues snackbars (Base UI Toast: aria-live, focus handling, escape). */
+export function SnackbarProvider({ children, timeout }: SnackbarProviderProps) {
   const portalContainer = usePortalContainer();
   return (
-    <Toast.Provider timeout={timeout} limit={1}>
-      {children}
+    <Toast.Provider limit={1}>
+      <SnackbarQueue timeout={timeout}>{children}</SnackbarQueue>
       <Toast.Portal container={portalContainer}>
         <Toast.Viewport {...stylex.props(s.viewport)}>
           <SnackbarList />
@@ -245,41 +302,104 @@ export function SnackbarProvider({ children, timeout = 6000 }: SnackbarProviderP
   );
 }
 
+/**
+ * SnackbarHostState: a FIFO queue in front of Base UI's toast store, which only ever holds the
+ * current snackbar (plus the one fading out) — so each timer starts when its snackbar is shown.
+ */
+function SnackbarQueue({ timeout, children }: { timeout?: number; children: ReactNode }) {
+  const manager = Toast.useToastManager();
+  const managerRef = useRef(manager);
+  managerRef.current = manager;
+  const timeoutRef = useRef(timeout);
+  timeoutRef.current = timeout;
+  const state = useRef<{ queue: PendingSnackbar[]; current: string | null }>({ queue: [], current: null });
+
+  const api = useMemo<SnackbarQueueApi>(() => {
+    const pump = () => {
+      const st = state.current;
+      if (st.current != null) return;
+      const next = st.queue.shift();
+      if (!next) return;
+      st.current = next.id;
+      managerRef.current.add({
+        id: next.id,
+        description: next.message,
+        timeout: next.timeout,
+        data: next.data,
+        onClose: () => {
+          if (state.current.current !== next.id) return;
+          state.current.current = null;
+          // After the store has finished closing this one: the next replaces it (crossfade).
+          queueMicrotask(pump);
+        },
+      });
+    };
+    return {
+      show(message, options = {}) {
+        const id = `m3x-snackbar-${++snackbarCount}`;
+        const ms = options.timeout ?? (options.duration ? DURATION_MS[options.duration] : (timeoutRef.current ?? DURATION_MS[options.action ? 'indefinite' : 'short']));
+        state.current.queue.push({
+          id,
+          message,
+          timeout: ms,
+          data: { actionLabel: options.action?.label, onAction: options.action?.onClick, withClose: options.withClose, stacked: options.stacked },
+        });
+        pump();
+        return id;
+      },
+      close(id) {
+        const st = state.current;
+        const queued = st.queue.findIndex((p) => p.id === id);
+        if (queued >= 0) st.queue.splice(queued, 1);
+        else managerRef.current.close(id);
+      },
+    };
+  }, []);
+
+  return <SnackbarQueueContext value={api}>{children}</SnackbarQueueContext>;
+}
+
 function SnackbarList() {
-  const { toasts } = Toast.useToastManager();
+  const { toasts, close } = Toast.useToastManager();
   return toasts.map((t) => {
     const data = (t.data ?? {}) as SnackbarData;
     return (
       <Toast.Root key={t.id} toast={t} {...stylex.props(s.toast)}>
-        <Snackbar
+        <SnackbarSurface
           stacked={data.stacked}
-          action={data.actionLabel ? <Toast.Action render={<SnackbarAction onClick={data.onAction}>{data.actionLabel}</SnackbarAction>} /> : undefined}
-          onClose={data.withClose ? () => {} : undefined}
+          action={
+            data.actionLabel ? (
+              <Toast.Action
+                render={
+                  // Compose: performAction() also dismisses the snackbar.
+                  <SnackbarAction
+                    onClick={() => {
+                      data.onAction?.();
+                      close(t.id);
+                    }}
+                  >
+                    {data.actionLabel}
+                  </SnackbarAction>
+                }
+              />
+            ) : undefined
+          }
+          // Always exposed: a snackbar is never collapsed into a stack (Base UI hides Close then).
+          close={data.withClose ? <Toast.Close aria-hidden={false} render={<SnackbarClose />} /> : null}
         >
           <Toast.Description render={<span />}>{t.description}</Toast.Description>
-        </Snackbar>
+        </SnackbarSurface>
       </Toast.Root>
     );
   });
 }
 
-export interface ShowSnackbarOptions {
-  action?: { label: string; onClick?: () => void };
-  withClose?: boolean;
-  stacked?: boolean;
-  timeout?: number;
-}
-
-/** `const snackbar = useSnackbar(); snackbar.show('Message sent', { action: { label: 'Undo' } })`. */
-export function useSnackbar() {
-  const manager = Toast.useToastManager();
-  return {
-    show: (message: ReactNode, options: ShowSnackbarOptions = {}) =>
-      manager.add({
-        description: message,
-        timeout: options.timeout,
-        data: { actionLabel: options.action?.label, onAction: options.action?.onClick, withClose: options.withClose, stacked: options.stacked } satisfies SnackbarData,
-      }),
-    close: (id: string) => manager.close(id),
-  };
+/**
+ * `const snackbar = useSnackbar(); snackbar.show('Message sent', { action: { label: 'Undo' } })`.
+ * Snackbars queue (first in, first out) and show one at a time.
+ */
+export function useSnackbar(): SnackbarQueueApi {
+  const api = useContext(SnackbarQueueContext);
+  if (!api) throw new Error('useSnackbar() must be used inside <SnackbarProvider>.');
+  return api;
 }

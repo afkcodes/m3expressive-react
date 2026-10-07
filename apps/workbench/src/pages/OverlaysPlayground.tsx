@@ -25,6 +25,12 @@ function SnackbarButtons() {
       <Button variant="tonal" onClick={() => snackbar.show('Message archived', { action: { label: 'Undo' } })}>With action</Button>
       <Button variant="tonal" onClick={() => snackbar.show('Connection lost', { withClose: true, action: { label: 'Retry' } })}>Action + close</Button>
       <Button variant="tonal" onClick={() => snackbar.show('Your statement for September is ready to download', { stacked: true, action: { label: 'Open statement' } })}>Longer action</Button>
+      <Button
+        variant="tonal"
+        onClick={() => ['First of three', 'Second of three', 'Third of three'].forEach((m) => snackbar.show(m, { withClose: true }))}
+      >
+        Queue three
+      </Button>
     </>
   );
 }
@@ -47,7 +53,7 @@ export function OverlaysPlayground() {
             </select>
           </label>
         </section>
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Tooltips — hover or focus</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Tooltips — hover, keyboard focus or touch long-press</h2>
         <section {...stylex.props(s.stage)}>
           <Tooltip content="Add to favourites">
             <IconButton aria-label="Favourite"><Stars /></IconButton>
@@ -60,7 +66,7 @@ export function OverlaysPlayground() {
             Funds are released in stages once each milestone is approved.
           </RichTooltip>
         </section>
-        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Snackbars — queued, auto-dismiss</h2>
+        <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>Snackbars — one at a time, first in first out (4s; with an action: until dismissed)</h2>
         <section {...stylex.props(s.stage)}>
           <SnackbarButtons />
         </section>

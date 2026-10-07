@@ -29,10 +29,24 @@ function LiveDemo() {
   );
 }
 
+/** Motion / queue probe: Compose default durations (no provider timeout). */
+function QueueDemo() {
+  const snackbar = useSnackbar();
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <button type="button" data-show="first" onClick={() => snackbar.show('First message')}>first</button>
+      <button type="button" data-show="second" onClick={() => snackbar.show('Second message')}>second</button>
+      <button type="button" data-show="action" onClick={() => snackbar.show('Connection lost', { action: { label: 'Retry' } })}>action</button>
+      <button type="button" data-show="close" onClick={() => snackbar.show('Closable message', { withClose: true, duration: 'long' })}>close</button>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'snackbar',
   variants: Object.fromEntries([
     ['live', { render: () => <SnackbarProvider timeout={60000}><LiveDemo /></SnackbarProvider> }],
+    ['queue-live', { render: () => <SnackbarProvider><QueueDemo /></SnackbarProvider> }],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const p = name.split('-');
       let render: () => ReactNode;
