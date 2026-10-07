@@ -342,8 +342,14 @@ function TabList({ variant, scrollable, current, ariaLabel, children }: { varian
         if (!cancelled) scrollToSelected();
       });
     } else scrollToSelected();
-    // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded.
-    const ro = new ResizeObserver(() => place(false));
+    // Re-place (no motion) when the row or a tab resizes, e.g. once web fonts have loaded. The
+    // observer's initial report isn't a resize: acting on it snapped every selection's indicator
+    // to its target one frame in.
+    let initial = true;
+    const ro = new ResizeObserver(() => {
+      if (initial) initial = false;
+      else place(false);
+    });
     ro.observe(el);
     for (const tab of el.querySelectorAll('[role="tab"]')) ro.observe(tab);
     return () => {
