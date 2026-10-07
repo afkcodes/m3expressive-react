@@ -25,12 +25,12 @@ export function useComposeOrigin(): {
     const update = () => {
       const popup = positioner.querySelector<HTMLElement>(':scope > [role="menu"]');
       if (!anchor || !popup) return;
-      const a = anchor.getBoundingClientRect();
+      const anchorBox = anchor.getBoundingClientRect();
       // The positioner isn't scaled: its box is the menu's laid-out bounds.
-      const m = positioner.getBoundingClientRect();
+      const menuBox = positioner.getBoundingClientRect();
       popup.style.setProperty(
         '--m3x-menu-origin',
-        `${pivot(a.left, a.right, m.left, m.right)}px ${pivot(a.top, a.bottom, m.top, m.bottom)}px`,
+        `${pivot(anchorBox.left, anchorBox.right, menuBox.left, menuBox.right)}px ${pivot(anchorBox.top, anchorBox.bottom, menuBox.top, menuBox.bottom)}px`,
       );
     };
     update();
