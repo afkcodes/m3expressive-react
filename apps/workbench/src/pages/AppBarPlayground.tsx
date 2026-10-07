@@ -107,7 +107,7 @@ export function AppBarPlayground() {
             key={size}
             size={size === 'centered' ? 'small' : size}
             centered={size === 'centered'}
-            title="Inbox"
+            headline="Inbox"
             subtitle={subtitle ? '24 unread' : undefined}
             navigationIcon={<Btn icon="menu-24" label="Menu" />}
             actions={

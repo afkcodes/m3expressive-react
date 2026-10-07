@@ -103,7 +103,7 @@ describe('top app bar scroll state', () => {
       return (
         <>
           <Profiler id="bar" onRender={() => commits++}>
-            <TopAppBar title="Title" scrollTarget={ref} />
+            <TopAppBar headline="Title" scrollTarget={ref} />
           </Profiler>
           <div
             ref={(el) => {

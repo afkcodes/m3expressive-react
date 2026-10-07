@@ -134,7 +134,14 @@ export type {
   NavigationRailSectionProps,
 } from './components/Navigation/index.ts';
 export { AppBarTitle, BottomAppBar, TopAppBar, useAppBarScroll } from './components/AppBar/index.ts';
-export type { AppBarTitleProps, BottomAppBarProps, TopAppBarProps, TopAppBarSize } from './components/AppBar/index.ts';
+export type {
+  AppBarScrollOptions,
+  AppBarScrollState,
+  AppBarTitleProps,
+  BottomAppBarProps,
+  TopAppBarProps,
+  TopAppBarSize,
+} from './components/AppBar/index.ts';
 export { SearchBar, SearchView } from './components/Search/index.ts';
 export type { SearchBarProps, SearchViewProps } from './components/Search/index.ts';
 export { Toolbar, useFloatingToolbarExitAlways, useFloatingToolbarNestedScroll } from './components/Toolbar/index.ts';
