@@ -1,5 +1,5 @@
 import './global.css';
-import { type ComponentType, type ReactNode } from 'react';
+import { StrictMode, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { findDemo, type Demo } from './demos.ts';
 import { importBeforeLoad } from './load.ts';
@@ -47,4 +47,12 @@ async function route(): Promise<ReactNode> {
 const root = createRoot(document.getElementById('root')!);
 void route()
   .catch((error: unknown) => <ErrorMessage error={error} />)
-  .then((content) => root.render(<Boundary>{content}</Boundary>));
+  .then((content) =>
+    // StrictMode: in development React renders twice and mounts, unmounts and remounts every effect,
+    // so every spec also checks that components clean up after themselves.
+    root.render(
+      <StrictMode>
+        <Boundary>{content}</Boundary>
+      </StrictMode>,
+    ),
+  );
