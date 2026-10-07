@@ -1069,7 +1069,8 @@ test('search (live): the bar matches the kit, opens the docked view, filters, cl
 
   // Keyboard: the menu button, then the bar's own trigger (a real button, not a wrapper around the icons).
   const trigger = page.getByRole('button', { name: 'Hinted search text' });
-  const layer = node.locator('> div > span').first();
+  // The bar sits in a wrapper that the expanded view overlays (it animates out over the bar).
+  const layer = node.locator('> div > div > span').first();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Menu' })).toBeFocused();
   await page.keyboard.press('Tab');
