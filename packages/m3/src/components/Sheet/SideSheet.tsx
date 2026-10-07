@@ -12,7 +12,7 @@ import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { Divider } from '../Divider/Divider.tsx';
-import { isNoDragTarget } from './dragGuard.ts';
+import { isNoDragTarget } from '../../motion/dragGuard.ts';
 import { ModalShell } from '../../primitives/ModalShell.tsx';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {

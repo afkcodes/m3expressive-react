@@ -2,7 +2,7 @@ import { act, Profiler, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Carousel, CarouselItem, TopAppBar } from '../../packages/m3/src/index.ts';
-import { isNoDragTarget } from '../../packages/m3/src/components/Sheet/dragGuard.ts';
+import { isNoDragTarget } from '../../packages/m3/src/motion/dragGuard.ts';
 import { ownsKey } from '../../packages/m3/src/hooks/useRovingTabStop.ts';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

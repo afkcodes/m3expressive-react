@@ -23,7 +23,7 @@ import {
 } from '../../motion/gesture.ts';
 import { ModalShell } from '../../primitives/ModalShell.tsx';
 import { BottomSheet } from './BottomSheet.tsx';
-import { isNoDragTarget } from './dragGuard.ts';
+import { isNoDragTarget } from '../../motion/dragGuard.ts';
 
 /* The modal bottom sheet: placement, show / hide and the drag — kit geometry and motion in ./BottomSheet.tsx. */
 const s = stylex.create({

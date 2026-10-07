@@ -13,6 +13,8 @@ import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
+import { isNoDragTarget } from '../../motion/dragGuard.ts';
+import { pointerSlop } from '../../motion/gesture.ts';
 import { focusRing } from '../../primitives/focusRing.ts';
 import { state as stateTokens } from '../../tokens/state.stylex.ts';
 import { ListContext } from './context.ts';
@@ -32,6 +34,8 @@ export type { SwipeRevealState };
  * once 56dp past the anchor they left; it then settles with AnchoredDraggableDefaults
  * .SnapAnimationSpec — tween(300ms, FastOutSlowIn). A full swipe (the kit's swipe action, engaged
  * 24px past the revealed width) runs the action unless flung back.
+ * A press becomes a swipe after the shared 8px slop (motion/gesture.ts); presses on text entry,
+ * sliders or `[data-m3-no-drag]` content never do (motion/dragGuard.ts).
  * Keyboard (swipeKeys.ts): with the item focused ArrowLeft reveals the actions and moves into them,
  * ArrowRight / Escape hide them; a row without its own click target takes focus itself.
  *
@@ -39,8 +43,6 @@ export type { SwipeRevealState };
  * directly and published to the actions row only (an external store), so the row and its list
  * item don't re-render per frame.
  */
-/** Horizontal travel before a press becomes a swipe (px). */
-const DRAG_SLOP = 6;
 /** The item travels at most this fraction of the row's width. */
 const MAX_SWIPE_FRACTION = 0.8;
 /** Row width assumed before the first measurement (px). */
@@ -216,7 +218,7 @@ export function SwipeableListItem({
   };
 
   const onPointerDown = (e: ReactPointerEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
     rowWidth.current = root.current?.getBoundingClientRect().width ?? DEFAULT_ROW_WIDTH;
     drag.current = { x: e.clientX, start: offsetStore.get(), moved: false };
     tracker.current.reset();
@@ -230,7 +232,7 @@ export function SwipeableListItem({
     for (const sample of samples.length > 0 ? samples : [e.nativeEvent])
       tracker.current.add(sample.timeStamp, sample.clientX);
     const dx = gesture.x - e.clientX;
-    if (!gesture.moved && Math.abs(dx) < DRAG_SLOP) return;
+    if (!gesture.moved && Math.abs(dx) < pointerSlop(e.pointerType)) return;
     if (!gesture.moved) {
       gesture.moved = true;
       try {
