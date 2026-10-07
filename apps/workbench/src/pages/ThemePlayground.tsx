@@ -322,10 +322,13 @@ export function ThemePlayground() {
   const extracted = useSeedColorsFromImage(image?.source);
   const colors = useDynamicScheme(seed, { variant, contrast, specVersion: spec });
 
-  // Use the image's best colour as soon as it is extracted (Android picks the top-ranked seed).
-  useEffect(() => {
+  // Use the image's best colour as soon as it is extracted (Android picks the top-ranked seed);
+  // adjusted during render, not in an effect (the hook's result is memoised).
+  const [adopted, setAdopted] = useState(extracted);
+  if (adopted !== extracted) {
+    setAdopted(extracted);
     if (extracted.status === 'ready' && extracted.colors[0]) setSeed(extracted.colors[0]);
-  }, [extracted.status, extracted.colors]);
+  }
 
   const preview = image?.preview;
   useEffect(
