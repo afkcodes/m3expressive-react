@@ -135,7 +135,7 @@ function useTooltipBehaviour(persistent: boolean) {
   const press = useRef({ timer: 0, dismiss: 0, held: false, due: false, suppressClick: false, pointerType: '' });
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const close = () => setOpen(false);
     closeVisibleTooltip?.();
     closeVisibleTooltip = close;
@@ -159,11 +159,11 @@ function useTooltipBehaviour(persistent: boolean) {
   };
 
   const release = () => {
-    const p = press.current;
-    window.clearTimeout(p.timer);
-    if (!p.held) return;
-    p.held = false;
-    if (p.due) hide();
+    const state = press.current;
+    window.clearTimeout(state.timer);
+    if (!state.held) return;
+    state.held = false;
+    if (state.due) hide();
   };
 
   const onOpenChange = (next: boolean, details: ChangeDetails) => {
@@ -190,20 +190,20 @@ function useTooltipBehaviour(persistent: boolean) {
       press.current.pointerType = event.pointerType;
     },
     onPointerDown(event: ReactPointerEvent) {
-      const p = press.current;
-      p.pointerType = event.pointerType;
-      p.suppressClick = false;
+      const state = press.current;
+      state.pointerType = event.pointerType;
+      state.suppressClick = false;
       if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
-      window.clearTimeout(p.timer);
-      p.timer = window.setTimeout(() => {
-        p.held = true;
-        p.suppressClick = true;
-        window.clearTimeout(p.dismiss);
-        p.due = false;
+      window.clearTimeout(state.timer);
+      state.timer = window.setTimeout(() => {
+        state.held = true;
+        state.suppressClick = true;
+        window.clearTimeout(state.dismiss);
+        state.due = false;
         setOpen(true);
         if (!persistent) {
-          p.dismiss = window.setTimeout(() => {
-            if (p.held) p.due = true;
+          state.dismiss = window.setTimeout(() => {
+            if (state.held) state.due = true;
             else hide();
           }, TOOLTIP_DURATION_MS);
         }
