@@ -1,0 +1,17 @@
+/* StyleX appends its atomic CSS to this file at build time. */
+@import '@m3x/react/fonts.css';
+@import 'material-symbols/rounded.css';
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-family: 'Roboto', system-ui, sans-serif;
+}
