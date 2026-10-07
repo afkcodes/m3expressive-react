@@ -43,6 +43,8 @@ const SCHEDULE =
 
 const s = stylex.create({
   surface: {
+    // Cells stack with z-index: keep them inside the picker (an inline picker must not paint over popups).
+    isolation: 'isolate',
     display: 'flex',
     flexDirection: 'column',
     rowGap: 20,

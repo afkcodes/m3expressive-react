@@ -45,6 +45,8 @@ const monthIndex = (d: Date) => d.getFullYear() * 12 + d.getMonth();
 
 const s = stylex.create({
   surface: {
+    // Cells stack with z-index: keep them inside the picker (an inline picker must not paint over popups).
+    isolation: 'isolate',
     display: 'flex',
     flexDirection: 'column',
     boxSizing: 'border-box',
