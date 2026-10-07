@@ -170,6 +170,9 @@ export const sizes = stylex.create({
   xlarge: {},
 });
 
+/** Inline (start = end) padding per size, as in `containerSizes`. */
+export const PAD_INLINE: Record<ButtonSize, number> = { xsmall: 12, small: 16, medium: 24, large: 48, xlarge: 64 };
+
 export const containerSizes = stylex.create({
   xsmall: { paddingBlock: 6, paddingInline: 12 },
   small: { paddingBlock: 10, paddingInline: 16 },
