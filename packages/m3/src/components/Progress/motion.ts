@@ -4,7 +4,7 @@ import { emphasizedAccelerate, standard } from '../../motion/easing.ts';
 export { cubicBezier } from '../../motion/easing.ts';
 
 /*
- * The indicators' animators are plain objects ticked from one frame callback (frameClock.ts):
+ * The indicators' animators are plain objects ticked from one frame callback (motion/frameClock.ts):
  * each frame computes the drawing and writes it to the SVG, so React renders only when props,
  * size or a forced still frame change.
  */

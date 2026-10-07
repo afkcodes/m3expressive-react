@@ -11,7 +11,7 @@ import { morphToSvgPath } from '../../shapes/graphics/svg.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { loadingShapes } from './loadingShapes.ts';
 import { MORPH_INTERVAL, MORPH_PRECISION, MORPH_SPRING, SPIN_MS, SpringAnimator } from './motion.ts';
-import { observeOnScreen, onEveryFrame } from './frameClock.ts';
+import { observeOnScreen, onEveryFrame } from '../../motion/frameClock.ts';
 
 const s = stylex.create({
   root: { display: 'inline-block', width: 48, height: 48, flexShrink: 0, verticalAlign: 'middle' },

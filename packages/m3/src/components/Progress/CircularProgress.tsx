@@ -22,7 +22,7 @@ import {
   circularIndeterminate,
   circularWaveAmplitude,
 } from './motion.ts';
-import { observeOnScreen, onEveryFrame } from './frameClock.ts';
+import { observeOnScreen, onEveryFrame } from '../../motion/frameClock.ts';
 
 const s = stylex.create({
   root: { display: 'inline-block', flexShrink: 0, verticalAlign: 'middle' },

@@ -24,7 +24,7 @@ import {
   linearIndeterminate,
   linearWaveAmplitude,
 } from './motion.ts';
-import { observeOnScreen, onEveryFrame } from './frameClock.ts';
+import { observeOnScreen, onEveryFrame } from '../../motion/frameClock.ts';
 
 const s = stylex.create({
   root: { display: 'block', width: '100%', flexShrink: 0, position: 'relative' },

@@ -269,6 +269,9 @@ navigation drawer (out of scope).
   close. Drag slop is Android's 8px touch slop for every pointer type — Compose's ~0.06px mouse slop turns web clicks
   (sub-pixel jitter) into drags / flings. Drag containers use `isNoDragTarget` (input / textarea / select / contenteditable / slider /
   `[data-m3-no-drag]` / pointer capture) and read `nativeEvent.defaultPrevented`.
+- Continuous animations (progress, wave, loading morph): React renders only resting / forced frames into fixed
+  element slots (unused slots carry no geometry, so pixels don't change); `motion/frameClock.ts` runs one shared rAF
+  that writes per-frame attributes, and drawing pauses off screen (IntersectionObserver) while the clock keeps time.
 - Keyboard: every grid / listbox / radio group / toolbar has exactly one `tabIndex=0` plus arrow keys (mirrored in
   RTL; text fields keep their arrows until the caret can't move). Parts leaving under an overlay become `inert`; a
   bar scrolled away is `inert`. Pointer gestures (swipe, drag) need a keyboard path. Popups move focus in on open and

@@ -1,7 +1,8 @@
 /**
- * One requestAnimationFrame loop for every animating progress indicator: each subscriber is called
- * with the frame timestamp, in subscription order, and the loop stops when the last one leaves.
- * (Indicators used to run a rAF per animator — up to four per instance.)
+ * One shared requestAnimationFrame loop for continuous animations (progress indicators): each
+ * subscriber is called with the frame timestamp, in subscription order, and the loop stops when the
+ * last one leaves. (Progress indicators used to run a rAF per animator — up to four per instance.)
+ * Internal: not exported from `@m3x/react/motion`.
  */
 type FrameCallback = (now: number) => void;
 
