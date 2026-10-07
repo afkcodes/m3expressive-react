@@ -17,6 +17,11 @@ export interface ImageSeedState {
 
 const IDLE: ImageSeedState = { colors: [], status: 'idle', error: null };
 
+interface SettledSeeds {
+  request: { source: ImageSeedSource; count: number | undefined; maxArea: number | undefined };
+  state: ImageSeedState;
+}
+
 /**
  * Seed colours from an image, re-extracted when `source` changes; pass the first to
  * `useDynamicScheme` (or offer them all, like Android's wallpaper colour options).
@@ -27,25 +32,37 @@ export function useSeedColorsFromImage(
   options: ImageSeedOptions = {},
 ): ImageSeedState {
   const { count, maxArea } = options;
-  const [state, setState] = useState<ImageSeedState>(IDLE);
+  // The last finished extraction and the request it answers; "loading" is derived from it.
+  const [settled, setSettled] = useState<SettledSeeds | null>(null);
+  // No source: forget the previous colours (a new source starts from empty, not from stale seeds).
+  if (source == null && settled !== null) setSettled(null);
   useEffect(() => {
-    if (source == null) {
-      setState(IDLE);
-      return;
-    }
+    if (source == null) return undefined;
     let current = true;
-    setState((s) => ({ ...s, status: 'loading', error: null }));
+    const request = { source, count, maxArea };
     seedColorsFromImage(source, { count, maxArea }).then(
-      (colors) => current && setState({ colors, status: 'ready', error: null }),
-      (error: unknown) =>
-        current &&
-        setState({ colors: [], status: 'error', error: error instanceof Error ? error : new Error(String(error)) }),
+      (colors) => {
+        if (current) setSettled({ request, state: { colors, status: 'ready', error: null } });
+      },
+      (error: unknown) => {
+        if (!current) return;
+        const failure = error instanceof Error ? error : new Error(String(error));
+        setSettled({ request, state: { colors: [], status: 'error', error: failure } });
+      },
     );
     return () => {
       current = false;
     };
   }, [source, count, maxArea]);
-  return state;
+  return useMemo(() => {
+    if (source == null) return IDLE;
+    const { request } = settled ?? {};
+    if (settled && request?.source === source && request.count === count && request.maxArea === maxArea) {
+      return settled.state;
+    }
+    // A new request: keep showing the previous colours while it runs.
+    return { colors: settled?.state.colors ?? [], status: 'loading', error: null };
+  }, [source, count, maxArea, settled]);
 }
 
 /**

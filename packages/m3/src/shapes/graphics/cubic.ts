@@ -414,10 +414,6 @@ export class Cubic {
  * [Cubic]s.
  */
 export class MutableCubic extends Cubic {
-  constructor() {
-    super();
-  }
-
   private transformOnePoint(f: PointTransformer, ix: number): void {
     const result = f(this.points[ix]!, this.points[ix + 1]!);
     this.points[ix] = result[0];

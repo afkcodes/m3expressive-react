@@ -1,4 +1,4 @@
-import { useEffect, useRef, type SVGProps } from 'react';
+import { useEffect, useRef, useState, type SVGProps } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../tokens/color.stylex.ts';
@@ -44,6 +44,9 @@ export function MorphingShape({
     anim: null,
   });
   const params = useSpringToken(spring);
+  // React renders the mount-time path only; every later outline is written by the effect below
+  // (a re-render must never put a stale `d` back mid-morph).
+  const [mountShape] = useState(shape);
 
   useEffect(() => {
     const state = current.current;
@@ -89,7 +92,7 @@ export function MorphingShape({
 
   useEffect(() => () => current.current.anim?.stop(), []);
 
-  const initial = figmaShapes[current.current.target];
+  const initial = figmaShapes[mountShape];
   return (
     <svg
       viewBox={`0 0 ${SHAPE_FRAME} ${SHAPE_FRAME}`}

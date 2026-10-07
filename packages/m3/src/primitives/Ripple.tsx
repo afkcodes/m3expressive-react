@@ -67,7 +67,7 @@ export function Ripple({ disabled = false, above = false }: RippleProps) {
     const container = ref.current;
     const host = container?.closest<HTMLElement>('[data-ripple-host]') ?? container?.parentElement;
     // No Web Animations API (e.g. jsdom): no ripple, nothing else depends on it.
-    if (!container || !host || disabled || typeof container.animate !== 'function') return;
+    if (!container || !host || disabled || typeof container.animate !== 'function') return undefined;
 
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
