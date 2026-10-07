@@ -112,8 +112,10 @@ export function NavigationPlayground() {
             <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '0 0 8px' }}>
               {DESTINATIONS[railValue as number]}
             </h2>
-            The menu button toggles the rail: it widens to 220px on the default spatial spring and
-            its items switch to rows. A newly selected pill grows from its centre.
+            The menu button toggles the rail: it widens to 220px while every item morphs on the same
+            default spatial spring — the label hops beside the icon halfway, fading through 4(p − ½)².
+            A newly selected indicator grows (and fades in) from its start edge in the rail, from its
+            centre in the bar.
           </div>
         </div>
         <div {...stylex.props(s.phone)}>

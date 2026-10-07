@@ -97,10 +97,48 @@ function LiveBar() {
   );
 }
 
+/** Live (motion): the kit's 4-item top rail (nrail-top-4 / nrailx-docked-top-4); the menu button toggles it. */
+function LiveRail() {
+  const [value, setValue] = useState<unknown>(0);
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div style={{ width: 280, height: 800, display: 'flex' }}>
+      <NavigationRail
+        expanded={expanded}
+        value={value}
+        onValueChange={setValue}
+        aria-label="Primary"
+        header={
+          <>
+            <IconButton size="medium" shape="square" aria-label="Menu" onClick={() => setExpanded((v) => !v)}>
+              <Icon name={expanded ? 'menu_open-24' : 'menu-24'} />
+            </IconButton>
+            {expanded ? (
+              <ExtendedFab size="small" elevated={false} icon={<Icon name="edit-24" />}>
+                Label
+              </ExtendedFab>
+            ) : (
+              <Fab aria-label="Edit" elevated={false}>
+                <Icon name="edit-24" />
+              </Fab>
+            )}
+          </>
+        }
+      >
+        {[0, 1, 2, 3].map((i) => item(i))}
+      </NavigationRail>
+      <output data-value style={{ position: 'absolute', left: -9999 }}>
+        {String(value)}
+      </output>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'navigation',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 64, render: () => <LiveBar /> } satisfies FixtureVariant],
+    ['live-rail', { width: 280, height: 800, render: () => <LiveRail /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [name, { node: v.node, width: w, height: h, render: () => <div style={{ width: w, height: h, display: 'flex' }}>{render(name)}</div> }];
