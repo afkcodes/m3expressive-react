@@ -166,7 +166,8 @@ function SnackbarList() {
   return toasts.map((t) => {
     const data = (t.data ?? {}) as SnackbarData;
     return (
-      <Toast.Root key={t.id} toast={t} {...stylex.props(s.toast)}>
+      // Toast.Root is a dialog: its message names it (Base UI only describes it by the message).
+      <Toast.Root key={t.id} toast={t} aria-labelledby={`${t.id}-message`} {...stylex.props(s.toast)}>
         <SnackbarSurface
           stacked={data.stacked}
           action={
@@ -189,7 +190,9 @@ function SnackbarList() {
           // Always exposed: a snackbar is never collapsed into a stack (Base UI hides Close then).
           close={data.withClose ? <Toast.Close aria-hidden={false} render={<SnackbarClose />} /> : null}
         >
-          <Toast.Description render={<span />}>{t.description}</Toast.Description>
+          <Toast.Description id={`${t.id}-message`} render={<span />}>
+            {t.description}
+          </Toast.Description>
         </SnackbarSurface>
       </Toast.Root>
     );

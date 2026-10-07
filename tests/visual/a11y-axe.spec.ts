@@ -247,36 +247,6 @@ interface Known {
 
 const KNOWN: Known[] = [
   {
-    route: 'overlays',
-    state: 'rich tooltip',
-    rule: 'aria-dialog-name',
-    selector: '[role="dialog"][class~="Tooltip__s.popup"]',
-    summary: 'RichTooltip: the popup is role="dialog" (Base UI Popover) with no accessible name',
-    fix:
-      'Render `subhead` through BasePopover.Title (aria-labelledby) and the supporting text through ' +
-      'BasePopover.Description (aria-describedby); without a subhead, require an aria-label.',
-  },
-  {
-    route: 'overlays',
-    state: 'snackbar with action',
-    rule: 'aria-dialog-name',
-    selector: '[class~="SnackbarHost__s.toast"]',
-    summary: 'Snackbar: Toast.Root is role="dialog" with only aria-describedby (the message), no accessible name',
-    fix:
-      'In SnackbarHost render the message through Toast.Title (aria-labelledby) rather than ' +
-      'Toast.Description, or name Toast.Root from the labels (e.g. "Notification").',
-  },
-  {
-    route: 'date-picker',
-    state: 'modal date picker',
-    rule: 'empty-table-header',
-    selector: '[role="columnheader"]',
-    summary:
-      'DatePicker (CalendarMonth): weekday column headers hide their visible letter with aria-hidden and ' +
-      'rely on aria-label, so no header text is visible to both sighted and screen-reader users (best practice)',
-    fix: 'Drop aria-hidden from the weekday letter: the aria-label ("Sunday") still names the header.',
-  },
-  {
     route: 'app-bar',
     rule: 'scrollable-region-focusable',
     selector: '[class~="AppBarPlayground__s.scroll"]',

@@ -1,6 +1,10 @@
 import {
+  createContext,
+  useContext,
   useEffect,
+  useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   type ComponentPropsWithRef,
   type MouseEvent as ReactMouseEvent,
@@ -110,13 +114,23 @@ export interface RichTooltipSurfaceProps extends SxProps<ComponentPropsWithRef<'
   actions?: ReactNode;
 }
 
+/** Inside a RichTooltip: ids for the surface's texts, which name and describe the popup dialog. */
+const RichTooltipTextIds = createContext<{ subhead: string; text: string } | null>(null);
+
 /** The rich tooltip container on its own (static rendering, custom positioning). */
 export function RichTooltipSurface({ subhead, children, actions, sx, ...rest }: RichTooltipSurfaceProps) {
+  const ids = useContext(RichTooltipTextIds);
   return (
     <div {...rest} {...stylex.props(s.rich, sx)}>
       <div {...stylex.props(s.richContent)}>
-        {subhead != null && <p {...stylex.props(typescale.titleSmall, s.text)}>{subhead}</p>}
-        <p {...stylex.props(typescale.bodyMedium, s.text)}>{children}</p>
+        {subhead != null && (
+          <p id={ids?.subhead} {...stylex.props(typescale.titleSmall, s.text)}>
+            {subhead}
+          </p>
+        )}
+        <p id={ids?.text} {...stylex.props(typescale.bodyMedium, s.text)}>
+          {children}
+        </p>
       </div>
       {actions != null && <div {...stylex.props(s.actions)}>{actions}</div>}
     </div>
@@ -337,15 +351,27 @@ export function RichTooltip({
     defaultOpen,
     onOpenChange: onOpenChangeProp,
   });
+  // The popup is a dialog: named by the subhead (else the text), described by the text — unless the
+  // app names it itself.
+  const id = useId();
+  const ids = useMemo(() => ({ subhead: `${id}-subhead`, text: `${id}-text` }), [id]);
+  const named = rest['aria-label'] != null || rest['aria-labelledby'] != null;
   return (
     <BasePopover.Root open={open} onOpenChange={onOpenChange}>
       <BasePopover.Trigger openOnHover delay={0} render={trigger} {...triggerProps} />
       <BasePopover.Portal container={portalContainer}>
         <BasePopover.Positioner side={side} sideOffset={4}>
-          <BasePopover.Popup {...rest} {...stylex.props(s.popup, sx)}>
-            <RichTooltipSurface subhead={subhead} actions={actions}>
-              {children}
-            </RichTooltipSurface>
+          <BasePopover.Popup
+            aria-labelledby={named ? undefined : subhead != null ? ids.subhead : ids.text}
+            aria-describedby={subhead != null ? ids.text : undefined}
+            {...rest}
+            {...stylex.props(s.popup, sx)}
+          >
+            <RichTooltipTextIds value={ids}>
+              <RichTooltipSurface subhead={subhead} actions={actions}>
+                {children}
+              </RichTooltipSurface>
+            </RichTooltipTextIds>
           </BasePopover.Popup>
         </BasePopover.Positioner>
       </BasePopover.Portal>

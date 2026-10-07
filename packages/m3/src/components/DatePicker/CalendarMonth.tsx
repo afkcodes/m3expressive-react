@@ -150,7 +150,8 @@ function CalendarMonthGrid({
               aria-label={formatter.weekdayLong(firstDayOfWeek + i)}
               {...stylex.props(s.weekday)}
             >
-              <span aria-hidden {...stylex.props(typescale.bodyLarge, textBox.hug)}>
+              {/* The letter stays in the tree (a header with no exposed text is "empty"); the label names it. */}
+              <span {...stylex.props(typescale.bodyLarge, textBox.hug)}>
                 {formatter.weekdayNarrow(firstDayOfWeek + i)}
               </span>
             </span>
