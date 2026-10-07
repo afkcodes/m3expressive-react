@@ -499,6 +499,30 @@ test('segmented button (live): select, check, keyboard', async ({ page }) => {
   await expect(items.nth(1)).toBeFocused();
 });
 
+// Auto width (unequal labels): equal segments as wide as the widest, sharing 1px borders — a
+// long label must never push its container past its track (that drew doubled dividers).
+test('segmented button (live, auto width): equal segments sized to the widest label', async ({ page }) => {
+  await page.goto('/fixture/segmented-button/live-auto');
+  await page.evaluate(() => document.fonts.ready);
+  const node = page.locator('[data-fixture-node]');
+  await expect(node).toBeVisible();
+  const segs = await node.locator('button').evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      const c = el.firstElementChild!.getBoundingClientRect();
+      const content = el.firstElementChild!.lastElementChild!.getBoundingClientRect();
+      return { left: r.left, width: r.width, container: c.width, content: content.width };
+    }),
+  );
+  expect(segs).toHaveLength(4);
+  const widest = Math.max(...segs.map((x) => x.content)) + 24; // 12px padding each side
+  for (const [i, x] of segs.entries()) {
+    expect.soft(x.width, `segment ${i} width`).toBeCloseTo(widest, 1);
+    expect.soft(x.container, `segment ${i} container fits its track`).toBeCloseTo(x.width, 1);
+    if (i > 0) expect.soft(x.left - segs[i - 1]!.left, `segment ${i} overlaps by 1px`).toBeCloseTo(widest - 1, 1);
+  }
+});
+
 // ── Radio: hover = kit, click selects (dot), arrow keys move the selection ──────────────────
 test('radio (live): hover, select, arrows', async ({ page }) => {
   const radios = JSON.parse(readFileSync(join(REFS_DIR, 'radio/manifest.json'), 'utf8')) as Manifest;

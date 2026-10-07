@@ -30,7 +30,18 @@ const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
 const scaleIn = stylex.keyframes({ from: { scale: 0 } });
 
 const s = stylex.create({
-  group: { display: 'inline-flex', verticalAlign: 'middle' },
+  // Equal segments sized to the widest one (Compose rows: IntrinsicSize.Min + weight(1f) → every
+  // segment = the largest intrinsic width). Under an auto width, `1fr` tracks take the largest
+  // max-content contribution; `minmax(0, …)` lets an explicit width shrink them (kit frames).
+  // Neighbours overlap by 1px: every segment pulls 1px back and the group pads 1px, so n segments
+  // of width w span n·w − (n − 1), as in the kit.
+  group: {
+    display: 'inline-grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'minmax(0, 1fr)',
+    paddingInlineStart: 1,
+    verticalAlign: 'middle',
+  },
   root: {
     appearance: 'none',
     borderWidth: 0,
@@ -46,7 +57,6 @@ const s = stylex.create({
     color: 'inherit',
     display: 'flex',
     alignItems: 'center',
-    flex: '1 1 0',
     minWidth: 0,
     cursor: { default: 'pointer', ':disabled': 'default' },
     userSelect: 'none',
@@ -247,7 +257,7 @@ export const SegmentedButtonItem = forwardRef<HTMLButtonElement, SegmentedButton
       {...stylex.props(
         s.root,
         dyn.heights(box + 8, box),
-        group && group.index > 0 && s.overlap,
+        group && s.overlap,
         stateLayerHost.hostPressLayer,
         isDisabled && stateLayerHost.disabled,
         forced.state === 'hovered' && stateLayerHost.forceHover,

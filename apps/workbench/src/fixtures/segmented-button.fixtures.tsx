@@ -43,6 +43,21 @@ const fixture: FixtureModule = {
         ),
       },
     ],
+    [
+      'live-auto',
+      {
+        // No width: every segment takes the widest one's width (Compose IntrinsicSize.Min + weight).
+        render: () => (
+          <SegmentedButton defaultValue={['week']} aria-label="Range">
+            {['Day', 'Week', 'Month', 'Year'].map((v) => (
+              <SegmentedButtonItem key={v} value={v.toLowerCase()} icon={<Stars />}>
+                {v}
+              </SegmentedButtonItem>
+            ))}
+          </SegmentedButton>
+        ),
+      },
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const parts = name.split('-');
       if (parts[0] === 'set') {
