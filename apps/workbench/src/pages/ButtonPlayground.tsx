@@ -11,6 +11,8 @@ import {
   FabMenuItem,
   IconButton,
   M3Provider,
+  Menu,
+  MenuItem,
   SegmentedButton,
   SegmentedButtonItem,
   SplitButton,
@@ -304,7 +306,7 @@ export function ButtonPlayground() {
         </section>
 
         <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: '8px 0 0' }}>
-          Split buttons ({size}) — hover each half, click the chevron
+          Split buttons ({size}) — hover each half, the chevron opens a menu
         </h2>
         <section {...stylex.props(s.grid)} style={{ gridTemplateColumns: 'repeat(4, max-content)' }}>
           {TOGGLE_VARIANTS.map((v) => (
@@ -312,7 +314,12 @@ export function ButtonPlayground() {
               <SplitButtonLeading icon={withIcon ? <StarsFilled /> : undefined}>
                 {label || undefined}
               </SplitButtonLeading>
-              <SplitButtonTrailing aria-label="More options" />
+              {/* As a menu trigger the trailing button follows the menu (open, Escape, item chosen). */}
+              <Menu trigger={<SplitButtonTrailing aria-label="More options" />}>
+                <MenuItem>Duplicate</MenuItem>
+                <MenuItem>Rename</MenuItem>
+                <MenuItem>Archive</MenuItem>
+              </Menu>
             </SplitButton>
           ))}
         </section>
