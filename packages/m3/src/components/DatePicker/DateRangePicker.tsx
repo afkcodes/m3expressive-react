@@ -1,10 +1,21 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentPropsWithRef,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { ModalShell } from '../../primitives/ModalShell.tsx';
+import { ModalShell, type ModalOpenChangeDetails } from '../../primitives/ModalShell.tsx';
+import type { SxProps } from '../../primitives/types.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { ICON_PATHS, SvgIcon } from '../../primitives/SvgIcon.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
@@ -114,50 +125,68 @@ export interface DateRange {
   end: Date | null;
 }
 
-export interface DateRangePickerProps {
-  value: DateRange;
-  onChange: (range: DateRange) => void;
+const NO_RANGE: DateRange = { start: null, end: null };
+
+/** `ref`, the native props and `sx` go to the picker's surface `<div>`. */
+export interface DateRangePickerProps extends SxProps<
+  Omit<ComponentPropsWithRef<'div'>, 'defaultValue' | 'placeholder'>
+> {
+  value?: DateRange;
+  /** The uncontrolled initial range (default none). */
+  defaultValue?: DateRange;
+  onValueChange?: (range: DateRange) => void;
   /** The first month listed. Defaults to the start's month (or today's) when the picker mounts. */
   firstMonth?: Date;
   /** How many months to list (default 12). */
   monthCount?: number;
+  /** The day treated as today (default: the device date at mount). */
   today?: Date;
   firstDayOfWeek?: number;
   locale?: string;
   formatter?: Partial<DatePickerFormatter> & { range?: (r: DateRange) => string };
+  /** The header's label (default the `selectDates` label). */
   supportingText?: ReactNode;
+  /** The headline while nothing is selected (default the `dateRangePlaceholder` label). */
   placeholder?: ReactNode;
-  onClose?: () => void;
-  onSave?: () => void;
-  onModeToggle?: () => void;
-  onClear?: () => void;
-  onCancel?: () => void;
-  onConfirm?: () => void;
-  labels?: { save?: string; close?: string; clear?: string; cancel?: string; confirm?: string; mode?: string };
-  sx?: StyleXStyles;
+  /** The close button at the top (hidden when omitted). */
+  onClose?: MouseEventHandler<HTMLButtonElement>;
+  /** The Save button at the top (hidden when omitted). */
+  onSave?: MouseEventHandler<HTMLButtonElement>;
+  /** The header's mode button (switch to text input); hidden when omitted. */
+  onModeToggle?: MouseEventHandler<HTMLButtonElement>;
+  onClear?: MouseEventHandler<HTMLButtonElement>;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
+  /** Overrides for the built-in strings (`selectDates`, `dateRangePlaceholder`, `close`, `save`, `switchToInput`, `clear`, `cancel`, `ok`). */
+  labels?: Partial<M3Labels>;
 }
 
 /** The full-screen range picker: tap a start day, then an end day. */
 export function DateRangePicker({
-  value,
-  onChange,
+  ref,
+  value: valueProp,
+  defaultValue = NO_RANGE,
+  onValueChange,
   firstMonth,
   monthCount = 12,
   today: todayProp,
   firstDayOfWeek = 0,
   locale,
   formatter: formatterProp,
-  supportingText = 'Select dates',
-  placeholder = 'Start date – End date',
+  supportingText,
+  placeholder,
   onClose,
   onSave,
   onModeToggle,
   onClear,
   onCancel,
   onConfirm,
-  labels = {},
+  labels: labelsProp,
   sx,
+  ...rest
 }: DateRangePickerProps) {
+  const labels = useLabels(labelsProp);
+  const [value, onChange] = useControllableState(valueProp, defaultValue, onValueChange);
   const formatter = useMemo(() => ({ ...defaultFormatter(locale), ...formatterProp }), [locale, formatterProp]);
   const today = useToday(todayProp);
   const short = dateFormat(locale, { month: 'short', day: 'numeric' });
@@ -223,11 +252,11 @@ export function DateRangePicker({
   };
 
   return (
-    <div {...stylex.props(s.surface, sx)}>
+    <div ref={ref} {...rest} {...stylex.props(s.surface, sx)}>
       <div {...stylex.props(s.header)}>
         <div {...stylex.props(s.bar)}>
           {onClose ? (
-            <IconButton aria-label={labels.close ?? 'Close'} onClick={onClose}>
+            <IconButton aria-label={labels.close} onClick={onClose}>
               <SvgIcon d={ICON_PATHS.close} />
             </IconButton>
           ) : (
@@ -235,19 +264,21 @@ export function DateRangePicker({
           )}
           {onSave && (
             <Button variant="text" onClick={onSave}>
-              {labels.save ?? 'Save'}
+              {labels.save}
             </Button>
           )}
         </div>
         <div {...stylex.props(s.title)}>
           <div {...stylex.props(s.titleText)}>
-            <p {...stylex.props(typescale.labelLarge, s.label)}>{supportingText}</p>
+            <p {...stylex.props(typescale.labelLarge, s.label)}>
+              {supportingText === undefined ? labels.selectDates : supportingText}
+            </p>
             <p {...stylex.props(typescale.titleLarge, s.range)} aria-live="polite">
-              {value.start ? rangeText(value) : placeholder}
+              {value.start ? rangeText(value) : placeholder === undefined ? labels.dateRangePlaceholder : placeholder}
             </p>
           </div>
           {onModeToggle && (
-            <IconButton aria-label={labels.mode ?? 'Switch to text input'} onClick={onModeToggle}>
+            <IconButton aria-label={labels.switchToInput} onClick={onModeToggle}>
               <SvgIcon d={DATE_PICKER_ICONS.edit} />
             </IconButton>
           )}
@@ -284,18 +315,18 @@ export function DateRangePicker({
         <div {...stylex.props(s.actions)}>
           {onClear && (
             <Button variant="text" onClick={onClear}>
-              {labels.clear ?? 'Clear'}
+              {labels.clear}
             </Button>
           )}
           <span {...stylex.props(s.end)}>
             {onCancel && (
               <Button variant="text" onClick={onCancel}>
-                {labels.cancel ?? 'Cancel'}
+                {labels.cancel}
               </Button>
             )}
             {onConfirm && (
               <Button variant="text" onClick={onConfirm}>
-                {labels.confirm ?? 'OK'}
+                {labels.ok}
               </Button>
             )}
           </span>
@@ -305,25 +336,55 @@ export function DateRangePicker({
   );
 }
 
+/**
+ * `ref`, the native props and `sx` go to the dialog popup (docs/API-CONVENTIONS.md §1); the
+ * picker options go to the range picker inside.
+ */
 export interface ModalDateRangePickerProps extends Omit<
   DateRangePickerProps,
-  'onClose' | 'onSave' | 'onCancel' | 'onConfirm' | 'value' | 'onChange'
+  'onClose' | 'onSave' | 'onCancel' | 'onConfirm' | 'role' | 'children'
 > {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  value: DateRange;
-  onChange: (range: DateRange) => void;
+  open?: boolean;
+  /** The uncontrolled initial open state (default false). */
+  defaultOpen?: boolean;
+  /**
+   * `details` are Base UI's (reason, event, `cancel()`) when the dialog closes itself (Escape); the
+   * picker's close / Save / Cancel / OK buttons close it without them.
+   */
+  onOpenChange?: (open: boolean, details?: ModalOpenChangeDetails) => void;
+  /** The committed range: changes on Save / OK (close / Cancel / Escape keep it). */
+  value?: DateRange;
+  defaultValue?: DateRange;
+  onValueChange?: (range: DateRange) => void;
 }
 
 /** The full-screen range picker in a dialog; Save / OK commit, close / Cancel / Escape discard. */
 export function ModalDateRangePicker({
-  open,
+  ref,
+  open: openProp,
+  defaultOpen = false,
   onOpenChange,
-  value,
-  onChange,
+  value: valueProp,
+  defaultValue = NO_RANGE,
+  onValueChange,
+  firstMonth,
+  monthCount,
+  today,
+  firstDayOfWeek,
+  locale,
+  formatter,
+  supportingText,
+  placeholder,
+  onModeToggle,
   onClear,
-  ...picker
+  labels: labelsProp,
+  sx,
+  'aria-label': ariaLabel,
+  ...popupProps
 }: ModalDateRangePickerProps) {
+  const labels = useLabels(labelsProp);
+  const [open, setOpen] = useControllableState<boolean, [ModalOpenChangeDetails?]>(openProp, defaultOpen, onOpenChange);
+  const [value, setValue] = useControllableState(valueProp, defaultValue, onValueChange);
   const [draft, setDraft] = useState<DateRange>(value);
   // Each opening starts from the committed range; a parent re-render while open keeps the picks.
   const [wasOpen, setWasOpen] = useState(open);
@@ -331,27 +392,39 @@ export function ModalDateRangePicker({
     setWasOpen(open);
     if (open) setDraft(value);
   }
+  const close = () => setOpen(false);
   const commit = () => {
-    onChange(draft);
-    onOpenChange(false);
+    setValue(draft);
+    setOpen(false);
   };
   return (
     // Full screen: the surface covers the page, no scrim.
     <ModalShell
+      ref={ref}
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={setOpen}
       scrim={false}
-      aria-label={typeof picker.supportingText === 'string' ? picker.supportingText : 'Select dates'}
-      sx={[s.popup, dialogMotion.fadeRise]}
+      aria-label={ariaLabel ?? (typeof supportingText === 'string' ? supportingText : labels.selectDates)}
+      {...popupProps}
+      sx={[s.popup, dialogMotion.fadeRise, sx]}
     >
       <DateRangePicker
-        {...picker}
+        firstMonth={firstMonth}
+        monthCount={monthCount}
+        today={today}
+        firstDayOfWeek={firstDayOfWeek}
+        locale={locale}
+        formatter={formatter}
+        supportingText={supportingText}
+        placeholder={placeholder}
+        onModeToggle={onModeToggle}
+        labels={labels}
         value={draft}
-        onChange={setDraft}
-        onClose={() => onOpenChange(false)}
+        onValueChange={setDraft}
+        onClose={close}
         onSave={commit}
-        onClear={onClear ?? (() => setDraft({ start: null, end: null }))}
-        onCancel={() => onOpenChange(false)}
+        onClear={onClear ?? (() => setDraft(NO_RANGE))}
+        onCancel={close}
         onConfirm={commit}
       />
     </ModalShell>

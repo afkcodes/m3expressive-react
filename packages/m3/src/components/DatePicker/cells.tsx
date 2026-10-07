@@ -1,4 +1,4 @@
-import { forwardRef, useState, type MouseEventHandler, type ReactNode } from 'react';
+import { useState, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -9,6 +9,7 @@ import { interaction } from '../../primitives/state.stylex.ts';
 import { StateLayer, forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, "Date & time pickers" building blocks (51954:18817 calendar cell, 18918 year,
@@ -158,26 +159,27 @@ const s = stylex.create({
 
 export type CalendarDayKind = 'default' | 'today' | 'selected' | 'range' | 'outside' | 'empty';
 
-export interface CalendarDayProps {
+/** `ref`, the native props and `sx` go to the day's `<button>` (an `'empty'` cell renders a bare `<span>`). */
+export interface CalendarDayProps extends SxProps<Omit<ComponentPropsWithRef<'button'>, 'children'>> {
+  /** The day number shown. */
   label?: ReactNode;
   kind?: CalendarDayKind;
   /** The selected day starts (band to the right) / ends (band to the left) a range. */
   rangeStart?: boolean;
   rangeEnd?: boolean;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  'aria-label'?: string;
-  'aria-pressed'?: boolean;
-  'aria-current'?: 'date';
-  tabIndex?: number;
-  'data-date'?: string;
 }
 
 /** One day of the calendar grid. */
-export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(function CalendarDay(
-  { label, kind = 'default', rangeStart, rangeEnd, disabled = false, onClick, ...aria },
+export function CalendarDay({
   ref,
-) {
+  label,
+  kind = 'default',
+  rangeStart,
+  rangeEnd,
+  disabled = false,
+  sx,
+  ...rest
+}: CalendarDayProps) {
   const forced = useForcedState();
   // A day leaving a range takes its new colour at once (Compose swaps to a fresh animated state).
   const [prevKind, setPrevKind] = useState(kind);
@@ -205,9 +207,8 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
       ref={ref}
       type="button"
       disabled={disabled}
-      onClick={onClick}
       data-ripple-host=""
-      {...aria}
+      {...rest}
       {...stylex.props(
         s.day,
         text,
@@ -215,6 +216,7 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
         interactive && s.pressLayer,
         forcedStateLayer(forced.state, 'pressed'),
         disabled && s.dim,
+        sx,
       )}
     >
       {kind === 'range' && <span aria-hidden {...stylex.props(s.band, s.bandFull)} />}
@@ -234,24 +236,27 @@ export const CalendarDay = forwardRef<HTMLButtonElement, CalendarDayProps>(funct
       <span {...stylex.props(typescale.bodyLarge, textBox.hug, s.label)}>{label}</span>
     </button>
   );
-});
+}
 
-export interface YearChipProps {
+/** `ref`, the native props and `sx` go to the year's `<button>` (its 88×52 cell is a layout `<span>`). */
+export interface YearChipProps extends SxProps<Omit<ComponentPropsWithRef<'button'>, 'children'>> {
   year: ReactNode;
   selected?: boolean;
-  disabled?: boolean;
   /** An option of a listbox (the year grid): role="option" + aria-selected instead of a toggle button. */
   option?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  tabIndex?: number;
   'data-year'?: number;
 }
 
 /** A year in the year selection grid. */
-export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function YearChip(
-  { year, selected = false, disabled = false, option = false, onClick, ...rest },
+export function YearChip({
   ref,
-) {
+  year,
+  selected = false,
+  disabled = false,
+  option = false,
+  sx,
+  ...rest
+}: YearChipProps) {
   const forced = useForcedState();
   return (
     <span role={option ? 'presentation' : undefined} {...stylex.props(s.yearCell)}>
@@ -262,7 +267,6 @@ export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function Ye
         role={option ? 'option' : undefined}
         aria-selected={option ? selected : undefined}
         aria-pressed={option ? undefined : selected}
-        onClick={onClick}
         data-ripple-host=""
         {...rest}
         {...stylex.props(
@@ -271,6 +275,7 @@ export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function Ye
           !disabled && stateLayerHost.hostPressLayer,
           forcedStateLayer(forced.state, 'pressed'),
           disabled && s.dim,
+          sx,
         )}
       >
         {!disabled && <StateLayer />}
@@ -278,26 +283,30 @@ export const YearChip = forwardRef<HTMLButtonElement, YearChipProps>(function Ye
       </button>
     </span>
   );
-});
+}
 
-export interface PickerMenuButtonProps {
+/** `ref`, the native props and `sx` go to the `<button>`. */
+export interface PickerMenuButtonProps extends SxProps<ComponentPropsWithRef<'button'>> {
   children: ReactNode;
+  /** Its list is open: the arrow flips (`aria-expanded`). */
   open?: boolean;
-  disabled?: boolean;
   /** Keep the arrow's space but hide it (an inactive menu in the docked picker's list views). */
   hideArrow?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  'aria-label'?: string;
 }
 
 // Kit icon arrow_drop_down (18px).
 const ARROW = 'M9 11.25L5.25 7.5H12.75L9 11.25Z';
 
 /** The month / year menu button of the date pickers (drop arrow flips while its list is open). */
-export const PickerMenuButton = forwardRef<HTMLButtonElement, PickerMenuButtonProps>(function PickerMenuButton(
-  { children, open = false, disabled = false, hideArrow = false, onClick, 'aria-label': ariaLabel },
+export function PickerMenuButton({
   ref,
-) {
+  children,
+  open = false,
+  disabled = false,
+  hideArrow = false,
+  sx,
+  ...rest
+}: PickerMenuButtonProps) {
   const forced = useForcedState();
   return (
     <button
@@ -305,10 +314,14 @@ export const PickerMenuButton = forwardRef<HTMLButtonElement, PickerMenuButtonPr
       type="button"
       disabled={disabled}
       aria-expanded={open}
-      aria-label={ariaLabel}
-      onClick={onClick}
       data-ripple-host=""
-      {...stylex.props(s.menu, !disabled && stateLayerHost.hostPressLayer, forcedStateLayer(forced.state, 'pressed'))}
+      {...rest}
+      {...stylex.props(
+        s.menu,
+        !disabled && stateLayerHost.hostPressLayer,
+        forcedStateLayer(forced.state, 'pressed'),
+        sx,
+      )}
     >
       {!disabled && <StateLayer />}
       <span {...stylex.props(typescale.labelLarge, textBox.hug, disabled && s.dim)}>{children}</span>
@@ -322,4 +335,4 @@ export const PickerMenuButton = forwardRef<HTMLButtonElement, PickerMenuButtonPr
       </svg>
     </button>
   );
-});
+}

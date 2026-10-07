@@ -1,10 +1,19 @@
-import { useLayoutEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type ComponentPropsWithRef,
+  type KeyboardEvent,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { SvgIcon } from '../../primitives/SvgIcon.tsx';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
 import { PickerMenuButton, YearChip } from './cells.tsx';
@@ -123,14 +132,23 @@ const s = stylex.create({
 
 export type DatePickerView = 'day' | 'year';
 
-export interface DatePickerProps {
-  value: Date | null;
-  onChange: (date: Date | null) => void;
-  /** The displayed month (any day in it). Uncontrolled from `value` / today when omitted. */
+/** `ref`, the native props and `sx` go to the picker's surface `<div>`. */
+export interface DatePickerProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'defaultValue' | 'placeholder'>> {
+  /** The selected day (`null`: none). */
+  value?: Date | null;
+  /** The uncontrolled initial selection (default none). */
+  defaultValue?: Date | null;
+  onValueChange?: (date: Date | null) => void;
+  /** The displayed month (any day in it). */
   month?: Date;
+  /** The uncontrolled initial month (default: the value's month, else today's). */
+  defaultMonth?: Date;
   onMonthChange?: (month: Date) => void;
   view?: DatePickerView;
+  /** The uncontrolled initial view (default `'day'`). */
+  defaultView?: DatePickerView;
   onViewChange?: (view: DatePickerView) => void;
+  /** The day treated as today (default: the device date at mount). */
   today?: Date;
   /** Years offered in the year view (inclusive). */
   yearRange?: [number, number];
@@ -139,50 +157,61 @@ export interface DatePickerProps {
   locale?: string;
   /** Overrides for the labels (month / headline / weekday / year …). */
   formatter?: Partial<DatePickerFormatter> & { year?: (year: number) => string };
+  /** The header's label (default the `selectDate` label). */
   supportingText?: ReactNode;
-  /** Headline when nothing is selected. */
+  /** Headline when nothing is selected (default the `selectDate` label). */
   placeholder?: ReactNode;
   /** The header's mode button (switch to text input); hidden when omitted. */
-  onModeToggle?: () => void;
-  onClear?: () => void;
-  onCancel?: () => void;
-  onConfirm?: () => void;
-  labels?: { clear?: string; cancel?: string; confirm?: string; previous?: string; next?: string; mode?: string };
-  sx?: StyleXStyles;
+  onModeToggle?: MouseEventHandler<HTMLButtonElement>;
+  /** The Clear button (hidden when omitted). */
+  onClear?: MouseEventHandler<HTMLButtonElement>;
+  /** The Cancel button (hidden when omitted). */
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  /** The OK button (hidden when omitted). */
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
+  /** Overrides for the built-in strings (`selectDate`, `previousMonth`, `nextMonth`, `year`, `clear`, `cancel`, `ok`…). */
+  labels?: Partial<M3Labels>;
 }
 
 /** The date picker surface (the modal's content; see `ModalDatePicker`). */
 export function DatePicker({
-  value,
-  onChange,
+  ref,
+  value: valueProp,
+  defaultValue = null,
+  onValueChange,
   month: monthProp,
+  defaultMonth,
   onMonthChange,
   view: viewProp,
+  defaultView = 'day',
   onViewChange,
   today: todayProp,
   yearRange = DEFAULT_YEAR_RANGE,
   firstDayOfWeek = 0,
   locale,
   formatter: formatterProp,
-  supportingText = 'Select date',
-  placeholder = 'Select date',
+  supportingText,
+  placeholder,
   onModeToggle,
   onClear,
   onCancel,
   onConfirm,
-  labels = {},
+  labels: labelsProp,
   sx,
+  ...rest
 }: DatePickerProps) {
+  const labels = useLabels(labelsProp);
   const formatter = useMemo(() => ({ ...defaultFormatter(locale), ...formatterProp }), [locale, formatterProp]);
   const today = useToday(todayProp);
+  const [value, onChange] = useControllableState(valueProp, defaultValue, onValueChange);
   const [anyDayOfMonth, setMonth] = useControllableState(
     monthProp,
-    () => makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+    () => defaultMonth ?? makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
     onMonthChange,
   );
   const [year, monthOfYear] = [anyDayOfMonth.getFullYear(), anyDayOfMonth.getMonth()];
   const month = useMemo(() => makeDate(year, monthOfYear, 1), [year, monthOfYear]);
-  const [view, setView] = useControllableState<DatePickerView>(viewProp, 'day', onViewChange);
+  const [view, setView] = useControllableState<DatePickerView>(viewProp, defaultView, onViewChange);
   const { phase, area, yearsBox, years: yearsRef } = useYearListTransition(view);
 
   // A year pick jumps to its month (Compose scrollToItem); one-month steps slide. The jump target
@@ -222,16 +251,18 @@ export function DatePicker({
   };
 
   return (
-    <div {...stylex.props(s.surface, sx)}>
+    <div ref={ref} {...rest} {...stylex.props(s.surface, sx)}>
       <div data-dp-header="" {...stylex.props(s.header)}>
         <div {...stylex.props(s.headerText)}>
-          <p {...stylex.props(typescale.labelLarge, s.supporting)}>{supportingText}</p>
+          <p {...stylex.props(typescale.labelLarge, s.supporting)}>
+            {supportingText === undefined ? labels.selectDate : supportingText}
+          </p>
           <p {...stylex.props(typescale.headlineLarge, s.headline)} aria-live="polite">
-            {value ? formatter.selectedDate(value) : placeholder}
+            {value ? formatter.selectedDate(value) : placeholder === undefined ? labels.selectDate : placeholder}
           </p>
         </div>
         {onModeToggle && (
-          <IconButton aria-label={labels.mode ?? 'Switch to text input'} onClick={onModeToggle}>
+          <IconButton aria-label={labels.switchToInput} onClick={onModeToggle}>
             <SvgIcon d={ICONS.edit} />
           </IconButton>
         )}
@@ -241,19 +272,16 @@ export function DatePicker({
           <PickerMenuButton
             open={view === 'year'}
             onClick={() => setView(view === 'year' ? 'day' : 'year')}
-            aria-label={`${formatter.monthYear(month)}, select year`}
+            aria-label={labels.selectYear(formatter.monthYear(month))}
           >
             {formatter.monthYear(month)}
           </PickerMenuButton>
           {view === 'day' && (
             <div {...stylex.props(s.controls)}>
-              <IconButton
-                aria-label={labels.previous ?? 'Previous month'}
-                onClick={() => setMonth(addMonths(month, -1))}
-              >
+              <IconButton aria-label={labels.previousMonth} onClick={() => setMonth(addMonths(month, -1))}>
                 <SvgIcon d={ICONS.prev} />
               </IconButton>
-              <IconButton aria-label={labels.next ?? 'Next month'} onClick={() => setMonth(addMonths(month, 1))}>
+              <IconButton aria-label={labels.nextMonth} onClick={() => setMonth(addMonths(month, 1))}>
                 <SvgIcon d={ICONS.next} />
               </IconButton>
             </div>
@@ -288,7 +316,7 @@ export function DatePicker({
               {...stylex.props(phase !== 'year' && s.yearsOverlay)}
             >
               <div ref={yearsRef} {...stylex.props(s.years)}>
-                <div role="listbox" aria-label="Year" onKeyDown={onYearKey} {...stylex.props(s.yearGrid)}>
+                <div role="listbox" aria-label={labels.year} onKeyDown={onYearKey} {...stylex.props(s.yearGrid)}>
                   {Array.from({ length: lastYear - firstYear + 1 }, (_, i) => firstYear + i).map((y) => (
                     <YearChip
                       key={y}
@@ -314,18 +342,18 @@ export function DatePicker({
       <div data-dp-actions="" {...stylex.props(s.actions, view === 'year' && s.actionsRule)}>
         {onClear && (
           <Button variant="text" onClick={onClear}>
-            {labels.clear ?? 'Clear'}
+            {labels.clear}
           </Button>
         )}
         <span {...stylex.props(s.end)}>
           {onCancel && (
             <Button variant="text" onClick={onCancel}>
-              {labels.cancel ?? 'Cancel'}
+              {labels.cancel}
             </Button>
           )}
           {onConfirm && (
             <Button variant="text" onClick={onConfirm}>
-              {labels.confirm ?? 'OK'}
+              {labels.ok}
             </Button>
           )}
         </span>
