@@ -73,14 +73,7 @@ export type {
   PlainTooltipSurfaceProps,
   RichTooltipSurfaceProps,
 } from './components/Tooltip/index.ts';
-export {
-  AssistChip,
-  FilterChip,
-  InputChip,
-  SuggestionChip,
-  ChipAvatarPlaceholder,
-  ChipGroup,
-} from './components/Chip/index.ts';
+export { AssistChip, FilterChip, InputChip, SuggestionChip, ChipGroup } from './components/Chip/index.ts';
 export { LinearProgress, CircularProgress, LoadingIndicator } from './components/Progress/index.ts';
 export { Slider, RangeSlider } from './components/Slider/index.ts';
 export { TextField } from './components/TextField/index.ts';

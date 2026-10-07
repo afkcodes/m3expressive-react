@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
-import { AssistChip, ChipAvatarPlaceholder, ChipGroup, FilterChip, InputChip, SuggestionChip } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { AssistChip, ChipGroup, FilterChip, InputChip, SuggestionChip } from '@m3x/react';
+import { ChipAvatarPlaceholder, ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/chips/manifest.json';
 import assets from '../../../../figma/chips/assets.json';
 import brandLogo from '../../../../figma/chips/assets/brand-logo.svg';
@@ -94,7 +94,7 @@ const fixture: FixtureModule = {
             <FilterChip
               elevated={style === 'el'}
               selected={sel === 't'}
-              trailingIcon={trailing === 't'}
+              dropdown={trailing === 't'}
               dragged={state === 'dragged'}
               disabled={state === 'disabled'}
               icon={cfg === 'icon' ? <Taxi /> : undefined}
