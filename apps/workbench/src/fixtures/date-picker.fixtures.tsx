@@ -1,29 +1,31 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   Button,
-  CalendarDay,
-  CalendarMonth,
   defaultFormatter,
-  DateInputPanel,
   DatePicker,
   DateRangePicker,
   DockedDatePicker,
   ModalDatePicker,
   ModalDateRangePicker,
   type DateRange,
-  DockedCalendar,
-  DATE_PICKER_ICONS,
   IconButton,
-  PickerMenuButton,
   TextField,
-  YearChip,
-  type CalendarDayKind,
   type DockedView,
 } from '@m3x/react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { textFieldVars } from '@m3x/react/components/TextField/textField.stylex';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import {
+  CalendarDay,
+  CalendarMonth,
+  DateInputPanel,
+  DockedCalendar,
+  ForceState,
+  PickerMenuButton,
+  YearChip,
+  type CalendarDayKind,
+  type ForcedState,
+} from '@m3x/react/testing';
 import manifest from '../../../../figma/date-picker/manifest.json';
 import assets from '../../../../figma/date-picker/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -80,7 +82,7 @@ function docked(view: DockedView): ReactNode {
                   aria-hidden
                   style={{ display: 'block' }}
                 >
-                  <path d={DATE_PICKER_ICONS.today} />
+                  <path d={assets.icons['today-24']} />
                 </svg>
               </IconButton>
             </ForceState>
@@ -89,7 +91,7 @@ function docked(view: DockedView): ReactNode {
       </ForceState>
       <DockedCalendar
         value={kit ? new Date(2024, 5, 17) : new Date(2025, 7, 17)}
-        onChange={noop}
+        onValueChange={noop}
         month={kit ? new Date(2024, 5, 1) : new Date(2025, 7, 1)}
         today={new Date(2000, 0, 1)}
         view={view}
@@ -113,7 +115,7 @@ function render(name: string): ReactNode {
     return (
       <DateRangePicker
         value={{ start: new Date(2025, 6, 17), end: new Date(2025, 6, 23) }}
-        onChange={noop}
+        onValueChange={noop}
         firstMonth={KIT_MONTH}
         monthCount={3}
         today={new Date(2025, 6, 5)}
@@ -141,7 +143,7 @@ function render(name: string): ReactNode {
     return (
       <DatePicker
         value={new Date(2025, 6, 17)}
-        onChange={noop}
+        onValueChange={noop}
         month={KIT_MONTH}
         today={new Date(2025, 6, 5)}
         view={name === 'modal-year' ? 'year' : 'day'}
@@ -193,19 +195,19 @@ function LivePickers() {
       <output data-date>{iso(date)}</output>
       <output data-range>{`${iso(range.start)}..${iso(range.end)}`}</output>
       <output data-docked>{iso(docked)}</output>
-      <DockedDatePicker value={docked} onChange={setDocked} today={new Date(2025, 6, 5)} />
+      <DockedDatePicker value={docked} onValueChange={setDocked} today={new Date(2025, 6, 5)} />
       <ModalDatePicker
         open={open}
         onOpenChange={setOpen}
         value={date}
-        onChange={setDate}
+        onValueChange={setDate}
         today={new Date(2025, 6, 5)}
       />
       <ModalDateRangePicker
         open={rangeOpen}
         onOpenChange={setRangeOpen}
         value={range}
-        onChange={setRange}
+        onValueChange={setRange}
         firstMonth={new Date(2025, 6, 1)}
         today={new Date(2025, 6, 5)}
       />
@@ -244,7 +246,7 @@ function ChurnPickers() {
       <output data-docked>{iso(docked)}</output>
       <DockedDatePicker
         value={fresh(docked)}
-        onChange={setDocked}
+        onValueChange={setDocked}
         today={new Date(2025, 6, 5)}
         formatter={{ monthShort: (d) => d.toLocaleString('en-US', { month: 'short' }) }}
       />
@@ -252,7 +254,7 @@ function ChurnPickers() {
         open={open}
         onOpenChange={setOpen}
         value={fresh(date)}
-        onChange={setDate}
+        onValueChange={setDate}
         today={new Date(2025, 6, 5)}
         formatter={{}}
       />
@@ -260,7 +262,7 @@ function ChurnPickers() {
         open={rangeOpen}
         onOpenChange={setRangeOpen}
         value={{ start: fresh(range.start), end: fresh(range.end) }}
-        onChange={setRange}
+        onValueChange={setRange}
         firstMonth={new Date(2025, 6, 1)}
         today={new Date(2025, 6, 5)}
         formatter={{}}

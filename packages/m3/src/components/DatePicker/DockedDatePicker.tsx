@@ -1,12 +1,14 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ComponentPropsWithRef, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Popover } from '@base-ui/react/popover';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { SvgIcon } from '../../primitives/SvgIcon.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
 import { TextField } from '../TextField/TextField.tsx';
@@ -86,14 +88,20 @@ export type DockedView = 'day' | 'month' | 'year';
 
 const noop = () => {};
 
-export interface DockedCalendarProps {
-  value: Date | null;
-  onChange: (date: Date) => void;
+/** The calendar options the docked picker passes on to its panel. */
+interface DockedCalendarOptions {
+  /** The displayed month (any day in it). */
   month?: Date;
+  /** The uncontrolled initial month (default: the value's month, else today's). */
+  defaultMonth?: Date;
   onMonthChange?: (month: Date) => void;
   view?: DockedView;
+  /** The uncontrolled initial view (default `'day'`). */
+  defaultView?: DockedView;
   onViewChange?: (view: DockedView) => void;
+  /** The day treated as today (default: the device date at mount). */
   today?: Date;
+  /** Years offered in the year list (inclusive). */
   yearRange?: [number, number];
   firstDayOfWeek?: number;
   locale?: string;
@@ -102,19 +110,32 @@ export interface DockedCalendarProps {
     monthLong?: (monthIndex: number) => string;
     year?: (year: number) => string;
   };
-  onCancel?: () => void;
-  onConfirm?: () => void;
-  labels?: { cancel?: string; confirm?: string };
-  sx?: StyleXStyles;
+  /** Overrides for the built-in strings (`previousMonth`, `nextMonth`, `previousYear`, `nextYear`, `selectMonth`, `selectYear`, `cancel`, `ok`…). */
+  labels?: Partial<M3Labels>;
+}
+
+/** `ref`, the native props and `sx` go to the panel `<div>`. */
+export interface DockedCalendarProps
+  extends DockedCalendarOptions, SxProps<Omit<ComponentPropsWithRef<'div'>, 'defaultValue'>> {
+  /** The picked day (`null`: none). */
+  value?: Date | null;
+  defaultValue?: Date | null;
+  onValueChange?: (date: Date | null) => void;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
 }
 
 /** The docked picker's panel (month / year menus, calendar, lists). */
 export function DockedCalendar({
-  value,
-  onChange,
+  ref,
+  value: valueProp,
+  defaultValue = null,
+  onValueChange,
   month: monthProp,
+  defaultMonth,
   onMonthChange,
   view: viewProp,
+  defaultView = 'day',
   onViewChange,
   today: todayProp,
   yearRange = DEFAULT_YEAR_RANGE,
@@ -123,9 +144,12 @@ export function DockedCalendar({
   formatter: formatterProp,
   onCancel,
   onConfirm,
-  labels = {},
+  labels: labelsProp,
   sx,
+  ...rest
 }: DockedCalendarProps) {
+  const labels = useLabels(labelsProp);
+  const [value, onChange] = useControllableState(valueProp, defaultValue, onValueChange);
   const formatter = useMemo(() => ({ ...defaultFormatter(locale), ...formatterProp }), [locale, formatterProp]);
   const monthShort = formatterProp?.monthShort ?? ((d: Date) => dateFormat(locale, { month: 'short' }).format(d));
   const monthLong =
@@ -135,17 +159,21 @@ export function DockedCalendar({
   const today = useToday(todayProp);
   const [anyDayOfMonth, setMonth] = useControllableState(
     monthProp,
-    () => makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
+    () => defaultMonth ?? makeDate((value ?? today).getFullYear(), (value ?? today).getMonth(), 1),
     onMonthChange,
   );
   const [year, monthOfYear] = [anyDayOfMonth.getFullYear(), anyDayOfMonth.getMonth()];
   const month = useMemo(() => makeDate(year, monthOfYear, 1), [year, monthOfYear]);
-  const [view, setView] = useControllableState<DockedView>(viewProp, 'day', onViewChange);
+  const [view, setView] = useControllableState<DockedView>(viewProp, defaultView, onViewChange);
   const list = view !== 'day';
+  const arrowLabel = {
+    month: [labels.previousMonth, labels.nextMonth],
+    year: [labels.previousYear, labels.nextYear],
+  } as const;
   const arrows = (unit: 'month' | 'year', dir: -1 | 1) => (
     <span {...stylex.props(list && s.hidden)}>
       <IconButton
-        aria-label={`${dir < 0 ? 'Previous' : 'Next'} ${unit}`}
+        aria-label={arrowLabel[unit][dir < 0 ? 0 : 1]}
         tabIndex={list ? -1 : undefined}
         onClick={() => setMonth(unit === 'month' ? addMonths(month, dir) : makeDate(year + dir, month.getMonth(), 1))}
       >
@@ -162,14 +190,14 @@ export function DockedCalendar({
       <PickerMenuButton
         open={view === unit}
         onClick={() => setView(view === unit ? 'day' : unit)}
-        aria-label={`${label}, select ${unit}`}
+        aria-label={unit === 'month' ? labels.selectMonth(label) : labels.selectYear(label)}
       >
         {label}
       </PickerMenuButton>
     );
 
   return (
-    <div {...stylex.props(s.panel, list && s.panelList, sx)}>
+    <div ref={ref} {...rest} {...stylex.props(s.panel, list && s.panelList, sx)}>
       <div {...stylex.props(s.row, list && s.rowRule)}>
         <span {...stylex.props(s.group)}>
           {arrows('month', -1)}
@@ -202,12 +230,12 @@ export function DockedCalendar({
           <div {...stylex.props(s.actions)}>
             {onCancel && (
               <Button variant="text" onClick={onCancel}>
-                {labels.cancel ?? 'Cancel'}
+                {labels.cancel}
               </Button>
             )}
             {onConfirm && (
               <Button variant="text" onClick={onConfirm}>
-                {labels.confirm ?? 'OK'}
+                {labels.ok}
               </Button>
             )}
           </div>
@@ -242,33 +270,70 @@ export function DockedCalendar({
   );
 }
 
-export interface DockedDatePickerProps extends Omit<
-  DockedCalendarProps,
-  'onCancel' | 'onConfirm' | 'onChange' | 'value'
-> {
-  value: Date | null;
-  onChange: (date: Date | null) => void;
+/**
+ * `ref`, the native props and `sx` go to the root (the field and its supporting text); the
+ * calendar options go to the docked panel.
+ */
+export interface DockedDatePickerProps
+  extends DockedCalendarOptions, SxProps<Omit<ComponentPropsWithRef<'div'>, 'defaultValue'>> {
+  /** The committed date: changes when a complete date is typed, the field is cleared, or OK is pressed in the panel. */
+  value?: Date | null;
+  defaultValue?: Date | null;
+  onValueChange?: (date: Date | null) => void;
+  /** Whether the calendar panel is open. */
+  open?: boolean;
+  /** The uncontrolled initial open state (default false). */
+  defaultOpen?: boolean;
+  /**
+   * `details` are Base UI's (reason, event, `cancel()`) when the popover opens or closes itself (the
+   * calendar button, Escape, an outside press); the panel's Cancel / OK close it without them.
+   */
+  onOpenChange?: (open: boolean, details?: Popover.Root.ChangeEventDetails) => void;
+  /** The field label (default the `date` label). */
   label?: string;
   /** Under the field: the expected format (default from the locale, e.g. "MM/DD/YYYY", "DD/MM/YYYY"). */
   supportingText?: ReactNode;
+  /** The field's width in px (default 312). */
   width?: number;
 }
 
 /** A text field with a docked calendar (desktop): type a date, or pick one from the panel. */
 export function DockedDatePicker({
-  value,
-  onChange,
-  label = 'Date',
+  ref,
+  value: valueProp,
+  defaultValue = null,
+  onValueChange,
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  label,
   supportingText,
   width = 312,
   locale,
   formatter,
-  ...cal
+  month,
+  defaultMonth,
+  onMonthChange,
+  view,
+  defaultView,
+  onViewChange,
+  today,
+  yearRange: yearRangeProp,
+  firstDayOfWeek,
+  labels: labelsProp,
+  sx,
+  ...rest
 }: DockedDatePickerProps) {
   const portal = usePortalContainer();
+  const labels = useLabels(labelsProp);
   const format = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
-  const yearRange = cal.yearRange ?? DEFAULT_YEAR_RANGE;
-  const [open, setOpen] = useState(false);
+  const yearRange = yearRangeProp ?? DEFAULT_YEAR_RANGE;
+  const [value, onChange] = useControllableState(valueProp, defaultValue, onValueChange);
+  const [open, setOpen] = useControllableState<boolean, [Popover.Root.ChangeEventDetails?]>(
+    openProp,
+    defaultOpen,
+    onOpenChange,
+  );
   const [text, setText] = useState(value ? format.input(value) : '');
   const [draft, setDraft] = useState<Date | null>(value);
   // The field follows `value` when it changes to a day other than the one typed (a pick, a reset);
@@ -281,17 +346,19 @@ export function DockedDatePicker({
     if (locale !== synced.locale || !(value ? sameDay(typed, value) : !typed))
       setText(value ? format.input(value) : '');
   }
-  const onOpenChange = (next: boolean) => {
-    // Each opening starts from the committed value.
-    if (next && !open) setDraft(value);
-    setOpen(next);
-  };
+  // Each opening starts from the committed value.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setDraft(value);
+  }
   const anchor = useRef<HTMLDivElement>(null);
+  const rootRef = useMergedRefs(anchor, ref);
   return (
-    <div ref={anchor} {...stylex.props(s.field, s.notch)}>
+    <div ref={rootRef} {...rest} {...stylex.props(s.field, s.notch, sx)}>
       <TextField
         variant="outlined"
-        label={label}
+        label={label ?? labels.date}
         value={text}
         onValueChange={(typed) => {
           setText(typed);
@@ -301,23 +368,32 @@ export function DockedDatePicker({
         supportingText={supportingText ?? inputFormatHint(locale, true)}
         sx={s.fieldWidth(width)}
         trailingIcon={
-          <Popover.Root open={open} onOpenChange={onOpenChange}>
+          <Popover.Root open={open} onOpenChange={setOpen}>
             <Popover.Trigger
               render={
-                <IconButton aria-label="Open calendar">
+                <IconButton aria-label={labels.openCalendar}>
                   <SvgIcon d={ICONS.today} />
                 </IconButton>
               }
             />
             <Popover.Portal container={portal}>
               <Popover.Positioner anchor={anchor} side="bottom" align="start" sideOffset={7}>
-                <Popover.Popup aria-label="Choose date" {...stylex.props(s.popup)}>
+                <Popover.Popup aria-label={labels.chooseDate} {...stylex.props(s.popup)}>
                   <DockedCalendar
-                    {...cal}
+                    month={month}
+                    defaultMonth={defaultMonth}
+                    onMonthChange={onMonthChange}
+                    view={view}
+                    defaultView={defaultView}
+                    onViewChange={onViewChange}
+                    today={today}
+                    yearRange={yearRangeProp}
+                    firstDayOfWeek={firstDayOfWeek}
                     locale={locale}
                     formatter={formatter}
+                    labels={labels}
                     value={draft}
-                    onChange={setDraft}
+                    onValueChange={setDraft}
                     onCancel={() => setOpen(false)}
                     onConfirm={() => {
                       onChange(draft);

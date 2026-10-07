@@ -1,6 +1,5 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type ComponentPropsWithRef, type MouseEventHandler, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { Button } from '../Button/Button.tsx';
@@ -9,8 +8,11 @@ import { TextField } from '../TextField/TextField.tsx';
 import { textFieldVars } from '../TextField/textField.stylex.ts';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
 import { SvgIcon } from '../../primitives/SvgIcon.tsx';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { defaultFormatter, inputFormatHint, parseInputDate, type DatePickerFormatter } from './calendar.ts';
+import type { DateRange } from './DateRangePicker.tsx';
 
 /*
  * Figma kit, "Input date picker" (51954:18540; Compose DatePicker displayMode = Input).
@@ -71,66 +73,80 @@ const s = stylex.create({
   },
 });
 
-export interface DateInputPanelProps {
-  /** Start / end fields (a range). */
-  range?: boolean;
-  value?: Date | null;
-  end?: Date | null;
-  onChange?: (date: Date | null) => void;
-  onEndChange?: (date: Date | null) => void;
+/** `ref`, the native props and `sx` go to the panel's surface `<div>`. */
+interface DateInputPanelCommon extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'defaultValue' | 'placeholder'>> {
   locale?: string;
   formatter?: Partial<DatePickerFormatter>;
   /** Years accepted (inclusive); a typed date outside them doesn't parse. */
   yearRange?: [number, number];
+  /** The header's label (default the `selectDate` label). */
   supportingText?: ReactNode;
+  /** Default the `enterDate` / `enterDates` label. */
   headline?: ReactNode;
+  /** The (first) field's label (default the `date` label — the kit's range also says "Date"). */
   label?: string;
+  /** The range's end field label (default the `endDate` label). */
   endLabel?: string;
   /** Placeholder: the expected format (default from the locale, e.g. "mm/dd/yyyy", "dd/mm/yyyy"). */
   placeholder?: string;
-  /** Switch back to the calendar. */
-  onModeToggle?: () => void;
-  onCancel?: () => void;
-  onConfirm?: () => void;
-  labels?: { cancel?: string; confirm?: string; mode?: string };
+  /** Switch back to the calendar (hidden when omitted). */
+  onModeToggle?: MouseEventHandler<HTMLButtonElement>;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
+  /** Overrides for the built-in strings (`selectDate`, `enterDate(s)`, `date`, `endDate`, `switchToCalendar`, `cancel`, `ok`). */
+  labels?: Partial<M3Labels>;
+  /** Focus the (first) field on mount. */
   autoFocus?: boolean;
-  sx?: StyleXStyles;
 }
 
+/**
+ * The fields keep what is typed (text entry is uncontrolled): `defaultValue` fills them on mount and
+ * every edit reports the parsed value (`null`: not a complete, valid date).
+ */
+export type DateInputPanelProps = DateInputPanelCommon &
+  (
+    | { range?: false; defaultValue?: Date | null; onValueChange?: (date: Date | null) => void }
+    | { range: true; defaultValue?: DateRange; onValueChange?: (range: DateRange) => void }
+  );
+
 /** Text entry for a date (or range) — the modal date picker's input mode. */
-export function DateInputPanel({
-  range = false,
-  value = null,
-  end = null,
-  onChange,
-  onEndChange,
-  locale,
-  formatter,
-  yearRange,
-  supportingText = 'Select date',
-  headline,
-  label = 'Date',
-  endLabel = 'End date',
-  placeholder: placeholderProp,
-  onModeToggle,
-  onCancel,
-  onConfirm,
-  labels = {},
-  autoFocus,
-  sx,
-}: DateInputPanelProps) {
+export function DateInputPanel(props: DateInputPanelProps) {
+  const {
+    ref,
+    // The value props are read from `props`, narrowed on `range`.
+    range = false,
+    defaultValue: _defaultValue,
+    onValueChange: _onValueChange,
+    locale,
+    formatter,
+    yearRange,
+    supportingText,
+    headline,
+    label,
+    endLabel,
+    placeholder: placeholderProp,
+    onModeToggle,
+    onCancel,
+    onConfirm,
+    labels: labelsProp,
+    autoFocus,
+    sx,
+    ...rest
+  } = props;
+  const labels = useLabels(labelsProp);
   const format = useMemo(() => ({ ...defaultFormatter(locale), ...formatter }), [locale, formatter]);
   const placeholder = placeholderProp ?? inputFormatHint(locale);
-  const [startText, setStartText] = useState(value ? format.input(value) : '');
+  const [start, end] = props.range
+    ? [props.defaultValue?.start ?? null, props.defaultValue?.end ?? null]
+    : [props.defaultValue ?? null, null];
+  const [startText, setStartText] = useState(start ? format.input(start) : '');
   const [endText, setEndText] = useState(end ? format.input(end) : '');
-  const field = (
-    text: string,
-    set: (t: string) => void,
-    report: ((d: Date | null) => void) | undefined,
-    fieldLabel: string,
-    half: boolean,
-    focus?: boolean,
-  ) => (
+  const parse = (text: string) => parseInputDate(text, locale, yearRange);
+  const report = (typedStart: string, typedEnd: string) => {
+    if (props.range) props.onValueChange?.({ start: parse(typedStart), end: parse(typedEnd) });
+    else props.onValueChange?.(parse(typedStart));
+  };
+  const field = (text: string, onType: (typed: string) => void, fieldLabel: string, half: boolean, focus?: boolean) => (
     <TextField
       variant="outlined"
       label={fieldLabel}
@@ -138,25 +154,24 @@ export function DateInputPanel({
       placeholder={placeholder}
       autoFocus={focus}
       inputMode="numeric"
-      onValueChange={(typed) => {
-        set(typed);
-        report?.(parseInputDate(typed, locale, yearRange));
-      }}
+      onValueChange={onType}
       sx={half ? s.half : s.field}
     />
   );
   return (
-    <div {...stylex.props(s.surface, sx)}>
+    <div ref={ref} {...rest} {...stylex.props(s.surface, sx)}>
       {/* A forced test state belongs to the first field only. */}
       <ForceStateBoundary>
         <div data-dp-header="" {...stylex.props(s.header)}>
-          <p {...stylex.props(typescale.labelLarge, s.supporting)}>{supportingText}</p>
+          <p {...stylex.props(typescale.labelLarge, s.supporting)}>
+            {supportingText === undefined ? labels.selectDate : supportingText}
+          </p>
           <div {...stylex.props(s.headlineRow, range && s.headlineRowRange)}>
             <p {...stylex.props(typescale.headlineLarge, s.headline)}>
-              {headline ?? (range ? 'Enter dates' : 'Enter date')}
+              {headline ?? (range ? labels.enterDates : labels.enterDate)}
             </p>
             {onModeToggle && (
-              <IconButton aria-label={labels.mode ?? 'Switch to calendar'} width="wide" onClick={onModeToggle}>
+              <IconButton aria-label={labels.switchToCalendar} width="wide" onClick={onModeToggle}>
                 <SvgIcon d={DATE_PICKER_ICONS.today} />
               </IconButton>
             )}
@@ -164,19 +179,40 @@ export function DateInputPanel({
         </div>
       </ForceStateBoundary>
       <div data-dp-body="" {...stylex.props(s.fields)}>
-        {field(startText, setStartText, onChange, label, range, autoFocus)}
-        {range && <ForceStateBoundary>{field(endText, setEndText, onEndChange, endLabel, true)}</ForceStateBoundary>}
+        {field(
+          startText,
+          (typed) => {
+            setStartText(typed);
+            report(typed, endText);
+          },
+          label ?? labels.date,
+          range,
+          autoFocus,
+        )}
+        {range && (
+          <ForceStateBoundary>
+            {field(
+              endText,
+              (typed) => {
+                setEndText(typed);
+                report(startText, typed);
+              },
+              endLabel ?? labels.endDate,
+              true,
+            )}
+          </ForceStateBoundary>
+        )}
       </div>
       <ForceStateBoundary>
         <div data-dp-actions="" {...stylex.props(s.actions)}>
           {onCancel && (
             <Button variant="text" onClick={onCancel}>
-              {labels.cancel ?? 'Cancel'}
+              {labels.cancel}
             </Button>
           )}
           {onConfirm && (
             <Button variant="text" onClick={onConfirm}>
-              {labels.confirm ?? 'OK'}
+              {labels.ok}
             </Button>
           )}
         </div>

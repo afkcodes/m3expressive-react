@@ -174,7 +174,26 @@ export { Dialog, DialogSurface } from './components/Dialog/index.ts';
 export type { DialogProps, DialogSurfaceProps } from './components/Dialog/index.ts';
 export { Carousel, CarouselItem } from './components/Carousel/index.ts';
 export type { CarouselItemProps, CarouselLayout, CarouselProps } from './components/Carousel/index.ts';
-export * from './components/DatePicker/index.ts';
+// Picker cells, dial parts and the docked / input panels are building blocks in '@m3x/react/testing'.
+export {
+  DatePicker,
+  DateRangePicker,
+  DockedDatePicker,
+  ModalDatePicker,
+  ModalDateRangePicker,
+  defaultFormatter,
+} from './components/DatePicker/index.ts';
+export type {
+  DatePickerFormatter,
+  DatePickerProps,
+  DatePickerView,
+  DateRange,
+  DateRangePickerProps,
+  DockedDatePickerProps,
+  DockedView,
+  ModalDatePickerProps,
+  ModalDateRangePickerProps,
+} from './components/DatePicker/index.ts';
 export { ModalTimePicker, TimeInput, TimePicker, normalizeTime } from './components/TimePicker/index.ts';
 export type {
   ModalTimePickerProps,

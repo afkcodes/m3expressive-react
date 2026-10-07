@@ -73,7 +73,7 @@ export function DatePickerPlayground() {
           </Button>
         </section>
         <div {...stylex.props(s.row)}>
-          <DockedDatePicker value={docked} onChange={setDocked} />
+          <DockedDatePicker value={docked} onValueChange={setDocked} />
           <div {...stylex.props(typescale.bodyMedium, s.muted)}>
             <div>modal: {fmt(date)}</div>
             <div>docked: {fmt(docked)}</div>
@@ -82,12 +82,12 @@ export function DatePickerPlayground() {
             </div>
           </div>
         </div>
-        <ModalDatePicker open={modal} onOpenChange={setModal} value={date} onChange={setDate} />
+        <ModalDatePicker open={modal} onOpenChange={setModal} value={date} onValueChange={setDate} />
         <ModalDateRangePicker
           open={rangeOpen}
           onOpenChange={setRangeOpen}
           value={range}
-          onChange={setRange}
+          onValueChange={setRange}
           supportingText="Depart – Return dates"
         />
       </main>
