@@ -14,15 +14,12 @@ import {
   ListItemMonogram,
   ListItemVideo,
   Radio,
-  SwipeActions,
   SwipeableListItem,
   Switch,
-  swipeLayout,
-  swipeOffset,
   type SwipeAction,
   type SwipeRevealState,
 } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { ForceState, SwipeActions, swipeOffset, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/list/manifest.json';
 import assets from '../../../../figma/list/assets.json';
 import toggleIconAssets from '../../../../figma/toggle-icon-button/assets.json';
@@ -142,7 +139,7 @@ function listComposition(name: string): ReactNode {
     Array.from({ length: 6 - from }, (_, k) => render(k + from));
   if (type === 'standard' || type === 'segmented-filled') {
     return (
-      <List type={type === 'standard' ? 'standard' : 'segmented'} aria-label="List">
+      <List variant={type === 'standard' ? 'standard' : 'segmented'} aria-label="List">
         {items(0, (i) => (
           <ListItem key={i} {...itemProps} supportingText={support(i)} supportingMaxLines={1}>
             Label text
@@ -153,12 +150,12 @@ function listComposition(name: string): ReactNode {
   }
   if (type === 'expandable') {
     return (
-      <List type="segmented" aria-label="List">
+      <List variant="segmented" aria-label="List">
         <ExpandableListItem
           leading={<Icon name="stars-20" />}
           supportingText={multi ? 'Supporting line text, lorem ipsum dolor' : undefined}
           supportingMaxLines={1}
-          expanded
+          open
           items={items(1, (i) => (
             <ListItem
               key={i}
@@ -207,7 +204,7 @@ function listComposition(name: string): ReactNode {
   // (transparent) plus the one swiped "List Item - Swipe" (Surface).
   const segmented = type.endsWith('segmented');
   return (
-    <List type={segmented ? 'segmented' : 'standard'} aria-label="List">
+    <List variant={segmented ? 'segmented' : 'standard'} aria-label="List">
       {items(0, (i) =>
         !segmented && i !== 2 ? (
           <ListItem
@@ -258,8 +255,8 @@ function baselineItem(name: string): ReactNode {
     none: undefined,
     monogram: <ListItemMonogram>A</ListItemMonogram>,
     icon: <Icon name="person-24" />,
-    image: <ListItemImage expressive={false} src={placeholder350} imageSx={fxBox.kitPlaceholder} />,
-    video: <ListItemVideo expressive={false} src={placeholder700} imageSx={fxBox.kitPlaceholder} />,
+    image: <ListItemImage src={placeholder350} imageSx={fxBox.kitPlaceholder} />,
+    video: <ListItemVideo src={placeholder700} imageSx={fxBox.kitPlaceholder} />,
     checkbox: control('checkbox', true, 'lead'),
     radiobutton: control('radiobutton', true, 'lead'),
     switch: control('switch', false, 'lead'),
@@ -338,7 +335,7 @@ function render(name: string): ReactNode {
   }
   if (p[0] === 'accordion') {
     return (
-      <ExpandableListItem leading={<Icon name="stars-20" />} expanded={p[1] === 'expanded'}>
+      <ExpandableListItem leading={<Icon name="stars-20" />} open={p[1] === 'expanded'}>
         Label text
       </ExpandableListItem>
     );
@@ -362,7 +359,11 @@ function render(name: string): ReactNode {
     const el: Record<string, ReactNode> = {
       icon: <Icon name="stars-20" />,
       indent: null,
-      image: <ListItemImage src={placeholder700} imageSx={fxBox.kitPlaceholder} selected />,
+      image: (
+        <ForceState selected>
+          <ListItemImage src={placeholder700} imageSx={fxBox.kitPlaceholder} />
+        </ForceState>
+      ),
       video: <ListItemVideo src={placeholder350} imageSx={fxBox.kitPlaceholder} />,
       avatar: (
         <Avatar size={40} src={placeholder700} alt="" sx={fxBox.kitPlaceholderBg} imageSx={fxBox.kitPlaceholder} />
@@ -393,7 +394,7 @@ function render(name: string): ReactNode {
           <StarsFilled24 />
         </IconButton>
       ),
-      'accordion-button': <AccordionButton expanded={false} />,
+      'accordion-button': <AccordionButton open={false} />,
       slot: <Slot />,
     };
     if (type === 'accordion-button' || type === 'slot') return el[type];
@@ -417,7 +418,6 @@ function render(name: string): ReactNode {
     const actions = ACTIONS.slice(3 - n);
     const state: SwipeRevealState = type === 'initiate-reveal' ? 'peek' : type === 'revealed' ? 'revealed' : 'action';
     const offset = swipeOffset(n, state) - 2;
-    void swipeLayout;
     return (
       <div style={{ position: 'relative', width: offset, height: 48 }}>
         <SwipeActions
@@ -435,7 +435,7 @@ function render(name: string): ReactNode {
     const ripple = 'M32 12.4545V32H-2C-2 19.8497 8.4301 10 21.2963 10C25.1552 10 28.795 10.8861 32 12.4545Z';
     return (
       <ForceState state={asForced(p[2]!)} ripplePath={p[2] === 'pressed' ? ripple : undefined}>
-        <AccordionButton expanded={p[1] === 'collapse'} forcedState={asForced(p[2]!)} aria-label="Toggle" />
+        <AccordionButton open={p[1] === 'collapse'} aria-label="Toggle" />
       </ForceState>
     );
   }

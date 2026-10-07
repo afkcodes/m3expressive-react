@@ -1,34 +1,34 @@
 import {
-  forwardRef,
   memo,
   useContext,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
+  type AnchorHTMLAttributes,
+  type HTMLAttributes,
   type MouseEventHandler,
   type ReactNode,
   type Ref,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { Divider } from '../Divider/Divider.tsx';
 import { InheritSurfaceContext } from './surface.ts';
 import { legacyLeading, textBox, textEnd } from '../../primitives/textBox.ts';
 import { forcedStateLayer, isInteractionState, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { ListContext, type ListItemVariant } from './context.ts';
+import { ListContext, ListItemContext, type ListVariant } from './context.ts';
 import { listItemStyles as s } from './listItemStyles.ts';
-
-export { ListContext };
-export type { ListItemVariant };
 
 /** Leaving drag fades the 16% layer out over this (Compose material-ripple StateLayer). */
 const DRAG_LAYER_OUT_MS = 150;
 
-export interface ListItemProps {
+/** A list row's content and state (shared with the expandable and swipeable items). */
+export interface ListItemOwnProps {
   /** The headline (label text). */
   children: ReactNode;
   overline?: ReactNode;
@@ -41,7 +41,8 @@ export interface ListItemProps {
   trailing?: ReactNode;
   /** Trailing supporting text, e.g. a shortcut ("⌘C"). */
   trailingText?: ReactNode;
-  variant?: ListItemVariant;
+  /** The item's style; by default the enclosing list's (`standard` outside a list). */
+  variant?: ListVariant;
   /**
    * Baseline line count (56 / 72 / 88px, top-aligned at 3). When omitted: 3 with an overline and
    * supporting text, or supporting text clamped to 2+ lines; 2 with either; otherwise 1.
@@ -49,44 +50,60 @@ export interface ListItemProps {
   lines?: 1 | 2 | 3;
   /** Expressive only: vertical alignment of the leading / trailing slots. */
   alignment?: 'middle' | 'top';
+  /**
+   * The selected look. Controlled only: selection is display state owned by the list (the item
+   * never toggles itself), so there is no `defaultSelected` / `onSelectedChange`.
+   */
   selected?: boolean;
   disabled?: boolean;
   /** Lifted while being reordered. */
   dragged?: boolean;
   /** A middle-inset divider under the item (the baseline kit's list items in dialogs). */
   divider?: boolean;
+  /** Makes the row a `<button>` (`aria-pressed` follows `selected`). */
   onClick?: MouseEventHandler<HTMLElement>;
+  /** Makes the row a link (`<a>`). */
   href?: string;
-  sx?: StyleXStyles;
 }
 
-const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
-  {
-    children,
-    overline,
-    supportingText,
-    supportingMaxLines,
-    leading,
-    trailing,
-    trailingText,
-    variant: variantProp,
-    lines: linesProp,
-    alignment = 'middle',
-    selected = false,
-    disabled = false,
-    dragged = false,
-    divider = false,
-    onClick,
-    href,
-    sx,
-  },
+/** Native props of the row, whichever element it renders (`<a>` with `href`, `<button>` with `onClick`, else `<div>`). */
+type RowNativeProps = HTMLAttributes<HTMLElement> &
+  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel' | 'download' | 'hrefLang' | 'ping' | 'referrerPolicy'>;
+
+/**
+ * Native props and `sx` go to the row (`<a>` / `<button>` / `<div>`); `ref` goes to the item's
+ * outermost element: the `<li>` inside a `List`, otherwise the row.
+ */
+export interface ListItemProps extends ListItemOwnProps, SxProps<Omit<RowNativeProps, keyof ListItemOwnProps>> {
+  ref?: Ref<HTMLElement>;
+}
+
+function ListItemImpl({
+  children,
+  overline,
+  supportingText,
+  supportingMaxLines,
+  leading,
+  trailing,
+  trailingText,
+  variant: variantProp,
+  lines: linesProp,
+  alignment = 'middle',
+  selected = false,
+  disabled = false,
+  dragged = false,
+  divider = false,
+  onClick,
+  href,
+  sx,
   ref,
-) {
+  ...rest
+}: ListItemProps) {
   const list = useContext(ListContext);
   const inheritSurface = useContext(InheritSurfaceContext);
   const forced = useForcedState();
   const variant = variantProp ?? list.variant;
-  const expressive = variant === 'expressive';
+  const expressive = variant !== 'baseline';
   const interactive = !disabled && (onClick != null || href != null || forced.state != null);
   const lines =
     linesProp ??
@@ -108,6 +125,7 @@ const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
     if (!dragged) leaveTimer.current = setTimeout(() => setLeavingDrag(false), DRAG_LAYER_OUT_MS);
   }, [dragged]);
   useEffect(() => () => clearTimeout(leaveTimer.current), []);
+  const itemContext = useMemo(() => ({ variant, selected }), [variant, selected]);
   const textTone = disabled
     ? s.textDisabled
     : tone === 'dragged'
@@ -196,7 +214,7 @@ const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
       ? s.expressive
       : [s.baseline, lines === 1 ? s.lines1 : lines === 2 ? s.lines2 : s.lines3, inheritSurface && s.inheritSurface],
     expressive && alignment === 'top' && s.top,
-    expressive && list.segmented && s.segmentedFill,
+    variant === 'segmented' && s.segmentedFill,
     interactive && s.interactive,
     interactive && stateLayerHost.host,
     expressive && interactive && s.expressiveShapes,
@@ -213,22 +231,25 @@ const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
     sx,
   );
   const common = {
+    ...rest,
     ...styles,
     'data-ripple-host': interactive ? '' : undefined,
     'data-selected': selected ? '' : undefined,
   };
+  // The row takes the ref only outside a list (inside one, the <li> does).
+  const rowRef = list.inList ? undefined : ref;
 
   let el: ReactNode;
   if (href != null && !disabled) {
     el = (
-      <a ref={ref as Ref<HTMLAnchorElement>} href={href} onClick={onClick} {...common}>
+      <a ref={rowRef as Ref<HTMLAnchorElement>} href={href} onClick={onClick} {...common}>
         {body}
       </a>
     );
   } else if (onClick != null) {
     el = (
       <button
-        ref={ref as Ref<HTMLButtonElement>}
+        ref={rowRef as Ref<HTMLButtonElement>}
         type="button"
         disabled={disabled}
         aria-pressed={selected || undefined}
@@ -240,7 +261,7 @@ const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
     );
   } else {
     el = (
-      <div ref={ref as Ref<HTMLDivElement>} aria-disabled={disabled || undefined} {...common}>
+      <div ref={rowRef as Ref<HTMLDivElement>} aria-disabled={disabled || undefined} {...common}>
         {body}
       </div>
     );
@@ -253,8 +274,15 @@ const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
   ) : (
     el
   );
-  return list.inList ? <li {...stylex.props(s.li)}>{withDivider}</li> : withDivider;
-});
+  const item = <ListItemContext value={itemContext}>{withDivider}</ListItemContext>;
+  return list.inList ? (
+    <li ref={ref as Ref<HTMLLIElement>} {...stylex.props(s.li)}>
+      {item}
+    </li>
+  ) : (
+    item
+  );
+}
 
 /** A list row; memoised, so a parent re-render with the same props skips it. */
 export const ListItem = memo(ListItemImpl);

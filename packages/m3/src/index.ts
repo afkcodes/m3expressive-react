@@ -93,18 +93,17 @@ export {
   ExpandableListItem,
   AccordionButton,
   SwipeableListItem,
-  SwipeActions,
-  swipeLayout,
-  swipeOffset,
 } from './components/List/index.ts';
 export type {
   ListProps,
+  ListVariant,
   ListItemProps,
-  ListItemVariant,
+  ListItemImageProps,
+  ListItemVideoProps,
+  ListItemMonogramProps,
   ExpandableListItemProps,
   AccordionButtonProps,
   SwipeableListItemProps,
-  SwipeActionsProps,
   SwipeAction,
   SwipeRevealState,
 } from './components/List/index.ts';

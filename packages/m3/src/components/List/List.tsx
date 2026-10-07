@@ -1,7 +1,7 @@
-import { forwardRef, useMemo, type ReactNode } from 'react';
+import { useMemo, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
-import { ListContext, type ListItemVariant } from './context.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { ListContext, type ListVariant } from './context.ts';
 
 const s = stylex.create({
   root: { display: 'flex', flexDirection: 'column', margin: 0, padding: 0, listStyle: 'none', boxSizing: 'border-box' },
@@ -10,28 +10,24 @@ const s = stylex.create({
   segmented: { rowGap: 2, borderRadius: 16, overflow: 'hidden' },
 });
 
-export interface ListProps {
-  /** "standard" (items on the background) or "segmented" (filled tiles, 2px gaps). */
-  type?: 'standard' | 'segmented';
-  /** Item style for the whole list (expressive by default; "baseline" = the classic M3 list). */
-  variant?: ListItemVariant;
-  'aria-label'?: string;
+/** `ref`, native props and `sx` go to the `<ul>`. */
+export interface ListProps extends SxProps<ComponentPropsWithRef<'ul'>> {
+  /**
+   * `standard` (expressive items on the background, the default), `segmented` (expressive filled
+   * tiles, 2px gaps) or `baseline` (the classic M3 list). Items read it from the list.
+   */
+  variant?: ListVariant;
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /** A list of <ListItem>s (rendered as ul/li). */
-export const List = forwardRef<HTMLUListElement, ListProps>(function List(
-  { type = 'standard', variant = 'expressive', children, sx, ...aria },
-  ref,
-) {
-  const segmented = type === 'segmented';
-  const ctx = useMemo(() => ({ inList: true, segmented, variant }), [segmented, variant]);
+export function List({ variant = 'standard', children, sx, ...rest }: ListProps) {
+  const ctx = useMemo(() => ({ inList: true, variant }), [variant]);
   return (
     <ListContext value={ctx}>
-      <ul ref={ref} {...aria} {...stylex.props(s.root, segmented && s.segmented, sx)}>
+      <ul {...rest} {...stylex.props(s.root, variant === 'segmented' && s.segmented, sx)}>
         {children}
       </ul>
     </ListContext>
   );
-});
+}
