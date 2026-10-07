@@ -1,6 +1,5 @@
-import { forwardRef, memo, useMemo, useState, type ReactNode } from 'react';
+import { memo, useMemo, useState, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Slider as BaseSlider } from '@base-ui/react/slider';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
@@ -8,6 +7,7 @@ import { focusRing } from '../../primitives/focusRing.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { thumb0, thumb1 } from './slider.stylex.ts';
 import { s } from './Slider.styles.ts';
 import { activeRange, along, trackSpans, type SliderMode } from './track.ts';
@@ -32,7 +32,11 @@ const SIZE: Record<SliderSize, { track: number; height: number; radius: number }
   xlarge: { track: 96, height: 108, radius: 28 },
 };
 
-interface CommonProps {
+/**
+ * `ref` and the native props go to Base UI's root `<div>` — except `aria-label` /
+ * `aria-labelledby`, which name the thumbs (the focusable sliders).
+ */
+interface CommonProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'defaultValue'>> {
   size?: SliderSize;
   orientation?: SliderOrientation;
   min?: number;
@@ -54,6 +58,7 @@ interface CommonProps {
    * scale would paint a solid line of dots, so above that no ticks are drawn.
    */
   ticks?: boolean;
+  /** The thumbs' accessible name (a range slider's two thumbs share it; see `getAriaLabel`). */
   'aria-label'?: string;
   'aria-labelledby'?: string;
   /**
@@ -63,14 +68,19 @@ interface CommonProps {
   getAriaLabel?: (index: number) => string;
   /** Announced value per thumb. Default: the `valueLabel` text, or the formatted value. */
   getAriaValueText?: (formattedValue: string, value: number, index: number) => string;
-  sx?: StyleXStyles;
 }
+
+/** Base UI's change details (reason, event, `activeThumbIndex`, `cancel()`). */
+type ChangeDetails = BaseSlider.Root.ChangeEventDetails;
+/** Base UI's commit details (reason, event). */
+type CommitDetails = BaseSlider.Root.CommitEventDetails;
 
 export interface SliderProps extends CommonProps {
   value?: number;
   defaultValue?: number;
-  onValueChange?: (value: number) => void;
-  onValueCommitted?: (value: number) => void;
+  onValueChange?: (value: number, details: ChangeDetails) => void;
+  /** The value when a drag / key press / track press ends. */
+  onValueCommitted?: (value: number, details: CommitDetails) => void;
   /** Centered slider: the active track grows from the middle of the range towards the handle. */
   centered?: boolean;
 }
@@ -79,8 +89,8 @@ export interface RangeSliderProps extends CommonProps {
   /** [start, end]; a reversed pair is put in order. */
   value?: [number, number];
   defaultValue?: [number, number];
-  onValueChange?: (value: [number, number]) => void;
-  onValueCommitted?: (value: [number, number]) => void;
+  onValueChange?: (value: [number, number], details: ChangeDetails) => void;
+  onValueCommitted?: (value: [number, number], details: CommitDetails) => void;
 }
 
 /** One discrete stop indicator. Memoised: a value change re-renders only the ticks that change colour. */
@@ -162,14 +172,15 @@ function SliderImpl({
   getAriaLabel,
   getAriaValueText,
   sx,
-  forwardedRef,
-  ...aria
+  ref,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  ...rest
 }: CommonProps & {
   mode: SliderMode;
   values: number[];
-  setValues: (values: number[]) => void;
-  onCommit?: (values: number[]) => void;
-  forwardedRef: React.Ref<HTMLDivElement>;
+  setValues: (values: number[], details: ChangeDetails) => void;
+  onCommit?: (values: number[], details: CommitDetails) => void;
 }) {
   const forced = useForcedState();
   // Compose halves the handle while it is pressed, dragged *or focused*; keyboard focus is tracked
@@ -194,10 +205,11 @@ function SliderImpl({
 
   return (
     <BaseSlider.Root
-      ref={forwardedRef}
+      ref={ref}
+      {...rest}
       value={mode === 'range' ? values : values[0]!}
-      onValueChange={(v) => setValues(Array.isArray(v) ? [...v] : [v])}
-      onValueCommitted={(v) => onCommit?.(Array.isArray(v) ? [...v] : [v])}
+      onValueChange={(v, details) => setValues(Array.isArray(v) ? [...v] : [v], details)}
+      onValueCommitted={(v, details) => onCommit?.(Array.isArray(v) ? [...v] : [v], details)}
       min={min}
       max={max}
       step={step}
@@ -262,8 +274,8 @@ function SliderImpl({
             <BaseSlider.Thumb
               key={i}
               index={mode === 'range' ? i : undefined}
-              aria-label={aria['aria-label']}
-              aria-labelledby={getAriaLabel ? undefined : aria['aria-labelledby']}
+              aria-label={ariaLabel}
+              aria-labelledby={getAriaLabel ? undefined : ariaLabelledby}
               getAriaLabel={getAriaLabel}
               getAriaValueText={valueText}
               onFocus={(e) => setKbFocus((e.target as Element).matches(':focus-visible') ? i : null)}
@@ -303,11 +315,17 @@ function SliderImpl({
 }
 
 /** Standard or centered slider (Base UI Slider underneath: keyboard, pointer, form, RTL). */
-export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
-  { value, defaultValue, onValueChange, onValueCommitted, centered = false, min = 0, max = 100, ...rest },
-  ref,
-) {
-  const [current, setCurrent] = useControllableState(
+export function Slider({
+  value,
+  defaultValue,
+  onValueChange,
+  onValueCommitted,
+  centered = false,
+  min = 0,
+  max = 100,
+  ...rest
+}: SliderProps) {
+  const [current, setCurrent] = useControllableState<number, [ChangeDetails]>(
     value,
     defaultValue ?? (centered ? (min + max) / 2 : min),
     onValueChange,
@@ -319,19 +337,27 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
       max={max}
       mode={centered ? 'centered' : 'standard'}
       values={[current]}
-      setValues={(next) => setCurrent(next[0]!)}
-      onCommit={onValueCommitted && ((next) => onValueCommitted(next[0]!))}
-      forwardedRef={ref}
+      setValues={(next, details) => setCurrent(next[0]!, details)}
+      onCommit={onValueCommitted && ((next, details) => onValueCommitted(next[0]!, details))}
     />
   );
-});
+}
 
 /** Range slider: two handles with the active track between them. */
-export const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(function RangeSlider(
-  { value, defaultValue, onValueChange, onValueCommitted, min = 0, max = 100, ...rest },
-  ref,
-) {
-  const [current, setCurrent] = useControllableState(value, defaultValue ?? [min, max], onValueChange);
+export function RangeSlider({
+  value,
+  defaultValue,
+  onValueChange,
+  onValueCommitted,
+  min = 0,
+  max = 100,
+  ...rest
+}: RangeSliderProps) {
+  const [current, setCurrent] = useControllableState<[number, number], [ChangeDetails]>(
+    value,
+    defaultValue ?? [min, max],
+    onValueChange,
+  );
   return (
     <SliderImpl
       {...rest}
@@ -339,9 +365,8 @@ export const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(function
       max={max}
       mode="range"
       values={current[0] <= current[1] ? current : sortRange(current)}
-      setValues={(next) => setCurrent([next[0]!, next[1]!])}
-      onCommit={onValueCommitted && ((next) => onValueCommitted([next[0]!, next[1]!]))}
-      forwardedRef={ref}
+      setValues={(next, details) => setCurrent([next[0]!, next[1]!], details)}
+      onCommit={onValueCommitted && ((next, details) => onValueCommitted([next[0]!, next[1]!], details))}
     />
   );
-});
+}
