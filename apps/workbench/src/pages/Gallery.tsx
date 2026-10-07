@@ -1,9 +1,8 @@
-import { Fragment, use } from 'react';
+import { Fragment } from 'react';
 import { demos } from '../demos.ts';
-import { loadAllFixtures } from '../registry.ts';
+import type { LoadedFixture } from '../registry.ts';
 
-export function Gallery() {
-  const all = use(loadAllFixtures());
+export function Gallery({ all }: { all: LoadedFixture[] }) {
   const loaded = all
     .flatMap((f) => (f.module ? [f.module] : []))
     .sort((a, b) => a.component.localeCompare(b.component));

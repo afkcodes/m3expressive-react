@@ -1,4 +1,5 @@
 import type { FixtureModule } from './fixtures/types.ts';
+import { importBeforeLoad } from './load.ts';
 
 /**
  * Fixture modules, loaded on demand: a fixture or compare page imports only its own component's
@@ -32,23 +33,17 @@ export function loadAllFixtures(): Promise<LoadedFixture[]> {
   return all;
 }
 
-const byComponent = new Map<string, Promise<FixtureModule | undefined>>();
-
 /**
  * The module whose default export's `component` is `component` (undefined if none). A module is
  * named after its component, so that file is tried first; otherwise every module is loaded and
- * matched by `component`. Cached per component: `use()` needs the same promise on every render.
+ * matched by `component`.
  */
-export function loadFixture(component: string): Promise<FixtureModule | undefined> {
-  let found = byComponent.get(component);
-  if (!found) {
-    const own = modules[pathOf(component)];
-    found = (own ? own().then((m) => m.default) : Promise.resolve(undefined)).then(async (mod) =>
-      mod?.component === component
-        ? mod
-        : (await loadAllFixtures()).find((f) => f.module?.component === component)?.module,
-    );
-    byComponent.set(component, found);
+export async function loadFixture(component: string): Promise<FixtureModule | undefined> {
+  const path = pathOf(component);
+  const own = modules[path];
+  if (own) {
+    const mod = (await importBeforeLoad(own, new URL(path, import.meta.url))).default;
+    if (mod.component === component) return mod;
   }
-  return found;
+  return (await loadAllFixtures()).find((f) => f.module?.component === component)?.module;
 }

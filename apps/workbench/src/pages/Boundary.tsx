@@ -1,29 +1,29 @@
-import { Component, Suspense, type ReactNode } from 'react';
+import { Component, type ReactNode } from 'react';
+
+/** A load or render error, shown in place. */
+export function ErrorMessage({ error }: { error: unknown }) {
+  return (
+    <pre data-fixture-error="" role="alert" style={{ margin: 0, color: '#B3261E', whiteSpace: 'pre-wrap' }}>
+      {error instanceof Error ? (error.stack ?? error.message) : String(error)}
+    </pre>
+  );
+}
 
 interface BoundaryState {
   /** Boxed: anything can be thrown, including undefined. */
-  error?: { thrown: unknown };
+  caught?: { error: unknown };
 }
 
-/**
- * Suspense for lazily loaded pages and fixture modules, plus an error boundary: a module that fails
- * to load, or a variant that throws, shows its error in place instead of blanking the page.
- */
+/** A part that throws while rendering shows its error instead of blanking the page. */
 export class Boundary extends Component<{ children: ReactNode }, BoundaryState> {
   override state: BoundaryState = {};
 
-  static getDerivedStateFromError(thrown: unknown): BoundaryState {
-    return { error: { thrown } };
+  static getDerivedStateFromError(error: unknown): BoundaryState {
+    return { caught: { error } };
   }
 
   override render() {
-    const { error } = this.state;
-    if (!error) return <Suspense fallback={null}>{this.props.children}</Suspense>;
-    const { thrown } = error;
-    return (
-      <pre data-fixture-error="" role="alert" style={{ margin: 0, color: '#B3261E', whiteSpace: 'pre-wrap' }}>
-        {thrown instanceof Error ? (thrown.stack ?? thrown.message) : String(thrown)}
-      </pre>
-    );
+    const { caught } = this.state;
+    return caught ? <ErrorMessage error={caught.error} /> : this.props.children;
   }
 }
