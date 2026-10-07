@@ -3,9 +3,15 @@
  * material3 sources (androidx-main): transition specs per state, sampled values against the
  * spring maths, gesture outcomes. Runs with motion enabled (the config defaults to reduced).
  */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { stepSpring } from '../../packages/m3/src/motion/spring.ts';
 import { motionSchemes } from '../../packages/m3/src/motion/tokens.ts';
+import { railItemGeometry } from '../../packages/m3/src/components/Navigation/railMorph.ts';
+import { compareImages } from './compare';
+import { captureRegion, hexToRgb } from './capture';
+import { REFS_DIR, type Manifest } from './manifest';
 
 const DEFAULT_EFFECTS = '0.231s';
 const FAST_SPATIAL = '0.369s';
@@ -355,6 +361,132 @@ test.describe('tabs motion', () => {
     await page.getByRole('tab', { name: 'Section 10' }).click();
     await page.waitForTimeout(SETTLE);
     expect(await list.evaluate((el) => el.scrollWidth - el.clientWidth - el.scrollLeft)).toBeLessThanOrEqual(1);
+  });
+});
+
+/** Parity of `el` against a kit variant (the variant's render bounds around `el`). */
+async function expectKit(page: Page, el: Locator, component: string, variant: string) {
+  const m = JSON.parse(readFileSync(join(REFS_DIR, `${component}/manifest.json`), 'utf8')) as Manifest;
+  const v = m.variants[variant]!;
+  const ref: Buffer = readFileSync(join(REFS_DIR, component, `${variant}.png`));
+  const r = compareImages(ref, await captureRegion(page, el, v.renderBounds ?? [0, 0, v.size[0], v.size[1]]), { background: hexToRgb(v.background ?? '#FFFFFF') });
+  test.info().annotations.push({ type: 'parity', description: `${variant} (live): ${r.diffPixels} drift px · ${r.aaPixels} AA` });
+  expect.soft(r.diffPixels, variant).toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────────────────────
+test.describe('navigation motion', () => {
+
+  test('rail collapse ⇄ expand: one default-spatial progress morphs width, items and labels; rest frames are the kit', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await open(page, '/fixture/navigation/live-rail');
+    const nav = page.getByRole('navigation');
+    await expectKit(page, nav, 'navigation', 'nrail-top-4');
+    const read = `(nav) => {
+      const n = nav.getBoundingClientRect();
+      const item = nav.querySelectorAll('button[aria-current], button[aria-current] ~ button')[1];
+      const r = item.getBoundingClientRect();
+      const label = [...item.querySelectorAll('span')].find((e) => e.textContent === 'Label' && !e.style.visibility && getComputedStyle(e).visibility !== 'hidden');
+      const l = label.getBoundingClientRect();
+      return { w: n.width, x: r.x - n.x, iw: r.width, ih: r.height, lx: l.x - r.x, lo: Number(getComputedStyle(label).opacity), fs: parseFloat(getComputedStyle(label).fontSize) };
+    }`;
+    type F = { w: number; x: number; iw: number; ih: number; lx: number; lo: number; fs: number };
+    const menu = `(nav) => nav.querySelector('button[aria-label="Menu"]').click()`;
+    const expand = await sampleFrames<F>(nav, read, 700, menu);
+    await page.mouse.move(600, 900);
+    await page.waitForTimeout(SETTLE);
+    await expectKit(page, nav, 'navigation', 'nrailx-docked-top-4');
+    // The expanded label width (hug box): item = 16 + 24 + 8 + label + 16.
+    const restItem = await nav.getByRole('button', { name: 'Label' }).nth(1).boundingBox();
+    const labelStart = restItem!.width - 64;
+    // The collapsed label width only matters under halfway while collapsing (not sampled below).
+    const metrics = { topWidth: 30, topHeight: 16, startWidth: labelStart, startHeight: 20 };
+    const spring = motionSchemes.expressive['default-spatial'];
+    expectSpring(expand.map((f) => ({ t: f.t, v: f.v.w })), 96, 220, spring);
+    expect(Math.max(...expand.map((f) => f.v.w)), 'the rail overshoots 220 (spatial spring)').toBeGreaterThan(220.5);
+    const mid = expand.filter((f) => f.v.w > 97 && f.v.w < 219);
+    expect(mid.length).toBeGreaterThan(5);
+    for (const { v } of mid) {
+      const p = (v.w - 96) / 124;
+      expect(v.x, 'items start at the rail edge mid-morph').toBeCloseTo(0, 1);
+      expect(v.fs, 'expanding uses the expanded text style throughout').toBe(14);
+      const g = railItemGeometry(p, true, metrics);
+      expect(Math.abs(v.iw - g.width), `item width at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
+      expect(Math.abs(v.ih - g.height), `item height at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
+      expect(v.lo).toBeCloseTo(Math.min(1, 4 * (p - 0.5) ** 2), 2);
+      if (p >= 0.5) expect(Math.abs(v.lx - (68 - 20 * (1 - p)) * p), `label x at p ${p.toFixed(2)}`).toBeLessThanOrEqual(0.6);
+    }
+    // Collapse: the label keeps the expanded style until halfway, then jumps under the icon.
+    const collapse = await sampleFrames<F>(nav, read, 700, menu);
+    await page.mouse.move(600, 900);
+    await page.waitForTimeout(SETTLE);
+    await expectKit(page, nav, 'navigation', 'nrail-top-4');
+    expectSpring(collapse.map((f) => ({ t: f.t, v: f.v.w })), 220, 96, spring);
+    for (const { v } of collapse.filter((f) => f.v.w > 97 && f.v.w < 219)) {
+      const p = (v.w - 96) / 124;
+      expect(v.fs).toBe(p < 0.5 ? 12 : 14);
+      expect(Math.abs(v.ih - railItemGeometry(p, false, metrics).height), `item height at p ${p.toFixed(2)}`).toBeLessThanOrEqual(1);
+      if (p >= 0.5) expect(Math.abs(v.lx - 68 * p), `label x at p ${p.toFixed(2)}`).toBeLessThanOrEqual(0.6);
+    }
+  });
+
+  test('indicator alpha and width share one progress: rail from its start edge, bar from its centre', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await open(page, '/fixture/navigation/live-rail');
+    const items = page.getByRole('navigation').getByRole('button', { name: 'Label' });
+    const fill = items.nth(2).locator('span[aria-hidden]').first();
+    expect(await transitionOf(fill, 'width')).toMatchObject({ duration: DEFAULT_SPATIAL });
+    expect(await transitionOf(fill, 'opacity')).toMatchObject({ duration: DEFAULT_SPATIAL });
+    const pillLeft = await items.nth(2).evaluate((el) => (el.querySelector('span') as HTMLElement).getBoundingClientRect().x);
+    const frames = await sampleFrames<{ x: number; w: number; o: number }>(
+      fill,
+      '(el) => { const r = el.getBoundingClientRect(); return { x: r.x, w: r.width, o: Number(getComputedStyle(el).opacity) }; }',
+      600,
+      '(el) => el.closest("button").click()',
+    );
+    const growing = frames.filter((f) => f.v.w > 0.5 && f.v.w < 55.5);
+    expect(growing.length).toBeGreaterThan(3);
+    for (const f of growing) {
+      expect(f.v.x, 'grows from the start edge').toBeCloseTo(pillLeft, 1);
+      expect(f.v.o, 'alpha = progress = width / 56 (clamped at 1)').toBeCloseTo(Math.min(1, f.v.w / 56), 1);
+    }
+    expect(frames.at(-1)!.v).toMatchObject({ w: 56, o: 1 });
+
+    await open(page, '/fixture/navigation/live');
+    const bar = page.getByRole('navigation').getByRole('button');
+    const barFill = bar.nth(2).locator('span[aria-hidden]').first();
+    const centre = await bar.nth(2).evaluate((el) => {
+      const r = (el.querySelector('span') as HTMLElement).getBoundingClientRect();
+      return r.x + r.width / 2;
+    });
+    const barFrames = await sampleFrames<{ c: number; w: number; o: number }>(
+      barFill,
+      '(el) => { const r = el.getBoundingClientRect(); return { c: r.x + r.width / 2, w: r.width, o: Number(getComputedStyle(el).opacity) }; }',
+      600,
+      '(el) => el.closest("button").click()',
+    );
+    for (const f of barFrames.filter((f) => f.v.w > 0.5 && f.v.w < 55.5)) {
+      expect(f.v.c, 'grows from the centre').toBeCloseTo(centre, 1);
+      expect(f.v.o).toBeCloseTo(Math.min(1, f.v.w / 56), 1);
+    }
+  });
+
+  test('bar icon / label colours switch instantly; rail labels fade on default effects (NavigationItem.kt)', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await open(page, '/fixture/navigation/live');
+    const barItem = page.getByRole('navigation').getByRole('button').nth(1);
+    expect(await transitionOf(barItem, 'color')).toBeNull();
+    expect(await transitionOf(barItem.getByText('Label'), 'color')).toBeNull();
+    expect(await transitionOf(barItem.locator('svg').locator('xpath=..'), 'color')).toBeNull();
+    await open(page, '/fixture/navigation/live-rail');
+    const railItem = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(1);
+    expect(await transitionOf(railItem.getByText('Label'), 'color')).toMatchObject({ duration: DEFAULT_EFFECTS });
+    expect(await transitionOf(railItem.locator('svg').locator('xpath=..'), 'color')).toBeNull();
+    // The icon has its own colour in both states (deselecting doesn't inherit a fading one).
+    const icon = page.getByRole('navigation').getByRole('button', { name: 'Label' }).nth(0).locator('svg').locator('xpath=..');
+    const selectedColor = await icon.evaluate((el) => getComputedStyle(el).color);
+    await railItem.click();
+    expect(await icon.evaluate((el) => getComputedStyle(el).color)).not.toBe(selectedColor);
   });
 });
 
