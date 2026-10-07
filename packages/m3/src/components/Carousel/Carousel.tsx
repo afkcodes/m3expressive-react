@@ -1,7 +1,9 @@
 import {
   Children,
   forwardRef,
+  isValidElement,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -45,6 +47,10 @@ import {
  *   size — identical to Compose's masked crop for height-bound, cover-fitted content.
  * Multi-aspect ratio: items keep their aspect ratio at the carousel's height and scroll freely.
  * Full screen: one item at a time, vertical paging.
+ * RTL: the keyline layout runs on the logical scroll (start → end), mirrored on screen; arrows
+ * follow the screen. Before the first measurement (server rendering, a hidden carousel) the
+ * keyline layouts show their items in a plain row at their preferred width.
+ * The viewport carries `data-m3-no-drag`: a sheet around it leaves its drags to it.
  */
 export type CarouselLayout = 'multi-browse' | 'hero' | 'center-hero' | 'uncontained' | 'multi-aspect' | 'full-screen';
 
@@ -73,13 +79,33 @@ const s = stylex.create({
     '::-webkit-scrollbar': { display: 'none' },
   },
   track: { position: 'relative', height: '100%' },
+  // Unmeasured keyline layouts: a plain row at the preferred item width (cqw: the viewport).
+  unmeasured: { containerType: 'inline-size' },
+  trackStatic: (start: number, end: number, gap: number) => ({
+    display: 'flex',
+    columnGap: gap,
+    boxSizing: 'border-box',
+    width: 'max-content',
+    paddingBlock: 8,
+    paddingInlineStart: start,
+    paddingInlineEnd: end,
+  }),
+  itemStatic: {
+    position: 'relative',
+    flexShrink: 0,
+    height: '100%',
+    overflow: 'hidden',
+    borderRadius: 28,
+    backgroundColor: color.surfaceContainerHigh,
+  },
+  itemWidth: (width: string) => ({ width }),
   // Snapping carousels take horizontal touch drags themselves (vertical pans still scroll the page).
   ownDrag: { touchAction: 'pan-y' },
   item: {
     position: 'absolute',
     top: 8,
     bottom: 8,
-    left: 0,
+    insetInlineStart: 0,
     boxSizing: 'border-box',
     overflow: 'hidden',
     borderRadius: 28,
@@ -122,6 +148,14 @@ const s = stylex.create({
   // the keyline space is inset by the padding, so clip to it — items leave under the padding edge.
   clip: (start: number, end: number) => ({ clipPath: `inset(0 ${end}px 0 ${start}px)` }),
 });
+
+/** The scroll position from the start edge (RTL scrollLeft runs from 0 to negative). */
+const readScroll = (el: HTMLElement, rtl: boolean) => (rtl ? -el.scrollLeft : el.scrollLeft);
+const writeScroll = (el: HTMLElement, rtl: boolean, value: number) => {
+  el.scrollLeft = rtl ? -value : value;
+};
+/** Slides keep their element (and state) when children are reordered. */
+const keyOf = (child: ReactNode, i: number) => (isValidElement(child) && child.key != null ? child.key : i);
 
 export interface CarouselProps {
   layout?: CarouselLayout;
@@ -169,16 +203,21 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     },
     [forwarded],
   );
-  const [width, setWidth] = useState(0);
+  const [geometry, setGeometry] = useState({ width: 0, rtl: false });
   useLayoutEffect(() => {
     const el = viewport.current;
-    if (!el) return;
-    setWidth(el.clientWidth);
-    if (typeof ResizeObserver === 'undefined') return; // jsdom / very old engines: measured once
-    const ro = new ResizeObserver(() => setWidth(el.clientWidth));
+    if (!el) return undefined;
+    const measure = () => {
+      const next = { width: el.clientWidth, rtl: getComputedStyle(el).direction === 'rtl' };
+      setGeometry((g) => (g.width === next.width && g.rtl === next.rtl ? g : next));
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return undefined; // jsdom / very old engines: measured once
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+  const { width, rtl } = geometry;
 
   const keyed = layout === 'multi-browse' || layout === 'hero' || layout === 'center-hero' || layout === 'uncontained';
   const padStart = contentPadding;
@@ -213,19 +252,30 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   const itemEls = useRef<(HTMLDivElement | null)[]>([]);
   const place = useCallback(() => {
     const el = viewport.current;
-    if (!el || !strategy) return;
-    const scroll = Math.min(max, Math.max(0, el.scrollLeft));
+    if (!el) return;
+    if (!strategy) {
+      // The plain row (unmeasured): drop the keyline geometry.
+      for (const item of itemEls.current) {
+        if (!item) continue;
+        item.style.width = '';
+        item.style.transform = '';
+        item.style.visibility = '';
+      }
+      return;
+    }
+    const scroll = Math.min(max, Math.max(0, readScroll(el, rtl)));
     const size = strategy.itemMainAxisSize;
     itemEls.current.forEach((item, i) => {
       if (!item) return;
       const { maskSize, translation } = itemPlacement(strategy, i, scroll, max);
-      // Pager position + keyline translation, then centre the visible box on the item's centre.
+      // Pager position + keyline translation, then centre the visible box on the item's centre
+      // (from the start edge: mirrored in RTL).
       const left = padStart + i * pitch + translation + (size - maskSize) / 2;
       item.style.width = `${Math.max(0, maskSize)}px`;
-      item.style.transform = `translateX(${left}px)`;
+      item.style.transform = `translateX(${rtl ? -left : left}px)`;
       item.style.visibility = maskSize <= 0.5 ? 'hidden' : '';
     });
-  }, [strategy, max, padStart, pitch]);
+  }, [strategy, max, padStart, pitch, rtl]);
 
   // Rest state: the initial item's snap position.
   const initialised = useRef(false);
@@ -233,11 +283,14 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     const el = viewport.current;
     if (!el || !strategy) return;
     if (!initialised.current) {
-      el.scrollLeft = snapTargets[Math.min(initialItem, count - 1)] ?? 0;
+      writeScroll(el, rtl, snapTargets[Math.min(initialItem, count - 1)] ?? 0);
       initialised.current = true;
     }
+  }, [strategy, snapTargets, initialItem, count, rtl]);
+  // Every commit: items may have been added, removed or reordered (keyed elements move).
+  useLayoutEffect(() => {
     place();
-  }, [strategy, snapTargets, initialItem, count, place]);
+  });
 
   // Snap with the Compose snap spring (critically damped, stiffness 400) from `velocity` (px/s).
   const anim = useRef<SpringAnimation | (() => void) | null>(null);
@@ -247,18 +300,31 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     else a?.stop();
     anim.current = null;
   };
+  /** Ends the pointer drag in progress (its window listeners); null when there is none. */
+  const gesture = useRef<(() => void) | null>(null);
+  // Unmounted: no drag, snap or fling may keep running on a detached viewport.
+  useEffect(
+    () => () => {
+      gesture.current?.();
+      const a = anim.current;
+      if (typeof a === 'function') a();
+      else a?.stop();
+      anim.current = null;
+    },
+    [],
+  );
   const settle = useCallback(
     (target?: number, velocity = 0) => {
       const el = viewport.current;
       if (!el || snapTargets.length === 0) return;
-      const from = el.scrollLeft;
+      const from = readScroll(el, rtl);
       const to =
         target ??
         snapTargets.reduce((best, t) => (Math.abs(t - from) < Math.abs(best - from) ? t : best), snapTargets[0]!);
       stop();
       if (Math.abs(to - from) < 0.5) return;
       if (prefersReducedMotion()) {
-        el.scrollLeft = to;
+        writeScroll(el, rtl, to);
         place();
         return;
       }
@@ -268,7 +334,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         to,
         velocity,
         onUpdate: (v) => {
-          el.scrollLeft = v;
+          writeScroll(el, rtl, v);
           place();
         },
         onComplete: () => {
@@ -277,7 +343,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [snapTargets, place],
+    [snapTargets, place, rtl],
   );
 
   /**
@@ -319,10 +385,13 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     if (!el || !strategy || e.button !== 0) return;
     // Uncontained keeps the browser's touch scrolling (its momentum is the decay).
     if (layout === 'uncontained' && e.pointerType === 'touch') return;
+    gesture.current?.();
+    // Pointer x → logical scroll: dragging towards the end edge scrolls back.
+    const toward = rtl ? -1 : 1;
     const id = e.pointerId;
     const downX = e.clientX;
     let x0 = e.clientX;
-    let scroll0 = el.scrollLeft;
+    let scroll0 = readScroll(el, rtl);
     let active = false;
     const slop = pointerSlop(e.pointerType);
     const tracker = new PointerVelocityTracker();
@@ -336,50 +405,57 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
         active = true;
         dragging.current = true;
         stop();
-        scroll0 = el.scrollLeft;
+        scroll0 = readScroll(el, rtl);
         x0 += Math.sign(dx) * slop; // Compose's overSlop
       }
-      el.scrollLeft = Math.min(max, Math.max(0, scroll0 - (ev.clientX - x0)));
+      writeScroll(el, rtl, Math.min(max, Math.max(0, scroll0 - toward * (ev.clientX - x0))));
       place();
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
+      end();
       if (!active) return;
       dragging.current = false;
       tracker.up(ev);
       suppressNextClick();
-      const velocity = -tracker.velocity().x;
+      const velocity = -toward * tracker.velocity().x;
       if (layout === 'uncontained') {
         // noSnapFlingBehavior: decay, no snap.
         if (velocity === 0 || prefersReducedMotion()) return;
-        const from = el.scrollLeft;
+        const from = readScroll(el, rtl);
         const fling = splineFling(velocity);
         let start: number | undefined;
         let frame = requestAnimationFrame(function tick(now) {
           start ??= now;
           const t = now - start;
-          el.scrollLeft = Math.min(max, Math.max(0, from + fling.position(t)));
+          const scroll = Math.min(max, Math.max(0, from + fling.position(t)));
+          writeScroll(el, rtl, scroll);
           place();
-          const atBound = el.scrollLeft <= 0 || el.scrollLeft >= max;
+          const atBound = scroll <= 0 || scroll >= max;
           if (t < fling.duration && !atBound) frame = requestAnimationFrame(tick);
           else anim.current = null;
         });
         anim.current = () => cancelAnimationFrame(frame);
         return;
       }
-      settle(singleAdvanceTarget(el.scrollLeft, velocity, ev.clientX - downX), velocity);
+      settle(singleAdvanceTarget(readScroll(el, rtl), velocity, toward * (ev.clientX - downX)), velocity);
+    };
+    const end = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (gesture.current === end) gesture.current = null;
+      dragging.current = false;
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
+    gesture.current = end;
   };
 
   useLayoutEffect(() => {
     const el = viewport.current;
-    if (!el || !strategy) return;
+    if (!el || !strategy) return undefined;
     const onScroll = () => place();
     // Wheel / trackpad / keyboard scrolling (not our drags or snaps) settles on the nearest item;
     // uncontained doesn't snap.
@@ -398,18 +474,20 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     const el = viewport.current;
     if (!el) return;
     if (layout === 'full-screen') return;
-    const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-    if (!dir) return;
+    // Screen direction: in RTL the right arrow goes back towards the start.
+    const right = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!right) return;
     e.preventDefault();
     if (strategy) {
+      const pos = readScroll(el, rtl);
       const current = snapTargets.reduce(
-        (bi, t, i) => (Math.abs(t - el.scrollLeft) < Math.abs(snapTargets[bi]! - el.scrollLeft) ? i : bi),
+        (bi, t, i) => (Math.abs(t - pos) < Math.abs(snapTargets[bi]! - pos) ? i : bi),
         0,
       );
-      const next = Math.min(count - 1, Math.max(0, current + dir));
+      const next = Math.min(count - 1, Math.max(0, current + (rtl ? -right : right)));
       settle(snapTargets[next]);
     } else {
-      el.scrollBy({ left: dir * 200, behavior: 'smooth' });
+      el.scrollBy({ left: right * 200, behavior: 'smooth' });
     }
   };
 
@@ -419,6 +497,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
     'aria-roledescription': 'carousel',
     'aria-label': ariaLabel,
     tabIndex: 0,
+    'data-m3-no-drag': '',
     onKeyDown,
   } as const;
   const slide = (i: number) =>
@@ -429,7 +508,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       <div {...common} {...stylex.props(s.viewport, s.pager, sx)}>
         <div {...stylex.props(s.pageGap)}>
           {items.map((child, i) => (
-            <div key={i} {...slide(i)} {...stylex.props(s.page)}>
+            <div key={keyOf(child, i)} {...slide(i)} {...stylex.props(s.page)}>
               {child}
             </div>
           ))}
@@ -443,7 +522,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
       <div {...common} {...stylex.props(s.viewport, sx)}>
         <div {...stylex.props(s.row)}>
           {items.map((child, i) => (
-            <div key={i} {...slide(i)} {...stylex.props(s.rowItem, s.aspect(aspectRatios[i] ?? 1))}>
+            <div key={keyOf(child, i)} {...slide(i)} {...stylex.props(s.rowItem, s.aspect(aspectRatios[i] ?? 1))}>
               {child}
             </div>
           ))}
@@ -453,27 +532,45 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   }
 
   const trackWidth = available + max + padStart + padEnd;
+  // Unmeasured: the preferred width, or a share of the viewport (cqw) like the keylines' defaults.
+  const staticWidth =
+    layout === 'uncontained'
+      ? itemWidth != null
+        ? `${itemWidth - itemSpacing}px`
+        : `calc(100cqw - ${padStart + itemSpacing}px)`
+      : preferredItemWidth != null
+        ? `${preferredItemWidth}px`
+        : layout === 'multi-browse'
+          ? `calc((100cqw - ${padStart + padEnd + itemSpacing}px) / 2)`
+          : `calc(100cqw - ${padStart + padEnd}px)`;
+  const track = stylex.props(s.track, !strategy && s.trackStatic(padStart, padEnd, itemSpacing));
   return (
     <div
       {...common}
       onPointerDown={onPointerDown}
       onDragStart={(e) => e.preventDefault()}
-      {...stylex.props(s.viewport, layout !== 'uncontained' && s.ownDrag, s.clip(padStart, padEnd), sx)}
+      {...stylex.props(
+        s.viewport,
+        layout !== 'uncontained' && s.ownDrag,
+        // The clip insets are physical: the start padding is on the right in RTL.
+        rtl ? s.clip(padEnd, padStart) : s.clip(padStart, padEnd),
+        !strategy && s.unmeasured,
+        sx,
+      )}
     >
-      <div style={{ width: trackWidth }} {...stylex.props(s.track)}>
-        {strategy &&
-          items.map((child, i) => (
-            <div
-              key={i}
-              ref={(el) => {
-                itemEls.current[i] = el;
-              }}
-              {...slide(i)}
-              {...stylex.props(s.item)}
-            >
-              {child}
-            </div>
-          ))}
+      <div {...track} style={strategy ? { ...track.style, width: trackWidth } : track.style}>
+        {items.map((child, i) => (
+          <div
+            key={keyOf(child, i)}
+            ref={(el) => {
+              itemEls.current[i] = el;
+            }}
+            {...slide(i)}
+            {...stylex.props(strategy ? s.item : [s.itemStatic, s.itemWidth(staticWidth)])}
+          >
+            {child}
+          </div>
+        ))}
       </div>
     </div>
   );
