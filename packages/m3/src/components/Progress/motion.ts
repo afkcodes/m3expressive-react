@@ -30,8 +30,9 @@ export class SpringAnimator {
   get running() {
     return this.seg !== null;
   }
+  /** Spring to `target`; a call that changes nothing (same target and spring) keeps the motion as is. */
   to(target: number, spring: SpringParams) {
-    if (!this.seg && this.value === target) return;
+    if (this.seg ? target === this.target && spring === this.spring : this.value === target) return;
     this.target = target;
     this.spring = spring;
     const { value, velocity, precision } = this;
