@@ -1,6 +1,5 @@
-import { useContext, useMemo, type ReactNode } from 'react';
+import { useContext, useMemo, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
@@ -8,6 +7,7 @@ import { typescale } from '../../tokens/typescale.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { TabsContext, type TabsVariant } from './context.ts';
 
@@ -97,7 +97,9 @@ const s = stylex.create({
   },
 });
 
-export interface TabProps {
+/** A tab `<button>` (`ref`, native props, `sx`); Base UI's Tabs.Tab. */
+export interface TabProps extends SxProps<Omit<BaseTabs.Tab.Props, 'render' | 'children' | 'value'>> {
+  ref?: Ref<HTMLButtonElement>;
   /** Identifies the tab (and its panel). */
   value: unknown;
   label?: ReactNode;
@@ -105,9 +107,6 @@ export interface TabProps {
   /** Badge on the icon (or after the label when there's no icon). */
   badge?: ReactNode;
   disabled?: boolean;
-  /** Static rendering (outside `<Tabs>`): draw the tab as selected. */
-  selected?: boolean;
-  sx?: StyleXStyles;
 }
 
 function TabBody({
@@ -144,8 +143,11 @@ function TabBody({
   );
 }
 
-/** A tab: inside `<Tabs>` a real tab (Base UI); alone, a static rendering of one. */
-export function Tab({ value, label, icon, badge, disabled = false, selected = false, sx }: TabProps) {
+/**
+ * A tab inside `<Tabs>` (Base UI). Outside a row (testing `TabScope`) it draws a static tab, selected
+ * per `ForceState selected`.
+ */
+export function Tab({ value, label, icon, badge, disabled = false, sx, ...rest }: TabProps) {
   const { variant, scrollable, live } = useContext(TabsContext);
   const forced = useForcedState();
   const stacked = icon != null && label != null && variant === 'primary';
@@ -162,6 +164,7 @@ export function Tab({ value, label, icon, badge, disabled = false, selected = fa
       sx,
     );
   if (!live) {
+    const selected = !!forced.selected;
     return (
       <div role="tab" aria-selected={selected} data-ripple-host="" {...style(selected)}>
         <TabBody label={label} icon={icon} badge={badge} variant={variant} inRow={false} />
@@ -176,6 +179,7 @@ export function Tab({ value, label, icon, badge, disabled = false, selected = fa
       value={value}
       disabled={disabled}
       data-ripple-host=""
+      {...rest}
       render={(props, state) => (
         <button type="button" {...props} {...style(state.active)}>
           <TabBody label={label} icon={icon} badge={badge} variant={variant} inRow />
@@ -185,7 +189,7 @@ export function Tab({ value, label, icon, badge, disabled = false, selected = fa
   );
 }
 
-/** Static tab styling context (render `<Tab>`s outside a live row). */
+/** Testing: static tab styling context (render `<Tab>`s outside a live row). */
 export function TabScope({ variant = 'primary', children }: { variant?: TabsVariant; children: ReactNode }) {
   const ctx = useMemo(() => ({ variant, scrollable: false, live: false }), [variant]);
   return <TabsContext value={ctx}>{children}</TabsContext>;

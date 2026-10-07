@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
-import { Tab, TabPanel, Tabs, TabScope, type TabsVariant } from '@m3x/react';
-import { ForceState, type ForcedState } from '@m3x/react/testing';
+import { Tab, TabPanel, Tabs, type TabsVariant } from '@m3x/react';
+import { ForceState, TabScope, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/tabs/manifest.json';
 import assets from '../../../../figma/tabs/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -30,12 +30,11 @@ function render(name: string): ReactNode {
     const ripple = p[3] === 'pressed' ? assets.ripple[`${p[1]}-${kind}` as keyof typeof assets.ripple] : undefined;
     return (
       <TabScope variant={variant}>
-        <ForceState state={asForced(p[3]!)} ripplePath={ripple}>
+        <ForceState state={asForced(p[3]!)} ripplePath={ripple} selected={p[4] === 'sel'}>
           <Tab
             value="t"
             label={kind === 'i' ? undefined : 'Tab'}
             icon={kind === 'l' ? undefined : <Icon name="stars-24" />}
-            selected={p[4] === 'sel'}
           />
         </ForceState>
       </TabScope>

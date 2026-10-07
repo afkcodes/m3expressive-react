@@ -7,6 +7,7 @@ export type { ForcedState, ForceStateValue, ForcedProgressFrame, ForcedPosition 
 // — Actions, bars, communication (buttons, chips, toolbar, tabs, search, snackbar…)
 export { ConnectedButtonGroupScope } from '../components/ButtonGroup/ConnectedButtonGroup.tsx';
 export { ChipAvatarPlaceholder } from '../components/Chip/InputChip.tsx';
+export { TabScope } from '../components/Tabs/Tab.tsx';
 export { ToolbarScope } from '../components/Toolbar/Toolbar.tsx';
 
 // — Lists, menus, navigation, surfaces
