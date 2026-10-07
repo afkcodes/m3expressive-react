@@ -1,65 +1,64 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
-import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import type { SpringParams } from '../../motion/spring.ts';
+import { estimateDurationMs, stepSpring, type SpringParams } from '../../motion/spring.ts';
 import { emphasizedAccelerate, standard } from '../../motion/easing.ts';
 
 export { cubicBezier } from '../../motion/easing.ts';
 
-/** Calls `onFrame(ms since start)` every animation frame while `active`. */
-export function useFrameLoop(active: boolean, onFrame: (ms: number) => void) {
-  const cb = useRef(onFrame);
-  cb.current = onFrame;
-  useEffect(() => {
-    if (!active) return;
-    let id = 0;
-    let t0: number | undefined;
-    const tick = (now: number) => {
-      t0 ??= now;
-      cb.current(now - t0);
-      id = requestAnimationFrame(tick);
-    };
-    id = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(id);
-  }, [active]);
-}
+/*
+ * The indicators' animators are plain objects ticked from one frame callback (frameClock.ts):
+ * each frame computes the drawing and writes it to the SVG, so React renders only when props,
+ * size or a forced still frame change.
+ */
 
 /**
- * A number that springs to `target`. `spring` null (reduced motion / frozen) jumps. The first
- * render starts at the target (no entrance animation), like Compose's animateFloatAsState.
+ * A number that springs to its target, ticked by the caller — `animateSpring` semantics
+ * (motion/animate.ts) without its own rAF: each segment (start or retarget, which keeps the value
+ * and velocity) is timed from its first tick and runs for Compose's estimated duration in units of
+ * `precision`, then snaps to the target. Like Compose's animateFloatAsState it starts at rest.
  */
-export function useSpringNumber(target: number, spring: SpringParams | null, precision = 0.001) {
-  const [value, setValue] = useState(target);
-  const anim = useRef<SpringAnimation | null>(null);
-  const current = useRef(target);
-  useEffect(() => {
-    if (!spring) {
-      anim.current?.stop();
-      anim.current = null;
-      current.current = target;
-      setValue(target);
-      return;
+export class SpringAnimator {
+  value: number;
+  velocity = 0;
+  private target: number;
+  private readonly precision: number;
+  private spring: SpringParams | null = null;
+  private seg: { value: number; velocity: number; duration: number; begin?: number } | null = null;
+  constructor(value: number, precision: number) {
+    this.value = value;
+    this.target = value;
+    this.precision = precision;
+  }
+  get running() {
+    return this.seg !== null;
+  }
+  to(target: number, spring: SpringParams) {
+    if (!this.seg && this.value === target) return;
+    this.target = target;
+    this.spring = spring;
+    const { value, velocity, precision } = this;
+    this.seg = {
+      value,
+      velocity,
+      duration: estimateDurationMs(spring, (value - target) / precision, velocity / precision),
+    };
+  }
+  jump(value: number) {
+    this.seg = null;
+    this.value = value;
+    this.velocity = 0;
+    this.target = value;
+  }
+  tick(now: number) {
+    const seg = this.seg;
+    if (!seg || !this.spring) return this.value;
+    seg.begin ??= now;
+    const elapsed = now - seg.begin;
+    if (elapsed >= seg.duration) {
+      this.jump(this.target);
+      return this.value;
     }
-    if (anim.current) {
-      anim.current.retarget(target, spring);
-      return;
-    }
-    if (current.current === target) return;
-    anim.current = animateSpring({
-      spring,
-      from: current.current,
-      to: target,
-      precision,
-      onUpdate: (v) => {
-        current.current = v;
-        setValue(v);
-      },
-      onComplete: () => {
-        anim.current = null;
-      },
-    });
-  }, [target, spring, precision]);
-  useEffect(() => () => anim.current?.stop(), []);
-  return value;
+    ({ value: this.value, velocity: this.velocity } = stepSpring(this.spring, seg, this.target, elapsed));
+    return this.value;
+  }
 }
 
 /** Compose `ProgressIndicatorDefaults.ProgressAnimationSpec`: no bounce, StiffnessVeryLow. */
@@ -173,44 +172,6 @@ export class AmplitudeRamp {
     }
     return this.value;
   }
-}
-
-/** Drives an animator on rAF while it runs; re-renders the caller each frame. */
-function useAnimatorLoop(anim: { running: boolean; tick(now: number): number }, kick: unknown[]) {
-  const [, rerender] = useReducer((n: number) => n + 1, 0);
-  useEffect(() => {
-    if (!anim.running) return;
-    let frame = 0;
-    const loop = (now: number) => {
-      anim.tick(now);
-      rerender();
-      if (anim.running) frame = requestAnimationFrame(loop);
-    };
-    frame = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(frame);
-  }, kick);
-}
-
-/** A number that tweens to `target` (`spec` null jumps). The first render starts at the target. */
-export function useTweenNumber(target: number, spec: Tween | null) {
-  const anim = useRef<TweenAnimator | null>(null);
-  anim.current ??= new TweenAnimator(target);
-  const a = anim.current;
-  if (!spec) a.jump(target);
-  else a.to(target, spec);
-  useAnimatorLoop(a, [target, spec]);
-  return a.value;
-}
-
-/** The wave amplitude 0…1 ramping to `target` (`animate` false jumps). Starts at the target. */
-export function useWaveAmplitude(target: number, animate: boolean) {
-  const ramp = useRef<AmplitudeRamp | null>(null);
-  ramp.current ??= new AmplitudeRamp(target);
-  const r = ramp.current;
-  if (!animate) r.jump(target);
-  else r.setTarget(target);
-  useAnimatorLoop(r, [target, animate]);
-  return r.value;
 }
 
 /*

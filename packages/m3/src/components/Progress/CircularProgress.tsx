@@ -1,26 +1,28 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useLayoutEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
-import { useForcedState } from '../../testing/ForceState.tsx';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import { useForcedState, type ForcedProgressFrame } from '../../testing/ForceState.tsx';
 import {
   CIRCULAR,
   circularFrame,
   circularShapes,
   type CircularFrame,
+  type CircularShapes,
   type ProgressThickness,
   type ProgressType,
 } from './geometry.ts';
 import {
+  AmplitudeRamp,
   PROGRESS_SPRING,
+  SpringAnimator,
   circularIndeterminate,
   circularWaveAmplitude,
-  useFrameLoop,
-  useSpringNumber,
-  useWaveAmplitude,
 } from './motion.ts';
+import { observeOnScreen, onEveryFrame } from './frameClock.ts';
 
 const s = stylex.create({
   root: { display: 'inline-block', flexShrink: 0, verticalAlign: 'middle' },
@@ -34,6 +36,8 @@ const s = stylex.create({
 const WAVE_PHASE = -5;
 /** Determinate wave travel ≈ one wave (40°) per second (Compose `waveSpeed = wavelength`). */
 const WAVE_SPEED = 40;
+/** Spring visibility threshold for the drawn progress (0…1). */
+const PROGRESS_PRECISION = 0.001;
 
 export interface CircularProgressProps {
   /** 0…max. Omit (or null) for the indeterminate indicator. */
@@ -47,6 +51,90 @@ export interface CircularProgressProps {
   sx?: StyleXStyles;
 }
 
+/** Everything a frame of the drawing depends on besides the animated values. */
+interface CircularInputs {
+  type: ProgressType;
+  thickness: ProgressThickness;
+  /** Target progress 0…1 (0 while indeterminate). */
+  progress: number;
+  indeterminate: boolean;
+  reduced: boolean;
+  forced: ForcedProgressFrame | undefined;
+}
+
+/** The animated values of a frame: drawn progress, wave amplitude, clock (ms). */
+interface CircularMotion {
+  shown: number;
+  amp: number;
+  clock: number;
+}
+
+const ampTargetOf = (type: ProgressType, indeterminate: boolean, shown: number) =>
+  type !== 'wave' ? 0 : indeterminate ? 1 : circularWaveAmplitude(shown);
+
+/** The drawing at one instant — the still frames and every animation frame alike. */
+function circularDrawing(inputs: CircularInputs, { shown, amp, clock }: CircularMotion): CircularShapes {
+  const { type, thickness, indeterminate, reduced, forced } = inputs;
+  // A forced `time` renders the live animation at that instant; any other forced frame is still.
+  const frozen = forced !== undefined && forced.time === undefined;
+  const kit = CIRCULAR[type][thickness];
+  let frame: CircularFrame | null;
+  let spin = 0;
+  if (indeterminate && frozen && forced.value !== undefined) {
+    // The kit's Step frames: determinate arcs, rotated.
+    frame = circularFrame(type, thickness, forced.value);
+    spin = forced.rotation ?? 0;
+  } else if (indeterminate) {
+    // Live: Compose's M3 Expressive indeterminate — the arc sweeps 10% ↔ 87% while the drawing
+    // turns (constant spin + a 90° step every 1.5s). The gap is the kit's (its 10% frame).
+    const { sweep, rotation } = circularIndeterminate(clock);
+    const sweepDeg = sweep * 360;
+    const gap = Math.min(sweepDeg, kit.tracks[1] - kit.ends[1]);
+    frame = {
+      start: kit.start,
+      end: kit.start + sweepDeg,
+      trackStart: kit.start + sweepDeg + gap,
+      trackEnd: kit.start + 360 - gap,
+    };
+    spin = rotation;
+  } else frame = circularFrame(type, thickness, shown);
+  // The wave turns with the indeterminate arc (Compose rotates the whole drawing) and travels
+  // backwards under the fixed arc ends, one wave per second (Compose rotates the segment by
+  // −offset).
+  const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED;
+  const phase = (forced?.phase ?? WAVE_PHASE) + spin - travel;
+  return circularShapes(type, thickness, frame, spin, phase, amp);
+}
+
+/** The frame React renders: a forced frame, or the indicator at rest on its target. */
+const restingMotion = (inputs: CircularInputs): CircularMotion => {
+  const shown = inputs.indeterminate ? 0 : inputs.progress;
+  return { shown, amp: ampTargetOf(inputs.type, inputs.indeterminate, shown), clock: inputs.forced?.time ?? 0 };
+};
+
+/** Writes a frame into the track / active paths rendered by `CircularProgress`. */
+function paintCircular(svg: SVGSVGElement, g: CircularShapes) {
+  const [track, active] = svg.children;
+  for (const [el, d] of [
+    [track, g.track],
+    [active, g.active],
+  ] as const) {
+    if (d === null) el!.removeAttribute('d');
+    else el!.setAttribute('d', d);
+  }
+}
+
+/** Per-instance animation state, ticked by the shared frame clock. */
+interface CircularDriver {
+  spring: SpringAnimator;
+  ramp: AmplitudeRamp;
+  /** Frame timestamp the clock counts from (unset while the drawing is still). */
+  clockStart: number | undefined;
+  clock: number;
+  visible: boolean;
+  stopLoop: (() => void) | null;
+}
+
 /**
  * Circular progress indicator (kit sets "Circular-determinate / -indeterminate progress
  * indicator"): 40 / 44px flat, 48 / 52px wavy. The active arc starts just right of 12 o'clock and
@@ -58,6 +146,10 @@ export interface CircularProgressProps {
  * Indeterminate: M3 Expressive motion as Material Components Android and the m3.material.io spec
  * video draw it (6s cycle: spin, Standard-eased 90° steps, 10% ↔ 87% Standard-eased sweep — see
  * motion.ts); the kit's Step frames (its 10% / 50% arcs, rotated) are reproduced as still frames.
+ *
+ * Rendering: React renders the resting (or forced) frame; while anything moves, one shared frame
+ * callback advances the animators and writes the paths directly — no re-render per frame, and no
+ * drawing while the indicator is off screen (its clock keeps running).
  */
 export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(function CircularProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, sx, ...aria },
@@ -65,58 +157,134 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
 ) {
   const forced = useForcedState().progress;
   const reduced = useReducedMotion();
-  const [ms, setMs] = useState(0);
+  const box = useRef<HTMLDivElement | null>(null);
+  const svg = useRef<SVGSVGElement | null>(null);
+  const setRefs = useMergedRefs(ref, box);
   const indeterminate = value == null;
-  const p = indeterminate ? 0 : Math.min(1, Math.max(0, value / max));
-  // A forced `time` renders the live animation at that instant; any other forced frame is still.
-  const frozen = forced !== undefined && forced.time === undefined;
-  const clock = forced?.time ?? ms;
-  const still = !!forced || reduced;
-  const wave = type === 'wave';
-  // Compose's circular wavy indicator recommends ProgressIndicatorDefaults.ProgressAnimationSpec
-  // (the flat spring, WavyProgressIndicator.kt:249); only the linear wavy one uses the 500ms tween.
-  const shown = useSpringNumber(p, still ? null : PROGRESS_SPRING);
-  // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
-  const amp = useWaveAmplitude(!wave ? 0 : indeterminate ? 1 : circularWaveAmplitude(shown), !still);
-  // The wave travels while it has an amplitude (Compose stops the offset animation at 0).
-  useFrameLoop(!forced && (indeterminate || (wave && !reduced && amp > 0 && shown > 0)), setMs);
+  const progress = indeterminate ? 0 : Math.min(1, Math.max(0, value / max));
+  const inputs: CircularInputs = { type, thickness, progress, indeterminate, reduced, forced };
 
-  const t = thickness;
-  const k = CIRCULAR[type][t];
-  let frame: CircularFrame | null;
-  let spin = 0;
-  if (indeterminate && frozen && forced.value !== undefined) {
-    // The kit's Step frames: determinate arcs, rotated.
-    frame = circularFrame(type, t, forced.value);
-    spin = forced.rotation ?? 0;
-  } else if (indeterminate) {
-    // Live: Compose's M3 Expressive indeterminate — the arc sweeps 10% ↔ 87% while the drawing
-    // turns (constant spin + a 90° step every 1.5s). The gap is the kit's (its 10% frame).
-    const { sweep, rotation } = circularIndeterminate(clock);
-    const sw = sweep * 360;
-    const g = Math.min(sw, k.tracks[1] - k.ends[1]);
-    frame = { start: k.start, end: k.start + sw, trackStart: k.start + sw + g, trackEnd: k.start + 360 - g };
-    spin = rotation;
-  } else frame = circularFrame(type, t, shown);
-  const size = k.size;
-  // The wave turns with the indeterminate arc (Compose rotates the whole drawing) and travels
-  // backwards under the fixed arc ends, one wave per second (Compose rotates the segment by
-  // −offset).
-  const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED;
-  const phase = (forced?.phase ?? WAVE_PHASE) + spin - travel;
-  const g = circularShapes(type, t, frame, spin, phase, amp);
+  // The latest inputs for the frame callback (updated after each commit, read only there).
+  const latest = useRef(inputs);
+  const driver = useRef<CircularDriver | null>(null);
+  const paint = (d: CircularDriver, current: CircularInputs, motion: CircularMotion) => {
+    if (d.visible && svg.current) paintCircular(svg.current, circularDrawing(current, motion));
+  };
+
+  // Frame callback: advance the animators, draw, and leave the clock once everything is at rest.
+  const onFrame = useRef<(now: number) => void>(() => {});
+  useLayoutEffect(() => {
+    onFrame.current = (now: number) => {
+      const d = driver.current;
+      if (!d) return;
+      const current = latest.current;
+      const motion = advance(d, current, now);
+      paint(d, current, motion);
+      if (!needsFrames(d, current, motion)) {
+        d.stopLoop?.();
+        d.stopLoop = null;
+      }
+    };
+  });
+
+  // After every commit: hand the new inputs to the animators and repaint the live frame (React has
+  // just rendered the resting one), starting the clock when something moves.
+  useLayoutEffect(() => {
+    latest.current = inputs;
+    if (forced) {
+      driver.current?.stopLoop?.();
+      driver.current = null;
+      return;
+    }
+    const d = (driver.current ??= {
+      spring: new SpringAnimator(progress, PROGRESS_PRECISION),
+      ramp: new AmplitudeRamp(ampTargetOf(type, indeterminate, progress)),
+      clockStart: undefined,
+      clock: 0,
+      visible: true,
+      stopLoop: null,
+    });
+    retarget(d, inputs);
+    const motion = currentMotion(d);
+    paint(d, inputs, motion);
+    if (!d.stopLoop && needsFrames(d, inputs, motion)) {
+      d.stopLoop = onEveryFrame((now) => onFrame.current(now));
+    }
+  });
+
+  // Off screen: skip drawing (the clock keeps running) and catch up on return. Unmount: stop.
+  useLayoutEffect(() => {
+    const el = box.current;
+    const stopObserving = el
+      ? observeOnScreen(el, (visible) => {
+          const d = driver.current;
+          if (!d) return;
+          d.visible = visible;
+          paint(d, latest.current, currentMotion(d));
+        })
+      : undefined;
+    return () => {
+      stopObserving?.();
+      driver.current?.stopLoop?.();
+      driver.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `paint` reads refs only
+  }, []);
+
+  const { size } = CIRCULAR[type][thickness];
+  const g = circularDrawing(inputs, restingMotion(inputs));
 
   return (
     <Progress.Root
-      ref={ref}
-      value={indeterminate ? null : p * 100}
+      ref={setRefs}
+      value={indeterminate ? null : progress * 100}
       {...aria}
       {...stylex.props(s.root, s.size(size), sx)}
     >
-      <svg width={size} height={size} {...stylex.props(s.svg)} aria-hidden>
-        {g.track && <path d={g.track} strokeWidth={t} {...stylex.props(s.track)} />}
-        {g.active && <path d={g.active} strokeWidth={t} {...stylex.props(s.active)} />}
+      <svg ref={svg} width={size} height={size} {...stylex.props(s.svg)} aria-hidden>
+        <path d={g.track ?? undefined} strokeWidth={thickness} {...stylex.props(s.track)} />
+        <path d={g.active ?? undefined} strokeWidth={thickness} {...stylex.props(s.active)} />
       </svg>
     </Progress.Root>
   );
 });
+
+/** New props: retarget the animators (Compose's animate*AsState) — a jump when motion is reduced. */
+function retarget(d: CircularDriver, { progress, reduced, type, indeterminate }: CircularInputs) {
+  // Compose's circular wavy indicator recommends ProgressIndicatorDefaults.ProgressAnimationSpec
+  // (the flat spring, WavyProgressIndicator.kt:249); only the linear wavy one uses the 500ms tween.
+  if (reduced) d.spring.jump(progress);
+  else d.spring.to(progress, PROGRESS_SPRING);
+  const ampTarget = ampTargetOf(type, indeterminate, d.spring.value);
+  if (reduced) d.ramp.jump(ampTarget);
+  else d.ramp.setTarget(ampTarget);
+}
+
+const currentMotion = (d: CircularDriver): CircularMotion => ({
+  shown: d.spring.value,
+  amp: d.ramp.value,
+  clock: d.clock,
+});
+
+/** Advances the animators to `now`; returns the frame's animated values. */
+function advance(d: CircularDriver, inputs: CircularInputs, now: number): CircularMotion {
+  const shown = d.spring.tick(now);
+  // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
+  const ampTarget = ampTargetOf(inputs.type, inputs.indeterminate, shown);
+  if (inputs.reduced) d.ramp.jump(ampTarget);
+  else d.ramp.setTarget(ampTarget);
+  const amp = d.ramp.tick(now);
+  if (runsClock(inputs, { shown, amp })) {
+    d.clockStart ??= now;
+    d.clock = now - d.clockStart;
+  } else d.clockStart = undefined;
+  return { shown, amp, clock: d.clock };
+}
+
+/** Indeterminate always runs on the clock; the wave travels while it has an amplitude (Compose
+ *  stops the offset animation at 0). */
+const runsClock = (inputs: CircularInputs, { shown, amp }: Pick<CircularMotion, 'shown' | 'amp'>) =>
+  inputs.indeterminate || (inputs.type === 'wave' && !inputs.reduced && amp > 0 && shown > 0);
+
+const needsFrames = (d: CircularDriver, inputs: CircularInputs, motion: CircularMotion) =>
+  d.spring.running || d.ramp.running || runsClock(inputs, motion);

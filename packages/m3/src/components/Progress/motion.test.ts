@@ -6,6 +6,8 @@ import {
   AmplitudeRamp,
   MORPH_PRECISION,
   MORPH_SPRING,
+  PROGRESS_SPRING,
+  SpringAnimator,
   TweenAnimator,
   WAVY_PROGRESS_TWEEN,
   circularIndeterminate,
@@ -95,6 +97,35 @@ describe('determinate motion (Compose wavy indicators)', () => {
     expect(r.tick(1000)).toBe(0);
     expect(r.running).toBe(false);
     expect(AMPLITUDE_DOWN.duration).toBe(500);
+  });
+});
+
+describe('SpringAnimator (animateSpring semantics, ticked by the frame clock)', () => {
+  it('times each segment from its first tick, follows the spring and snaps at the estimated end', () => {
+    const a = new SpringAnimator(0.3, 0.001);
+    a.to(0.3, PROGRESS_SPRING);
+    expect(a.running).toBe(false); // already there
+    a.to(0.8, PROGRESS_SPRING);
+    expect(a.tick(1000)).toBeCloseTo(0.3, 12); // the segment starts on this frame
+    const at = (ms: number) => stepSpring(PROGRESS_SPRING, { value: 0.3, velocity: 0 }, 0.8, ms).value;
+    expect(a.tick(1200)).toBeCloseTo(at(200), 12);
+    const end = estimateDurationMs(PROGRESS_SPRING, (0.3 - 0.8) / 0.001, 0);
+    expect(a.tick(1000 + end - 1)).toBeCloseTo(at(end - 1), 12);
+    expect(a.tick(1000 + end)).toBe(0.8);
+    expect(a.running).toBe(false);
+  });
+
+  it('a retarget keeps the value and velocity and restarts the timing on the next tick', () => {
+    const a = new SpringAnimator(0, 0.001);
+    a.to(1, PROGRESS_SPRING);
+    a.tick(0);
+    const mid = stepSpring(PROGRESS_SPRING, { value: 0, velocity: 0 }, 1, 300);
+    expect(a.tick(300)).toBeCloseTo(mid.value, 12);
+    a.to(0.2, PROGRESS_SPRING);
+    expect(a.tick(320)).toBeCloseTo(mid.value, 12);
+    expect(a.tick(420)).toBeCloseTo(stepSpring(PROGRESS_SPRING, mid, 0.2, 100).value, 12);
+    a.jump(0.5);
+    expect([a.value, a.velocity, a.running]).toEqual([0.5, 0, false]);
   });
 });
 
