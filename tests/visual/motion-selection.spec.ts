@@ -246,7 +246,7 @@ test.describe('tooltip motion and behaviour', () => {
   const plainText = 'Supporting text';
   const richText = 'Supporting line text lorem ipsum dolor sit amet, consectetur';
 
-  test('mouse: shows on enter with no delay, scales about its centre; rich with actions persists; one at a time', async ({ page }) => {
+  test('mouse: shows on enter with no delay, scales about its centre; rich dismisses on exit unless persistent; one at a time', async ({ page }) => {
     await open(page, 'tooltip', 'live');
     await page.getByRole('button', { name: 'Favourite' }).hover();
     // Compose: PointerEventType.Enter → show(). Mounted on the next frame, no 500ms delay.
@@ -259,11 +259,17 @@ test.describe('tooltip motion and behaviour', () => {
     await page.getByRole('button', { name: 'Details' }).hover();
     await expect(page.getByText(richText)).toBeVisible({ timeout: 200 });
     await expect(page.getByText(plainText, { exact: true }), 'GlobalMutatorMutex: one tooltip').toBeHidden();
+    // Compose's default rememberTooltipState(isPersistent = false): pointer exit dismisses it.
+    await page.mouse.move(2, 2);
+    await expect(page.getByText(richText), 'not persistent: dismisses on pointer exit').toBeHidden({ timeout: 500 });
+    // `persistent`: stays on exit until Escape / an outside press.
+    await page.getByRole('button', { name: 'Pinned' }).hover();
+    await expect(page.getByText('Persistent rich tooltip')).toBeVisible({ timeout: 200 });
     await page.mouse.move(2, 2);
     await page.waitForTimeout(500);
-    await expect(page.getByText(richText), 'persistent: stays on pointer exit').toBeVisible();
+    await expect(page.getByText('Persistent rich tooltip'), 'persistent: stays on pointer exit').toBeVisible();
     await page.keyboard.press('Escape');
-    await expect(page.getByText(richText)).toBeHidden();
+    await expect(page.getByText('Persistent rich tooltip')).toBeHidden();
   });
 
   test.describe('touch', () => {

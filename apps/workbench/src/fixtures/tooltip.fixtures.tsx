@@ -39,6 +39,9 @@ const fixture: FixtureModule = {
           <RichTooltip trigger={<Button variant="text">Details</Button>} subhead="Title" actions={<Button variant="text">Action</Button>}>
             Supporting line text lorem ipsum dolor sit amet, consectetur
           </RichTooltip>
+          <RichTooltip persistent trigger={<Button variant="text">Pinned</Button>} subhead="Pinned" actions={<Button variant="text">Action</Button>}>
+            Persistent rich tooltip
+          </RichTooltip>
         </div>
       ),
     },

@@ -217,6 +217,7 @@ line to flip if you'd rather follow the M3 guidelines:
 | Floating toolbar | balanced padding animates on default effects; the bar itself drags / flings in exitAlways | no balanced padding (our 48px targets have no asymmetric insets — Compose adds 0 for them); scroll-driven exitAlways only |
 | Circular flat progress, gap near 0% | gap = min(sweep, gap) | the 8dp gap opens over the first 25° of sweep (the kit's 10% frame: 25° arc with the full 40° gap) |
 | Circular wavy amplitude | flat ≤10% and ≥95% | flat only below 10% (the kit draws 10% / 100% wavy) |
+| Circular indeterminate timing | keyframes attach each easing to the keyframe after the move, so at runtime the arc grows linearly and the 90° spins run linear over 300ms | Material Components Android's M3 Expressive timing, which m3.material.io's spec video shows: growth and shrink both Standard-eased over 3s, spins Standard-eased over 500ms (fitted to the video: 3.7° rms sweep / 1.6° rotation vs Compose 35.7° / 4.1°). The video's longest arc measures ~0.80 of the circle where both implementations say 0.87 — we keep 0.87 |
 | Linear progress at 100% | — | the kit's length formula ends at W−6 just below 100% but W−2 at 100%, so the active indicator jumps 4px as an animation lands on 100% (known, not yet fixed) |
 
 ## Shapes

@@ -26,8 +26,8 @@ import { usePortalContainer } from '../../theme/portal.tsx';
  *   Touch / pen: shows after a long press (Android ViewConfiguration long-press timeout, 400ms)
  *   and swallows that press's click; a non-persistent tooltip shown that way dismisses
  *   TooltipDuration (1500ms) later, or when the finger lifts if it is still down then.
- *   Keyboard focus shows it until blur / Escape. Rich tooltips with actions are persistent: they
- *   stay when the pointer leaves and close on an outside press or Escape.
+ *   Keyboard focus shows it until blur / Escape. A `persistent` rich tooltip stays when the
+ *   pointer leaves and closes on an outside press or Escape (Compose's default is not persistent).
  *   One tooltip is visible at a time (Compose's GlobalMutatorMutex).
  */
 /** Android `ViewConfiguration.DEFAULT_LONG_PRESS_TIMEOUT` (Compose `longPressTimeoutMillis`). */
@@ -238,15 +238,19 @@ export interface RichTooltipProps extends Omit<RichTooltipSurfaceProps, 'sx'> {
   /** The trigger (must forward its ref). */
   trigger: ReactElement;
   side?: 'top' | 'bottom' | 'left' | 'right';
+  /**
+   * Stay open when the pointer leaves, until an outside press or Escape (Compose
+   * `rememberTooltipState(isPersistent = true)`). Default false, as in Compose: the tooltip
+   * dismisses once the pointer has left both the trigger and the tooltip (moving into it to
+   * reach its actions keeps it open).
+   */
+  persistent?: boolean;
 }
 
-/**
- * Rich tooltip: opens on hover (immediately), click or a touch long press. With actions it is
- * persistent — it stays until an outside press or Escape.
- */
-export function RichTooltip({ trigger, side = 'bottom', ...surface }: RichTooltipProps) {
+/** Rich tooltip: opens on hover (immediately), click or a touch long press. */
+export function RichTooltip({ trigger, side = 'bottom', persistent = false, ...surface }: RichTooltipProps) {
   const portalContainer = usePortalContainer();
-  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(surface.actions != null);
+  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(persistent);
   return (
     <BasePopover.Root open={open} onOpenChange={onOpenChange}>
       <BasePopover.Trigger openOnHover delay={0} render={trigger} {...triggerProps} />
