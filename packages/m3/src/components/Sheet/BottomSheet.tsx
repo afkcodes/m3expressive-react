@@ -1,4 +1,13 @@
-import { forwardRef, useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Dialog } from '@base-ui/react/dialog';
@@ -17,6 +26,7 @@ import {
   suppressNextClick,
   TOUCH_SLOP,
 } from '../../motion/gesture.ts';
+import { isNoDragTarget } from './dragGuard.ts';
 import { scrim } from './scrim.ts';
 
 /*
@@ -54,7 +64,14 @@ const s = stylex.create({
     borderTopRightRadius: 28,
   },
   standard: { boxShadow: elevation.level3 },
-  header: { display: 'flex', justifyContent: 'center', flexShrink: 0, padding: 16, touchAction: 'none' },
+  header: {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    flexShrink: 0,
+    padding: 16,
+    touchAction: 'none',
+  },
   handleButton: {
     margin: 0,
     borderWidth: 0,
@@ -65,6 +82,9 @@ const s = stylex.create({
     outlineColor: color.secondary,
     outlineWidth: 3,
     outlineOffset: 2,
+    // The whole header is the handle's hit target (Compose gives the handle a 48dp interactive
+    // size; the kit's header is 36px tall). The drawn handle and its focus ring stay 32×4.
+    '::after': { content: '""', position: 'absolute', inset: 0 },
   },
   handle: { display: 'block', width: 32, height: 4, borderRadius: 2, backgroundColor: color.outline },
   content: { flexGrow: 1, minHeight: 0, overflowY: 'auto' },
@@ -198,10 +218,23 @@ export function ModalBottomSheet({
   const portal = usePortalContainer();
   const popup = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
-  const content = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement | null>(null);
   const settleSpec = useSpringToken('default-spatial');
   const settle = useRef<SpringAnimation | null>(null);
   const offset = useRef(0);
+  /** Ends the pointer gesture in progress (its window listeners); null when there is none. */
+  const gesture = useRef<(() => void) | null>(null);
+  /**
+   * The touch pointerdown's verdict for the content's touchstart that follows it: a TouchEvent
+   * can't tell whether a descendant (a slider) captured the pointer.
+   */
+  const touchExempt = useRef(false);
+  // Gesture and settle callbacks outlive the render that created them: they read the latest
+  // props here.
+  const latest = useRef({ onOpenChange, settleSpec });
+  useLayoutEffect(() => {
+    latest.current = { onOpenChange, settleSpec };
+  });
 
   const hiddenAnchor = () => popup.current?.offsetHeight ?? 0;
   const place = (y: number) => {
@@ -221,6 +254,17 @@ export function ModalBottomSheet({
       el.style.transition = '';
     }
     showScrim(true);
+  };
+  /** Drop the gesture and the settle; the sheet goes back to its CSS motion from wherever it is. */
+  const interrupt = () => {
+    gesture.current?.();
+    settle.current?.stop();
+    settle.current = null;
+    const el = popup.current;
+    if (el && el.style.translate) {
+      el.style.transition = '';
+      el.style.translate = '';
+    }
   };
 
   /** A drag begins (after the slop, or at once over a settling sheet — startDragImmediately). */
@@ -266,16 +310,17 @@ export function ModalBottomSheet({
     const done = () => {
       settle.current = null;
       // Settled at Hidden: dismiss (the sheet stays there through the dialog's exit).
-      if (hide) onOpenChange(false);
+      if (hide) latest.current.onOpenChange(false);
       else reset();
     };
-    if (!settleSpec) {
+    const spring = latest.current.settleSpec;
+    if (!spring) {
       place(target);
       done();
       return;
     }
     settle.current = animateSpring({
-      spring: settleSpec,
+      spring,
       from: offset.current,
       to: target,
       velocity: v,
@@ -286,11 +331,14 @@ export function ModalBottomSheet({
 
   // Mouse / pen anywhere on the sheet, touch on the handle (touch on the content: below).
   const onSurfacePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0 || !popup.current) return;
+    const exempt = isNoDragTarget(e.nativeEvent, e.currentTarget);
+    if (e.pointerType === 'touch') touchExempt.current = exempt;
+    if (e.button !== 0 || !popup.current || exempt) return;
     const target = e.target as Element;
     const inHeader = !!target.closest('[data-sheet-header]');
     if (e.pointerType === 'touch' && !inHeader) return;
     if (!inHeader && (content.current?.scrollTop ?? 0) > 0) return;
+    gesture.current?.();
     const tracker = new PointerVelocityTracker();
     tracker.down(e);
     const d: Drag = { y0: e.clientY, start: offset.current, active: false, slop: pointerSlop(e.pointerType), tracker };
@@ -298,6 +346,11 @@ export function ModalBottomSheet({
     const id = e.pointerId;
     const move = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
+      // The sheet unmounted under the pointer (closed by a key or by its owner).
+      if (!popup.current) {
+        end();
+        return;
+      }
       d.tracker.move(ev);
       if (!d.active) {
         const dy = ev.clientY - d.y0;
@@ -310,36 +363,50 @@ export function ModalBottomSheet({
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== id) return;
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
-      if (!d.active) return;
+      end();
+      if (!d.active || !popup.current) return;
       d.tracker.up(ev);
       suppressNextClick();
       release(d);
     };
+    const end = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (gesture.current === end) gesture.current = null;
+    };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
+    gesture.current = end;
   };
+
+  // The content's touch handlers are attached by its ref, whenever the portal mounts it; they
+  // reach the current gesture functions through this ref.
+  const drag = useRef({ begin, moveTo, release });
+  useLayoutEffect(() => {
+    drag.current = { begin, moveTo, release };
+  });
 
   // Touch on the content drags the sheet while the content is at its top and the finger moves
   // down (or the content can't scroll); otherwise the content scrolls natively.
-  useEffect(() => {
-    if (!open) return;
-    let el: HTMLDivElement | null = null;
+  const contentRef = useCallback((el: HTMLDivElement | null) => {
+    content.current = el;
+    if (!el) return undefined;
     let d: (Drag & { id: number }) | null = null;
     const onStart = (e: TouchEvent) => {
-      if (e.touches.length !== 1 || !el || el.scrollTop > 0) return;
+      const exempt = touchExempt.current;
+      touchExempt.current = false;
+      if (e.touches.length !== 1 || el.scrollTop > 0 || exempt || isNoDragTarget(e, el)) return;
       const t = e.touches[0]!;
       const tracker = new PointerVelocityTracker();
       tracker.down({ timeStamp: e.timeStamp, clientX: t.clientX, clientY: t.clientY });
       d = { id: t.identifier, y0: t.clientY, start: offset.current, active: false, slop: TOUCH_SLOP, tracker };
-      if (settle.current) begin(d);
+      if (settle.current) drag.current.begin(d);
     };
     const onMove = (e: TouchEvent) => {
       const t = d && [...e.changedTouches].find((c) => c.identifier === d!.id);
-      if (!d || !t || !el) return;
+      if (!d || !t) return;
       d.tracker.move({ timeStamp: e.timeStamp, clientX: t.clientX, clientY: t.clientY });
       if (!d.active) {
         const dy = t.clientY - d.y0;
@@ -351,10 +418,10 @@ export function ModalBottomSheet({
         if (e.cancelable) e.preventDefault();
         if (Math.abs(dy) <= d.slop) return;
         d.y0 += Math.sign(dy) * d.slop;
-        begin(d);
+        drag.current.begin(d);
       }
       if (e.cancelable) e.preventDefault();
-      moveTo(d, t.clientY);
+      drag.current.moveTo(d, t.clientY);
     };
     const onEnd = (e: TouchEvent) => {
       if (!d || ![...e.changedTouches].some((c) => c.identifier === d!.id)) return;
@@ -362,25 +429,35 @@ export function ModalBottomSheet({
       d = null;
       if (!ended.active) return;
       ended.tracker.up({ timeStamp: e.timeStamp });
-      release(ended);
+      drag.current.release(ended);
     };
-    // The popup mounts with the portal; attach on the next frame.
-    const frame = requestAnimationFrame(() => {
-      el = content.current;
-      el?.addEventListener('touchstart', onStart, { passive: true });
-      el?.addEventListener('touchmove', onMove, { passive: false });
-      el?.addEventListener('touchend', onEnd);
-      el?.addEventListener('touchcancel', onEnd);
-    });
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchmove', onMove, { passive: false });
+    el.addEventListener('touchend', onEnd);
+    el.addEventListener('touchcancel', onEnd);
     return () => {
-      cancelAnimationFrame(frame);
-      el?.removeEventListener('touchstart', onStart);
-      el?.removeEventListener('touchmove', onMove);
-      el?.removeEventListener('touchend', onEnd);
-      el?.removeEventListener('touchcancel', onEnd);
+      if (content.current === el) content.current = null;
+      el.removeEventListener('touchstart', onStart);
+      el.removeEventListener('touchmove', onMove);
+      el.removeEventListener('touchend', onEnd);
+      el.removeEventListener('touchcancel', onEnd);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, []);
+
+  // Closed by its owner mid-gesture or mid-settle: drop both and let the CSS hide take over. (A
+  // drag that dismissed the sheet has already settled at Hidden and stays there.)
+  useEffect(() => {
+    if (!open && (gesture.current || settle.current)) interrupt();
+  });
+  // Unmounted: nothing may run on (or call back from) a sheet that's gone.
+  useEffect(
+    () => () => {
+      gesture.current?.();
+      settle.current?.stop();
+      settle.current = null;
+    },
+    [],
+  );
 
   return (
     <Dialog.Root
@@ -388,15 +465,7 @@ export function ModalBottomSheet({
       onOpenChange={(next) => {
         // Escape / scrim / handle: hand the sheet back to the CSS hide (fast effects) from wherever
         // a drag or settle left it.
-        if (!next) {
-          const el = popup.current;
-          settle.current?.stop();
-          settle.current = null;
-          if (el && el.style.translate) {
-            el.style.transition = '';
-            el.style.translate = '';
-          }
-        }
+        if (!next) interrupt();
         onOpenChange(next);
       }}
     >
@@ -408,7 +477,7 @@ export function ModalBottomSheet({
             dragHandle={dragHandle}
             onHandleActivate={() => onOpenChange(false)}
             onSurfacePointerDown={onSurfacePointerDown}
-            contentRef={content}
+            contentRef={contentRef}
             sx={[s.popupSheet, sx]}
           >
             {children}

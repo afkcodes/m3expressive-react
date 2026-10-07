@@ -1,7 +1,18 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
-import { BottomSheet, Button, IconButton, ListItem, ModalBottomSheet, ModalSideSheet, SideSheet } from '@m3x/react';
+import {
+  BottomSheet,
+  Button,
+  Carousel,
+  CarouselItem,
+  IconButton,
+  ListItem,
+  ModalBottomSheet,
+  ModalSideSheet,
+  SideSheet,
+  Slider,
+} from '@m3x/react';
 import manifest from '../../../../figma/sheets/manifest.json';
 import assets from '../../../../figma/sheets/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
@@ -109,10 +120,82 @@ function LiveSheets() {
   );
 }
 
+/**
+ * Live (a11y / robustness): sheets holding content with its own pointer handling — a slider, a
+ * text field, a carousel and a `data-m3-no-drag` area — plus plain rows that still drag the sheet.
+ * A `m3-fixture-unmount` window event removes both sheets (unmount mid-gesture); `<output>` logs
+ * every onOpenChange with the handler's render version ("Bump version" re-creates the handler).
+ */
+function LiveSheetGuards({ initialBottom = false }: { initialBottom?: boolean }) {
+  const [bottom, setBottom] = useState(initialBottom);
+  const [side, setSide] = useState(false);
+  const [mounted, setMounted] = useState(true);
+  const [version, setVersion] = useState(0);
+  const [log, setLog] = useState<string[]>([]);
+  useEffect(() => {
+    const unmount = () => setMounted(false);
+    window.addEventListener('m3-fixture-unmount', unmount);
+    return () => window.removeEventListener('m3-fixture-unmount', unmount);
+  }, []);
+  const change = (which: 'bottom' | 'side') => (open: boolean) => {
+    setLog((l) => [...l, `${which}:${open}:v${version}`]);
+    if (which === 'bottom') setBottom(open);
+    else setSide(open);
+  };
+  const content = (
+    <div
+      style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12, paddingInline: 16, paddingBottom: 16 }}
+    >
+      {['Copy link', 'Email'].map((t) => (
+        <ListItem key={t}>{t}</ListItem>
+      ))}
+      <Button variant="text" onClick={() => setVersion((v) => v + 1)}>
+        Bump version
+      </Button>
+      <Slider aria-label="Amount" defaultValue={40} />
+      <input aria-label="Note" defaultValue="Selectable note text" style={{ font: 'inherit', padding: 8 }} />
+      <div style={{ height: 140 }}>
+        <Carousel aria-label="Photos" preferredItemWidth={120}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <CarouselItem key={i} />
+          ))}
+        </Carousel>
+      </div>
+      <div data-m3-no-drag="" data-testid="pad" style={{ height: 48, background: 'rgba(0,0,0,0.08)' }}>
+        Signature pad
+      </div>
+    </div>
+  );
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      <Button onClick={() => setBottom(true)}>Open bottom sheet</Button>
+      <Button variant="tonal" onClick={() => setSide(true)}>
+        Open side sheet
+      </Button>
+      <output data-log="">{log.join(' ')}</output>
+      {mounted && (
+        <ModalBottomSheet open={bottom} onOpenChange={change('bottom')} aria-label="Controls">
+          {content}
+        </ModalBottomSheet>
+      )}
+      {mounted && (
+        <ModalSideSheet open={side} onOpenChange={change('side')} headline="Filters">
+          {content}
+        </ModalSideSheet>
+      )}
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'sheets',
   variants: Object.fromEntries([
     ['live', { width: 412, height: 56, render: () => <LiveSheets /> } satisfies FixtureVariant],
+    ['live-guards', { width: 600, height: 56, render: () => <LiveSheetGuards /> } satisfies FixtureVariant],
+    [
+      'live-initial-open',
+      { width: 600, height: 56, render: () => <LiveSheetGuards initialBottom /> } satisfies FixtureVariant,
+    ],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
