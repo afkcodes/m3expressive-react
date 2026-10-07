@@ -67,6 +67,7 @@ export function TabList({
   scrollable,
   current,
   ariaLabel,
+  ariaLabelledBy,
   children,
 }: {
   variant: TabsVariant;
@@ -74,6 +75,7 @@ export function TabList({
   /** The selected value (Base UI owns it when uncontrolled): a new one re-places the indicator. */
   current: unknown;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   children: ReactNode;
 }) {
   const list = useRef<HTMLDivElement>(null);
@@ -227,7 +229,12 @@ export function TabList({
   }, [place]);
 
   return (
-    <BaseTabs.List ref={list} aria-label={ariaLabel} {...stylex.props(s.list, scrollable && s.listScrollable)}>
+    <BaseTabs.List
+      ref={list}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
+      {...stylex.props(s.list, scrollable && s.listScrollable)}
+    >
       {children}
       {geo && (
         <span

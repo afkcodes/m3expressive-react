@@ -117,8 +117,8 @@ export type {
   MenuVariant,
   SubmenuProps,
 } from './components/Menu/index.ts';
-export { Tab, TabPanel, Tabs, TabScope } from './components/Tabs/index.ts';
-export type { TabProps, TabsProps, TabsVariant } from './components/Tabs/index.ts';
+export { Tab, TabPanel, Tabs } from './components/Tabs/index.ts';
+export type { TabPanelProps, TabProps, TabsProps, TabsVariant } from './components/Tabs/index.ts';
 export {
   NavigationBar,
   NavigationItem,
