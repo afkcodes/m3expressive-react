@@ -143,7 +143,8 @@ function useTicks(
           key={k}
           fraction={fraction}
           horizontal={horizontal}
-          onActive={fraction > low && fraction < high}
+          // Compose drawTicks: a stop is inactive only outside the active range (its ends count as active).
+          onActive={fraction >= low && fraction <= high}
           disabled={disabled}
         />,
       );
