@@ -21,6 +21,8 @@ interface Motion {
   /** Docked: the results' height for the slide, measured once per slide (not every frame). */
   slideHeight: number | null;
   dropdown: boolean;
+  /** An expand is under way: report it once everything is at rest. */
+  expanding: boolean;
   spring: SpringAnimation | null;
   slideSpring: SpringAnimation | null;
   fade: (() => void) | null;
@@ -40,6 +42,8 @@ export interface SearchViewMotionOptions {
   rootRef: RefObject<HTMLDivElement | null>;
   barRef: RefObject<HTMLDivElement | null>;
   resultsRef: RefObject<HTMLDivElement | null>;
+  /** An expand (not the view mounting expanded in place) has finished. */
+  onExpanded: () => void;
   /** The collapse has finished: unmount the view. */
   onCollapsed: () => void;
 }
@@ -57,6 +61,7 @@ export function useSearchViewMotion({
   rootRef,
   barRef,
   resultsRef,
+  onExpanded,
   onCollapsed,
 }: SearchViewMotionOptions) {
   const expandSpec = useSpringToken(full ? 'fast-spatial' : 'default-spatial');
@@ -64,9 +69,9 @@ export function useSearchViewMotion({
   const motionRef = useRef<Motion | null>(null);
   // Animation callbacks outlive renders: they read the latest props here (updated before the
   // effects below run).
-  const props = useRef({ full, expandSpec, collapseSpec, onCollapsed });
+  const props = useRef({ full, expandSpec, collapseSpec, onExpanded, onCollapsed });
   useLayoutEffect(() => {
-    props.current = { full, expandSpec, collapseSpec, onCollapsed };
+    props.current = { full, expandSpec, collapseSpec, onExpanded, onCollapsed };
   });
 
   const apply = () => {
@@ -123,8 +128,13 @@ export function useSearchViewMotion({
   const settled = () => {
     const motion = motionRef.current;
     if (!motion || motion.spring || motion.slideSpring || motion.fade) return;
-    if (motion.open) clear();
-    else {
+    if (motion.open) {
+      clear();
+      if (motion.expanding) {
+        motion.expanding = false;
+        props.current.onExpanded();
+      }
+    } else {
       motionRef.current = null;
       props.current.onCollapsed();
     }
@@ -165,7 +175,8 @@ export function useSearchViewMotion({
   // Each change of `open` (and the mount) starts the motion towards it, from wherever it is.
   const startMotion = useEffectEvent((open: boolean) => {
     // Without a bar to expand from (static layouts), the view starts expanded.
-    const animateIn = motionRef.current == null && open && expandedFrom?.current != null;
+    const fresh = motionRef.current == null;
+    const animateIn = fresh && open && expandedFrom?.current != null;
     const motion = (motionRef.current ??= {
       open,
       p: animateIn ? 0 : 1,
@@ -173,6 +184,7 @@ export function useSearchViewMotion({
       slide: animateIn ? 0 : 1,
       slideHeight: null,
       dropdown: !animateIn,
+      expanding: false,
       spring: null,
       slideSpring: null,
       fade: null,
@@ -180,6 +192,7 @@ export function useSearchViewMotion({
       to: null,
     });
     motion.open = open;
+    motion.expanding = open && (animateIn || !fresh);
     const target = open ? 1 : 0;
 
     // The bar's rest box and the collapsed bar's box.

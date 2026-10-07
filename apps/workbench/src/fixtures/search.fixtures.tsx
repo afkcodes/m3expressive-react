@@ -68,9 +68,8 @@ function render(name: string): ReactNode {
   return (
     <ForceState state={input ? 'focused' : undefined}>
       <SearchView
-        mode={p[0] === 'full' ? 'full-screen' : 'docked'}
+        layout={p[0] === 'full' ? 'fullScreen' : 'docked'}
         value={input ? 'Input text' : ''}
-        onValueChange={() => {}}
         placeholder="Hinted search text"
         leading={<Btn icon="arrow_back-24" label="Back" />}
         trailing={
@@ -115,12 +114,12 @@ function LiveSearch() {
         onActivate={() => setOpen(true)}
       />
       <SearchView
-        mode="docked"
+        layout="docked"
         open={open}
         expandedFrom={bar}
         value={q}
         onValueChange={setQ}
-        onDismiss={close}
+        onOpenChange={close}
         placeholder="Hinted search text"
         autoFocus
         sx={fx.overlay}
@@ -171,7 +170,6 @@ function LiveSearchFull() {
         open={open}
         expandedFrom={bar}
         value=""
-        onValueChange={() => {}}
         onOpenChange={setOpen}
         placeholder="Hinted search text"
         sx={fx.fullOverlay}

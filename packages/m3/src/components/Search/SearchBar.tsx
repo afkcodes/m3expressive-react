@@ -1,13 +1,14 @@
-import { forwardRef, type ReactNode } from 'react';
+import type { ComponentPropsWithRef, MouseEventHandler, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { state } from '../../tokens/state.stylex.ts';
 import { forcedStateLayer, StateLayer } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
+import type { SxProps } from '../../primitives/types.ts';
 import { ForceStateBoundary, useForcedState } from '../../testing/ForceState.tsx';
 
 /*
@@ -109,11 +110,21 @@ const s = stylex.create({
   },
 });
 
-export interface SearchBarProps {
+/**
+ * The root is the bar `<div>` (`ref`, native props, `sx`). `aria-label` and `autoFocus` go to the
+ * trigger button / the input, which they name and focus.
+ */
+export interface SearchBarProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children' | 'defaultValue'>> {
+  /**
+   * `trigger` (default): the bar is a button that opens a search view (`onActivate`). `input`: the
+   * bar is the search field (`value` / `defaultValue` / `onValueChange`), e.g. in a `SearchView`.
+   */
+  mode?: 'trigger' | 'input';
   /** Hint text (placeholder). */
   placeholder?: string;
-  /** Provide value / onValueChange to make the bar an input; otherwise it's a trigger. */
+  /** Input mode: the query. */
   value?: string;
+  defaultValue?: string;
   onValueChange?: (value: string) => void;
   /** Leading icon button (search / menu / back). */
   leading?: ReactNode;
@@ -122,22 +133,31 @@ export interface SearchBarProps {
   /** A 30px avatar after the trailing icons. */
   avatar?: ReactNode;
   /** Trigger mode: activate (e.g. open a search view). */
-  onActivate?: () => void;
-  'aria-label'?: string;
-  autoFocus?: boolean;
-  sx?: StyleXStyles;
+  onActivate?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(function SearchBar(
-  { placeholder, value, onValueChange, leading, trailing, avatar, onActivate, 'aria-label': ariaLabel, autoFocus, sx },
-  ref,
-) {
+export function SearchBar({
+  mode = 'trigger',
+  placeholder,
+  value: valueProp,
+  defaultValue = '',
+  onValueChange,
+  leading,
+  trailing,
+  avatar,
+  onActivate,
+  'aria-label': ariaLabel,
+  autoFocus,
+  sx,
+  ...rest
+}: SearchBarProps) {
   const forced = useForcedState();
-  const input = onValueChange != null;
+  const input = mode === 'input';
+  const [value, setValue] = useControllableState(valueProp, defaultValue, onValueChange);
   return (
     <div
-      ref={ref}
       role={input ? 'search' : undefined}
+      {...rest}
       {...stylex.props(
         s.bar,
         // The expanded input bar is a text field: no state layer (Compose InputField).
@@ -157,11 +177,11 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(function Sea
           <span {...stylex.props(s.inputWrap)}>
             <input
               type="search"
-              value={value ?? ''}
+              value={value}
               placeholder={placeholder}
               aria-label={ariaLabel ?? placeholder}
               autoFocus={autoFocus}
-              onChange={(e) => onValueChange?.(e.target.value)}
+              onChange={(e) => setValue(e.target.value)}
               {...stylex.props(typescale.bodyLarge, s.input)}
             />
             {forced.state === 'focused' && (
@@ -177,6 +197,7 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(function Sea
             data-search-trigger=""
             data-ripple-host=""
             aria-label={ariaLabel}
+            autoFocus={autoFocus}
             onClick={onActivate}
             {...stylex.props(typescale.bodyLarge, s.hint, s.trigger)}
           >
@@ -195,4 +216,4 @@ export const SearchBar = forwardRef<HTMLDivElement, SearchBarProps>(function Sea
       )}
     </div>
   );
-});
+}

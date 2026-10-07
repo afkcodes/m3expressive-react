@@ -1,7 +1,18 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode, type RefObject } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentPropsWithRef,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
+import { useLabels, type M3Labels } from '../../theme/labels.tsx';
 import { List } from '../List/List.tsx';
 import { ForceStateBoundary } from '../../testing/ForceState.tsx';
 import { SearchBar } from './SearchBar.tsx';
@@ -28,10 +39,10 @@ import { useSearchViewMotion } from './useSearchViewMotion.ts';
  *   - docked: the result panel shows once progress > 0.1, its list sliding in from −height/2 on
  *     the expand spring (out on the collapse spring), at alpha = contentProgress;
  *   - collapsing keeps the view mounted until the motion ends (content fades first), then it
- *     unmounts and calls onCollapsed.
+ *     unmounts and calls onOpenChangeComplete(false).
  * Focus: expanding from a bar (`expandedFrom`) moves focus to the input; collapsing returns it to
  * the bar's trigger (when it was in the view); Tab stays inside the full-screen view while it's
- * open; Escape asks to collapse (`onDismiss` / `onOpenChange(false)`).
+ * open; Escape asks to collapse (`onOpenChange(false)`).
  */
 const s = stylex.create({
   view: {
@@ -69,10 +80,17 @@ const tabbables = (root: HTMLElement) =>
     (el) => el.tabIndex >= 0 && !el.matches(':disabled') && !el.closest('[inert]') && el.getClientRects().length > 0,
   );
 
-export interface SearchViewProps {
-  mode?: 'full-screen' | 'docked';
-  value: string;
-  onValueChange: (value: string) => void;
+/**
+ * The view's surface `<div>` takes `ref`, native props and `sx`; `aria-label` and `autoFocus` go to
+ * its search field.
+ */
+export interface SearchViewProps extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children' | 'defaultValue'>> {
+  /** Full screen (default), or docked: a result panel under the bar. */
+  layout?: 'fullScreen' | 'docked';
+  /** The query. */
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   placeholder?: string;
   /** Leading icon button (typically "back", closing the view). */
   leading?: ReactNode;
@@ -80,45 +98,53 @@ export interface SearchViewProps {
   trailing?: ReactNode;
   /** Result rows (`ListItem`s). */
   children?: ReactNode;
-  autoFocus?: boolean;
-  /** Escape (Compose: back): collapse the view (set `open` false). Focus returns to the bar. */
-  onDismiss?: () => void;
-  /** Called with false on Escape, like `onDismiss` (for a controlled `open`). */
-  onOpenChange?: (open: boolean) => void;
   /**
    * Expanded (default true). Set false to collapse: the view animates back and then unmounts
-   * itself (keep rendering it), calling `onCollapsed`.
+   * itself (keep rendering it).
    */
   open?: boolean;
+  defaultOpen?: boolean;
+  /** Escape (Compose: back) asks to collapse: `onOpenChange(false)`. Focus returns to the bar. */
+  onOpenChange?: (open: boolean) => void;
+  /** The expand (true) or collapse (false, the view has unmounted) motion has finished. */
+  onOpenChangeComplete?: (open: boolean) => void;
   /** The collapsed `SearchBar` the view expands from and collapses into. */
   expandedFrom?: RefObject<HTMLElement | null>;
-  onCollapsed?: () => void;
-  'aria-label'?: string;
-  sx?: StyleXStyles;
+  /** Overrides the built-in strings (`searchResults`, the results list's name). */
+  labels?: Partial<M3Labels>;
 }
 
 /** The expanded search: an input bar over its results (place it in a dialog / popover). */
 export function SearchView({
-  mode = 'full-screen',
-  value,
+  layout = 'fullScreen',
+  value: valueProp,
+  defaultValue = '',
   onValueChange,
   placeholder,
   leading,
   trailing,
   children,
   autoFocus,
-  onDismiss,
+  open: openProp,
+  defaultOpen = true,
   onOpenChange,
-  open = true,
+  onOpenChangeComplete,
   expandedFrom,
-  onCollapsed,
+  labels: labelOverrides,
   'aria-label': ariaLabel,
   sx,
+  ref,
+  onKeyDown: onKeyDownProp,
+  ...rest
 }: SearchViewProps) {
-  const full = mode === 'full-screen';
+  const full = layout === 'fullScreen';
+  const labels = useLabels(labelOverrides);
+  const [open, setOpen] = useControllableState(openProp, defaultOpen, onOpenChange);
+  const [value, setValue] = useControllableState(valueProp, defaultValue, onValueChange);
   const [mounted, setMounted] = useState(open);
   if (open && !mounted) setMounted(true);
   const root = useRef<HTMLDivElement>(null);
+  const setRoot = useMergedRefs(root, ref);
   const bar = useRef<HTMLDivElement>(null);
   const results = useRef<HTMLDivElement>(null);
 
@@ -141,10 +167,11 @@ export function SearchView({
   }, [open, mounted, expandedFrom]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && (onDismiss || onOpenChange)) {
+    onKeyDownProp?.(e);
+    // Escape collapses an uncontrolled view, or asks the owner of `open` to.
+    if (e.key === 'Escape' && (openProp === undefined || onOpenChange)) {
       e.stopPropagation();
-      onDismiss?.();
-      onOpenChange?.(false);
+      setOpen(false);
       return;
     }
     // Full screen covers the page: Tab cycles through the view.
@@ -171,9 +198,10 @@ export function SearchView({
     rootRef: root,
     barRef: bar,
     resultsRef: results,
+    onExpanded: () => onOpenChangeComplete?.(true),
     onCollapsed: () => {
       setMounted(false);
-      onCollapsed?.();
+      onOpenChangeComplete?.(false);
     },
   });
 
@@ -181,16 +209,18 @@ export function SearchView({
   return (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- Escape / Tab bubbling up from the field / results (delegation)
     <div
-      ref={root}
+      ref={setRoot}
       inert={!open || undefined}
+      {...rest}
       onKeyDown={onKeyDown}
       {...stylex.props(s.view, full && s.fullScreen, sx)}
     >
       <div {...stylex.props(s.header, full && s.headerFull)}>
         <SearchBar
           ref={bar}
+          mode="input"
           value={value}
-          onValueChange={onValueChange}
+          onValueChange={setValue}
           placeholder={placeholder}
           leading={leading}
           trailing={trailing}
@@ -201,7 +231,7 @@ export function SearchView({
       {children != null && (
         <div ref={results} {...stylex.props(s.results, !full && s.resultsDocked)}>
           <ForceStateBoundary>
-            <List aria-label="Results">{children}</List>
+            <List aria-label={labels.searchResults}>{children}</List>
           </ForceStateBoundary>
         </div>
       )}
