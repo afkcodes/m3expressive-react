@@ -6,7 +6,7 @@ import type { LinkOrButtonProps, SxProps } from '../../primitives/types.ts';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { textBox, textCentred } from '../../primitives/textBox.ts';
+import { hugEllipsis, textBox, textCentred } from '../../primitives/textBox.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
 import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { visuallyHidden } from '../../primitives/visuallyHidden.ts';
@@ -297,7 +297,11 @@ export function NavigationItem({
         <StateLayer />
         {iconEl}
         {badge != null && <span {...stylex.props(badgeSize === 'small' ? s.hBadgeSmall : s.hBadgeLarge)}>{badge}</span>}
-        {label != null && <span {...stylex.props(typescale.labelMedium, textBox.hug, s.label)}>{label}</span>}
+        {label != null && (
+          <span {...stylex.props(typescale.labelMedium, textBox.hug, hugEllipsis.box)}>
+            <span {...stylex.props(hugEllipsis.text)}>{label}</span>
+          </span>
+        )}
       </span>
     );
   } else {
@@ -308,7 +312,11 @@ export function NavigationItem({
         <StateLayer />
         {iconEl}
         {badge != null && badgeSize === 'small' && <span {...stylex.props(s.railHBadgeSmall)}>{badge}</span>}
-        {label != null && <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{label}</span>}
+        {label != null && (
+          <span {...stylex.props(typescale.labelLarge, textBox.hug, hugEllipsis.box)}>
+            <span {...stylex.props(hugEllipsis.text)}>{label}</span>
+          </span>
+        )}
         {badge != null && badgeSize === 'large' && <span {...stylex.props(s.railHBadgeLarge)}>{badge}</span>}
       </>
     );

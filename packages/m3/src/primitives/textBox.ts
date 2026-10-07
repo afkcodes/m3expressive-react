@@ -24,6 +24,23 @@ export const textBox = stylex.create({
 });
 
 /**
+ * A hug label that ellipsizes only when its space runs out. The hug box leaves out the trailing
+ * letter spacing (Figma) but Chrome's ellipsis counts it, so text that fits would be cut whenever
+ * ceil(advance − tracking) < advance ("Ho…"). Put the text in `text`, one tracking wider than the
+ * `box` (which keeps the hug geometry): only real overflow ellipsizes.
+ */
+export const hugEllipsis = stylex.create({
+  box: { maxWidth: '100%' },
+  text: {
+    display: 'block',
+    width: `calc(100% + ${typeMetrics.tracking})`,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+});
+
+/**
  * Centred text in a fixed-width box: Figma centres the glyph advance without the trailing letter
  * spacing, CSS includes it — trim it so the box (and the centring) matches. (Label-medium's 0.5px
  * tracking would otherwise sit 0.25px left.)
