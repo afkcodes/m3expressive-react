@@ -1,8 +1,10 @@
 import {
+  Children,
   createContext,
   useContext,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type MouseEventHandler,
@@ -254,14 +256,25 @@ const s = stylex.create({
   mLabel: (alpha: number) => ({ whiteSpace: 'nowrap', opacity: alpha }),
   mRound: { borderRadius: 9999, isolation: 'isolate' },
   measure: { position: 'absolute', left: 0, top: 0, visibility: 'hidden', whiteSpace: 'nowrap', pointerEvents: 'none' },
+  // A label that isn't drawn (collapsed rail without labels) still names the item.
+  visuallyHidden: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    padding: 0,
+    overflow: 'hidden',
+    clipPath: 'inset(50%)',
+    whiteSpace: 'nowrap',
+    borderWidth: 0,
+  },
 });
 
-export interface NavigationItemProps {
+interface NavigationItemBaseProps {
   value: unknown;
   icon: ReactNode;
   /** Icon shown while selected (the kit swaps to the filled glyph). */
   selectedIcon?: ReactNode;
-  label?: ReactNode;
   /** A `<Badge>` (no children = the small dot). */
   badge?: ReactNode;
   badgeSize?: 'small' | 'large';
@@ -272,6 +285,13 @@ export interface NavigationItemProps {
   selected?: boolean;
   sx?: StyleXStyles;
 }
+
+/**
+ * Every destination needs a name: a `label` (also announced when a rail hides its labels), or an
+ * `aria-label` for an icon-only item.
+ */
+export type NavigationItemProps = NavigationItemBaseProps &
+  ({ label: NonNullable<ReactNode>; 'aria-label'?: string } | { label?: null; 'aria-label': string });
 
 /** A destination in a navigation bar or rail. */
 export function NavigationItem({
@@ -286,6 +306,7 @@ export function NavigationItem({
   onClick,
   selected: selectedProp,
   sx,
+  'aria-label': ariaLabel,
 }: NavigationItemProps) {
   const ctx = useContext(NavContext);
   const forced = useForcedState();
@@ -388,7 +409,11 @@ export function NavigationItem({
             </span>
           )}
         </span>
-        {showLabel && <span {...stylex.props(typescale.labelMedium, s.label, textCentred.trimTracking)}>{label}</span>}
+        {showLabel ? (
+          <span {...stylex.props(typescale.labelMedium, s.label, textCentred.trimTracking)}>{label}</span>
+        ) : (
+          label != null && <span {...stylex.props(s.visuallyHidden)}>{label}</span>
+        )}
       </>
     );
   } else if (ctx.layout === 'horizontal') {
@@ -425,6 +450,7 @@ export function NavigationItem({
       sx,
     ),
     'aria-current': selected ? ('page' as const) : undefined,
+    'aria-label': ariaLabel,
     onClick: (e: React.MouseEvent<HTMLElement>) => {
       if (disabled) return;
       onClick?.(e);
@@ -488,7 +514,8 @@ export function NavigationScope({
   showLabels?: boolean;
   children: ReactNode;
 }) {
-  return <NavContext value={{ layout, value: undefined, showLabels, fill: true }}>{children}</NavContext>;
+  const ctx = useMemo(() => ({ layout, value: undefined, showLabels, fill: true }), [layout, showLabels]);
+  return <NavContext value={ctx}>{children}</NavContext>;
 }
 
 // ── Bar ───────────────────────────────────────────────────────────────────────────────────────
@@ -512,17 +539,20 @@ export function NavigationBar({
   'aria-label': ariaLabel,
   sx,
 }: NavigationBarProps) {
-  const count = Array.isArray(children) ? children.length : 1;
+  // Rendered items only (conditional children leave false / null behind).
+  const count = Children.toArray(children).length;
   // Kit: horizontal-item bars inset their items 160 / 120 / 80 / 40px for 3 / 4 / 5 / 6 items.
   const inset = itemLayout === 'horizontal' ? Math.max(0, 280 - 40 * count) : 0;
+  const ctx = useMemo(
+    () => ({ layout: itemLayout, value, onSelect: onValueChange, showLabels: true, fill: true }),
+    [itemLayout, value, onValueChange],
+  );
   return (
     <nav
       aria-label={ariaLabel}
       {...stylex.props(s.bar, itemLayout === 'horizontal' && [s.barHorizontal, s.barInset(inset)], sx)}
     >
-      <NavContext value={{ layout: itemLayout, value, onSelect: onValueChange, showLabels: true, fill: true }}>
-        {children}
-      </NavContext>
+      <NavContext value={ctx}>{children}</NavContext>
     </nav>
   );
 }
@@ -561,19 +591,20 @@ export function NavigationRail({
 }: NavigationRailProps) {
   const middle = alignment === 'middle';
   const items = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const [shift, setShift] = useState(0);
+  const [headerEl, setHeaderEl] = useState<HTMLDivElement | null>(null);
+  const [measuredShift, setShift] = useState(0);
+  const shift = middle ? measuredShift : 0;
   const morph = useRailMorph(expanded, showLabels);
+  // Middle alignment: measured (again before paint when the rail expands / collapses), then
+  // whenever the rail, its destinations or the header resize. The header element is observed, not
+  // the `header` node (a ReactNode is new on every render).
   useLayoutEffect(() => {
     const el = items.current;
     const rail = el?.parentElement;
-    if (!middle || !el || !rail) {
-      setShift(0);
-      return;
-    }
+    if (!middle || !el || !rail) return;
     const measure = () => {
       const centred = (rail.clientHeight - el.offsetHeight) / 2;
-      const headerBottom = headerRef.current ? headerRef.current.offsetTop + headerRef.current.offsetHeight : 0;
+      const headerBottom = headerEl ? headerEl.offsetTop + headerEl.offsetHeight : 0;
       setShift(centred >= headerBottom ? centred - el.offsetTop : 0);
     };
     measure();
@@ -581,8 +612,20 @@ export function NavigationRail({
     const ro = new ResizeObserver(measure);
     ro.observe(rail);
     ro.observe(el);
+    if (headerEl) ro.observe(headerEl);
     return () => ro.disconnect();
-  }, [middle, expanded, header]);
+  }, [middle, expanded, headerEl]);
+  const ctx = useMemo(
+    () => ({
+      layout: expanded ? ('rail-horizontal' as const) : ('vertical' as const),
+      value,
+      onSelect: onValueChange,
+      showLabels,
+      fill: false,
+      morph,
+    }),
+    [expanded, value, onValueChange, showLabels, morph],
+  );
   const p = morph?.p ?? 0;
   return (
     <nav
@@ -597,7 +640,7 @@ export function NavigationRail({
     >
       {header != null && (
         <div
-          ref={headerRef}
+          ref={setHeaderEl}
           {...stylex.props(
             s.railHeader,
             expanded && s.railHeaderExpanded,
@@ -616,18 +659,7 @@ export function NavigationRail({
           middle && shift !== 0 && s.railMiddleShift(shift),
         )}
       >
-        <NavContext
-          value={{
-            layout: expanded ? 'rail-horizontal' : 'vertical',
-            value,
-            onSelect: onValueChange,
-            showLabels,
-            fill: false,
-            morph,
-          }}
-        >
-          {children}
-        </NavContext>
+        <NavContext value={ctx}>{children}</NavContext>
       </div>
     </nav>
   );
@@ -642,6 +674,12 @@ export function NavigationRail({
 function useRailMorph(expanded: boolean, showLabels: boolean) {
   const spring = useSpringToken('default-spatial');
   const [morph, setMorph] = useState<{ p: number; toExpanded: boolean } | null>(null);
+  // A change of `expanded` starts the morph from where it is (or snaps) in the same render.
+  const [prevExpanded, setPrevExpanded] = useState(expanded);
+  if (prevExpanded !== expanded) {
+    setPrevExpanded(expanded);
+    setMorph(spring && showLabels ? { p: morph ? morph.p : prevExpanded ? 1 : 0, toExpanded: expanded } : null);
+  }
   const anim = useRef<SpringAnimation | null>(null);
   const progress = useRef(expanded ? 1 : 0);
   const toExpanded = useRef(expanded);
@@ -653,10 +691,8 @@ function useRailMorph(expanded: boolean, showLabels: boolean) {
       anim.current?.stop();
       anim.current = null;
       progress.current = target;
-      setMorph(null);
       return;
     }
-    setMorph({ p: progress.current, toExpanded: expanded });
     if (anim.current) anim.current.retarget(target, spring);
     else
       anim.current = animateSpring({
