@@ -425,3 +425,37 @@ test.describe('time picker keyboard and input', () => {
     expect(after - before).toBeLessThanOrEqual(1);
   });
 });
+
+// A click whose pointer wobbles a pixel or two (normal for a mouse or trackpad, reported sub-pixel by
+// browsers) must stay a click: it selects the day, keeps the month and never shows the neighbouring
+// month's grid on top (Compose's ~0.06px mouse slop turned such clicks into swipes / flings).
+test('date picker: a slightly wobbly click selects the day; no swipe, no overlapping month', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await open(page, '/fixture/date-picker/live');
+  await page.getByRole('button', { name: 'Pick date' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  const monthLabel = () => dialog.getByRole('button', { name: /2025/ }).first().textContent();
+  const before = await monthLabel();
+  for (const [day, dx] of [
+    [10, 2],
+    [12, -3],
+    [20, 1.5],
+  ] as const) {
+    const cell = dialog
+      .getByRole('gridcell')
+      .filter({ hasText: new RegExp(`^${day}$`) })
+      .first();
+    const box = (await cell.boundingBox())!;
+    const x = box.x + box.width / 2;
+    const y = box.y + box.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + dx, y);
+    expect(await page.locator('[data-month-copy]').count(), `no neighbouring month while clicking ${day}`).toBe(0);
+    await page.mouse.up();
+    await expect.poll(monthLabel, `still ${before}`).toBe(before);
+    // The headline shows the picked day.
+    await expect(dialog.locator('p[aria-live]')).toContainText(new RegExp(`\\b${day}\\b`));
+  }
+});

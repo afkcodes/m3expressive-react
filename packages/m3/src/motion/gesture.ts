@@ -9,8 +9,7 @@
  *   more than 40ms after the last move resets the tracker (b/238654963).
  * - `closestAnchor` / `computeAnchorTarget`: foundation `DefaultDraggableAnchors.closestAnchor`
  *   and `AnchoredDraggable.computeTarget`.
- * - Slops: Android `ViewConfiguration.TOUCH_SLOP` (8dp) and Compose's mouse slop
- *   (`pointerSlop`: touchSlop × 0.125dp / 18dp).
+ * - Slop: Android `ViewConfiguration.TOUCH_SLOP` (8dp) for every pointer type (see MOUSE_SLOP).
  */
 
 const ASSUME_POINTER_MOVE_STOPPED_MS = 40;
@@ -21,8 +20,13 @@ const MIN_SAMPLE_SIZE = 2;
 
 /** Android ViewConfiguration.TOUCH_SLOP, px (1dp = 1 CSS px). */
 export const TOUCH_SLOP = 8;
-/** Compose DragGestureDetector `pointerSlop(Mouse)`: touchSlop × (0.125dp / 18dp). */
-export const MOUSE_SLOP = TOUCH_SLOP * (0.125 / 18);
+/**
+ * Mouse slop. Compose's DragGestureDetector uses touchSlop × (0.125dp / 18dp) ≈ 0.06px for a mouse,
+ * which suits desktop mice that report whole-pixel moves; browsers report sub-pixel pointer jitter,
+ * so with it a click on a date, a carousel card or a button in a sheet became a drag (and a 2px
+ * wobble a fling to the next month). On the web every pointer gets the touch slop.
+ */
+export const MOUSE_SLOP = TOUCH_SLOP;
 /** Android ViewConfiguration.MAXIMUM_FLING_VELOCITY (8000dp/s) — Compose's maximumFlingVelocity. */
 export const MAX_FLING_VELOCITY = 8000;
 /** Android ViewConfiguration.MINIMUM_FLING_VELOCITY (50dp/s). */

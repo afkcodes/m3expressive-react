@@ -119,7 +119,14 @@ export function MonthPager({ month, children, onSwipe, instant = false, inert = 
   // Run the slide once the outgoing copy is rendered.
   const sliding = useRef<Other | null>(null);
   useLayoutEffect(() => {
-    if (!other || other === sliding.current || drag.current) return;
+    if (!other || other === sliding.current) return;
+    // A drag asked for the neighbouring month in its move handler, before React rendered it: place
+    // the new copy's rows at the drag offset before they paint (unplaced, they sat on top of the
+    // shown month — overlapping date numbers).
+    if (drag.current) {
+      apply(offset.current, other.side);
+      return;
+    }
     const p = parts();
     if (!p) return;
     sliding.current = other;
