@@ -1,4 +1,4 @@
-import { forwardRef, useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useEffect, useLayoutEffect, useRef, useState, type InputHTMLAttributes, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Field } from '@base-ui/react/field';
@@ -6,7 +6,8 @@ import { color } from '../../tokens/color.stylex';
 import { motion } from '../../tokens/motion.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { useReducedMotion } from '../../motion/context.tsx';
+import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
+import { useSpringToken } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { textFieldMarker, textFieldVars } from './textField.stylex.ts';
 
@@ -18,13 +19,19 @@ export type TextFieldVariant = 'filled' | 'outlined';
  * (filled: y 8 above the input at y 24; outlined: centred on the top edge, notching the outline).
  * Icons sit flush in 48px slots (the 4px padding is vertical). Filled: surface-container-highest,
  * 4px top corners, an indicator line inside the bottom edge (1px; 3px focused). Outlined: 1px inside stroke (3px focused). Supporting text 12/16, 4px below.
- * Motion (Compose TextFieldImpl): label float + stroke width on FastSpatial, colours FastEffects.
+ * Motion (Compose TextFieldImpl / TextFieldDefaults): label float (and the outlined notch with it)
+ * + stroke width on FastSpatial; indicator, outline, label and container colours on FastEffects
+ * (indicator and outline snap when disabled); placeholder fades on Fast / SlowEffects.
  */
 const ERROR_ICON =
   'M10 15C10.2833 15 10.5208 14.9042 10.7125 14.7125C10.9042 14.5208 11 14.2833 11 14C11 13.7167 10.9042 13.4792 10.7125 13.2875C10.5208 13.0958 10.2833 13 10 13C9.71667 13 9.47917 13.0958 9.2875 13.2875C9.09583 13.4792 9 13.7167 9 14C9 14.2833 9.09583 14.5208 9.2875 14.7125C9.47917 14.9042 9.71667 15 10 15ZM9 11H11V5H9V11ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20Z';
 
-const spatial = { transitionDuration: motion.fastSpatialDuration, transitionTimingFunction: motion.fastSpatialEasing };
 const effects = { transitionDuration: motion.fastEffectsDuration, transitionTimingFunction: motion.fastEffectsEasing };
+/** Three transitioned properties: two spatial (FastSpatial) and one colour (FastEffects), in this order. */
+const spatialSpatialEffects = {
+  transitionDuration: `${motion.fastSpatialDuration}, ${motion.fastSpatialDuration}, ${motion.fastEffectsDuration}`,
+  transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.fastSpatialEasing}, ${motion.fastEffectsEasing}`,
+};
 const mix = (c: string, pct: number) => `color-mix(in srgb, ${c} ${pct}%, transparent)`;
 
 const s = stylex.create({
@@ -44,7 +51,14 @@ const s = stylex.create({
   padStartIcon: { paddingInlineStart: 0 },
   padEnd: { paddingInlineEnd: 16 },
   padEndIcon: { paddingInlineEnd: 0 },
-  filled: { backgroundColor: color.surfaceContainerHighest, borderTopLeftRadius: 4, borderTopRightRadius: 4 },
+  // Compose TextFieldDefaults.Container: the container colour animates on FastEffects (enable ⇄ disable).
+  filled: {
+    backgroundColor: color.surfaceContainerHighest,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    transitionProperty: 'background-color',
+    ...effects,
+  },
   filledDisabled: { backgroundColor: mix(color.onSurface, 4) },
   outlined: { borderRadius: 4 },
   stateLayer: {
@@ -86,9 +100,20 @@ const s = stylex.create({
     color: color.onSurface,
     caretColor: color.primary,
     textOverflow: 'ellipsis',
-    '::placeholder': { color: color.onSurfaceVariant, opacity: 1 },
+    '::placeholder': {
+      color: color.onSurfaceVariant,
+      opacity: 1,
+      transitionProperty: 'opacity',
+      transitionDuration: motion.fastEffectsDuration,
+      transitionTimingFunction: motion.fastEffectsEasing,
+    },
   },
   inputHidePlaceholder: { '::placeholder': { opacity: 0 } },
+  // Compose `placeholderOpacity`: SlowEffects for UnfocusedEmpty → Focused and
+  // UnfocusedNotEmpty → UnfocusedEmpty, FastEffects otherwise.
+  placeholderSlow: {
+    '::placeholder': { transitionDuration: motion.slowEffectsDuration, transitionTimingFunction: motion.slowEffectsEasing },
+  },
   inputError: { caretColor: color.error },
   inputDisabled: { color: mix(color.onSurface, 38), '::placeholder': { color: mix(color.onSurface, 38) } },
   cDisabled: { color: mix(color.onSurface, 38) },
@@ -100,9 +125,9 @@ const s = stylex.create({
     whiteSpace: 'nowrap',
     pointerEvents: 'none',
     transformOrigin: 'left center',
-    transitionProperty: 'color, transform',
-    transitionDuration: `${motion.fastEffectsDuration}, ${motion.fastSpatialDuration}`,
-    transitionTimingFunction: `${motion.fastEffectsEasing}, ${motion.fastSpatialEasing}`,
+    // The float itself is a spring driven per frame (see `useLabelFloat`); colours fade in CSS.
+    transitionProperty: 'color',
+    ...effects,
   },
   labelRest: { top: 16 },
   labelFloatFilled: { top: 8 },
@@ -119,8 +144,9 @@ const s = stylex.create({
     left: 0,
     right: 0,
     pointerEvents: 'none',
+    // Compose IndicatorLineNode: width on FastSpatial, colour on FastEffects.
     transitionProperty: 'top, height, background-color',
-    ...spatial,
+    ...spatialSpatialEffects,
   },
   indicatorW: (w: number) => ({ top: 56 - w, height: w }),
   bgOnSurfaceVariant: { backgroundColor: color.onSurfaceVariant },
@@ -128,7 +154,8 @@ const s = stylex.create({
   bgOnSurface: { backgroundColor: color.onSurface },
   bgPrimary: { backgroundColor: color.primary },
   bgError: { backgroundColor: color.error },
-  bgOnSurfaceDim: { backgroundColor: color.onSurface, opacity: 0.38 },
+  // Disabled: Compose snaps the indicator (`snap()` while disabled).
+  bgOnSurfaceDim: { backgroundColor: color.onSurface, opacity: 0.38, transitionDuration: '0s' },
   // Outlined stroke: a fieldset whose legend cuts the notch for the floating label.
   outline: {
     position: 'absolute',
@@ -141,8 +168,9 @@ const s = stylex.create({
     borderStyle: 'solid',
     borderRadius: 4,
     pointerEvents: 'none',
-    transitionProperty: 'border-width, border-color, padding-inline-start',
-    ...spatial,
+    // Compose animateBorderStrokeAsState: thickness on FastSpatial, colour on FastEffects.
+    transitionProperty: 'border-width, padding-inline-start, border-color',
+    ...spatialSpatialEffects,
   },
   outlineW: (w: number, notchX: number) => ({ borderWidth: w, paddingInlineStart: notchX - w }),
   outlineCentered: { inset: 'auto', top: 0, left: 0, width: 'calc(100% + 1px)', height: 'calc(100% + 1px)', transform: 'translate(-0.5px, -0.5px)' },
@@ -151,8 +179,9 @@ const s = stylex.create({
   bOnSurface: { borderColor: color.onSurface },
   bPrimary: { borderColor: color.primary },
   bError: { borderColor: color.error },
-  bDisabledInner: { borderColor: mix(color.onSurface, 4) },
-  bDisabledCenter: { borderColor: mix(color.onSurface, 10) },
+  // Disabled: Compose doesn't animate the stroke (rememberUpdatedState while disabled).
+  bDisabledInner: { borderColor: mix(color.onSurface, 4), transitionDuration: '0s' },
+  bDisabledCenter: { borderColor: mix(color.onSurface, 10), transitionDuration: '0s' },
   legend: {
     float: 'none',
     boxSizing: 'border-box',
@@ -163,15 +192,118 @@ const s = stylex.create({
     maxWidth: 0.01,
     visibility: 'visible',
     color: 'transparent',
-    transitionProperty: 'max-width',
-    ...spatial,
   },
   legendOpen: { maxWidth: '100%', paddingInline: 4 },
   legendH: (w: number) => ({ height: w }),
   caret: { position: 'absolute', width: 1, height: 17, pointerEvents: 'none' },
   caretMirror: { visibility: 'hidden', whiteSpace: 'pre' },
-  supporting: { flexShrink: 0, margin: 0, paddingTop: 4, paddingInline: 16, color: color.onSurfaceVariant, transitionProperty: 'color', ...effects },
+  // Compose doesn't animate the supporting-text colour (error on / off switches at once).
+  supporting: { flexShrink: 0, margin: 0, paddingTop: 4, paddingInline: 16, color: color.onSurfaceVariant },
 });
+
+/** Label centre line (px from the content top): resting 16/24 at y 16, floating 12/16 at y 8 (outlined −8). */
+const REST_Y = 16 + 12;
+const floatY = (outlined: boolean) => (outlined ? -8 : 8) + 8;
+/** The outlined notch's padding each side of the label (Compose OutlinedTextFieldInnerPadding). */
+const NOTCH_PAD = 4;
+
+/**
+ * The label's transform at float progress `p` (0 rest … 1 floated) relative to the layout it
+ * currently has (real 16/24 type at rest, 12/16 floated — exact still frames). Position and size
+ * are linear in `p` in both layouts, so a layout swap mid-flight is seamless. `scale` is relative
+ * to the current layout's type.
+ */
+function labelTransform(layoutFloated: boolean, p: number, outlined: boolean, labelLeft: number) {
+  const dy = REST_Y - floatY(outlined);
+  if (layoutFloated) {
+    // Floated outlined labels sit in a 4px-padded notch box starting at labelLeft − 4.
+    const pad = outlined ? NOTCH_PAD : 0;
+    const k = 16 / 12;
+    const q = 1 - p;
+    return { x: (-(labelLeft - pad) - pad * k) * q, y: dy * q, scale: 1 + (k - 1) * q };
+  }
+  return { x: labelLeft * p, y: -dy * p, scale: 1 + (12 / 16 - 1) * p };
+}
+
+/**
+ * Label float as a FastSpatial spring (Compose `labelProgress`: a Transition, so an interrupted
+ * float continues from the current position and velocity), written per frame. The outlined notch
+ * follows it like Compose's `outlineCutout`: label width × progress, plus 4px each side once open.
+ */
+function useLabelFloat(
+  floated: boolean,
+  outlined: boolean,
+  labelLeft: number,
+  still: boolean,
+  label: RefObject<HTMLElement | null>,
+  container: RefObject<HTMLDivElement | null>,
+) {
+  const spring = useSpringToken('fast-spatial');
+  const anim = useRef<SpringAnimation | null>(null);
+  const progress = useRef(floated ? 1 : 0);
+  const layout = useRef({ floated, outlined, labelLeft, width: 0 });
+  const prevFloated = useRef(floated);
+
+  useLayoutEffect(() => {
+    if (prevFloated.current === floated) return;
+    prevFloated.current = floated;
+    const el = label.current;
+    const legends = [...(container.current?.querySelectorAll('legend') ?? [])];
+    const clear = () => {
+      if (el) el.style.transform = '';
+      for (const lg of legends) {
+        lg.style.width = '';
+        lg.style.maxWidth = '';
+        lg.style.paddingInline = '';
+      }
+    };
+    const target = floated ? 1 : 0;
+    if (!el || !spring || still) {
+      anim.current?.stop();
+      anim.current = null;
+      progress.current = target;
+      clear();
+      return;
+    }
+    // The label just switched type: measure its text width in the new layout.
+    el.style.transform = 'none';
+    const width = el.getBoundingClientRect().width - (floated && outlined ? 2 * NOTCH_PAD : 0);
+    layout.current = { floated, outlined, labelLeft, width };
+    const draw = (p: number) => {
+      const g = layout.current;
+      const t = labelTransform(g.floated, p, g.outlined, g.labelLeft);
+      el.style.transform = `translate(${t.x}px, ${t.y}px) scale(${t.scale})`;
+      if (!g.outlined) return;
+      const cut = p > 0 ? g.width * t.scale * p : 0;
+      for (const lg of legends) {
+        lg.style.maxWidth = cut > 0 ? 'none' : '0.01px';
+        lg.style.width = cut > 0 ? `${cut + 2 * NOTCH_PAD}px` : '';
+        lg.style.paddingInline = cut > 0 ? `${NOTCH_PAD}px` : '0px';
+      }
+    };
+    if (anim.current) anim.current.retarget(target, spring);
+    else
+      anim.current = animateSpring({
+        spring,
+        from: progress.current,
+        to: target,
+        precision: 0.01, // Compose's Float visibility threshold
+        onUpdate: (v) => {
+          progress.current = v;
+          draw(v);
+        },
+        onComplete: () => {
+          anim.current = null;
+          clear();
+        },
+      });
+    draw(progress.current);
+  }, [floated, outlined, labelLeft, still, spring, label, container]);
+
+  useEffect(() => () => anim.current?.stop(), []);
+}
+
+type InputPhase = 'focused' | 'unfocusedEmpty' | 'unfocusedNotEmpty';
 
 export interface TextFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'size' | 'style' | 'className'> {
@@ -216,7 +348,6 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   ref,
 ) {
   const forced = useForcedState();
-  const reduced = useReducedMotion();
   const [inner, setInner] = useState(defaultValue);
   const value = valueProp ?? inner;
   const [focusedReal, setFocused] = useState(false);
@@ -229,28 +360,22 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   const notchX = outlined && leadingIcon != null ? 16 : 12;
   const w = focused ? 3 : 1;
 
-  // FLIP: the label switches between real 16/24 and 12/16 type (exact still frames) and animates
-  // from the previous geometry with a transform (centre-aligned, which keeps the baseline).
+  // The label switches between real 16/24 and 12/16 type (exact still frames); the float between
+  // them is a transform (centre-aligned, which keeps the baseline) driven by a spring.
   const labelRef = useRef<HTMLSpanElement>(null);
-  const prevFloated = useRef(floated);
-  useLayoutEffect(() => {
-    const el = labelRef.current;
-    if (!el || prevFloated.current === floated) return;
-    prevFloated.current = floated;
-    if (reduced || forced.state) return;
-    const restTop = 16 + 12;
-    const floatTop = (outlined ? -8 : 8) + 8;
-    const k = floated ? 16 / 12 : 12 / 16;
-    // Text x: resting 0; floating labelLeft (outlined labels sit in a 4px-padded notch box).
-    const pad = outlined ? 4 : 0;
-    const dx = floated ? -(labelLeft - pad) - pad * k : labelLeft;
-    const dy = floated ? restTop - floatTop : floatTop - restTop;
-    el.style.transition = 'none';
-    el.style.transform = `translate(${dx}px, ${dy}px) scale(${k})`;
-    void el.offsetWidth;
-    el.style.transition = '';
-    el.style.transform = '';
-  }, [floated, outlined, labelLeft, reduced, forced.state]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  useLabelFloat(floated, outlined, labelLeft, !!forced.state, labelRef, containerRef);
+
+  // Placeholder opacity (Compose `placeholderOpacity`): shown while focused, or while empty when
+  // the label doesn't rest inside the field; the fade's speed depends on where it comes from.
+  const phase: InputPhase = focused ? 'focused' : value === '' ? 'unfocusedEmpty' : 'unfocusedNotEmpty';
+  const [phases, setPhases] = useState({ from: phase, to: phase });
+  if (phases.to !== phase) setPhases({ from: phases.to, to: phase });
+  const from = phases.to !== phase ? phases.to : phases.from;
+  const placeholderSlow =
+    (from === 'unfocusedEmpty' && phase === 'focused') || (from === 'unfocusedNotEmpty' && phase === 'unfocusedEmpty');
+  const showExpandedLabel = !!label && !alwaysFloatLabel;
+  const placeholderShown = phase === 'focused' || (phase === 'unfocusedEmpty' && !showExpandedLabel);
 
   const labelColor = disabled
     ? s.cDisabled
@@ -270,6 +395,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   return (
     <Field.Root disabled={disabled} invalid={error} {...stylex.props(s.root, sx)}>
       <div
+        ref={containerRef}
         {...stylex.props(
           s.container,
           textFieldMarker,
@@ -322,8 +448,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
               typescale.bodyLarge,
               s.input,
               !!label && !outlined ? s.inputFilledLabel : s.inputCentered,
-              !!label && !floated && s.inputHidePlaceholder,
-              !!label && !focused && !alwaysFloatLabel && s.inputHidePlaceholder,
+              !placeholderShown && s.inputHidePlaceholder,
+              placeholderSlow && s.placeholderSlow,
               error && s.inputError,
               disabled && s.inputDisabled,
             )}

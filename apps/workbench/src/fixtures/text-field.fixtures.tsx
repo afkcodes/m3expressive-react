@@ -23,6 +23,7 @@ function Live() {
       <TextField label="Label" supportingText="Supporting text" value={v} onValueChange={setV} />
       <div style={{ position: 'absolute', top: 140, display: 'grid', gap: 24 }}>
         <TextField variant="outlined" label="Email" supportingText="We never share it" leadingIcon={<Icon name="search" />} />
+        <TextField variant="outlined" label="Name" placeholder="Jane Doe" />
         <output data-value>{v}</output>
       </div>
     </div>
