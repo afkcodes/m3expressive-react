@@ -10,6 +10,8 @@ export default defineConfig({
   testDir: 'tests/visual',
   outputDir: 'test-results',
   fullyParallel: true,
+  // A stray test.only must never pass CI silently.
+  forbidOnly: !!process.env.CI,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     ...devices['Desktop Chrome'],
@@ -21,6 +23,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm --filter workbench dev',
     url: `http://localhost:${port}`,
-    reuseExistingServer: true,
+    // Locally reuse a running workbench; CI always starts its own (never another checkout's server).
+    reuseExistingServer: !process.env.CI,
   },
 });
