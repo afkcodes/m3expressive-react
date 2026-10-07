@@ -73,6 +73,38 @@ Which motion each component uses is ported per component from the Compose materi
   (`motion/gesture.ts`, `motion/fling.ts`).
 - Live checks: `tests/visual/motion-*.spec.ts` compare frames against the analytic springs.
 
+## Dynamic colour (seed from a colour or an image)
+Material You's "colour from wallpaper": every colour role is generated from one seed with Google's
+[material-color-utilities](https://github.com/material-foundation/material-color-utilities) (the library
+Android and Material Theme Builder use) and applied with `<M3Provider colors>`. Without `colors` the
+provider uses the M3 baseline (Figma kit) colours, which is what parity is measured against.
+
+```tsx
+import { M3Provider } from '@m3x/react';
+import { useDynamicScheme, useSeedColorsFromImage } from '@m3x/react/dynamic-color';
+
+// A hard-coded seed
+const colors = useDynamicScheme('#006A6A', { variant: 'tonal-spot', contrast: 'standard' });
+
+// …or a seed from a picture (<img>, ImageBitmap, canvas, File/Blob or a CORS-enabled URL)
+const { colors: seeds } = useSeedColorsFromImage(file);   // ranked candidates, best first
+const colors = useDynamicScheme(seeds[0]);
+
+<M3Provider colorScheme="system" colors={colors}>…</M3Provider>
+```
+
+- Variants (Android's colour "styles"): `tonal-spot` (default), `neutral`, `vibrant`, `expressive`,
+  `fidelity`, `content`, `rainbow`, `fruit-salad`, `monochrome`. Contrast: `standard` / `medium` /
+  `high` or MCU's −1…1. Spec: `2025` (M3 Expressive, default) or `2021`.
+- Image seeds follow MCU's pipeline (QuantizerCelebi to 128 colours, then Score), on the image scaled
+  to ≤ 112 × 112 px like Android's WallpaperColors; Score falls back to Google Blue when nothing in the
+  image is usable. Non-hook helpers: `schemeFromSeed`, `seedColorsFromImage`, `seedColorsFromPixels`.
+- `@m3x/react/dynamic-color` is a separate entry so material-color-utilities (~15 KB gzip) only loads in
+  apps that use it. MCU 0.4.0 has extensionless relative imports: bundlers resolve them, but a server that
+  loads it unbundled (Vite SSR, Vitest) needs it inlined — `ssr.noExternal` /
+  `test.server.deps.inline: ['@material/material-color-utilities']`.
+- Try it: `/demo/theme` (seed presets, any colour, four generated wallpapers, upload / drop a picture).
+
 ## Where the Figma kit departs from the M3 guidelines
 The library follows the kit (the brief is pixel parity with Figma). Each item is one style
 line to flip if you'd rather follow the M3 guidelines:

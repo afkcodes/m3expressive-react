@@ -67,6 +67,9 @@ navigation drawer (out of scope).
   `tokens/*.stylex.ts`; **never edit generated files**; `tokens.test.ts` fails if they drift.
 - Colour: 49 roles, CSS `light-dark()` (set `color-scheme` on any subtree), medium/high contrast via
   `color-themes.ts` (`M3Provider contrast`). The kit's 12 hue themes + monochrome are not yet generated.
+- Dynamic colour: `@m3x/react/dynamic-color` (material-color-utilities: `schemeFromSeed`, image seeds) →
+  `<M3Provider colors>` sets every colour var inline (`light-dark(light, dark)`). Keep MCU out of the core
+  entry (bundle size); `theme/colorRoles.ts` is the MCU-free role list. Fixtures never seed (parity = kit).
 - Typescale: 15 roles × baseline/emphasized; emphasized "Bold" = **SemiBold 600**. Every role also
   sets `typeMetrics.tracking` for `textBox.hug`.
 - Fonts: apps import `@m3x/react/fonts.css` (Google Fonts Roboto v51 registered as **"Roboto"**, the
