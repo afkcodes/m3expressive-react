@@ -312,7 +312,7 @@ export function useCarouselScroll({
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const el = viewportRef.current;
     if (!el) return;
-    if (layout === 'full-screen') return;
+    if (layout === 'fullScreen') return;
     // Screen direction: in RTL the right arrow goes back towards the start.
     const right = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
     if (!right) return;

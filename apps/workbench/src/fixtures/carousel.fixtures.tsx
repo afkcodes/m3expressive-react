@@ -20,30 +20,30 @@ const items = (n: number) =>
 // Kit layout → Compose parameters that produce it (tablet hero variants are the multi-browse
 // layout copied in the kit; they render as hero carousels — see the spec's exceptions).
 const config: Record<string, Omit<CarouselProps, 'aria-label' | 'children'>> = {
-  'carousel-mobile-multi': { layout: 'multi-browse', preferredItemWidth: 188 },
-  'carousel-tablet-multi': { layout: 'multi-browse', preferredItemWidth: 184 },
+  'carousel-mobile-multi': { layout: 'multiBrowse', preferredItemWidth: 188 },
+  'carousel-tablet-multi': { layout: 'multiBrowse', preferredItemWidth: 184 },
   'carousel-mobile-hero': { layout: 'hero', preferredItemWidth: 316 },
   'carousel-tablet-hero': { layout: 'hero' },
-  'carousel-mobile-center-hero': { layout: 'center-hero', preferredItemWidth: 252, initialItem: 1 },
-  'carousel-tablet-center-hero': { layout: 'center-hero', initialItem: 1 },
+  'carousel-mobile-center-hero': { layout: 'centeredHero', preferredItemWidth: 252, defaultItem: 1 },
+  'carousel-tablet-center-hero': { layout: 'centeredHero', defaultItem: 1 },
   'carousel-mobile-uncontained': { layout: 'uncontained', itemWidth: 154 },
   'carousel-tablet-uncontained': { layout: 'uncontained', itemWidth: 512 / 3 - 8 },
   'carousel-mobile-aspect': {
-    layout: 'multi-aspect',
+    layout: 'multiAspect',
     aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204],
   },
   'carousel-tablet-aspect': {
-    layout: 'multi-aspect',
+    layout: 'multiAspect',
     aspectRatios: [362.22 / 204, 270.67 / 204, 1, 153.25 / 204, 116 / 204],
   },
-  'carousel-full': { layout: 'full-screen' },
+  'carousel-full': { layout: 'fullScreen' },
 };
 
 function render(name: string): ReactNode {
   const c = config[name]!;
   return (
     <Carousel aria-label="Photos" {...c}>
-      {items(c.layout === 'multi-aspect' ? 5 : 8)}
+      {items(c.layout === 'multiAspect' ? 5 : 8)}
     </Carousel>
   );
 }
