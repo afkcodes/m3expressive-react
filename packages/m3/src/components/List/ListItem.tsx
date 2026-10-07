@@ -1,6 +1,7 @@
 import {
   createContext,
   forwardRef,
+  memo,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -209,7 +210,7 @@ export interface ListItemProps {
   sx?: StyleXStyles;
 }
 
-export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem(
+const ListItemImpl = forwardRef<HTMLElement, ListItemProps>(function ListItem(
   {
     children,
     overline,
@@ -402,3 +403,6 @@ export const ListItem = forwardRef<HTMLElement, ListItemProps>(function ListItem
   );
   return list.inList ? <li {...stylex.props(s.li)}>{withDivider}</li> : withDivider;
 });
+
+/** A list row; memoised, so a parent re-render with the same props skips it. */
+export const ListItem = memo(ListItemImpl);

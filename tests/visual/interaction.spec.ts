@@ -1024,13 +1024,13 @@ test.describe('list (live)', () => {
     await check('accordion-collapsed');
     await expect(nested).toBeHidden();
     await page.mouse.click(box.x + 260, box.y + 26);
-    const collapse = page.getByRole('button', { name: 'Collapse' });
-    await expect(collapse).toHaveAttribute('aria-expanded', 'true');
+    // One name in both states (verb + item label); the state is aria-expanded.
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(nested).toBeVisible();
     await page.mouse.move(0, 0);
     await page.waitForTimeout(SETTLE);
     await check('accordion-expanded');
-    await collapse.press('Enter');
+    await toggle.press('Enter');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(nested).toBeHidden();
   });
