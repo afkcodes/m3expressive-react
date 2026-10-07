@@ -176,3 +176,126 @@ test('slider value indicator: appears / disappears with no transition (Compose L
   await expect(volume).toBeFocused();
   expect(await state(), 'keyboard focus: shown at once').toEqual({ opacity: '1', animations: 0 });
 });
+
+// ── Text field ──────────────────────────────────────────────────────────────────────────────
+test.describe('text field motion', () => {
+  /** Computed transition of the first element under the fixture node matching `pick`. */
+  const transitionOf = (page: Page, pick: string) =>
+    page.locator('[data-fixture-node]').evaluate((root, pick) => {
+      const el = [...root.querySelectorAll<HTMLElement>('*')].find((e) => e.matches(pick))!;
+      const cs = getComputedStyle(el);
+      return { property: cs.transitionProperty, duration: cs.transitionDuration };
+    }, pick);
+
+  test('indicator / outline: colour on FastEffects, thickness on FastSpatial, snap when disabled; container FastEffects; supporting text not animated', async ({ page }) => {
+    await page.goto('/fixture/text-field/filled-enabled-label-xx');
+    // Filled indicator line (Compose IndicatorLineNode).
+    expect(await transitionOf(page, 'span[aria-hidden]:last-child')).toEqual({ property: 'top, height, background-color', duration: '0.369s, 0.369s, 0.15s' });
+    // Container colour (TextFieldDefaults.Container) and supporting text (not animated).
+    expect(await transitionOf(page, '[data-fixture-node] > div > div')).toEqual({ property: 'background-color', duration: '0.15s' });
+    const supporting = page.getByText('Supporting text');
+    expect(await supporting.evaluate((el) => getComputedStyle(el).transitionProperty + ' ' + getComputedStyle(el).transitionDuration)).toBe('all 0s');
+    await page.goto('/fixture/text-field/filled-disabled-label-xx');
+    expect((await transitionOf(page, 'span[aria-hidden]:last-child')).duration).toBe('0s');
+    // Outlined stroke (animateBorderStrokeAsState).
+    await page.goto('/fixture/text-field/outlined-enabled-label-xx');
+    expect(await transitionOf(page, 'fieldset')).toEqual({ property: 'border-width, padding-inline-start, border-color', duration: '0.369s, 0.369s, 0.15s' });
+    await page.goto('/fixture/text-field/outlined-disabled-label-xx');
+    expect((await transitionOf(page, 'fieldset')).duration).toBe('0s');
+  });
+
+  test('placeholder: fades in on SlowEffects when focused, out on FastEffects when blurred', async ({ page }) => {
+    await page.goto('/fixture/text-field/live');
+    const name = page.getByRole('textbox', { name: 'Name' });
+    const ph = () => name.evaluate((el) => {
+      const cs = getComputedStyle(el, '::placeholder');
+      return { opacity: Number(cs.opacity), duration: cs.transitionDuration };
+    });
+    expect(await ph()).toEqual({ opacity: 0, duration: '0.15s' });
+    await name.focus();
+    const fading = await ph();
+    expect(fading.duration).toBe('0.327s');
+    expect(fading.opacity).toBeLessThan(1);
+    await expect.poll(async () => (await ph()).opacity).toBe(1);
+    await name.blur();
+    const out = await ph();
+    expect(out.duration).toBe('0.15s');
+    expect(out.opacity).toBeGreaterThan(0);
+    await expect.poll(async () => (await ph()).opacity).toBe(0);
+  });
+
+  test('outlined notch opens with the label: label width × progress + 4px each side (Compose outlineCutout)', async ({ page }) => {
+    await page.goto('/fixture/text-field/live');
+    await page.evaluate(() => document.fonts.ready); // the label is measured when the float starts
+    const frames = await page.evaluate(
+      () =>
+        new Promise<{ t: number; scale: number; legend: number }[]>((resolve) => {
+          const input = [...document.querySelectorAll('input')].find((i) => i.placeholder === 'Jane Doe')!;
+          const label = input.parentElement!.querySelector('label')!;
+          const legend = input.closest('div')!.parentElement!.querySelector('legend')!;
+          const out: { t: number; scale: number; legend: number }[] = [];
+          const t0 = performance.now();
+          input.focus();
+          const tick = (now: number) => {
+            const m = /scale\(([\d.]+)\)/.exec(label.style.transform);
+            out.push({ t: now - t0, scale: m ? Number(m[1]) : 1, legend: legend.getBoundingClientRect().width });
+            if (now - t0 < 500) requestAnimationFrame(tick);
+            else resolve(out);
+          };
+          requestAnimationFrame(tick);
+        }),
+    );
+    const final = frames.at(-1)!.legend; // label text width + 8
+    const text = final - 8;
+    let checked = 0;
+    for (const f of frames) {
+      if (f.scale === 1) continue; // settled
+      const p = 1 - 3 * (f.scale - 1); // floated layout: scale = 1 + (16/12 − 1)(1 − p)
+      if (p <= 0.02) continue;
+      expect(Math.abs(f.legend - (text * f.scale * p + 8))).toBeLessThan(0.5);
+      checked++;
+    }
+    expect(checked).toBeGreaterThan(5);
+    // Half way through the float the notch is about half open (the old max-width transition ran ahead).
+    const mid = frames.find((f) => f.scale < 1 + (1 / 3) * 0.5)!;
+    expect(mid.legend).toBeLessThan(final * 0.8);
+  });
+
+  test('label float interrupted mid-flight continues from its position and velocity (Compose Transition)', async ({ page }) => {
+    await page.goto('/fixture/text-field/live');
+    await page.evaluate(() => document.fonts.ready);
+    const ys = await page.evaluate(
+      () =>
+        new Promise<{ t: number; y: number; blurred: boolean }[]>((resolve) => {
+          const input = document.querySelector<HTMLInputElement>('input')!; // filled "Label"
+          const label = input.parentElement!.querySelector('label')!;
+          const out: { t: number; y: number; blurred: boolean }[] = [];
+          const t0 = performance.now();
+          let blurred = false;
+          input.focus();
+          const tick = (now: number) => {
+            const r = label.getBoundingClientRect();
+            out.push({ t: now - t0, y: r.top + r.height / 2, blurred });
+            if (!blurred && now - t0 > 60) {
+              input.blur();
+              blurred = true;
+            }
+            if (now - t0 < 700) requestAnimationFrame(tick);
+            else resolve(out);
+          };
+          requestAnimationFrame(tick);
+        }),
+    );
+    const rest = ys[0]!.y;
+    for (let i = 1; i < ys.length; i++) expect(Math.abs(ys[i]!.y - ys[i - 1]!.y), `jump at ${ys[i]!.t.toFixed(0)}ms`).toBeLessThan(7);
+    const i = ys.findIndex((s) => s.blurred);
+    const before = ys[i - 1]!.y - ys[i - 2]!.y; // moving up (negative)
+    expect(before).toBeLessThan(-1);
+    // Velocity carries over: it keeps rising for a moment after the blur instead of restarting
+    // downwards — but never reaches the floated position (a restarted FLIP would jump there first).
+    const after = ys.slice(i).map((s) => s.y);
+    expect(ys[i + 1]!.y).toBeLessThan(ys[i - 1]!.y);
+    expect(Math.min(...after)).toBeGreaterThan(rest - 12 + 1.5); // filled: floats 12px up (centre 28 → 16)
+    expect(Math.abs(ys.at(-1)!.y - rest)).toBeLessThan(0.05);
+  });
+});
