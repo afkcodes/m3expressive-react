@@ -9,6 +9,8 @@ import { motion } from '../../tokens/motion.stylex';
 import { state } from '../../tokens/state.stylex';
 import { typescale } from '../../tokens/typescale.ts';
 import { interaction } from '../../primitives/state.stylex';
+import { tween } from '../../primitives/tweens.stylex';
+import { elevationMotion } from '../../primitives/elevationMotion.ts';
 import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { textBox } from '../../primitives/textBox.ts';
 import { useForcedState, type ForcedState } from '../../testing/ForceState.tsx';
@@ -30,6 +32,16 @@ type StateKey = 'enabled' | 'hovered' | 'focused' | 'pressed' | 'dragged';
  *   content on-surface at 38%.
  *   Elevation differs per chip type in the kit (tables below); focused variants don't clip, so
  *   their shadow has no spread and their outline sits under the state layer.
+ *
+ * Motion — Compose material3 Chip.kt:
+ *   elevation: ChipElevation.animateElevation → internal/Elevation.kt tweens (`elevationMotion`),
+ *   snapping when disabled; the container colour is not animated (Surface `color` changes as is).
+ *   Filter chip without an icon (expressive SelectableChip → AnimatingChipContent): the leading
+ *   check enters with expandHorizontally(from Start) on FastSpatial + fadeIn DefaultEffects and
+ *   leaves with shrinkHorizontally(towards Start) FastSpatial + fadeOut DefaultEffects. Compose
+ *   keeps the 8dp padding and 8dp spacing around an empty (0-wide) leading slot, so the label sits
+ *   16 from the edge unselected and 34 selected — here the slot is always present and its width
+ *   springs 0 ⇄ 18px (overshoot included, like the IntSize spring).
  */
 const ELEVATION: Record<string, Record<StateKey, Level>> = {
   'assist-elevated': { enabled: 1, hovered: 1, focused: 1, pressed: 2, dragged: 2 },
@@ -73,10 +85,9 @@ const s = stylex.create({
     outlineColor: color.secondary,
     outlineWidth: state.focusIndicatorThickness,
     outlineOffset: state.focusIndicatorOuterOffset,
-    transitionProperty: 'box-shadow, background-color',
-    transitionDuration: motion.fastEffectsDuration,
-    transitionTimingFunction: motion.fastEffectsEasing,
   },
+  // Raised by the `dragged` prop: Compose enters a drag with the incoming elevation tween.
+  draggedIn: { transitionDuration: tween.elevationInDuration, transitionTimingFunction: tween.elevationInEasing },
   pill: { borderRadius: 16 },
   ringForced: { outlineStyle: 'solid' },
   stroke: {
@@ -118,6 +129,18 @@ const s = stylex.create({
   content: { position: 'relative', display: 'inline-flex', alignItems: 'center', columnGap: 8 },
   contentDisabled: { opacity: state.disabledContentOpacity, color: color.onSurface },
   icon: { width: 18, height: 18, flexShrink: 0, fill: 'currentColor', display: 'block' },
+  // Leading check slot of an icon-less filter chip (kept mounted; clips the check from the start).
+  checkSlot: {
+    display: 'block',
+    flexShrink: 0,
+    height: 18,
+    overflow: 'hidden',
+    transitionProperty: 'width, opacity',
+    transitionDuration: `${motion.fastSpatialDuration}, ${motion.defaultEffectsDuration}`,
+    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.defaultEffectsEasing}`,
+  },
+  checkSlotIn: { width: 18, opacity: 1 },
+  checkSlotOut: { width: 0, opacity: 0 },
   label: { color: 'inherit' },
   avatar: { position: 'relative', width: 24, height: 24, borderRadius: 12, flexShrink: 0, overflow: 'hidden' },
   inputWrap: { position: 'relative', display: 'inline-flex', verticalAlign: 'middle', flexShrink: 0 },
@@ -180,7 +203,8 @@ interface FrameOptions {
   disabled: boolean;
   dragged: boolean;
   forced: { state?: ForcedState; focusRing?: boolean };
-  leading: 'none' | 'icon' | 'avatar';
+  /** `slot`: an icon-less filter chip's animated check slot (8 + slot + 8 before the label). */
+  leading: 'none' | 'icon' | 'avatar' | 'slot';
   trailing: boolean;
   pill?: boolean;
 }
@@ -196,7 +220,7 @@ function frameStyles({ kind, elevated, selected, disabled, dragged, forced, lead
     : stateKey
       ? dyn.fixedShadow(stateKey === 'focused' ? SHADOW_NO_SPREAD[lvl('focused')] : SHADOW[lvl(stateKey)])
       : dyn.shadow(SHADOW[lvl('enabled')], SHADOW[lvl('hovered')], SHADOW_NO_SPREAD[lvl('focused')], SHADOW[lvl('pressed')]);
-  const start = leading === 'avatar' ? 4 : leading === 'icon' ? 8 : kind === 'input' ? 12 : 16;
+  const start = leading === 'avatar' ? 4 : leading === 'icon' || leading === 'slot' ? 8 : kind === 'input' ? 12 : 16;
   const end = trailing ? 8 : kind === 'input' ? 12 : 16;
   const outlinedUnselected = !elevated && !selected;
   return [
@@ -227,6 +251,8 @@ function frameStyles({ kind, elevated, selected, disabled, dragged, forced, lead
     outlinedUnselected && fs === 'focused' && s.strokeUnder,
     outlinedUnselected && disabled && s.strokeDisabled,
     shadow,
+    disabled ? elevationMotion.none : elevationMotion.host,
+    !disabled && dragged && s.draggedIn,
     forced.focusRing && s.ringForced,
   ];
 }
@@ -238,11 +264,13 @@ interface ContentProps {
   icon?: ReactNode;
   avatar?: ReactNode;
   showCheck: boolean;
+  /** Icon-less filter chip: the check lives in an always-mounted slot that springs open. */
+  checkSlot?: boolean;
   trailingIcon?: ReactNode;
   label: ReactNode;
 }
 
-function ChipContent({ kind, selected, disabled, icon, avatar, showCheck, trailingIcon, label }: ContentProps) {
+function ChipContent({ kind, selected, disabled, icon, avatar, showCheck, checkSlot = false, trailingIcon, label }: ContentProps) {
   // Colours (kit): label on-surface (assist) / on-surface-variant; icons primary; trailing
   // on-surface-variant; selected → on-secondary-container (suggestion / input keep a primary icon).
   const labelTone = selected ? color.onSecondaryContainer : kind === 'assist' ? color.onSurface : color.onSurfaceVariant;
@@ -251,7 +279,11 @@ function ChipContent({ kind, selected, disabled, icon, avatar, showCheck, traili
   return (
     <span {...stylex.props(s.content, disabled ? s.contentDisabled : dyn.color(labelTone))}>
       {avatar}
-      {showCheck ? <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} /> : icon != null ? <span style={{ display: 'contents', color: disabled ? undefined : iconTone }}>{icon}</span> : null}
+      {checkSlot ? (
+        <span data-part="check-slot" {...stylex.props(s.checkSlot, showCheck ? s.checkSlotIn : s.checkSlotOut)}>
+          <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} />
+        </span>
+      ) : showCheck ? <Glyph d={ICONS.check} tone={disabled ? undefined : color.onSecondaryContainer} /> : icon != null ? <span style={{ display: 'contents', color: disabled ? undefined : iconTone }}>{icon}</span> : null}
       <span {...stylex.props(typescale.labelLarge, textBox.hug, s.label)}>{label}</span>
       {trailingIcon != null && <span style={{ display: 'contents', color: disabled ? undefined : trailingTone }}>{trailingIcon}</span>}
     </span>
@@ -324,8 +356,8 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(functio
 ) {
   const forced = useForcedState();
   const [selected, setSelected] = useSelected({ selected: selectedProp, defaultSelected, onSelectedChange });
-  // Selected: a check replaces the leading icon (or appears in front of label-only chips).
-  const leading = selected || icon != null ? 'icon' : 'none';
+  // Selected: a check replaces the leading icon (or springs open in front of label-only chips).
+  const leading = icon != null ? 'icon' : 'slot';
   return (
     <BaseToggle ref={ref} pressed={selected} onPressedChange={setSelected} disabled={disabled} {...rest} {...stylex.props(...frameStyles({ kind: 'filter', elevated, selected, disabled, dragged, forced, leading, trailing: trailingIcon }), sx)}>
       <StateLayer />
@@ -335,6 +367,7 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(functio
         disabled={disabled}
         icon={icon}
         showCheck={selected}
+        checkSlot={icon == null}
         trailingIcon={trailingIcon ? <Glyph d={ICONS.arrowDropDown} /> : undefined}
         label={children}
       />
