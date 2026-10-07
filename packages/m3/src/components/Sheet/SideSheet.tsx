@@ -19,12 +19,12 @@ import { scrim } from '../../primitives/scrim.ts';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   MAX_FLING_VELOCITY,
-  MIN_FLING_VELOCITY,
   PointerVelocityTracker,
   suppressNextClick,
   TOUCH_SLOP,
   tween,
 } from '../../motion/gesture.ts';
+import { computeSettleDuration, quinticOut, shouldHideOnRelease, type SideSheetGeometry } from './sideSheetDrag.ts';
 
 /*
  * Figma kit, "Sheets" page (Side Sheet set 53198:27851).
@@ -111,9 +111,9 @@ export interface SideSheetProps {
   /** Modal styling (rounded, Surface Container Low, no edge divider). `ModalSideSheet` sets it. */
   modal?: boolean;
   headline?: ReactNode;
-  /** Leading icon button, e.g. back (the kit's narrow icon button). */
+  /** Leading icon button, e.geometry. back (the kit's narrow icon button). */
   navigation?: ReactNode;
-  /** Trailing icon button, e.g. close. */
+  /** Trailing icon button, e.geometry. close. */
   close?: ReactNode;
   /** Buttons under the divider at the bottom. */
   actions?: ReactNode;
@@ -158,46 +158,6 @@ export interface ModalSideSheetProps extends Omit<SideSheetProps, 'modal' | 'hea
   side?: 'end' | 'start';
 }
 
-/** SideSheetBehavior: SIGNIFICANT_VEL_THRESHOLD, HIDE_THRESHOLD, HIDE_FRICTION. */
-const SIGNIFICANT_VEL_THRESHOLD = 500;
-const HIDE_THRESHOLD = 0.5;
-const HIDE_FRICTION = 0.1;
-/** ViewDragHelper BASE_SETTLE_DURATION / MAX_SETTLE_DURATION (ms) and its quintic ease-out. */
-const BASE_SETTLE_DURATION = 256;
-const MAX_SETTLE_DURATION = 600;
-const quinticOut = (t: number) => {
-  const u = t - 1;
-  return u * u * u * u * u + 1;
-};
-const clampMag = (value: number, absMin: number, absMax: number) => {
-  const abs = Math.abs(value);
-  if (abs < absMin) return 0;
-  if (abs > absMax) return value > 0 ? absMax : -absMax;
-  return value;
-};
-/** ViewDragHelper.computeAxisDuration. */
-function computeAxisDuration(delta: number, velocity: number, motionRange: number, parentWidth: number) {
-  if (delta === 0) return 0;
-  const halfWidth = Math.trunc(parentWidth / 2);
-  const distanceRatio = Math.min(1, Math.abs(delta) / parentWidth);
-  const influence = Math.sin((distanceRatio - 0.5) * ((0.3 * Math.PI) / 2));
-  const distance = halfWidth + halfWidth * influence;
-  let duration: number;
-  velocity = Math.abs(velocity);
-  if (velocity > 0) duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
-  else duration = Math.trunc((Math.abs(delta) / motionRange + 1) * BASE_SETTLE_DURATION);
-  return Math.min(duration, MAX_SETTLE_DURATION);
-}
-/** ViewDragHelper.computeSettleDuration for a horizontal-only drag (vertical range 0, dy 0). */
-function computeSettleDuration(dx: number, xvel: number, yvel: number, motionRange: number, parentWidth: number) {
-  xvel = Math.trunc(clampMag(xvel, MIN_FLING_VELOCITY, MAX_FLING_VELOCITY));
-  yvel = Math.trunc(clampMag(yvel, MIN_FLING_VELOCITY, MAX_FLING_VELOCITY));
-  const absXVel = Math.abs(xvel);
-  const addedVel = absXVel + Math.abs(yvel);
-  const xweight = xvel !== 0 ? absXVel / addedVel : 1;
-  return Math.trunc(computeAxisDuration(dx, xvel, motionRange, parentWidth) * xweight);
-}
-
 /** A modal side sheet: scrim, focus trap, Escape / scrim / drag to dismiss. */
 export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: ModalSideSheetProps) {
   const portal = usePortalContainer();
@@ -215,7 +175,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
     latest.current = onOpenChange;
   });
 
-  const geometry = (el: HTMLElement) => {
+  const measure = (el: HTMLElement): SideSheetGeometry => {
     const rtl = getComputedStyle(el).direction === 'rtl';
     const right = (side === 'end') !== rtl;
     const parentWidth = document.documentElement.clientWidth;
@@ -252,10 +212,11 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   };
 
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const el0 = popup.current;
-    if (e.button !== 0 || !el0 || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
+    const popupEl = popup.current;
+    if (e.button !== 0 || !popupEl || isNoDragTarget(e.nativeEvent, e.currentTarget)) return;
     gesture.current?.();
-    const g = geometry(el0);
+    // Measured once per drag: the release maths use the press-time geometry.
+    const geometry = measure(popupEl);
     const tracker = new PointerVelocityTracker();
     tracker.down(e);
     const pointer = e.pointerId;
@@ -269,9 +230,9 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       settling.current = null;
       // From wherever the sheet is (a show transition may still be running).
       const shift = el.getBoundingClientRect().left - el.offsetLeft;
-      start = Math.min(g.range, Math.max(0, g.right ? shift : -shift));
+      start = Math.min(geometry.range, Math.max(0, geometry.right ? shift : -shift));
       el.style.transition = 'none';
-      place(start, g.right);
+      place(start, geometry.right);
     };
     const move = (ev: PointerEvent) => {
       if (ev.pointerId !== pointer) return;
@@ -289,7 +250,7 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
         begin(el);
       }
       // clampViewPositionHorizontal: between Expanded and fully off screen.
-      place(Math.min(g.range, Math.max(0, start + (g.right ? dx : -dx))), g.right);
+      place(Math.min(geometry.range, Math.max(0, start + (geometry.right ? dx : -dx))), geometry.right);
     };
     const up = (ev: PointerEvent) => {
       if (ev.pointerId !== pointer) return;
@@ -298,25 +259,27 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       tracker.up(ev);
       suppressNextClick();
       const { x: vx, y: vy } = tracker.velocity(MAX_FLING_VELOCITY);
-      const hide = shouldHideOnRelease(g, offset.current, vx, vy);
+      const hide = shouldHideOnRelease(geometry, offset.current, vx, vy);
       showScrim(!hide);
-      const to = hide ? g.range : 0;
+      const to = hide ? geometry.range : 0;
       const finish = () => {
         settling.current = null;
         if (hide) latest.current(false);
         else reset();
       };
       const left = (inward: number) =>
-        g.right ? g.parentWidth - g.innerMargin - g.childWidth + inward : g.innerMargin - inward;
+        geometry.right
+          ? geometry.parentWidth - geometry.innerMargin - geometry.childWidth + inward
+          : geometry.innerMargin - inward;
       const duration = prefersReducedMotion()
         ? 0
-        : computeSettleDuration(left(to) - left(offset.current), vx, vy, g.range, g.parentWidth);
+        : computeSettleDuration(left(to) - left(offset.current), vx, vy, geometry.range, geometry.parentWidth);
       settling.current = tween({
         from: offset.current,
         to,
         duration,
         easing: quinticOut,
-        onUpdate: (v) => place(v, g.right),
+        onUpdate: (v) => place(v, geometry.right),
         onComplete: finish,
       });
     };
@@ -369,40 +332,4 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
       </Dialog.Portal>
     </Dialog.Root>
   );
-}
-
-/**
- * SideSheetBehavior.calculateTargetStateOnViewReleased with the Right / LeftSheetDelegate
- * geometry. (shouldHide compares the released edge in px with HIDE_THRESHOLD 0.5 — always true
- * on screen, so the significant-swipe / half-way rules decide; ported as is.)
- */
-function shouldHideOnRelease(
-  g: { right: boolean; parentWidth: number; childWidth: number; innerMargin: number },
-  inward: number,
-  vx: number,
-  vy: number,
-) {
-  const mostlyHorizontal = Math.abs(vx) > Math.abs(vy);
-  if (g.right) {
-    const expanded = Math.max(0, g.parentWidth - g.childWidth - g.innerMargin);
-    const hidden = g.parentWidth;
-    const left = expanded + inward;
-    if (vx < 0) return false; // isExpandingOutwards
-    if (Math.abs(left + g.childWidth + vx * HIDE_FRICTION) > HIDE_THRESHOLD) {
-      return (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left > (hidden + expanded) / 2;
-    }
-    if (vx === 0 || !mostlyHorizontal) return Math.abs(left - expanded) >= Math.abs(left - hidden);
-    return true;
-  }
-  const expanded = Math.max(0, g.innerMargin);
-  const hidden = -g.childWidth - g.innerMargin;
-  const left = expanded - inward;
-  if (vx > 0) return false;
-  if (Math.abs(left + vx * HIDE_FRICTION) > HIDE_THRESHOLD) {
-    return (
-      (mostlyHorizontal && Math.abs(vx) > SIGNIFICANT_VEL_THRESHOLD) || left + g.childWidth < (expanded - hidden) / 2
-    );
-  }
-  if (vx === 0 || !mostlyHorizontal) return Math.abs(left - expanded) >= Math.abs(left - hidden);
-  return true;
 }
