@@ -245,34 +245,7 @@ interface Known {
   fix: string;
 }
 
-const KNOWN: Known[] = [
-  {
-    route: 'app-bar',
-    rule: 'scrollable-region-focusable',
-    selector: '[class~="AppBarPlayground__s.scroll"]',
-    summary: "App bar playground: the bars' scroll container has no focusable content, so keyboards can't scroll it",
-    fix: 'AppBarPlayground: give the scroller tabIndex={0}, role="region" and an aria-label.',
-  },
-  {
-    route: 'toolbar',
-    rule: 'scrollable-region-focusable',
-    selector: '[class~="ToolbarPlayground__s.scroll"]',
-    summary:
-      "Toolbar playground: the toolbar's scroll container has no focusable content, so keyboards can't scroll it",
-    fix: 'ToolbarPlayground: give the scroller tabIndex={0}, role="region" and an aria-label.',
-  },
-  {
-    route: 'theme',
-    rule: 'color-contrast',
-    selector: '[class~="ThemePlayground__s.roleChip"]',
-    summary:
-      'Theme playground: hex labels on mid-tone swatches are white below 4.5:1 (2.69:1 on #FA746F, ' +
-      '4.25:1 on #727D7C at the default seed)',
-    fix:
-      'ThemePlayground labelColor(): switch to black at relative luminance > 0.179 (equal contrast with ' +
-      'black and white) instead of 0.4.',
-  },
-];
+const KNOWN: Known[] = [];
 
 interface Finding {
   rule: string;

@@ -308,7 +308,8 @@ function contrastText(hex: string) {
   const n = Number.parseInt(hex.slice(1), 16);
   const lin = (c: number) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
   const l = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
-  return l > 0.4 ? '#000' : '#FFF';
+  // 0.179: black and white give equal contrast there ((l + 0.05) / 0.05 = 1.05 / (l + 0.05)).
+  return l > 0.179 ? '#000' : '#FFF';
 }
 
 /** Dynamic colour: seed the whole scheme from a colour or from an image (Material You). */

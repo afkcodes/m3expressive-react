@@ -161,7 +161,15 @@ export function ToolbarPlayground() {
           </label>
         </section>
         <div {...stylex.props(s.phone)}>
-          <div ref={floating ? scrollRef : undefined} {...stylex.props(s.scroll)}>
+          {/* Focusable so keyboards can scroll it (axe scrollable-region-focusable). */}
+          <div
+            ref={floating ? scrollRef : undefined}
+            // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must take focus
+            tabIndex={0}
+            role="region"
+            aria-label="Scrolling content"
+            {...stylex.props(s.scroll)}
+          >
             {Array.from({ length: 30 }, (_, i) => (
               <div key={i} {...stylex.props(typescale.bodyLarge, s.row)}>
                 Row {i + 1} — scroll down to collapse the floating toolbar (or move it away), up to bring it back.

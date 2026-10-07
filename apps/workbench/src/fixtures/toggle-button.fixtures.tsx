@@ -16,7 +16,7 @@ function Icon({ d }: { d: string }) {
 const fixture: FixtureModule = {
   component: 'toggle-button',
   variants: Object.fromEntries([
-    // Live (uncontrolled, no forced state) for interaction.spec.ts: medium, round when unselected.
+    // Live (uncontrolled, no forced state) for interaction-buttons.spec.ts: medium, round when unselected.
     ...(['filled', 'elevated', 'outlined', 'tonal'] as const).map((variant): [string, FixtureVariant] => [
       `${variant}-live`,
       {

@@ -15,7 +15,7 @@ const live = (variant: CardVariant): [string, FixtureVariant] => [
 const fixture: FixtureModule = {
   component: 'card-states',
   variants: Object.fromEntries([
-    // Real, interactive cards: driven by pointer/keyboard in tests/visual/interaction.spec.ts.
+    // Real, interactive cards: driven by pointer/keyboard in tests/visual/interaction-cards.spec.ts.
     live('outlined'),
     live('elevated'),
     live('filled'),

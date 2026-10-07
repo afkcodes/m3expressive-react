@@ -27,7 +27,7 @@ type Ripples = Record<
 const fixture: FixtureModule = {
   component: 'toggle-icon-button',
   variants: Object.fromEntries([
-    // Live (uncontrolled, no forced state) for interaction.spec.ts: medium default, round when unselected.
+    // Live (uncontrolled, no forced state) for interaction-buttons.spec.ts: medium default, round when unselected.
     ...(['filled', 'tonal', 'outlined', 'standard'] as const).map((variant): [string, FixtureVariant] => [
       `${variant}-live`,
       {

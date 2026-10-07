@@ -123,7 +123,9 @@ export function AppBarPlayground() {
             }
             scrollTarget={ref}
           />
-          <div ref={ref} {...stylex.props(s.scroll)}>
+          {/* Focusable so keyboards can scroll it (axe scrollable-region-focusable). */}
+          {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must take focus */}
+          <div ref={ref} tabIndex={0} role="region" aria-label="Scrolling content" {...stylex.props(s.scroll)}>
             {Array.from({ length: 30 }, (_, i) => (
               <div key={i} {...stylex.props(typescale.bodyLarge, s.row)}>
                 Message {i + 1} — scroll to see the bar take Surface Container (small) or collapse with the content
