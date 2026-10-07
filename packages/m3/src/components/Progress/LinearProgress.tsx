@@ -3,10 +3,19 @@ import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex';
-import { useReducedMotion, useSpringToken } from '../../motion/context.tsx';
+import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { linearDeterminate, linearHeight, linearShapes, type ProgressThickness, type ProgressType } from './geometry.ts';
-import { PROGRESS_SPRING, linearIndeterminate, useFrameLoop, useSpringNumber } from './motion.ts';
+import { determinateTrackSpace, linearDeterminate, linearHeight, linearShapes, type ProgressThickness, type ProgressType } from './geometry.ts';
+import {
+  PROGRESS_SPRING,
+  WAVY_PROGRESS_TWEEN,
+  linearIndeterminate,
+  linearWaveAmplitude,
+  useFrameLoop,
+  useSpringNumber,
+  useTweenNumber,
+  useWaveAmplitude,
+} from './motion.ts';
 
 const s = stylex.create({
   root: { display: 'block', width: '100%', flexShrink: 0, position: 'relative' },
@@ -41,10 +50,13 @@ export interface LinearProgressProps {
 /**
  * Linear progress indicator (kit sets "Linear-determinate / -indeterminate progress indicator").
  * Fills its container's width. Determinate: active from the start, track + stop dot to the end;
- * value changes spring (Compose ProgressAnimationSpec). Wave: 40px wavelength travelling one
- * wavelength per second, flattened at ≤10% and ≥95% (Compose's amplitude rule, as the kit's 10% /
- * 100% frames show). Indeterminate: Compose's two-line keyframes; the wave uses a 20px wavelength.
- * Waves travel towards the start, one wavelength per second, as in Compose.
+ * value changes spring (Compose ProgressIndicatorDefaults.ProgressAnimationSpec) — the wave tweens
+ * them linearly over 500ms (WavyProgressIndicatorDefaults.ProgressAnimationSpec). The active ↔
+ * track space grows from 0 as the value leaves 0; the wavy stop dot shrinks away as the active
+ * reaches it. Wave: 40px wavelength travelling one wavelength per second, flattened at ≤10% and
+ * ≥95% (Compose's amplitude rule, as the kit's 10% / 100% frames show), ramping over 500ms.
+ * Indeterminate: Compose's two-line keyframes; the wave uses a 20px wavelength. Waves travel
+ * towards the start, one wavelength per second, as in Compose.
  */
 export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(function LinearProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, wavelength, sx, ...aria },
@@ -52,7 +64,6 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
 ) {
   const forced = useForcedState().progress;
   const reduced = useReducedMotion();
-  const effects = useSpringToken('slow-effects');
   const box = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
   const [ms, setMs] = useState(0);
@@ -79,9 +90,14 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
   // A forced `time` renders the live animation at that instant; any other forced frame is still.
   const frozen = forced !== undefined && forced.time === undefined;
   const clock = forced?.time ?? ms;
-  const wavyNow = type === 'wave' && (indeterminate || (p > 0.1 && p < 0.95));
-  const amp = useSpringNumber(wavyNow ? 1 : 0, forced ? null : effects);
-  const shown = useSpringNumber(p, forced || reduced ? null : PROGRESS_SPRING);
+  const still = !!forced || reduced;
+  const wave = type === 'wave';
+  const sprung = useSpringNumber(p, still || wave ? null : PROGRESS_SPRING);
+  const tweened = useTweenNumber(p, still || !wave ? null : WAVY_PROGRESS_TWEEN);
+  const shown = wave ? tweened : sprung;
+  // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
+  const ampTarget = !wave ? 0 : indeterminate ? 1 : linearWaveAmplitude(shown);
+  const amp = useWaveAmplitude(ampTarget, !still);
   const travelling = !forced && width > 0 && (indeterminate || (type === 'wave' && !reduced && amp > 0));
   useFrameLoop(travelling, setMs);
 
@@ -98,7 +114,10 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     actives = lines.map(([a, b]) => [clamp(a), clamp(b)]);
     const head = lines[0]![1] * width;
     gap = head < pad ? 0 : Math.min(head - pad, 4);
-  } else actives = linearDeterminate(width, t, shown, type === 'wave' ? amp : 0);
+  } else {
+    actives = linearDeterminate(width, t, shown, type === 'wave' ? amp : 0);
+    gap = determinateTrackSpace(type, t, actives[0]?.[1] ?? 0);
+  }
   const wl = wavelength ?? (indeterminate ? WAVELENGTH.indeterminate : WAVELENGTH.determinate);
   const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED_PER_WAVELENGTH * wl;
   // Compose moves the wave towards the start (a crest at x is drawn at x − shift).
@@ -109,10 +128,11 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     type,
     actives,
     stop: !indeterminate,
+    stopShrink: type === 'wave',
     wavelength: wl,
     waveOrigin,
     amp: type === 'wave' ? amp : 0,
-    snap: frozen || (!indeterminate && shown === p),
+    snap: frozen || (!indeterminate && shown === p && amp === ampTarget),
     gap,
   });
   const height = linearHeight(type, t);
@@ -129,10 +149,19 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
           {g.tracks.map((tr, i) => (
             <rect key={i} x={tr.x} y={g.cy - t / 2} width={tr.width} height={t} rx={t / 2} {...stylex.props(s.track)} />
           ))}
-          {g.stop && <rect x={g.stop.x} y={g.cy - 2} width={4} height={4} rx={2} {...stylex.props(s.stop)} />}
           {g.active.map((d, i) => (
             <path key={i} d={d} strokeWidth={t} {...stylex.props(s.active)} />
           ))}
+          {g.stop && (
+            <rect
+              x={g.stop.x}
+              y={g.cy - g.stop.size / 2}
+              width={g.stop.size}
+              height={g.stop.size}
+              rx={g.stop.size / 2}
+              {...stylex.props(s.stop)}
+            />
+          )}
         </svg>
       )}
     </Progress.Root>

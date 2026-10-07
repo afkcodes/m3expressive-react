@@ -70,8 +70,14 @@ export interface LinearSpec {
   type: ProgressType;
   /** Active segments as centre-line frames [start, end] (px). Empty = no active indicator. */
   actives: readonly (readonly [number, number])[];
-  /** Determinate only: the stop dot at the end of the last track piece. */
+  /** Determinate only: the stop dot at the end of the track. */
   stop: boolean;
+  /**
+   * Wavy stop (Compose internal_LinearWavyProgressModifiers `drawStopIndicator`): once the active
+   * reaches the dot it shrinks from its start edge until gone. Flat (ProgressIndicator.kt) draws
+   * it at a fixed size whatever the progress.
+   */
+  stopShrink?: boolean;
   wavelength: number;
   /** x (px) where a downward half-wave starts: the wave is anchored to the track, not to the
    *  moving segments, and travels by moving this origin. */
@@ -90,7 +96,8 @@ export interface LinearShapes {
   cy: number;
   active: string[];
   tracks: { x: number; width: number }[];
-  stop: { x: number } | null;
+  /** Drawn above the active indicator (Compose draws it last). */
+  stop: { x: number; size: number } | null;
 }
 
 export function linearShapes(s: LinearSpec): LinearShapes {
@@ -102,6 +109,7 @@ export function linearShapes(s: LinearSpec): LinearShapes {
   const active: string[] = [];
   const tracks: { x: number; width: number }[] = [];
   let cursor = 0;
+  let activeEnd = -Infinity; // visible end (cap included) of the last active
   const len = (n: number) => (s.snap ? Math.round(n) : n);
   for (const [a, b] of s.actives) {
     if (b - a <= 0) continue; // a line that hasn't entered (Compose draws nothing)
@@ -114,14 +122,36 @@ export function linearShapes(s: LinearSpec): LinearShapes {
         : `M${f(a)} ${f(cy)}H${f(end)}`,
     );
     cursor = b + gap;
+    activeEnd = end + t / 2;
   }
   const tw = len(W - cursor);
-  let stop: { x: number } | null = null;
-  if (tw > 0) {
-    tracks.push({ x: cursor, width: tw });
-    if (s.stop && tw >= STOP) stop = { x: cursor + tw - stopInset(t) };
+  if (tw > 0) tracks.push({ x: cursor, width: tw });
+  let stop: LinearShapes['stop'] = null;
+  if (s.stop) {
+    // The dot sits `stopInset` before the track's end (Figma's whole-px track end in still frames).
+    let x = (tw > 0 ? cursor + tw : W) - stopInset(t);
+    let size = STOP;
+    if (s.stopShrink) {
+      if (activeEnd > x) {
+        size = Math.max(0, size - (activeEnd - x));
+        x = activeEnd;
+      }
+      if (size > 0) stop = { x, size };
+    } else if (activeEnd < W) stop = { x, size }; // a full-width active covers it exactly
   }
   return { height, cy, active, tracks, stop };
+}
+
+/**
+ * Visible active ↔ track space of a determinate indicator whose active centre line ends at
+ * `head` (px from the start; the line starts at `pad`). Both grow from 0 as the value leaves 0:
+ *   - flat (ProgressIndicator.kt LinearProgressIndicator): the track starts at
+ *     p + min(p, gap + stroke) of the width, i.e. it overlaps the active until the head passes
+ *     one stroke and the space reaches 4px at head = 4 + stroke;
+ *   - wavy (internal_LinearWavyProgressModifiers `updateDrawPaths`): min(head − cap, 4).
+ */
+export function determinateTrackSpace(type: ProgressType, t: ProgressThickness, head: number) {
+  return type === 'wave' ? Math.min(Math.max(0, head - t / 2), TRACK_ACTIVE_SPACE) : Math.min(head, TRACK_ACTIVE_SPACE + t) - t;
 }
 
 /** Determinate active frame: L = p·(W − 8) flat, p·(W − 4) wavy (the kit's two formulas). */
@@ -167,6 +197,25 @@ export interface CircularFrame {
   trackEnd: number;
 }
 
+/**
+ * How far the active ↔ track gaps are open (0…1) for an active sweep of `sweep` degrees: both gaps
+ * grow from 0 as the value leaves 0, and are fully open by the kit's 10% frame.
+ *   - flat (ProgressIndicator.kt CircularProgressIndicator): gap = min(sweep, gapSweep). The kit's
+ *     gap (25° at 4 dp) is open once the sweep reaches it; at 8 dp its 10% frame already shows the
+ *     full 40° gap after a 25° sweep, so the gap opens over the first 25°.
+ *   - wavy (internal_CircularWavyProgressModifiers `updateDrawPaths`): the track spacing is
+ *     2·min(L, cap) + min(L, gap) along the path, L = the active's length — scaled onto the kit's
+ *     gaps. Below 10% the wavy active is flat (on the crest circle), so L is measured there.
+ */
+export function gapOpening(type: ProgressType, t: ProgressThickness, sweep: number) {
+  const k = CIRCULAR[type][t];
+  if (sweep <= 0) return 0;
+  if (type === 'flat') return Math.min(1, sweep / Math.min(k.tracks[1] - k.ends[1], k.ends[1] - k.start));
+  const L = rad(sweep) * STAR_CREST;
+  const cap = t / 2;
+  return Math.min(1, (2 * Math.min(L, cap) + Math.min(L, TRACK_ACTIVE_SPACE)) / (2 * cap + TRACK_ACTIVE_SPACE));
+}
+
 /** Arc angles for a determinate value 0…1 (null at 0: the full track ring). */
 export function circularFrame(type: ProgressType, t: ProgressThickness, value: number): CircularFrame | null {
   const k = CIRCULAR[type][t];
@@ -174,7 +223,10 @@ export function circularFrame(type: ProgressType, t: ProgressThickness, value: n
   if (value >= 1) return { start: k.start, end: k.start + 360, trackStart: k.trackEnd, trackEnd: k.trackEnd };
   const end = keyframe(k.ends, value);
   const minGap = Math.min(...k.tracks.slice(1, 5).map((tr, i) => tr - k.ends[i + 1]!));
-  return { start: k.start, end, trackStart: Math.max(keyframe(k.tracks, value), end + minGap), trackEnd: k.trackEnd };
+  const trackStart = Math.max(keyframe(k.tracks, value), end + minGap);
+  const open = gapOpening(type, t, end - k.start);
+  if (open >= 1) return { start: k.start, end, trackStart, trackEnd: k.trackEnd };
+  return { start: k.start, end, trackStart: end + (trackStart - end) * open, trackEnd: k.start + 360 - (k.start + 360 - k.trackEnd) * open };
 }
 
 const polar = (r: number, deg: number, c: number): [number, number] => [c + r * Math.sin(rad(deg)), c - r * Math.cos(rad(deg))];
@@ -271,6 +323,33 @@ function onArc(p: Extract<Prim, { kind: 'arc' }>, pt: [number, number]) {
 }
 
 /**
+ * The wave at partial amplitude between polar angles a0 → a1: Compose morphs the active from the
+ * track circle to the star (`Morph(circle, star)` at progress = amplitude), which moves each point
+ * radially between the crest circle and the star outline. Sampled every degree (≤ 0.004px from
+ * the curve at this size).
+ */
+export function blendedStarPath(a0: number, a1: number, phase: number, c: number, amp: number): string {
+  const prims = starPrims(phase);
+  const radius = (deg: number) => {
+    for (const p of prims) {
+      const q = cross(p, ((deg % 360) + 360) % 360);
+      if (q) return Math.hypot(q[0], q[1]);
+    }
+    return STAR_CREST;
+  };
+  const full = a1 - a0 >= 360 - 1e-6;
+  const n = Math.max(1, Math.ceil(a1 - a0));
+  let d = '';
+  for (let i = 0; i <= (full ? n - 1 : n); i++) {
+    const deg = a0 + ((a1 - a0) * i) / n;
+    const r = STAR_CREST + amp * (radius(deg) - STAR_CREST);
+    const [x, y] = polar(r, deg, c);
+    d += `${i === 0 ? 'M' : 'L'}${f(x)} ${f(y)}`;
+  }
+  return full ? d + 'Z' : d;
+}
+
+/**
  * The star's centre line between polar angles a0 → a1 (clockwise, degrees from top), centred at
  * (c, c). `phase` rotates the star under fixed endpoints (the wave's travel).
  */
@@ -319,13 +398,17 @@ export interface CircularShapes {
   track: string | null;
 }
 
-/** `frame` null = full track ring. `rotation` turns the whole drawing; `phase` turns the wave. */
+/**
+ * `frame` null = full track ring. `rotation` turns the whole drawing; `phase` turns the wave;
+ * `amp` (0…1) flattens it onto the crest circle (1 = the kit's star).
+ */
 export function circularShapes(
   type: ProgressType,
   t: ProgressThickness,
   frame: CircularFrame | null,
   rotation: number,
   phase: number,
+  amp = 1,
 ): CircularShapes {
   const { size } = CIRCULAR[type][t];
   const c = size / 2;
@@ -334,7 +417,12 @@ export function circularShapes(
   const a0 = frame.start + rotation;
   const a1 = frame.end + rotation;
   const full = frame.end - frame.start >= 360 - 1e-6;
-  const active = type === 'wave' ? starPath(a0, a1, phase, c) : arcPath(trackR, a0, full ? a0 + 360 : a1, c);
+  const active =
+    type === 'wave' && amp >= 1
+      ? starPath(a0, a1, phase, c)
+      : type === 'wave' && amp > 0
+        ? blendedStarPath(a0, full ? a0 + 360 : a1, phase, c, amp)
+        : arcPath(trackR, a0, full ? a0 + 360 : a1, c);
   const track = !full && frame.trackEnd - frame.trackStart > 1e-3 ? arcPath(trackR, frame.trackStart + rotation, frame.trackEnd + rotation, c) : null;
   return { size, c, active, track };
 }

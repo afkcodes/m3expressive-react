@@ -10,6 +10,7 @@ import { SvgPathParser } from '../../shapes/graphics/svgPathParser.ts';
 import { morphToSvgPath } from '../../shapes/graphics/svg.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { loadingShapes } from './loadingShapes.ts';
+import { MORPH_INTERVAL, MORPH_PRECISION, MORPH_SPRING, SPIN_MS } from './motion.ts';
 
 const s = stylex.create({
   root: { display: 'inline-block', width: 48, height: 48, flexShrink: 0, verticalAlign: 'middle' },
@@ -19,11 +20,6 @@ const s = stylex.create({
   shapeOnContainer: { fill: color.onPrimaryContainer },
 });
 
-/* Compose LoadingIndicator (androidx-main): a new shape every 650ms, morphing on spring(0.6, 200),
- * turning a quarter per morph, while the whole indicator spins once per 4666ms. */
-const MORPH_INTERVAL = 650;
-const MORPH_SPRING = { dampingRatio: 0.6, stiffness: 200 };
-const SPIN_MS = 4666;
 const C = 24;
 
 let morphs: Morph[] | null = null;
@@ -60,33 +56,35 @@ export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps
   useEffect(() => {
     if (step !== undefined) return;
     const list = getMorphs();
-    // Compose LoadingIndicator: every 650ms a morph to the next shape starts on spring(0.6, 200)
-    // with a 0.1 visibility threshold; when it settles the next shape is snapped in and the
-    // rotation target advances a quarter turn. Drawing rotates by progress·90 + target + spin.
+    // Compose LoadingIndicatorImpl: `while (true) { val d = async { morph.animateTo(1f, spring) };
+    // delay(650); d.await() }`. The spring (0.6, 200, threshold 0.1) ends at ≈297ms mid overshoot
+    // (≈1.09) and snaps; then the next shape is current, progress snaps to 0 and the rotation
+    // target advances a quarter turn. An iteration starts 650ms after the previous one, or when
+    // its morph finishes if that is later. Drawing rotates by progress·90 + target + spin.
     let index = 0;
     let progress = 0;
     let target = 90;
-    let started = -1;
     let spring: SpringAnimation | null = null;
+    let iteration = 0; // ms (from the first frame) at which the next iteration may start
+    let finishedAt = 0;
     let t0: number | undefined;
     let frame = 0;
     const draw = (now: number) => {
       t0 ??= now;
       const t = now - t0;
-      const due = Math.floor(t / MORPH_INTERVAL);
-      if (due > started) {
-        started = due;
-        spring?.finish();
+      if (!spring && t >= iteration) {
+        iteration = Math.max(iteration, finishedAt) + MORPH_INTERVAL;
         spring = animateSpring({
           spring: MORPH_SPRING,
           from: 0,
           to: 1,
-          precision: 0.1,
+          precision: MORPH_PRECISION,
           onUpdate: (v) => (progress = v),
           onComplete: () => {
             index = (index + 1) % list.length;
             progress = 0;
             target = (target + 90) % 360;
+            finishedAt = performance.now() - t0!;
             spring = null;
           },
         });

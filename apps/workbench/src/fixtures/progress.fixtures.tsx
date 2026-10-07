@@ -32,7 +32,31 @@ function LiveDeterminate({ kind }: { kind: 'linear' | 'circular' }) {
   );
 }
 
+/**
+ * Motion review / live tests: flat and wavy, linear and circular, sharing one value. The buttons
+ * cover the motion edges: gaps opening from 0, the amplitude thresholds (10% / 95%), the stop dot.
+ */
+function LiveMotion() {
+  const [value, setValue] = useState(Number(new URLSearchParams(location.search).get('v') ?? 50));
+  return (
+    <div style={{ display: 'grid', gap: 16, width: '100%' }}>
+      <LinearProgress value={value} aria-label="Linear flat" />
+      <LinearProgress value={value} type="wave" aria-label="Linear wave" />
+      <div style={{ display: 'flex', gap: 16 }}>
+        <CircularProgress value={value} aria-label="Circular flat" />
+        <CircularProgress value={value} type="wave" aria-label="Circular wave" />
+        <CircularProgress value={value} thickness={8} aria-label="Circular flat 8" />
+        <CircularProgress value={value} type="wave" thickness={8} aria-label="Circular wave 8" />
+      </div>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {[0, 1, 5, 9, 30, 50, 80, 97, 99.5, 100].map((n) => <button key={n} onClick={() => setValue(n)}>{n}%</button>)}
+      </div>
+    </div>
+  );
+}
+
 const live: Record<string, FixtureVariant> = {
+  'live-motion': { width: 404, height: 200, render: () => <LiveMotion /> },
   'live-linear': { width: 404, height: 12, render: () => <LiveDeterminate kind="linear" /> },
   'live-circular': { width: 40, height: 40, render: () => <LiveDeterminate kind="circular" /> },
   'live-wave-linear': { width: 404, height: 12, render: () => <LinearProgress value={50} type="wave" aria-label="Upload" /> },
