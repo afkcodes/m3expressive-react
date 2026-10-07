@@ -1,6 +1,5 @@
-import { forwardRef, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex.ts';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
@@ -8,6 +7,7 @@ import { Morph } from '../../shapes/graphics/morph.ts';
 import { RoundedPolygon } from '../../shapes/graphics/roundedPolygon.ts';
 import { SvgPathParser } from '../../shapes/graphics/svgPathParser.ts';
 import { morphToSvgPath } from '../../shapes/graphics/svg.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { loadingShapes } from './loadingShapes.ts';
 import { MORPH_INTERVAL, MORPH_PRECISION, MORPH_SPRING, SPIN_MS, SpringAnimator } from './motion.ts';
@@ -38,12 +38,15 @@ const polygon = (i: number) =>
   }));
 const morphFrom = (i: number) => (morphs[i] ??= new Morph(polygon(i), polygon((i + 1) % loadingShapes.length)));
 
-export interface LoadingIndicatorProps {
-  /** "Show container": a 48px primary-container circle behind the shape. */
-  container?: boolean;
-  'aria-label'?: string;
-  'aria-labelledby'?: string;
-  sx?: StyleXStyles;
+/** The root is Base UI's Progress `<div role="progressbar">` (`ref`, native props, `sx`). */
+export interface LoadingIndicatorProps extends SxProps<
+  Omit<Progress.Root.Props, 'render' | 'children' | 'value' | 'min' | 'max'>
+> {
+  /**
+   * The kit's "Show container" (Compose ContainedLoadingIndicator): a 48px primary-container circle
+   * behind the shape.
+   */
+  contained?: boolean;
 }
 
 /**
@@ -52,10 +55,7 @@ export interface LoadingIndicatorProps {
  * from the AndroidX Morph. Animation runs on the shared frame clock and writes the path directly
  * (no re-renders); off screen it skips drawing while its clock keeps running.
  */
-export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps>(function LoadingIndicator(
-  { container = false, sx, ...aria },
-  ref,
-) {
+export function LoadingIndicator({ contained = false, sx, ref, ...rest }: LoadingIndicatorProps) {
   const forced = useForcedState().progress;
   const step = forced?.step;
   const box = useRef<HTMLDivElement | null>(null);
@@ -113,17 +113,17 @@ export const LoadingIndicator = forwardRef<HTMLDivElement, LoadingIndicatorProps
   }, [step]);
 
   return (
-    <Progress.Root ref={setRefs} value={null} {...aria} {...stylex.props(s.root, sx)}>
+    <Progress.Root ref={setRefs} value={null} {...rest} {...stylex.props(s.root, sx)}>
       <svg width={48} height={48} viewBox="0 0 48 48" {...stylex.props(s.svg)} aria-hidden>
-        {container && <circle cx={CENTRE} cy={CENTRE} r={24} {...stylex.props(s.container)} />}
+        {contained && <circle cx={CENTRE} cy={CENTRE} r={24} {...stylex.props(s.container)} />}
         <g ref={group}>
           <path
             ref={path}
             d={loadingShapes[(step ?? 0) % loadingShapes.length]}
-            {...stylex.props(container ? s.shapeOnContainer : s.shape)}
+            {...stylex.props(contained ? s.shapeOnContainer : s.shape)}
           />
         </g>
       </svg>
     </Progress.Root>
   );
-});
+}

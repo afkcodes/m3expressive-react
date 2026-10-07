@@ -20,13 +20,13 @@ import { STAR_CREST, blendedStarPath, starPath } from './star.ts';
 
 export { STAR_CREST, blendedStarPath, starPath } from './star.ts';
 
-export type ProgressType = 'flat' | 'wave';
+export type ProgressShape = 'flat' | 'wavy';
 export type ProgressThickness = 4 | 8;
 
 /* ------------------------------------------------------------------ linear */
 
-export const linearHeight = (type: ProgressType, thickness: ProgressThickness) =>
-  type === 'wave' && thickness === 8 ? 14 : 12;
+export const linearHeight = (shape: ProgressShape, thickness: ProgressThickness) =>
+  shape === 'wavy' && thickness === 8 ? 14 : 12;
 /** Visible space between the active indicator and the track (Compose TrackActiveSpace). */
 export const TRACK_ACTIVE_SPACE = 4;
 /** The stop dot's size, and its inset from the track's end (kit). */
@@ -72,7 +72,7 @@ export function wavePath(x0: number, x1: number, cy: number, wavelength: number,
 export interface LinearSpec {
   width: number;
   thickness: ProgressThickness;
-  type: ProgressType;
+  shape: ProgressShape;
   /** Active segments as centre-line frames [start, end] (px). Empty = no active indicator. */
   actives: readonly (readonly [number, number])[];
   /** Determinate only: the stop dot at the end of the track. */
@@ -107,7 +107,7 @@ export interface LinearShapes {
 
 export function linearShapes(spec: LinearSpec): LinearShapes {
   const { width, thickness } = spec;
-  const height = linearHeight(spec.type, thickness);
+  const height = linearHeight(spec.shape, thickness);
   const cy = height / 2;
   // Centre-line end → track edge: the cap plus the visible space (6 / 8px at the kit's 4 / 8dp).
   const gap = thickness / 2 + (spec.gap ?? TRACK_ACTIVE_SPACE);
@@ -122,7 +122,7 @@ export function linearShapes(spec: LinearSpec): LinearShapes {
     const trackWidth = len(start - gap - cursor);
     if (trackWidth > 0) tracks.push({ x: cursor, width: trackWidth });
     active.push(
-      spec.type === 'wave' && spec.amp > 0
+      spec.shape === 'wavy' && spec.amp > 0
         ? wavePath(start, end, cy, spec.wavelength, start - spec.waveOrigin, spec.amp)
         : `M${num(start)} ${num(cy)}H${num(end)}`,
     );
@@ -155,8 +155,8 @@ export function linearShapes(spec: LinearSpec): LinearShapes {
  *     one stroke and the space reaches 4px at head = 4 + stroke;
  *   - wavy (internal_LinearWavyProgressModifiers `updateDrawPaths`): min(head − cap, 4).
  */
-export function determinateTrackSpace(type: ProgressType, thickness: ProgressThickness, head: number) {
-  return type === 'wave'
+export function determinateTrackSpace(shape: ProgressShape, thickness: ProgressThickness, head: number) {
+  return shape === 'wavy'
     ? Math.min(Math.max(0, head - thickness / 2), TRACK_ACTIVE_SPACE)
     : Math.min(head, TRACK_ACTIVE_SPACE + thickness) - thickness;
 }
@@ -172,7 +172,7 @@ export function linearDeterminate(width: number, thickness: ProgressThickness, v
 /* ---------------------------------------------------------------- circular */
 
 /**
- * Per type × thickness, the kit's keyframes at its samples (0 / 10 / 30 / 50 / 80 / 100%): the
+ * Per shape × thickness, the kit's keyframes at its samples (0 / 10 / 30 / 50 / 80 / 100%): the
  * active end and the track start (degrees). The kit draws arc lengths and gaps by eye, so they are
  * keyframes rather than a formula; we interpolate linearly between them. The active always starts
  * at `start`, the track always ends at `trackEnd`. The track never comes closer to the active end
@@ -189,7 +189,7 @@ export const CIRCULAR = {
       tracks: [50, 75, 130, 205, 327.5, 330],
     },
   },
-  wave: {
+  wavy: {
     4: {
       size: 48,
       start: 7.6,
@@ -232,10 +232,10 @@ export interface CircularFrame {
  *     2·min(L, cap) + min(L, gap) along the path, L = the active's length — scaled onto the kit's
  *     gaps. Below 10% the wavy active is flat (on the crest circle), so L is measured there.
  */
-export function gapOpening(type: ProgressType, thickness: ProgressThickness, sweep: number) {
-  const kit = CIRCULAR[type][thickness];
+export function gapOpening(shape: ProgressShape, thickness: ProgressThickness, sweep: number) {
+  const kit = CIRCULAR[shape][thickness];
   if (sweep <= 0) return 0;
-  if (type === 'flat') return Math.min(1, sweep / Math.min(kit.tracks[1] - kit.ends[1], kit.ends[1] - kit.start));
+  if (shape === 'flat') return Math.min(1, sweep / Math.min(kit.tracks[1] - kit.ends[1], kit.ends[1] - kit.start));
   const length = rad(sweep) * STAR_CREST;
   const cap = thickness / 2;
   return Math.min(
@@ -245,14 +245,14 @@ export function gapOpening(type: ProgressType, thickness: ProgressThickness, swe
 }
 
 /** Arc angles for a determinate value 0…1 (null at 0: the full track ring). */
-export function circularFrame(type: ProgressType, thickness: ProgressThickness, value: number): CircularFrame | null {
-  const kit = CIRCULAR[type][thickness];
+export function circularFrame(shape: ProgressShape, thickness: ProgressThickness, value: number): CircularFrame | null {
+  const kit = CIRCULAR[shape][thickness];
   if (value <= 0) return null;
   if (value >= 1) return { start: kit.start, end: kit.start + 360, trackStart: kit.trackEnd, trackEnd: kit.trackEnd };
   const end = keyframe(kit.ends, value);
   const minGap = Math.min(...kit.tracks.slice(1, 5).map((track, i) => track - kit.ends[i + 1]!));
   const trackStart = Math.max(keyframe(kit.tracks, value), end + minGap);
-  const open = gapOpening(type, thickness, end - kit.start);
+  const open = gapOpening(shape, thickness, end - kit.start);
   if (open >= 1) return { start: kit.start, end, trackStart, trackEnd: kit.trackEnd };
   return {
     start: kit.start,
@@ -288,24 +288,24 @@ export interface CircularShapes {
  * `amp` (0…1) flattens it onto the crest circle (1 = the kit's star).
  */
 export function circularShapes(
-  type: ProgressType,
+  shape: ProgressShape,
   thickness: ProgressThickness,
   frame: CircularFrame | null,
   rotation: number,
   phase: number,
   amp = 1,
 ): CircularShapes {
-  const { size } = CIRCULAR[type][thickness];
+  const { size } = CIRCULAR[shape][thickness];
   const c = size / 2;
-  const trackR = type === 'wave' ? STAR_CREST : (size - thickness) / 2;
+  const trackR = shape === 'wavy' ? STAR_CREST : (size - thickness) / 2;
   if (!frame) return { size, c, active: null, track: arcPath(trackR, 0, 360, c) };
   const a0 = frame.start + rotation;
   const a1 = frame.end + rotation;
   const full = frame.end - frame.start >= 360 - 1e-6;
   const active =
-    type === 'wave' && amp >= 1
+    shape === 'wavy' && amp >= 1
       ? starPath(a0, a1, phase, c)
-      : type === 'wave' && amp > 0
+      : shape === 'wavy' && amp > 0
         ? blendedStarPath(a0, full ? a0 + 360 : a1, phase, c, amp)
         : arcPath(trackR, a0, full ? a0 + 360 : a1, c);
   const track =

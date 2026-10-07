@@ -1,10 +1,10 @@
-import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Progress } from '@base-ui/react/progress';
 import { color } from '../../tokens/color.stylex.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { useForcedState, type ForcedProgressFrame } from '../../testing/ForceState.tsx';
 import {
   determinateTrackSpace,
@@ -13,7 +13,7 @@ import {
   linearShapes,
   type LinearShapes,
   type ProgressThickness,
-  type ProgressType,
+  type ProgressShape,
 } from './geometry.ts';
 import {
   AmplitudeRamp,
@@ -49,27 +49,26 @@ const PROGRESS_PRECISION = 0.001;
 const TRACK_SLOTS = 3;
 const activeSlots = (indeterminate: boolean) => (indeterminate ? 2 : 1);
 
-export interface LinearProgressProps {
+/** The root is Base UI's Progress `<div role="progressbar">` (`ref`, native props, `sx`). */
+export interface LinearProgressProps extends SxProps<
+  Omit<Progress.Root.Props, 'render' | 'children' | 'value' | 'min' | 'max'>
+> {
   /** 0…max. Omit (or null) for the indeterminate indicator. */
   value?: number | null;
   max?: number;
-  /** "Flat" or "Wave" (Expressive wavy active indicator). */
-  type?: ProgressType;
+  /** The active indicator: `flat` or `wavy` (the kit's "Flat" / "Wave"; Expressive). */
+  shape?: ProgressShape;
   /** Active indicator / track thickness: 4 or 8 dp. */
   thickness?: ProgressThickness;
   /** Wave length in px (Compose `wavelength`). Default 40 determinate, 20 indeterminate. */
   wavelength?: number;
-  'aria-label'?: string;
-  'aria-labelledby'?: string;
-  'aria-valuetext'?: string;
-  sx?: StyleXStyles;
 }
 
 /** Everything a frame of the drawing depends on besides the animated values. */
 interface LinearInputs {
   width: number;
   thickness: ProgressThickness;
-  type: ProgressType;
+  shape: ProgressShape;
   wavelength: number | undefined;
   /** Target progress 0…1 (0 while indeterminate). */
   progress: number;
@@ -85,12 +84,12 @@ interface LinearMotion {
   clock: number;
 }
 
-const ampTargetOf = (type: ProgressType, indeterminate: boolean, shown: number) =>
-  type !== 'wave' ? 0 : indeterminate ? 1 : linearWaveAmplitude(shown);
+const ampTargetOf = (shape: ProgressShape, indeterminate: boolean, shown: number) =>
+  shape !== 'wavy' ? 0 : indeterminate ? 1 : linearWaveAmplitude(shown);
 
 /** The drawing at one instant — the still frames and every animation frame alike. */
 function linearFrame(inputs: LinearInputs, { shown, amp, clock }: LinearMotion): LinearShapes {
-  const { width, thickness, type, progress, indeterminate, reduced, forced } = inputs;
+  const { width, thickness, shape, progress, indeterminate, reduced, forced } = inputs;
   // A forced `time` renders the live animation at that instant; any other forced frame is still.
   const frozen = forced !== undefined && forced.time === undefined;
   const pad = thickness / 2;
@@ -106,24 +105,24 @@ function linearFrame(inputs: LinearInputs, { shown, amp, clock }: LinearMotion):
     const head = lines[0]![1] * width;
     gap = head < pad ? 0 : Math.min(head - pad, 4);
   } else {
-    actives = linearDeterminate(width, thickness, shown, type === 'wave' ? amp : 0);
-    gap = determinateTrackSpace(type, thickness, actives[0]?.[1] ?? 0);
+    actives = linearDeterminate(width, thickness, shown, shape === 'wavy' ? amp : 0);
+    gap = determinateTrackSpace(shape, thickness, actives[0]?.[1] ?? 0);
   }
   const wavelength = inputs.wavelength ?? (indeterminate ? WAVELENGTH.indeterminate : WAVELENGTH.determinate);
   const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED_PER_WAVELENGTH * wavelength;
   // Compose moves the wave towards the start (a crest at x is drawn at x − shift).
   const waveOrigin = frozen ? (actives[0]?.[0] ?? pad) + (forced.phase ?? 0) : pad - travel;
-  const ampTarget = ampTargetOf(type, indeterminate, shown);
+  const ampTarget = ampTargetOf(shape, indeterminate, shown);
   return linearShapes({
     width,
     thickness,
-    type,
+    shape,
     actives,
     stop: !indeterminate,
-    stopShrink: type === 'wave',
+    stopShrink: shape === 'wavy',
     wavelength,
     waveOrigin,
-    amp: type === 'wave' ? amp : 0,
+    amp: shape === 'wavy' ? amp : 0,
     snap: frozen || (!indeterminate && shown === progress && amp === ampTarget),
     gap,
   });
@@ -132,7 +131,7 @@ function linearFrame(inputs: LinearInputs, { shown, amp, clock }: LinearMotion):
 /** The frame React renders: a forced frame, or the indicator at rest on its target. */
 const restingMotion = (inputs: LinearInputs): LinearMotion => {
   const shown = inputs.indeterminate ? 0 : inputs.progress;
-  return { shown, amp: ampTargetOf(inputs.type, inputs.indeterminate, shown), clock: inputs.forced?.time ?? 0 };
+  return { shown, amp: ampTargetOf(inputs.shape, inputs.indeterminate, shown), clock: inputs.forced?.time ?? 0 };
 };
 
 const setAttrs = (el: Element, attrs: Record<string, number | string> | null, names: readonly string[]) => {
@@ -195,10 +194,16 @@ interface LinearDriver {
  * callback advances the animators and writes the SVG attributes directly — no re-render per frame,
  * and no drawing while the indicator is off screen (its clock keeps running).
  */
-export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(function LinearProgress(
-  { value = null, max = 100, type = 'flat', thickness = 4, wavelength, sx, ...aria },
+export function LinearProgress({
+  value = null,
+  max = 100,
+  shape = 'flat',
+  thickness = 4,
+  wavelength,
+  sx,
   ref,
-) {
+  ...rest
+}: LinearProgressProps) {
   const forced = useForcedState().progress;
   const reduced = useReducedMotion();
   const box = useRef<HTMLDivElement | null>(null);
@@ -207,7 +212,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
   const [width, setWidth] = useState(0);
   const indeterminate = value == null;
   const progress = indeterminate ? 0 : Math.min(1, Math.max(0, value / max));
-  const inputs: LinearInputs = { width, thickness, type, wavelength, progress, indeterminate, reduced, forced };
+  const inputs: LinearInputs = { width, thickness, shape, wavelength, progress, indeterminate, reduced, forced };
 
   useLayoutEffect(() => {
     const el = box.current;
@@ -254,7 +259,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     const d = (driver.current ??= {
       spring: new SpringAnimator(progress, PROGRESS_PRECISION),
       tween: new TweenAnimator(progress),
-      ramp: new AmplitudeRamp(ampTargetOf(type, indeterminate, progress)),
+      ramp: new AmplitudeRamp(ampTargetOf(shape, indeterminate, progress)),
       clockStart: undefined,
       clock: 0,
       visible: true,
@@ -286,7 +291,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `paint` reads refs only
   }, []);
 
-  const height = linearHeight(type, thickness);
+  const height = linearHeight(shape, thickness);
   const g = width > 0 ? linearFrame(inputs, restingMotion(inputs)) : null;
   const stop = g ? stopAttrs(g) : null;
 
@@ -294,7 +299,7 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
     <Progress.Root
       ref={setRefs}
       value={indeterminate ? null : progress * 100}
-      {...aria}
+      {...rest}
       {...stylex.props(s.root, s.height(height), sx)}
     >
       {g && (
@@ -310,32 +315,32 @@ export const LinearProgress = forwardRef<HTMLDivElement, LinearProgressProps>(fu
       )}
     </Progress.Root>
   );
-});
+}
 
 /** New props: retarget the animators (Compose's animate*AsState) — a jump when motion is reduced. */
 function retarget(d: LinearDriver, inputs: LinearInputs) {
-  const { progress, reduced, type, indeterminate } = inputs;
-  const wave = type === 'wave';
+  const { progress, reduced, shape, indeterminate } = inputs;
+  const wave = shape === 'wavy';
   if (reduced || wave) d.spring.jump(progress);
   else d.spring.to(progress, PROGRESS_SPRING);
   if (reduced || !wave) d.tween.jump(progress);
   else d.tween.to(progress, WAVY_PROGRESS_TWEEN);
-  const ampTarget = ampTargetOf(type, indeterminate, wave ? d.tween.value : d.spring.value);
+  const ampTarget = ampTargetOf(shape, indeterminate, wave ? d.tween.value : d.spring.value);
   if (reduced) d.ramp.jump(ampTarget);
   else d.ramp.setTarget(ampTarget);
 }
 
 const currentMotion = (d: LinearDriver, inputs: LinearInputs): LinearMotion => ({
-  shown: inputs.type === 'wave' ? d.tween.value : d.spring.value,
+  shown: inputs.shape === 'wavy' ? d.tween.value : d.spring.value,
   amp: d.ramp.value,
   clock: d.clock,
 });
 
 /** Advances the animators to `now`; returns the frame's animated values. */
 function advance(d: LinearDriver, inputs: LinearInputs, now: number): LinearMotion {
-  const shown = inputs.type === 'wave' ? d.tween.tick(now) : d.spring.tick(now);
+  const shown = inputs.shape === 'wavy' ? d.tween.tick(now) : d.spring.tick(now);
   // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
-  const ampTarget = ampTargetOf(inputs.type, inputs.indeterminate, shown);
+  const ampTarget = ampTargetOf(inputs.shape, inputs.indeterminate, shown);
   if (inputs.reduced) d.ramp.jump(ampTarget);
   else d.ramp.setTarget(ampTarget);
   const amp = d.ramp.tick(now);
@@ -348,7 +353,7 @@ function advance(d: LinearDriver, inputs: LinearInputs, now: number): LinearMoti
 
 /** The wave travels (and indeterminate lines run) on the clock. */
 const travels = (inputs: LinearInputs, amp: number) =>
-  inputs.width > 0 && (inputs.indeterminate || (inputs.type === 'wave' && !inputs.reduced && amp > 0));
+  inputs.width > 0 && (inputs.indeterminate || (inputs.shape === 'wavy' && !inputs.reduced && amp > 0));
 
 const needsFrames = (d: LinearDriver, inputs: LinearInputs, amp: number) =>
   d.spring.running || d.tween.running || d.ramp.running || travels(inputs, amp);

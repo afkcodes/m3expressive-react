@@ -4,4 +4,4 @@ export { CircularProgress } from './CircularProgress.tsx';
 export type { CircularProgressProps } from './CircularProgress.tsx';
 export { LoadingIndicator } from './LoadingIndicator.tsx';
 export type { LoadingIndicatorProps } from './LoadingIndicator.tsx';
-export type { ProgressType, ProgressThickness } from './geometry.ts';
+export type { ProgressShape, ProgressThickness } from './geometry.ts';
