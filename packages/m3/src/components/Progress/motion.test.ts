@@ -121,9 +121,12 @@ describe('SpringAnimator (animateSpring semantics, ticked by the frame clock)', 
     a.tick(0);
     const mid = stepSpring(PROGRESS_SPRING, { value: 0, velocity: 0 }, 1, 300);
     expect(a.tick(300)).toBeCloseTo(mid.value, 12);
+    a.to(1, PROGRESS_SPRING); // a re-render with the same target changes nothing
+    expect(a.tick(310)).toBeCloseTo(stepSpring(PROGRESS_SPRING, { value: 0, velocity: 0 }, 1, 310).value, 12);
     a.to(0.2, PROGRESS_SPRING);
-    expect(a.tick(320)).toBeCloseTo(mid.value, 12);
-    expect(a.tick(420)).toBeCloseTo(stepSpring(PROGRESS_SPRING, mid, 0.2, 100).value, 12);
+    const at310 = stepSpring(PROGRESS_SPRING, { value: 0, velocity: 0 }, 1, 310);
+    expect(a.tick(320)).toBeCloseTo(at310.value, 12);
+    expect(a.tick(420)).toBeCloseTo(stepSpring(PROGRESS_SPRING, at310, 0.2, 100).value, 12);
     a.jump(0.5);
     expect([a.value, a.velocity, a.running]).toEqual([0.5, 0, false]);
   });
