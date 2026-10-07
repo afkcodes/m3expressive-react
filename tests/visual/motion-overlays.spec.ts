@@ -165,6 +165,17 @@ const translateOf = (el: Locator) =>
     return [parseFloat(x), parseFloat(y)];
   });
 
+/** A quick drag: `n` moves of dx / n px, `ms` apart (≈ dx / (n × ms) px/ms), then release. */
+async function flick(page: Page, x: number, y: number, dx: number, dy = 0, n = 4, ms = 8) {
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (let i = 1; i <= n; i++) {
+    await page.waitForTimeout(ms);
+    await page.mouse.move(x + (dx * i) / n, y + (dy * i) / n);
+  }
+  await page.mouse.up();
+}
+
 /** Pointer moves of `step` px every frame (a slow, steady drag: ~step × 60 px/s). */
 async function slowDrag(page: Page, x: number, y: number, dx: number, dy: number, step = 1) {
   const n = Math.max(Math.abs(dx), Math.abs(dy)) / step;
@@ -247,6 +258,11 @@ test.describe('modal bottom sheet', () => {
     await slowDrag(page, x, y + 166, 0, -12, 2);
     await page.mouse.up();
     await expect(sheet).toHaveCount(0);
+
+    // A short fast flick down (≥ 125dp/s): Hidden.
+    ({ sheet, x, y } = await openSheet(page));
+    await flick(page, x, y, 0, 24);
+    await expect(sheet).toHaveCount(0);
   });
 
   test('no rubber band above Expanded; the scrim follows the closest anchor while dragging', async ({ page }) => {
@@ -287,7 +303,10 @@ test.describe('modal bottom sheet', () => {
     await page.mouse.down();
     await page.mouse.move(x, y + 40, { steps: 4 });
     // A quick flick back up: Expanded, overshooting above it on the way (velocity carried).
-    await page.mouse.move(x, y + 10, { steps: 2 });
+    for (let i = 1; i <= 3; i++) {
+      await page.waitForTimeout(8);
+      await page.mouse.move(x, y + 40 - 10 * i);
+    }
     const ys = sheet.evaluate(
       (el) =>
         new Promise<number[]>((resolve) => {
@@ -387,12 +406,9 @@ test.describe('modal side sheet', () => {
     await page.waitForTimeout(120);
     await page.mouse.up();
     await expect(side).toHaveCount(0);
-    // A quick 60px swipe: hides.
+    // A quick 60px swipe (> 500px/s, mostly horizontal): hides.
     ({ side, x, y } = await open());
-    await page.mouse.move(x, y);
-    await page.mouse.down();
-    await page.mouse.move(x + 60, y, { steps: 3 });
-    await page.mouse.up();
+    await flick(page, x, y, 60);
     await expect(side).toHaveCount(0);
   });
 });
@@ -554,5 +570,87 @@ test.describe('toolbar', () => {
     const [b, c] = await Promise.all([more.boundingBox(), clip.boundingBox()]);
     expect(c!.width).toBeLessThan(52);
     expect(Math.abs(b!.x - c!.x - 4)).toBeLessThan(0.5);
+  });
+});
+
+test.describe('carousel', () => {
+  async function setup(page: Page, variant = 'live') {
+    await openFixture(page, `/fixture/carousel/${variant}`);
+    const carousel = page.getByRole('region', { name: 'Photos' });
+    const b = (await carousel.boundingBox())!;
+    const scroll = () => carousel.evaluate((el) => Math.round(el.scrollLeft));
+    return { carousel, scroll, x: b.x + 300, y: b.y + b.height / 2 };
+  }
+
+  test('single advance: a slow release snaps by the dragged fraction (half an item / 56dp), a fling moves one item at most', async ({ page }) => {
+    const { scroll, x, y } = await setup(page);
+    const dragTo = async (dx: number, rest: boolean, step = 4) => {
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      if (rest) {
+        await page.mouse.move(x + dx, y, { steps: 10 });
+        await page.waitForTimeout(120);
+      } else await slowDrag(page, x, y, dx, 0, step);
+      await page.mouse.up();
+    };
+    // 40px and rest: closest item (back).
+    await dragTo(-40, true);
+    await expect.poll(scroll).toBe(0);
+    // 70px (over 56dp, under half the 188px item): back to where it came from.
+    await dragTo(-70, true);
+    await expect.poll(scroll).toBe(0);
+    // Past half an item: on to the next one.
+    await dragTo(-110, true);
+    await expect.poll(scroll).toBe(196);
+    // A 40px flick (well over 400dp/s; a slow 40px release stays): to the next item.
+    await flick(page, x, y, -40);
+    await expect.poll(scroll).toBe(392);
+    // A long fast flick still moves only one item past where it was released.
+    await flick(page, x, y, -150, 0, 5, 8);
+    await expect.poll(scroll).toBe(588);
+    // Backwards: one item back.
+    await flick(page, x, y, 40);
+    await expect.poll(scroll).toBe(392);
+  });
+
+  test('the snap starts from the release velocity (no stop at release)', async ({ page }) => {
+    const { carousel, x, y } = await setup(page);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    for (let i = 1; i <= 4; i++) {
+      await page.waitForTimeout(8);
+      await page.mouse.move(x - 15 * i, y);
+    }
+    const sampling = carousel.evaluate(
+      (el) =>
+        new Promise<number[]>((resolve) => {
+          const out: number[] = [];
+          const t0 = performance.now();
+          const tick = () => {
+            out.push(el.scrollLeft);
+            if (performance.now() - t0 < 120) requestAnimationFrame(tick);
+            else resolve(out);
+          };
+          tick();
+        }),
+    );
+    await page.mouse.up();
+    const s = await sampling;
+    // Keeps moving forward right after release (a v0 = 0 spring would ease in).
+    const i = s.findIndex((v, k) => k > 0 && v > s[0]! + 0.5);
+    expect(i).toBeGreaterThan(0);
+    expect(s[i + 1]! - s[i]!).toBeGreaterThan(3);
+  });
+
+  test('uncontained flings with decay and does not snap', async ({ page }) => {
+    const { scroll, x, y } = await setup(page, 'live-uncontained');
+    await flick(page, x, y, -50);
+    // Decays past the release point …
+    await expect.poll(scroll).toBeGreaterThan(80);
+    const end = await scroll();
+    await page.waitForTimeout(800);
+    // … and stays wherever it stopped (no snap to an item).
+    expect(await scroll()).toBe(await scroll());
+    expect(end).toBeGreaterThan(50);
   });
 });
