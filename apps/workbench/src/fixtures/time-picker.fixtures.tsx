@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import {
@@ -118,10 +118,45 @@ function LiveTime() {
   );
 }
 
+/** Live, under a parent that passes a fresh Time object on every render (`window.__m3xChurn()`). */
+function ChurnTime() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    (window as unknown as { __m3xChurn?: () => void }).__m3xChurn = () => setTick((t) => t + 1);
+  }, []);
+  const [open, setOpen] = useState(false);
+  const [time, setTime] = useState<Time>({ hour: 19, minute: 0 });
+  return (
+    <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+      <Button onClick={() => setOpen(true)}>Pick time</Button>
+      <output data-tick>{tick}</output>
+      <output data-time>{`${time.hour}:${String(time.minute).padStart(2, '0')}`}</output>
+      <ModalTimePicker open={open} onOpenChange={setOpen} value={{ ...time }} onChange={setTime} />
+    </div>
+  );
+}
+
+/** Out-of-range input: the pickers clamp it instead of crashing. */
+function InvalidTime() {
+  const [time, setTime] = useState<Time>({ hour: 25, minute: 75 });
+  return (
+    <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+      <output data-time>{`${time.hour}:${time.minute}`}</output>
+      <TimePicker value={time} onChange={setTime} />
+      <ClockFace mode="minute" value={60} onChange={noop} aria-label="Minute 60" />
+      <ClockFace mode="hour" value={-1} onChange={noop} aria-label="Hour -1" />
+      <ClockFace mode="hour" value={Number.NaN} is24Hour onChange={noop} aria-label="Hour NaN" />
+      <TimeInput value={{ hour: Number.NaN, minute: 61 }} onChange={noop} />
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'time-picker',
   variants: Object.fromEntries([
     ['live', { width: 360, height: 100, render: () => <LiveTime /> } satisfies FixtureVariant],
+    ['live-churn', { width: 360, height: 100, render: () => <ChurnTime /> } satisfies FixtureVariant],
+    ['live-invalid', { width: 360, height: 1600, render: () => <InvalidTime /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [
