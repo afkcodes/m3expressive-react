@@ -4,53 +4,49 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-  type ReactNode,
+  type PointerEvent as ReactPointerEvent,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
-import { motion } from '../../tokens/motion.stylex.ts';
-import { state as stateTokens } from '../../tokens/state.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useReducedMotion } from '../../motion/context.tsx';
-import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { state as stateTokens } from '../../tokens/state.stylex.ts';
+import { ListContext } from './context.ts';
+import { ListItem, type ListItemProps } from './ListItem.tsx';
 import { fastOutSlowIn, VelocityTracker1D } from './gesture.ts';
+import { SwipeActions, type SwipeAction, type SwipeActionsProps } from './SwipeActions.tsx';
+import { SETTLE_MS, swipeMode, swipeOffset, swipeTarget, type SwipeRevealState } from './swipeGeometry.ts';
 import { swipeKey, type SwipeKeyTarget } from './swipeKeys.ts';
 
-export type SwipeRevealState = 'closed' | 'peek' | 'revealed' | 'action';
-
-export interface SwipeAction {
-  icon: ReactNode;
-  label: string;
-  onAction?: () => void;
-}
+export type { SwipeRevealState };
 
 /*
- * Kit "List Item - Swipe" + "Reveal element" (59106:13321 / 13386). Swiping left slides the item
- * (Surface, 4px corners) and reveals the actions 2px to its right, rightmost = primary:
- *   peek     — 8px pills (2px apart): Secondary Container, primary pill Primary — as the drag
- *              opens, the pills widen evenly into…
- *   revealed — 48px icon buttons (52px when there's a single action), fully rounded;
- *   action   — a full swipe: the primary grows to 120px, the others shrink back to pills.
- * The reveal is a pure function of the offset, so the drag tracks the finger. Release follows
- * Compose SwipeToDismissBox (AnchoredDraggable fling behaviour): the pointer's velocity (Compose
- * VelocityTracker, 100ms horizon) at or above 125dp/s picks the next anchor in the fling direction,
- * slower releases go on once 56dp past the anchor they left; it then settles with
- * AnchoredDraggableDefaults.SnapAnimationSpec — tween(300ms, FastOutSlowIn). A full swipe (the
- * kit's swipe action, engaged 24px past the revealed width) runs the action unless flung back.
+ * Kit "List Item - Swipe" (59106:13321): swiping left slides the item (Surface, 4px corners) and
+ * reveals the actions (SwipeActions; geometry and release physics in swipeGeometry.ts). Release
+ * follows Compose SwipeToDismissBox: the pointer's velocity (Compose VelocityTracker, 100ms
+ * horizon) at or above 125dp/s picks the next anchor in the fling direction, slower releases go on
+ * once 56dp past the anchor they left; it then settles with AnchoredDraggableDefaults
+ * .SnapAnimationSpec — tween(300ms, FastOutSlowIn). A full swipe (the kit's swipe action, engaged
+ * 24px past the revealed width) runs the action unless flung back.
  * Keyboard (swipeKeys.ts): with the item focused ArrowLeft reveals the actions and moves into them,
  * ArrowRight / Escape hide them; a row without its own click target takes focus itself.
+ *
+ * The offset changes on every pointer move and tween frame: it is written to the item's transform
+ * directly and published to the actions row only (an external store), so the row and its list
+ * item don't re-render per frame.
  */
-const GAP = 2;
-const PILL = 8;
-const BUTTON = 48;
-const ACTION = 120;
-/** SwipeToDismissBox.kt: DismissVelocityThreshold (125.dp) and positionalThreshold (56.dp). */
-const VELOCITY_THRESHOLD = 125;
-const POSITIONAL_THRESHOLD = 56;
-/** AnchoredDraggableDefaults.SnapAnimationSpec = tween() — 300ms, FastOutSlowInEasing. */
-const SETTLE_MS = 300;
+/** Horizontal travel before a press becomes a swipe (px). */
+const DRAG_SLOP = 6;
+/** The item travels at most this fraction of the row's width. */
+const MAX_SWIPE_FRACTION = 0.8;
+/** Row width assumed before the first measurement (px). */
+const DEFAULT_ROW_WIDTH = 280;
+/** Released this long after the last move, the pointer had stopped (Lsq2VelocityTracker, b/238654963). */
+const ASSUME_STOPPED_MS = 40;
 
 const s = stylex.create({
   // No text selection: a horizontal drag swipes rather than selecting the label.
@@ -63,152 +59,43 @@ const s = stylex.create({
     margin: 0,
     padding: 0,
   },
-  // A row that isn't itself a button / link is the keyboard focus target: ring drawn inside it.
-  rootFocusable: {
-    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: stateTokens.focusIndicatorThickness,
-    outlineOffset: `calc(-1 * ${stateTokens.focusIndicatorThickness})`,
-  },
+  // A row that isn't itself a button / link is the keyboard focus target: ring drawn inside it
+  // (after focusRing.host).
+  ringInside: { outlineOffset: `calc(-1 * ${stateTokens.focusIndicatorThickness})` },
   item: { position: 'relative', willChange: 'transform' },
   itemSurface: { backgroundColor: color.surface },
-  actions: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    display: 'flex',
-    columnGap: GAP,
-    alignItems: 'stretch',
-  },
-  action: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-    padding: 0,
-    margin: 0,
-    overflow: 'hidden',
-    borderWidth: 0,
-    borderStyle: 'none',
-    borderRadius: 9999,
-    cursor: 'pointer',
-    backgroundColor: color.secondaryContainer,
-    color: color.onSecondaryContainer,
-    transitionProperty: 'background-color',
-    transitionDuration: motion.defaultEffectsDuration,
-    transitionTimingFunction: motion.defaultEffectsEasing,
-  },
-  primary: { backgroundColor: color.primary, color: color.onPrimary },
-  w: (px: number) => ({ width: px }),
-  icon: { display: 'flex', flexShrink: 0 },
-  iconOpacity: (o: number) => ({ opacity: o }),
 });
 
-/** Action widths (left → right) for an offset `d` (px the item has moved left). */
-export function swipeLayout(n: number, d: number, mode: 'drag' | 'action') {
-  const avail = Math.max(0, d - GAP);
-  if (n === 0) return [];
-  if (mode === 'action') {
-    const others = (n - 1) * (PILL + GAP);
-    return [...Array(n - 1).fill(PILL), Math.max(PILL, avail - others)] as number[];
-  }
-  const full = n === 1 ? 52 : BUTTON;
-  const w = Math.min(full, Math.max(0, (avail - (n - 1) * GAP) / n));
-  return Array(n).fill(w) as number[];
+const translate = (offset: number) => `translateX(${-offset}px)`;
+
+/** The swipe offset (px the item has moved left), outside React state. */
+interface OffsetStore {
+  get: () => number;
+  set: (offset: number) => void;
+  subscribe: (listener: () => void) => () => void;
 }
 
-/** Item offset for each settled state. */
-export function swipeOffset(n: number, state: SwipeRevealState) {
-  if (state === 'peek') return n * PILL + (n - 1) * GAP + GAP;
-  if (state === 'revealed') return (n === 1 ? 52 : n * BUTTON + (n - 1) * GAP) + GAP;
-  if (state === 'action') return ACTION + (n - 1) * (PILL + GAP) + GAP;
-  return 0;
-}
-
-/**
- * Release target: AnchoredDraggable `computeTarget` over the closed (0) and revealed anchors.
- * `velocity` is in px/s along the offset (positive = opening).
- */
-export function swipeTarget(n: number, offset: number, velocity: number, mode: 'drag' | 'action'): SwipeRevealState {
-  if (n === 0) return 'closed';
-  if (mode === 'action') return velocity <= -VELOCITY_THRESHOLD ? 'revealed' : 'action';
-  const anchors: [SwipeRevealState, number][] = [
-    ['closed', 0],
-    ['revealed', swipeOffset(n, 'revealed')],
-  ];
-  // DefaultDraggableAnchors.closestAnchor (ties and "nothing in that direction" pick the later anchor).
-  const closest = (pos: number, upwards?: boolean) => {
-    let best = anchors[0]!;
-    let min = Infinity;
-    for (const a of anchors) {
-      const delta = upwards === undefined ? Math.abs(pos - a[1]) : upwards ? a[1] - pos : pos - a[1];
-      const dist = delta < 0 ? Infinity : delta;
-      if (dist <= min) {
-        best = a;
-        min = dist;
-      }
-    }
-    return best;
+function createOffsetStore(initial: number): OffsetStore {
+  let offset = initial;
+  const listeners = new Set<() => void>();
+  return {
+    get: () => offset,
+    set: (next) => {
+      if (next === offset) return;
+      offset = next;
+      for (const listener of listeners) listener();
+    },
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
   };
-  if (velocity === 0 || Number.isNaN(velocity)) return closest(offset)[0];
-  const forward = velocity > 0;
-  if (Math.abs(velocity) >= VELOCITY_THRESHOLD) return closest(offset, forward)[0];
-  const left = closest(offset, false);
-  const right = closest(offset, true);
-  const fromStart = forward ? left[1] : right[1];
-  const crossed = Math.abs(fromStart - offset) >= POSITIONAL_THRESHOLD;
-  return (crossed ? (forward ? right : left) : forward ? left : right)[0];
 }
 
-export interface SwipeActionsProps {
-  actions: SwipeAction[];
-  /** The full-swipe action (defaults to the primary, i.e. the last action). */
-  swipeAction?: SwipeAction;
-  /** Item offset (px) the actions fill, and whether a full swipe is engaged. */
-  offset: number;
-  mode: 'drag' | 'action';
-  /** Interactive (focusable) — true once revealed. */
-  revealed?: boolean;
-  /** `event.detail` is 0 when the action was run from the keyboard. */
-  onAction?: (action: SwipeAction, event: ReactMouseEvent<HTMLButtonElement>) => void;
-  sx?: StyleXStyles;
-}
-
-/** The reveal row behind a swiped item (kit "Reveal element"); a pure function of the offset. */
-export function SwipeActions({
-  actions,
-  swipeAction,
-  offset,
-  mode,
-  revealed = false,
-  onAction,
-  sx,
-}: SwipeActionsProps) {
-  const n = actions.length;
-  const widths = swipeLayout(n, offset, mode);
-  const shown = mode === 'action' && swipeAction ? [...actions.slice(0, -1), swipeAction] : actions;
-  return (
-    <div {...stylex.props(s.actions, sx)} aria-hidden={!revealed}>
-      {shown.map((a, i) => {
-        const w = widths[i] ?? 0;
-        const iconOpacity = Math.max(0, Math.min(1, (w - 24) / 24));
-        return (
-          <button
-            key={i}
-            type="button"
-            aria-label={a.label}
-            tabIndex={revealed ? 0 : -1}
-            data-swipe-action=""
-            onClick={(e) => onAction?.(a, e)}
-            {...stylex.props(s.action, i === n - 1 && s.primary, s.w(w))}
-          >
-            {w >= 24 && <span {...stylex.props(s.icon, s.iconOpacity(iconOpacity))}>{a.icon}</span>}
-          </button>
-        );
-      })}
-    </div>
-  );
+/** The actions row, re-rendered by offset changes on its own. */
+function LiveSwipeActions({ store, ...props }: Omit<SwipeActionsProps, 'offset'> & { store: OffsetStore }) {
+  const offset = useSyncExternalStore(store.subscribe, store.get, store.get);
+  return <SwipeActions offset={offset} {...props} />;
 }
 
 export interface SwipeableListItemProps extends ListItemProps {
@@ -231,25 +118,20 @@ export function SwipeableListItem({
 }: SwipeableListItemProps) {
   const list = useContext(ListContext);
   const reduced = useReducedMotion();
-  const n = actions.length;
-  const [inner, setInner] = useState<SwipeRevealState>('closed');
-  const state = revealState ?? inner;
-  const setState = (v: SwipeRevealState) => {
-    if (revealState === undefined) setInner(v);
-    onRevealStateChange?.(v);
-  };
-  const [offset, setOffsetState] = useState(() => swipeOffset(n, state));
-  const offsetRef = useRef(offset);
-  const setOffset = (v: number) => {
-    offsetRef.current = v;
-    setOffsetState(v);
-  };
+  const actionCount = actions.length;
+  const [state, setState] = useControllableState(revealState, 'closed', onRevealStateChange);
+  const [offsetStore] = useState(() => createOffsetStore(swipeOffset(actionCount, state)));
+  // The item's transform at mount (also the server render); later offsets are written to the DOM.
+  const [initialTransform] = useState(() => translate(swipeOffset(actionCount, state)));
   const [mode, setMode] = useState<'drag' | 'action'>(state === 'action' ? 'action' : 'drag');
+  // The latest mode, for the gesture handlers (moves only re-render when the mode flips).
+  const modeNow = useRef(mode);
   const anim = useRef<{ target: number; stop: () => void } | null>(null);
   const drag = useRef<{ x: number; start: number; moved: boolean } | null>(null);
   const tracker = useRef(new VelocityTracker1D());
-  const width = useRef(280);
-  const root = useRef<HTMLElement | null>(null);
+  const rowWidth = useRef(DEFAULT_ROW_WIDTH);
+  const root = useRef<HTMLDivElement | null>(null);
+  const itemBox = useRef<HTMLDivElement | null>(null);
   const itemRef = useRef<HTMLElement | null>(null);
   const itemList = useMemo(() => ({ ...list, inList: false }), [list]);
   // The keyboard focus target: the item when it is a button / link, otherwise this row.
@@ -260,14 +142,24 @@ export function SwipeableListItem({
   // Keyboard reveal: the action to focus once the actions are interactive (state "revealed").
   const pendingFocus = useRef<number | null>(null);
 
+  const setOffset = (offset: number) => {
+    offsetStore.set(offset);
+    if (itemBox.current) itemBox.current.style.transform = translate(offset);
+  };
+  const updateMode = (next: 'drag' | 'action') => {
+    if (modeNow.current === next) return;
+    modeNow.current = next;
+    setMode(next);
+  };
+
   // Settle on a state's offset: tween(300ms, FastOutSlowIn), instant under reduced motion.
   const settle = (next: SwipeRevealState) => {
-    const target = swipeOffset(n, next);
-    setMode(next === 'action' ? 'action' : 'drag');
+    const target = swipeOffset(actionCount, next);
+    updateMode(next === 'action' ? 'action' : 'drag');
     if (anim.current?.target === target) return;
     anim.current?.stop();
     anim.current = null;
-    const from = offsetRef.current;
+    const from = offsetStore.get();
     if (reduced || from === target) {
       setOffset(target);
       return;
@@ -276,9 +168,9 @@ export function SwipeableListItem({
     let begin: number | undefined;
     const tick = (now: number) => {
       begin ??= now;
-      const p = Math.min(1, (now - begin) / SETTLE_MS);
-      setOffset(from + (target - from) * fastOutSlowIn(p));
-      if (p < 1) frame = requestAnimationFrame(tick);
+      const progress = Math.min(1, (now - begin) / SETTLE_MS);
+      setOffset(from + (target - from) * fastOutSlowIn(progress));
+      if (progress < 1) frame = requestAnimationFrame(tick);
       else anim.current = null;
     };
     frame = requestAnimationFrame(tick);
@@ -287,7 +179,7 @@ export function SwipeableListItem({
   useEffect(() => {
     settle(state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, n]);
+  }, [state, actionCount]);
   useEffect(() => () => anim.current?.stop(), []);
   useEffect(() => {
     if (state !== 'revealed' || pendingFocus.current == null) return;
@@ -304,42 +196,43 @@ export function SwipeableListItem({
     if (index >= 0) at = { kind: 'action', index };
     else if (target === focusTarget()) at = { kind: 'item' };
     else return; // a control inside the item keeps its own keys
-    const r = swipeKey(e.key, at, state, n);
-    if (!r) return;
+    const reaction = swipeKey(e.key, at, state, actionCount);
+    if (!reaction) return;
     e.preventDefault();
     pendingFocus.current = null;
-    if (r.reveal) {
+    if (reaction.reveal) {
       setState('revealed');
       settle('revealed');
     }
-    if (r.close) {
+    if (reaction.close) {
       setState('closed');
       settle('closed');
     }
-    if (r.focus === 'item') focusTarget()?.focus();
-    else if (r.focus != null) {
-      if (r.reveal || state !== 'revealed') pendingFocus.current = r.focus;
-      else actionButtons()[r.focus]?.focus();
+    if (reaction.focus === 'item') focusTarget()?.focus();
+    else if (reaction.focus != null) {
+      if (reaction.reveal || state !== 'revealed') pendingFocus.current = reaction.focus;
+      else actionButtons()[reaction.focus]?.focus();
     }
   };
 
-  const onPointerDown = (e: React.PointerEvent) => {
+  const onPointerDown = (e: ReactPointerEvent) => {
     if (e.button !== 0) return;
-    width.current = root.current?.getBoundingClientRect().width ?? 280;
-    drag.current = { x: e.clientX, start: offsetRef.current, moved: false };
+    rowWidth.current = root.current?.getBoundingClientRect().width ?? DEFAULT_ROW_WIDTH;
+    drag.current = { x: e.clientX, start: offsetStore.get(), moved: false };
     tracker.current.reset();
     tracker.current.add(e.timeStamp, e.clientX);
   };
-  const onPointerMove = (e: React.PointerEvent) => {
-    const d = drag.current;
-    if (!d) return;
+  const onPointerMove = (e: ReactPointerEvent) => {
+    const gesture = drag.current;
+    if (!gesture) return;
     // Compose Lsq2VelocityTracker: every MOVE, with its historical (coalesced) samples.
     const samples = e.nativeEvent.getCoalescedEvents?.() ?? [];
-    for (const c of samples.length > 0 ? samples : [e.nativeEvent]) tracker.current.add(c.timeStamp, c.clientX);
-    const dx = d.x - e.clientX;
-    if (!d.moved && Math.abs(dx) < 6) return;
-    if (!d.moved) {
-      d.moved = true;
+    for (const sample of samples.length > 0 ? samples : [e.nativeEvent])
+      tracker.current.add(sample.timeStamp, sample.clientX);
+    const dx = gesture.x - e.clientX;
+    if (!gesture.moved && Math.abs(dx) < DRAG_SLOP) return;
+    if (!gesture.moved) {
+      gesture.moved = true;
       try {
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       } catch {
@@ -348,21 +241,20 @@ export function SwipeableListItem({
       anim.current?.stop();
       anim.current = null;
     }
-    const next = Math.max(0, Math.min(width.current * 0.8, d.start + dx));
+    const next = Math.max(0, Math.min(rowWidth.current * MAX_SWIPE_FRACTION, gesture.start + dx));
     setOffset(next);
-    setMode(next > swipeOffset(n, 'revealed') + 24 ? 'action' : 'drag');
+    updateMode(swipeMode(actionCount, next));
   };
-  const onPointerUp = (e: React.PointerEvent) => {
-    const d = drag.current;
+  const onPointerUp = (e: ReactPointerEvent) => {
+    const gesture = drag.current;
     drag.current = null;
-    if (!d?.moved) return;
-    // The UP isn't a sample; released over 40ms after the last MOVE, the pointer had stopped
-    // (Lsq2VelocityTracker, b/238654963). The item moves left as the pointer does: opening
-    // velocity is the pointer's, negated.
-    const stopped = e.type === 'pointercancel' || e.timeStamp - tracker.current.lastTime() > 40;
+    if (!gesture?.moved) return;
+    // The UP isn't a sample; released over 40ms after the last MOVE, the pointer had stopped. The
+    // item moves left as the pointer does: opening velocity is the pointer's, negated.
+    const stopped = e.type === 'pointercancel' || e.timeStamp - tracker.current.lastTime() > ASSUME_STOPPED_MS;
     const velocity = stopped ? 0 : -tracker.current.velocity();
-    const target = swipeTarget(n, offsetRef.current, velocity, mode);
-    if (target === 'action') (swipeAction ?? actions[n - 1])?.onAction?.();
+    const target = swipeTarget(actionCount, offsetStore.get(), velocity, modeNow.current);
+    if (target === 'action') (swipeAction ?? actions[actionCount - 1])?.onAction?.();
     setState(target);
     // Settle even when the state doesn't change (released back where it started).
     settle(target);
@@ -371,9 +263,7 @@ export function SwipeableListItem({
   return (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- swipe gesture and its keyboard path, delegated from the row and its actions
     <div
-      ref={(el) => {
-        root.current = el;
-      }}
+      ref={root}
       role={list.inList ? 'listitem' : undefined}
       tabIndex={ownTarget ? undefined : 0}
       data-swipe-item=""
@@ -382,16 +272,16 @@ export function SwipeableListItem({
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onKeyDown={onKeyDown}
-      {...stylex.props(s.root, !ownTarget && s.rootFocusable, sx)}
+      {...stylex.props(s.root, !ownTarget && [focusRing.host, s.ringInside], sx)}
     >
-      <SwipeActions
+      <LiveSwipeActions
+        store={offsetStore}
         actions={actions}
         swipeAction={swipeAction}
-        offset={offset}
         mode={mode}
         revealed={state === 'revealed'}
-        onAction={(a, e) => {
-          a.onAction?.();
+        onAction={(action, e) => {
+          action.onAction?.();
           setState('closed');
           // Closed actions leave the tab order and the accessibility tree: don't strand focus there.
           // From the keyboard focus returns to the item; a pointer press just drops it.
@@ -402,7 +292,7 @@ export function SwipeableListItem({
           }
         }}
       />
-      <div {...stylex.props(s.item)} style={{ transform: `translateX(${-offset}px)` }}>
+      <div ref={itemBox} {...stylex.props(s.item)} style={{ transform: initialTransform }}>
         <ListContext value={itemList}>
           <ListItem ref={itemRef} {...item} sx={s.itemSurface} />
         </ListContext>

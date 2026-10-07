@@ -1,14 +1,16 @@
-import { forwardRef, useContext, useId, useMemo, useState, type ReactNode } from 'react';
+import { forwardRef, useContext, useId, useMemo, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Collapsible } from '@base-ui/react/collapsible';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { useForcedState, type ForcedState } from '../../testing/ForceState.tsx';
-import { ListContext, ListItem, type ListItemProps } from './ListItem.tsx';
+import { ListContext } from './context.ts';
+import { ListItem, type ListItemProps } from './ListItem.tsx';
 import { expandPanelMarker } from './list.stylex.ts';
 
 const CHEVRON_DOWN = 'M10 12.8334L5 7.83341L6.16667 6.66675L10 10.5001L13.8333 6.66675L15 7.83341L10 12.8334Z';
@@ -123,7 +125,7 @@ export interface AccordionButtonProps {
 /** The kit's accordion toggle (used by ExpandableListItem; exported for custom headers). */
 export const AccordionButton = forwardRef<
   HTMLButtonElement,
-  AccordionButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
+  AccordionButtonProps & ButtonHTMLAttributes<HTMLButtonElement>
 >(function AccordionButton({ expanded, forcedState, ...rest }, ref) {
   // The chevron flips on every toggle after mount (not on the first render).
   const [initial] = useState(expanded);
@@ -144,9 +146,9 @@ export const AccordionButton = forwardRef<
           stateLayerHost.host,
           // after host: the layer box is absolutely placed 4px from the top
           s.layerBox,
-          forcedState === 'hovered' && stateLayerHost.forceHover,
-          forcedState === 'focused' && stateLayerHost.forceFocus,
-          forcedState === 'pressed' && [stateLayerHost.forceHover, s.layerPressed],
+          // The kit's Pressed variant keeps the hover layer under the ripple and squares the box.
+          forcedState !== 'dragged' && forcedStateLayer(forcedState, 'hover'),
+          forcedState === 'pressed' && s.layerPressed,
         )}
       >
         <StateLayer />
@@ -195,12 +197,7 @@ export function ExpandableListItem({
   const list = useContext(ListContext);
   const headerList = useMemo(() => ({ ...list, inList: false }), [list]);
   const panelList = useMemo(() => ({ ...list, inList: true }), [list]);
-  const [inner, setInner] = useState(defaultExpanded);
-  const open = expanded ?? inner;
-  const setOpen = (v: boolean) => {
-    if (expanded === undefined) setInner(v);
-    onExpandedChange?.(v);
-  };
+  const [open, setOpen] = useControllableState(expanded, defaultExpanded, onExpandedChange);
   // Name = verb (the button's own aria-label) + the item's label text.
   const buttonId = useId();
   const labelId = useId();
@@ -228,7 +225,7 @@ export function ExpandableListItem({
   return (
     <Collapsible.Root
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(next) => setOpen(next)}
       render={list.inList ? <li {...stylex.props(s.li)} /> : <div />}
     >
       <ListContext value={headerList}>{header}</ListContext>
