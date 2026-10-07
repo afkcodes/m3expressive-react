@@ -159,7 +159,7 @@ test('fab menu: focus moves to the first item, items rove with one tab stop, Esc
   const fab = node.getByRole('button', { name: 'Actions' });
   await fab.focus();
   await page.keyboard.press('Enter');
-  const toggle = node.getByRole('button', { name: 'Close menu' });
+  const toggle = node.getByRole('button', { name: 'Actions' });
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   const menu = node.getByRole('menu');
   await expect(toggle).toHaveAttribute('aria-controls', (await menu.getAttribute('id'))!);

@@ -411,7 +411,7 @@ test('FAB menu: one toggle morphs on FastSpatial; items stagger in from the bott
   const log = await page.evaluate(
     () => (window as unknown as { __log: { r: number; vis: boolean[]; clip: boolean }[] }).__log,
   );
-  const close = node.getByRole('button', { name: 'Close menu' });
+  const close = node.getByRole('button', { name: 'Actions' });
   // Opening moves focus into the menu: the first item, once the stagger has drawn it.
   await expect(node.getByRole('menuitem', { name: 'First' })).toBeFocused();
   expect.soft(log[0]!.r, 'closed: 16px corners').toBeCloseTo(16, 1);

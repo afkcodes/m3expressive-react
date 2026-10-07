@@ -142,7 +142,7 @@ export function AppBarPlayground() {
               </>
             }
             fab={
-              <Fab aria-label="New" color="secondary-container" elevated={false}>
+              <Fab aria-label="New" color="secondaryContainer" elevated={false}>
                 <Icon name="add-24" />
               </Fab>
             }

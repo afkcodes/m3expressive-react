@@ -8,7 +8,7 @@ import assets from '../../../../figma/toolbar/assets.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
 
 const fx = stylex.create({
-  // The kit's call example overrides the tertiary-container FAB with Error Container.
+  // The kit's call example overrides the tertiaryContainer FAB with Error Container.
   errorFab: { backgroundColor: color.errorContainer, color: color.onErrorContainer },
   // The kit squeezes the 52px wide icon button into a 48px slot (its container overflows 2px).
   squeeze: { marginInline: -2 },
@@ -109,7 +109,7 @@ function render(name: string): ReactNode {
         <Toolbar
           aria-label="Actions"
           fab={
-            <Fab aria-label="Add" color="tertiary-container">
+            <Fab aria-label="Add" color="tertiaryContainer">
               <Icon name="add" />
             </Fab>
           }
@@ -122,7 +122,7 @@ function render(name: string): ReactNode {
         <Toolbar
           aria-label="Message actions"
           fab={
-            <Fab aria-label="Reply" color="tertiary-container">
+            <Fab aria-label="Reply" color="tertiaryContainer">
               <Icon name="reply" />
             </Fab>
           }
@@ -137,7 +137,7 @@ function render(name: string): ReactNode {
         <Toolbar
           aria-label="Call controls"
           fab={
-            <Fab aria-label="End call" color="tertiary-container" sx={fx.errorFab}>
+            <Fab aria-label="End call" color="tertiaryContainer" sx={fx.errorFab}>
               <Icon name="call_end" />
             </Fab>
           }
@@ -195,7 +195,7 @@ function LiveToolbar() {
         aria-label="Actions"
         expanded={expanded}
         fab={
-          <Fab aria-label="Add" color="tertiary-container">
+          <Fab aria-label="Add" color="tertiaryContainer">
             <Icon name="add" />
           </Fab>
         }

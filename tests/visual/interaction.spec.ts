@@ -520,7 +520,7 @@ test('fab menu (live): open, render, keyboard, escape', async ({ page }) => {
   const node = page.locator('[data-fixture-node]');
   const fab = node.getByRole('button', { name: 'Actions' });
   await fab.click();
-  const close = node.getByRole('button', { name: 'Close menu' });
+  const close = node.getByRole('button', { name: 'Actions' });
   await expect(close).toHaveAttribute('aria-expanded', 'true');
   // Focus moves into the menu: the first item, once it is drawn (the last of the stagger).
   await expect(node.getByRole('menuitem', { name: 'First' })).toBeFocused();

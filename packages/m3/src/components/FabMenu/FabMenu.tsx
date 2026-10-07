@@ -6,12 +6,13 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentPropsWithRef,
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { useControllableState } from '../../hooks/useControllableState.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { FabMenuContext, FabMenuIndexContext } from './context.ts';
 import { fabMenuStyles as s, type FabMenuColor } from './fabMenuStyles.ts';
 import { FabMenuToggle } from './FabMenuToggle.tsx';
@@ -31,21 +32,30 @@ export type { FabMenuColor };
  * drawn; the items are one tab stop (roving tabindex: arrows, Home / End); Escape closes and
  * returns focus to the toggle.
  */
-export interface FabMenuProps {
+/**
+ * The root is a `<span>` holding the item list and the toggle (`ref`, native props and `sx` go
+ * there); `aria-label` names the toggle and the item menu.
+ */
+export interface FabMenuProps extends SxProps<
+  Omit<ComponentPropsWithRef<'span'>, 'color' | 'children' | 'aria-label'>
+> {
+  /**
+   * A Compose FAB-menu colour set, not a single role: the closed FAB and the items draw
+   * `{color}Container`, the open toggle `{color}`.
+   */
   color?: FabMenuColor;
-  /** Controlled open state. */
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   /** Icon of the closed FAB (use currentColor). */
   icon?: ReactNode;
-  /** Accessible name of the closed FAB. */
+  /**
+   * Accessible name of the toggle — constant: the FAB and the close button it morphs into are one
+   * button, whose state is `aria-expanded` — and of the item menu.
+   */
   'aria-label': string;
-  /** Accessible name of the close button. */
-  closeLabel?: string;
   /** <FabMenuItem/>s, top to bottom. */
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
 export function FabMenu({
@@ -55,9 +65,10 @@ export function FabMenu({
   onOpenChange,
   icon,
   'aria-label': label,
-  closeLabel = 'Close menu',
   children,
+  onKeyDown: onKeyDownProp,
   sx,
+  ...rest
 }: FabMenuProps) {
   const [open, setOpen] = useControllableState(openProp, defaultOpen, onOpenChange);
   const listRef = useRef<HTMLDivElement>(null);
@@ -72,7 +83,8 @@ export function FabMenu({
     setOpen(false);
     requestAnimationFrame(() => fabRef.current?.focus());
   }, [setOpen]);
-  const onKeyDown = (e: KeyboardEvent) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLSpanElement>) => {
+    onKeyDownProp?.(e);
     if (!open) return;
     if (e.key === 'Escape') return close();
     const list = menuItems();
@@ -99,7 +111,7 @@ export function FabMenu({
 
   return (
     // oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- arrow-key navigation delegated from the items
-    <span {...stylex.props(s.root, sx)} onKeyDown={onKeyDown}>
+    <span {...rest} {...stylex.props(s.root, sx)} onKeyDown={onKeyDown}>
       {mounted && hasMenu && (
         // Closing: the items fade out but are no longer part of the menu.
         <div ref={listRef} id={listId} role="menu" aria-label={label} inert={!open} {...stylex.props(s.list)}>
@@ -117,7 +129,7 @@ export function FabMenu({
         open={open}
         color={color}
         icon={icon}
-        aria-label={open ? closeLabel : label}
+        aria-label={label}
         aria-haspopup={hasMenu ? 'menu' : undefined}
         aria-controls={mounted && hasMenu ? listId : undefined}
         onClick={() => {

@@ -1,4 +1,4 @@
-import { forwardRef, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
@@ -29,6 +29,7 @@ export interface FabMenuToggleProps extends Omit<
   BaseButton.Props,
   'className' | 'style' | 'render' | 'children' | 'color'
 > {
+  ref?: Ref<HTMLButtonElement>;
   open: boolean;
   color: FabMenuColor;
   icon?: ReactNode;
@@ -41,10 +42,7 @@ export interface FabMenuToggleProps extends Omit<
  * on-{colour} (Oklab lerp), icon size lerp(24, 20); the glyph swaps to "close" once progress > 0.5.
  * The kit's open / closed frames are the progress-1 / progress-0 rest states.
  */
-export const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(function FabMenuToggle(
-  { open, color: menuColor, icon, ...rest },
-  ref,
-) {
+export function FabMenuToggle({ open, color: menuColor, icon, ref, ...rest }: FabMenuToggleProps) {
   const forced = useForcedState();
   const spring = useSpringToken('fast-spatial');
   const el = useRef<HTMLButtonElement | null>(null);
@@ -139,4 +137,4 @@ export const FabMenuToggle = forwardRef<HTMLButtonElement, FabMenuToggleProps>(f
       )}
     </BaseButton>
   );
-});
+}

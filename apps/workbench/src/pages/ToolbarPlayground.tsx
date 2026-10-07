@@ -108,7 +108,7 @@ export function ToolbarPlayground() {
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   const floating = type !== 'docked';
   const fab = (
-    <Fab aria-label="Add" color={tone === 'vibrant' ? 'primary-container' : 'tertiary-container'}>
+    <Fab aria-label="Add" color={tone === 'vibrant' ? 'primaryContainer' : 'tertiaryContainer'}>
       <Icon name="add" />
     </Fab>
   );
