@@ -8,6 +8,7 @@ import { textBox } from '../../primitives/textBox.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 import { Button } from '../Button/Button.tsx';
 import { IconButton } from '../IconButton/IconButton.tsx';
+import { dialogMotion } from '../Dialog/dialogMotion.ts';
 import { CalendarMonth } from './CalendarMonth.tsx';
 import { DATE_PICKER_ICONS } from './icons.ts';
 import { defaultFormatter, startOfDay, type DatePickerFormatter } from './calendar.ts';
@@ -97,11 +98,6 @@ const s = stylex.create({
     position: 'fixed',
     inset: 0,
     outlineStyle: 'none',
-    opacity: { default: 1, ':is([data-starting-style], [data-ending-style])': 0 },
-    translate: { default: '0 0', ':is([data-starting-style])': '0 24px' },
-    transitionProperty: 'opacity, translate',
-    transitionDuration: { default: '400ms', ':is([data-ending-style])': '150ms', '@media (prefers-reduced-motion: reduce)': '0ms' },
-    transitionTimingFunction: { default: 'cubic-bezier(0.05, 0.7, 0.1, 1)', ':is([data-ending-style])': 'cubic-bezier(0.3, 0, 0.8, 0.15)' },
   },
 });
 
@@ -280,7 +276,7 @@ export function ModalDateRangePicker({ open, onOpenChange, value, onChange, onCl
       <BaseDialog.Portal container={portal}>
         <BaseDialog.Popup
           aria-label={typeof picker.supportingText === 'string' ? picker.supportingText : 'Select dates'}
-          {...stylex.props(s.popup)}
+          {...stylex.props(s.popup, dialogMotion.fadeRise)}
         >
           <DateRangePicker
             {...picker}
