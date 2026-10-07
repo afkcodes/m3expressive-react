@@ -4,107 +4,63 @@
  * and compare against the Figma state variants. Complements figma-parity.spec.ts, which renders
  * states statically.
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { expect, test, type Page } from '@playwright/test';
-import { compareImages } from './compare.ts';
-import { captureRegion, hexToRgb } from './capture.ts';
-import { REFS_DIR, type Manifest } from './manifest.ts';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expectKit } from './helpers/kit.ts';
+import { openFixture } from './helpers/page.ts';
+import { moveToCentre } from './helpers/pointer.ts';
+import { settle } from './helpers/settle.ts';
+import { computedStyle, outlineOf } from './helpers/styles.ts';
 
-const OUT = join(process.cwd(), 'tests/visual/__output__/interaction');
-/** Effects transitions (state layer, shadow) are 150 ms; allow generous settling. */
-const SETTLE = 500;
-// ── Toggle button: hover / focus / click-to-select / press morph on the live component ─────
-const toggles = JSON.parse(readFileSync(join(REFS_DIR, 'toggle-button/manifest.json'), 'utf8')) as Manifest;
+/** The live focus ring: the kit's (hidden) Focus indicator layer, 3px secondary, 2px out. */
+const RING = { style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' };
 
-function checkToggle(name: string, refName: string, shot: Buffer) {
-  const v = toggles.variants[refName]!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'toggle-button', `${refName}.png`));
-  const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `toggle-${name}.actual.png`), shot);
-  writeFileSync(join(OUT, `toggle-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  return { r, allowed: v.allowedDiffPixels ?? 0 };
+/**
+ * The kit's Focused variants hide their indicator: with the ring's geometry asserted, hide the live
+ * ring (`selector`) and let the change land before comparing the rest pixel for pixel.
+ */
+async function hideRing(page: Page, selector: string) {
+  await page.addStyleTag({ content: `${selector} { outline-style: none !important }` });
+  await settle(page);
 }
 
+// ── Toggle button: hover / focus / click-to-select / press morph on the live component ─────
 for (const variant of ['filled', 'elevated', 'outlined', 'tonal'] as const) {
   test.describe(`toggle button ${variant} (live)`, () => {
     const ref = (sel: 'selected' | 'unselected', state: string) => `${variant}-${sel}-round-medium-${state}`;
-    const rb = (name: string) => toggles.variants[name]!.renderBounds!;
-    const openToggle = async (page: Page) => {
-      await page.goto(`/fixture/toggle-button/${variant}-live`);
-      await page.evaluate(() => document.fonts.ready);
-      await page.mouse.move(0, 0);
-      const node = page.locator('[data-fixture-node]');
-      await expect(node).toBeVisible();
-      return node;
-    };
+    const kit = (node: Locator, name: string, sel: 'selected' | 'unselected', state: string, message: string) =>
+      expectKit(node, 'toggle-button', ref(sel, state), { label: `${variant}-${name}`, message });
 
     test('rest, hover, click selects, keyboard focus', async ({ page }) => {
-      const node = await openToggle(page);
+      const node = await openFixture(page, `/fixture/toggle-button/${variant}-live`);
       const btn = node.locator('button');
-      await page.waitForTimeout(SETTLE);
-      let res = checkToggle(
-        `${variant}-rest`,
-        ref('unselected', 'enabled'),
-        await captureRegion(page, node, rb(ref('unselected', 'enabled'))),
-      );
-      expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
+      await settle(page);
+      await kit(node, 'rest', 'unselected', 'enabled', 'rest');
 
-      const b = (await btn.boundingBox())!;
-      await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-      await page.waitForTimeout(SETTLE);
-      res = checkToggle(
-        `${variant}-hover`,
-        ref('unselected', 'hovered'),
-        await captureRegion(page, node, rb(ref('unselected', 'hovered'))),
-      );
-      expect.soft(res.r.diffPixels, 'hover').toBeLessThanOrEqual(res.allowed);
+      await moveToCentre(btn);
+      await settle(page);
+      await kit(node, 'hover', 'unselected', 'hovered', 'hover');
 
       await expect(btn).toHaveAttribute('aria-pressed', 'false');
       await page.mouse.down();
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       // Held: corners morph to the pressed radius (medium 12).
       const container = btn.locator('> span').first();
-      expect
-        .soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius')
-        .toBe('12px');
+      expect.soft(await computedStyle(container, 'border-top-left-radius'), 'pressed radius').toBe('12px');
       await page.mouse.up();
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       // Pointer still over it → kit "Selected / Hovered" (shape swapped to square).
-      res = checkToggle(
-        `${variant}-selected-hover`,
-        ref('selected', 'hovered'),
-        await captureRegion(page, node, rb(ref('selected', 'hovered'))),
-      );
-      expect.soft(res.r.diffPixels, 'selected hover').toBeLessThanOrEqual(res.allowed);
+      await kit(node, 'selected-hover', 'selected', 'hovered', 'selected hover');
 
       await page.mouse.move(0, 0);
       // The click focused it (no ring: pointer focus); re-enter by keyboard for :focus-visible.
       await btn.evaluate((e) => e.blur());
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       await expect(btn).toBeFocused();
-      const ring = await container.evaluate((e) => {
-        const cs = getComputedStyle(e);
-        return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
-      });
-      expect
-        .soft(ring, 'focus ring')
-        .toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
-      await page.addStyleTag({ content: '[data-fixture-node] button > span { outline-style: none !important }' });
-      await page.waitForTimeout(50);
-      res = checkToggle(
-        `${variant}-selected-focus`,
-        ref('selected', 'focused'),
-        await captureRegion(page, node, rb(ref('selected', 'focused'))),
-      );
-      expect.soft(res.r.diffPixels, 'selected focus').toBeLessThanOrEqual(res.allowed);
+      expect.soft(await outlineOf(container), 'focus ring').toEqual(RING);
+      await hideRing(page, '[data-fixture-node] button > span');
+      await kit(node, 'selected-focus', 'selected', 'focused', 'selected focus');
 
       await page.keyboard.press('Space');
       await expect(btn).toHaveAttribute('aria-pressed', 'false');
@@ -113,244 +69,118 @@ for (const variant of ['filled', 'elevated', 'outlined', 'tonal'] as const) {
 }
 
 // ── Toggle icon button: same flow on the live component ─────────────────────────────────────
-const toggleIcons = JSON.parse(readFileSync(join(REFS_DIR, 'toggle-icon-button/manifest.json'), 'utf8')) as Manifest;
-
-function checkToggleIcon(name: string, refName: string, shot: Buffer) {
-  const v = toggleIcons.variants[refName]!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'toggle-icon-button', `${refName}.png`));
-  const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `toggle-icon-${name}.actual.png`), shot);
-  writeFileSync(join(OUT, `toggle-icon-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  return { r, allowed: v.allowedDiffPixels ?? 0 };
-}
-
 for (const variant of ['filled', 'tonal', 'outlined', 'standard'] as const) {
   test.describe(`toggle icon button ${variant} (live)`, () => {
     const ref = (sel: 'selected' | 'unselected', state: string) => `${variant}-${sel}-round-medium-default-${state}`;
-    const rb = (name: string) => toggleIcons.variants[name]!.renderBounds!;
+    const kit = (node: Locator, name: string, sel: 'selected' | 'unselected', state: string, message: string) =>
+      expectKit(node, 'toggle-icon-button', ref(sel, state), { label: `${variant}-${name}`, message });
 
     test('rest, hover, click selects, keyboard focus', async ({ page }) => {
-      await page.goto(`/fixture/toggle-icon-button/${variant}-live`);
-      await page.mouse.move(0, 0);
-      const node = page.locator('[data-fixture-node]');
-      await expect(node).toBeVisible();
+      const node = await openFixture(page, `/fixture/toggle-icon-button/${variant}-live`);
       const btn = node.locator('button');
-      await page.waitForTimeout(SETTLE);
-      let res = checkToggleIcon(
-        `${variant}-rest`,
-        ref('unselected', 'enabled'),
-        await captureRegion(page, node, rb(ref('unselected', 'enabled'))),
-      );
-      expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
+      await settle(page);
+      await kit(node, 'rest', 'unselected', 'enabled', 'rest');
 
-      const b = (await btn.boundingBox())!;
-      await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-      await page.waitForTimeout(SETTLE);
-      res = checkToggleIcon(
-        `${variant}-hover`,
-        ref('unselected', 'hovered'),
-        await captureRegion(page, node, rb(ref('unselected', 'hovered'))),
-      );
-      expect.soft(res.r.diffPixels, 'hover').toBeLessThanOrEqual(res.allowed);
+      await moveToCentre(btn);
+      await settle(page);
+      await kit(node, 'hover', 'unselected', 'hovered', 'hover');
 
       await page.mouse.down();
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       const container = btn.locator('> span').first();
-      expect
-        .soft(await container.evaluate((e) => getComputedStyle(e).borderTopLeftRadius), 'pressed radius')
-        .toBe('12px');
+      expect.soft(await computedStyle(container, 'border-top-left-radius'), 'pressed radius').toBe('12px');
       await page.mouse.up();
       await expect(btn).toHaveAttribute('aria-pressed', 'true');
-      await page.waitForTimeout(SETTLE);
-      res = checkToggleIcon(
-        `${variant}-selected-hover`,
-        ref('selected', 'hovered'),
-        await captureRegion(page, node, rb(ref('selected', 'hovered'))),
-      );
-      expect.soft(res.r.diffPixels, 'selected hover').toBeLessThanOrEqual(res.allowed);
+      await settle(page);
+      await kit(node, 'selected-hover', 'selected', 'hovered', 'selected hover');
 
       await page.mouse.move(0, 0);
       // The click focused it (no ring: pointer focus); re-enter by keyboard for :focus-visible.
       await btn.evaluate((e) => e.blur());
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       await expect(btn).toBeFocused();
-      const ring = await container.evaluate((e) => {
-        const cs = getComputedStyle(e);
-        return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
-      });
-      expect
-        .soft(ring, 'focus ring')
-        .toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
-      await page.addStyleTag({ content: '[data-fixture-node] button > span { outline-style: none !important }' });
-      await page.waitForTimeout(50);
-      res = checkToggleIcon(
-        `${variant}-selected-focus`,
-        ref('selected', 'focused'),
-        await captureRegion(page, node, rb(ref('selected', 'focused'))),
-      );
-      expect.soft(res.r.diffPixels, 'selected focus').toBeLessThanOrEqual(res.allowed);
+      expect.soft(await outlineOf(container), 'focus ring').toEqual(RING);
+      await hideRing(page, '[data-fixture-node] button > span');
+      await kit(node, 'selected-focus', 'selected', 'focused', 'selected focus');
     });
   });
 }
 
 // ── Split button: leading hover, trailing click expands (kit "Selected"), keyboard focus ────
-const splits = JSON.parse(readFileSync(join(REFS_DIR, 'split-button/manifest.json'), 'utf8')) as Manifest;
-
-function checkSplit(name: string, refName: string, shot: Buffer) {
-  const v = splits.variants[refName]!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'split-button', `${refName}.png`));
-  const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `split-${name}.actual.png`), shot);
-  writeFileSync(join(OUT, `split-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  return { r, allowed: v.allowedDiffPixels ?? 0 };
-}
-
 for (const variant of ['filled', 'tonal', 'outlined', 'elevated'] as const) {
   test.describe(`split button ${variant} (live)`, () => {
-    const ref = (lead: string, trail: string) => `${variant}-medium-${lead}-${trail}`;
-    const rb = (name: string) => splits.variants[name]!.renderBounds!;
+    const kit = (node: Locator, name: string, lead: string, trail: string, message: string) =>
+      expectKit(node, 'split-button', `${variant}-medium-${lead}-${trail}`, { label: `${variant}-${name}`, message });
 
     test('rest, hover, expand, keyboard focus', async ({ page }) => {
-      await page.goto(`/fixture/split-button/${variant}-live`);
-      await page.evaluate(() => document.fonts.ready);
-      await page.mouse.move(0, 0);
-      const node = page.locator('[data-fixture-node]');
-      await expect(node).toBeVisible();
+      const node = await openFixture(page, `/fixture/split-button/${variant}-live`);
       const [lead, trail] = [node.locator('button').nth(0), node.locator('button').nth(1)];
-      await page.waitForTimeout(SETTLE);
-      let res = checkSplit(
-        `${variant}-rest`,
-        ref('enabled', 'enabled'),
-        await captureRegion(page, node, rb(ref('enabled', 'enabled'))),
-      );
-      expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
+      await settle(page);
+      await kit(node, 'rest', 'enabled', 'enabled', 'rest');
 
-      const lb = (await lead.boundingBox())!;
-      await page.mouse.move(lb.x + lb.width / 2, lb.y + lb.height / 2);
-      await page.waitForTimeout(SETTLE);
-      res = checkSplit(
-        `${variant}-lead-hover`,
-        ref('hovered', 'enabled'),
-        await captureRegion(page, node, rb(ref('hovered', 'enabled'))),
-      );
-      expect.soft(res.r.diffPixels, 'leading hover (inner corners grow)').toBeLessThanOrEqual(res.allowed);
+      await moveToCentre(lead);
+      await settle(page);
+      await kit(node, 'lead-hover', 'hovered', 'enabled', 'leading hover (inner corners grow)');
 
-      const tb = (await trail.boundingBox())!;
-      await page.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2);
-      await page.waitForTimeout(SETTLE);
-      res = checkSplit(
-        `${variant}-trail-hover`,
-        ref('enabled', 'hovered'),
-        await captureRegion(page, node, rb(ref('enabled', 'hovered'))),
-      );
-      expect.soft(res.r.diffPixels, 'trailing hover').toBeLessThanOrEqual(res.allowed);
+      await moveToCentre(trail);
+      await settle(page);
+      await kit(node, 'trail-hover', 'enabled', 'hovered', 'trailing hover');
 
       await expect(trail).toHaveAttribute('aria-expanded', 'false');
       await trail.click();
       await expect(trail).toHaveAttribute('aria-expanded', 'true');
       await page.mouse.move(0, 0);
       await trail.evaluate((e) => e.blur());
-      await page.waitForTimeout(SETTLE);
-      res = checkSplit(
-        `${variant}-expanded`,
-        ref('enabled', 'selected'),
-        await captureRegion(page, node, rb(ref('enabled', 'selected'))),
+      await settle(page);
+      await kit(
+        node,
+        'expanded',
+        'enabled',
+        'selected',
+        'expanded = kit Selected (round, centred up-chevron, 10% layer)',
       );
-      expect
-        .soft(res.r.diffPixels, 'expanded = kit Selected (round, centred up-chevron, 10% layer)')
-        .toBeLessThanOrEqual(res.allowed);
 
       await trail.click();
       await expect(trail).toHaveAttribute('aria-expanded', 'false');
       await page.mouse.move(0, 0);
       await trail.evaluate((e) => e.blur());
       await page.keyboard.press('Tab');
-      await page.waitForTimeout(SETTLE);
+      await settle(page);
       await expect(lead).toBeFocused();
-      await page.addStyleTag({
-        content: '[data-fixture-node] button > span:last-child { outline-style: none !important }',
-      });
-      await page.waitForTimeout(50);
-      res = checkSplit(
-        `${variant}-lead-focus`,
-        ref('focused', 'enabled'),
-        await captureRegion(page, node, rb(ref('focused', 'enabled'))),
-      );
-      expect.soft(res.r.diffPixels, 'leading focus (ring only, no layer)').toBeLessThanOrEqual(res.allowed);
+      await hideRing(page, '[data-fixture-node] button > span:last-child');
+      await kit(node, 'lead-focus', 'focused', 'enabled', 'leading focus (ring only, no layer)');
     });
   });
 }
 
 // ── FAB: hover raises to level 4, keyboard focus drops the shadow spread ────────────────────
-const fabs = JSON.parse(readFileSync(join(REFS_DIR, 'fab/manifest.json'), 'utf8')) as Manifest;
-
-function checkFab(name: string, refName: string, shot: Buffer) {
-  const v = fabs.variants[refName]!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'fab', `${refName}.png`));
-  const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, `fab-${name}.actual.png`), shot);
-  writeFileSync(join(OUT, `fab-${name}.diff.png`), r.diffPng);
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  return { r, allowed: v.allowedDiffPixels ?? 0 };
-}
-
 for (const kind of ['fab', 'extended'] as const) {
   test(`${kind} (live): rest, hover, keyboard focus`, async ({ page }) => {
-    const ref = (state: string) => `${kind}-primaryContainer-medium-${state}`;
-    const rb = (name: string) => fabs.variants[name]!.renderBounds!;
-    await page.goto(`/fixture/fab/${kind}-live`);
-    await page.evaluate(() => document.fonts.ready);
-    await page.mouse.move(0, 0);
-    const node = page.locator('[data-fixture-node]');
-    await expect(node).toBeVisible();
+    const node = await openFixture(page, `/fixture/fab/${kind}-live`);
+    const kit = (name: string, state: string, message: string) =>
+      expectKit(node, 'fab', `${kind}-primaryContainer-medium-${state}`, { label: `${kind}-${name}`, message });
     const btn = node.locator('button');
-    await page.waitForTimeout(SETTLE);
-    let res = checkFab(`${kind}-rest`, ref('enabled'), await captureRegion(page, node, rb(ref('enabled'))));
-    expect.soft(res.r.diffPixels, 'rest').toBeLessThanOrEqual(res.allowed);
+    await settle(page);
+    await kit('rest', 'enabled', 'rest');
 
-    const b = (await btn.boundingBox())!;
-    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-    await page.waitForTimeout(SETTLE);
-    res = checkFab(`${kind}-hover`, ref('hovered'), await captureRegion(page, node, rb(ref('hovered'))));
-    expect.soft(res.r.diffPixels, 'hover (level 4)').toBeLessThanOrEqual(res.allowed);
+    await moveToCentre(btn);
+    await settle(page);
+    await kit('hover', 'hovered', 'hover (level 4)');
 
     await page.mouse.move(0, 0);
     await page.keyboard.press('Tab');
-    await page.waitForTimeout(SETTLE);
+    await settle(page);
     await expect(btn).toBeFocused();
-    const ring = await btn.evaluate((e) => {
-      const cs = getComputedStyle(e);
-      return { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: cs.outlineColor };
-    });
-    expect.soft(ring, 'focus ring').toEqual({ style: 'solid', width: '3px', offset: '2px', color: 'rgb(98, 91, 113)' });
-    await page.addStyleTag({ content: '[data-fixture-node] button { outline-style: none !important }' });
-    await page.waitForTimeout(50);
-    res = checkFab(`${kind}-focus`, ref('focused'), await captureRegion(page, node, rb(ref('focused'))));
-    expect.soft(res.r.diffPixels, 'focus (no-spread shadow, 10% layer)').toBeLessThanOrEqual(res.allowed);
+    expect.soft(await outlineOf(btn), 'focus ring').toEqual(RING);
+    await hideRing(page, '[data-fixture-node] button');
+    await kit('focus', 'focused', 'focus (no-spread shadow, 10% layer)');
   });
 }
 
 // ── FAB menu: open from the FAB, render = kit "FAB menu", keyboard into items, Escape closes ─
 test('fab menu (live): open, render, keyboard, escape', async ({ page }) => {
-  const menus = JSON.parse(readFileSync(join(REFS_DIR, 'fab-menu/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/fab-menu/live');
-  await page.evaluate(() => document.fonts.ready);
-  const node = page.locator('[data-fixture-node]');
+  const node = await openFixture(page, '/fixture/fab-menu/live');
   const fab = node.getByRole('button', { name: 'Actions' });
   await fab.click();
   const close = node.getByRole('button', { name: 'Actions' });
@@ -359,16 +189,8 @@ test('fab menu (live): open, render, keyboard, escape', async ({ page }) => {
   await expect(node.getByRole('menuitem', { name: 'First' })).toBeFocused();
   await expect(node.getByRole('menuitem')).toHaveCount(3);
   await page.mouse.move(0, 0);
-  await page.waitForTimeout(SETTLE);
-  const v = menus.variants['menu-primary']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'fab-menu', 'menu-primary.png'));
-  const shot = await captureRegion(page, node, v.renderBounds!);
-  const r = compareImages(ref, shot, { background: hexToRgb(v.background ?? '#FFFFFF') });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  expect.soft(r.diffPixels, 'open menu = kit FAB menu').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  await settle(page);
+  await expectKit(node, 'fab-menu', 'menu-primary', { message: 'open menu = kit FAB menu' });
 
   await page.keyboard.press('ArrowUp');
   await expect(node.getByRole('menuitem', { name: 'Third' })).toBeFocused();
@@ -381,23 +203,9 @@ test('fab menu (live): open, render, keyboard, escape', async ({ page }) => {
 
 // ── Connected button group: rest = kit, single selection, roving focus, hover morph ─────────
 test('connected button group (live): select, keyboard, hover morph', async ({ page }) => {
-  const groups = JSON.parse(readFileSync(join(REFS_DIR, 'button-group/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/button-group/connected-live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
-  await page.waitForTimeout(SETTLE);
-  const v = groups.variants['connected-round-medium']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'button-group', 'connected-round-medium.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
-    background: hexToRgb(v.background ?? '#FFFFFF'),
-  });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  expect.soft(r.diffPixels, 'rest = kit connected group').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  const node = await openFixture(page, '/fixture/button-group/connected-live');
+  await settle(page);
+  await expectKit(node, 'button-group', 'connected-round-medium', { message: 'rest = kit connected group' });
 
   const items = node.locator('button');
   await items.nth(1).click();
@@ -405,7 +213,7 @@ test('connected button group (live): select, keyboard, hover morph', async ({ pa
   await expect(items.nth(0)).toHaveAttribute('aria-pressed', 'false');
   // Selected → pill; the previously selected first segment returns to round outer / 8px inner.
   await page.mouse.move(0, 0);
-  await page.waitForTimeout(SETTLE);
+  await settle(page);
   const radii = (i: number) =>
     items
       .nth(i)
@@ -421,31 +229,16 @@ test('connected button group (live): select, keyboard, hover morph', async ({ pa
   await items.nth(1).focus();
   await page.keyboard.press('ArrowRight');
   await expect(items.nth(2)).toBeFocused();
-  const b = (await items.nth(2).boundingBox())!;
-  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-  await page.waitForTimeout(SETTLE);
+  await moveToCentre(items.nth(2));
+  await settle(page);
   expect.soft(await radii(2), 'hovered last: inner corner grows to 16').toBe('16px 28px');
 });
 
 // ── Segmented button: rest = kit set, click selects (check appears), keyboard roving ───────
 test('segmented button (live): select, check, keyboard', async ({ page }) => {
-  const segs = JSON.parse(readFileSync(join(REFS_DIR, 'segmented-button/manifest.json'), 'utf8')) as Manifest;
-  await page.goto('/fixture/segmented-button/live');
-  await page.evaluate(() => document.fonts.ready);
-  await page.mouse.move(0, 0);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
-  await page.waitForTimeout(SETTLE);
-  const v = segs.variants['set-3-d0']!;
-  const ref: Buffer = readFileSync(join(REFS_DIR, 'segmented-button', 'set-3-d0.png'));
-  const r = compareImages(ref, await captureRegion(page, node, v.renderBounds!), {
-    background: hexToRgb(v.background ?? '#FFFFFF'),
-  });
-  test.info().annotations.push({
-    type: 'parity',
-    description: `${r.diffPixels} drift px (${r.flatDriftPixels} flat) · ${r.aaPixels} AA · ${r.rasterPixels} raster`,
-  });
-  expect.soft(r.diffPixels, 'rest = kit set').toBeLessThanOrEqual(v.allowedDiffPixels ?? 0);
+  const node = await openFixture(page, '/fixture/segmented-button/live');
+  await settle(page);
+  await expectKit(node, 'segmented-button', 'set-3-d0', { message: 'rest = kit set' });
   const items = node.locator('button');
   await items.nth(2).click();
   await expect(items.nth(2)).toHaveAttribute('aria-pressed', 'true');
@@ -459,10 +252,7 @@ test('segmented button (live): select, check, keyboard', async ({ page }) => {
 // Auto width (unequal labels): equal segments as wide as the widest, sharing 1px borders — a
 // long label must never push its container past its track (that drew doubled dividers).
 test('segmented button (live, auto width): equal segments sized to the widest label', async ({ page }) => {
-  await page.goto('/fixture/segmented-button/live-auto');
-  await page.evaluate(() => document.fonts.ready);
-  const node = page.locator('[data-fixture-node]');
-  await expect(node).toBeVisible();
+  const node = await openFixture(page, '/fixture/segmented-button/live-auto');
   const segs = await node.locator('button').evaluateAll((els) =>
     els.map((el) => {
       const r = el.getBoundingClientRect();
