@@ -7,6 +7,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { enableMotion, load } from './helpers/page.ts';
 import { centre, pointerDrag, touchDrag, type Point } from './helpers/pointer.ts';
+import { countFrames } from './helpers/settle.ts';
 import { translateOf } from './helpers/styles.ts';
 
 /** Press at `from`, move by (dx, dy) in steps, read `read`, rest 120ms (no fling) and release. */
@@ -20,10 +21,7 @@ async function dragAndRead<T>(page: Page, from: Point, dx: number, dy: number, r
   return value;
 }
 
-/**
- * Window `pointermove` listeners (one per gesture being tracked: the sheets' and carousel's drags)
- * and requestAnimationFrame calls, counted.
- */
+/** Window `pointermove` listeners (one per gesture being tracked: the sheets' and carousel's drags), counted. */
 async function instrument(page: Page) {
   await page.addInitScript(() => {
     const live = new Set<unknown>();
@@ -37,14 +35,7 @@ async function instrument(page: Page) {
       if (type === 'pointermove') live.delete(fn);
       remove(type, fn, opts as EventListenerOptions);
     }) as typeof window.removeEventListener;
-    const raf = window.requestAnimationFrame.bind(window);
-    const w = window as unknown as { __pointerListeners: () => number; __rafCalls: number };
-    w.__pointerListeners = () => live.size;
-    w.__rafCalls = 0;
-    window.requestAnimationFrame = (cb) => {
-      w.__rafCalls++;
-      return raf(cb);
-    };
+    (window as unknown as { __pointerListeners: () => number }).__pointerListeners = () => live.size;
   });
 }
 const pointerListeners = (page: Page) =>
@@ -247,9 +238,9 @@ test.describe('sheets / carousel: unmounting mid-gesture', () => {
     // … and stops with the carousel: no more frames are requested (fixed windows on purpose: the
     // unmount lands, then frames are counted over 300ms).
     await page.waitForTimeout(50);
-    await page.evaluate(() => ((window as unknown as { __rafCalls: number }).__rafCalls = 0));
+    const frames = await countFrames(page);
     await page.waitForTimeout(300);
-    expect(await page.evaluate(() => (window as unknown as { __rafCalls: number }).__rafCalls)).toBe(0);
+    expect(await frames()).toBe(0);
 
     await page.reload();
     const again = page.getByRole('region', { name: 'Photos' });

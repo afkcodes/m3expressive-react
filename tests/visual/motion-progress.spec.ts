@@ -5,7 +5,7 @@
  */
 import { expect, test, type Page } from '@playwright/test';
 import { sampleFrames, type Frame } from './helpers/frames.ts';
-import { enableMotion, openFixture } from './helpers/page.ts';
+import { enableMotion, load, openFixture } from './helpers/page.ts';
 import { settle } from './helpers/settle.ts';
 import { transitionOf } from './helpers/styles.ts';
 
@@ -274,8 +274,7 @@ test.describe('text field motion', () => {
   test('outlined notch opens with the label: label width × progress + 4px each side (Compose outlineCutout)', async ({
     page,
   }) => {
-    await page.goto('/fixture/text-field/live');
-    await page.evaluate(() => document.fonts.ready); // the label is measured when the float starts
+    await load(page, '/fixture/text-field/live'); // the label is measured when the float starts
     const frames = await page.evaluate(
       () =>
         new Promise<{ t: number; scale: number; legend: number }[]>((resolve) => {
@@ -313,8 +312,7 @@ test.describe('text field motion', () => {
   test('label float interrupted mid-flight continues from its position and velocity (Compose Transition)', async ({
     page,
   }) => {
-    await page.goto('/fixture/text-field/live');
-    await page.evaluate(() => document.fonts.ready);
+    await load(page, '/fixture/text-field/live');
     const ys = await page.evaluate(
       () =>
         new Promise<{ t: number; y: number; blurred: boolean }[]>((resolve) => {

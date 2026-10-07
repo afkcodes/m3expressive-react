@@ -78,7 +78,7 @@ async function settleInPage(
     await frame();
     const looping = o.springs && counter.requests !== requests;
     if (!looping && running().length === 0) return null;
-    if (performance.now() > deadline) return 'animation frames still requested (a rAF loop is running)';
+    if (looping && performance.now() > deadline) return 'animation frames still requested (a rAF loop is running)';
   }
 }
 
