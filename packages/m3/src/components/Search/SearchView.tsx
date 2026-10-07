@@ -131,7 +131,7 @@ interface Motion {
   to: DOMRect | null;
 }
 
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const lerp = (from: number, to: number, fraction: number) => from + (to - from) * fraction;
 
 /** The expanded search: an input bar over its results (place it in a dialog / popover). */
 export function SearchView({
@@ -159,7 +159,7 @@ export function SearchView({
   const root = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const results = useRef<HTMLDivElement>(null);
-  const m = useRef<Motion | null>(null);
+  const motionRef = useRef<Motion | null>(null);
   // Animation callbacks outlive renders: they read the latest props here (updated before the
   // effects below run).
   const props = useRef({ full, expandSpec, collapseSpec, onCollapsed });
@@ -168,62 +168,62 @@ export function SearchView({
   });
 
   const apply = () => {
-    const st = m.current;
-    if (!st) return;
-    const prog = Math.min(1, Math.max(0, st.p));
-    const b = bar.current;
-    const res = results.current;
+    const motion = motionRef.current;
+    if (!motion) return;
+    const progress = Math.min(1, Math.max(0, motion.p));
+    const barEl = bar.current;
+    const resultsEl = results.current;
     if (props.current.full) {
-      root.current?.style.setProperty('--m3-search-surface-alpha', String(prog));
+      root.current?.style.setProperty('--m3-search-surface-alpha', String(progress));
       let dy = 0;
-      if (b && st.from && st.to) {
-        const { from, to } = st;
-        const w = lerp(from.width, to.width, st.p);
-        const cx = lerp(from.left + from.width / 2, to.left + to.width / 2, st.p);
-        dy = lerp(from.top, to.top, prog) - to.top;
-        b.style.width = `${w}px`;
-        b.style.transform = `translate(${cx - w / 2 - to.left}px, ${dy}px)`;
+      if (barEl && motion.from && motion.to) {
+        const { from, to } = motion;
+        const width = lerp(from.width, to.width, motion.p);
+        const centreX = lerp(from.left + from.width / 2, to.left + to.width / 2, motion.p);
+        dy = lerp(from.top, to.top, progress) - to.top;
+        barEl.style.width = `${width}px`;
+        barEl.style.transform = `translate(${centreX - width / 2 - to.left}px, ${dy}px)`;
       }
-      if (res) {
-        res.style.opacity = String(st.c);
-        res.style.transform = dy ? `translateY(${dy}px)` : '';
+      if (resultsEl) {
+        resultsEl.style.opacity = String(motion.c);
+        resultsEl.style.transform = dy ? `translateY(${dy}px)` : '';
       }
-    } else if (res) {
-      res.style.opacity = String(st.c);
-      res.style.visibility = st.dropdown || st.slideSpring ? '' : 'hidden';
-      const list = res.firstElementChild as HTMLElement | null;
+    } else if (resultsEl) {
+      resultsEl.style.opacity = String(motion.c);
+      resultsEl.style.visibility = motion.dropdown || motion.slideSpring ? '' : 'hidden';
+      const list = resultsEl.firstElementChild as HTMLElement | null;
       if (list) {
-        if (st.slide === 1) list.style.transform = '';
+        if (motion.slide === 1) list.style.transform = '';
         else {
-          st.slideHeight ??= res.offsetHeight;
-          list.style.transform = `translateY(${(-st.slideHeight / 2) * (1 - st.slide)}px)`;
+          motion.slideHeight ??= resultsEl.offsetHeight;
+          list.style.transform = `translateY(${(-motion.slideHeight / 2) * (1 - motion.slide)}px)`;
         }
       }
     }
   };
   const clear = () => {
-    const b = bar.current;
-    if (b) {
-      b.style.width = '';
-      b.style.transform = '';
+    const barEl = bar.current;
+    if (barEl) {
+      barEl.style.width = '';
+      barEl.style.transform = '';
     }
-    const res = results.current;
-    if (res) {
-      res.style.opacity = '';
-      res.style.transform = '';
-      res.style.visibility = '';
-      const list = res.firstElementChild as HTMLElement | null;
+    const resultsEl = results.current;
+    if (resultsEl) {
+      resultsEl.style.opacity = '';
+      resultsEl.style.transform = '';
+      resultsEl.style.visibility = '';
+      const list = resultsEl.firstElementChild as HTMLElement | null;
       if (list) list.style.transform = '';
     }
     root.current?.style.removeProperty('--m3-search-surface-alpha');
   };
   /** Everything at rest: expanded → drop the inline motion styles; collapsed → unmount. */
   const settled = () => {
-    const st = m.current;
-    if (!st || st.spring || st.slideSpring || st.fade) return;
-    if (st.open) clear();
+    const motion = motionRef.current;
+    if (!motion || motion.spring || motion.slideSpring || motion.fade) return;
+    if (motion.open) clear();
     else {
-      m.current = null;
+      motionRef.current = null;
       setMounted(false);
       props.current.onCollapsed?.();
     }
@@ -231,31 +231,31 @@ export function SearchView({
   // Docked dropdown: AnimatedVisibility(visible = progress > 0.1 && target == Expanded), sliding
   // on the expand spec in and the collapse spec out.
   const setDropdown = (visible: boolean) => {
-    const st = m.current;
-    if (!st || props.current.full || st.dropdown === visible) return;
-    st.dropdown = visible;
-    st.slideHeight = null;
+    const motion = motionRef.current;
+    if (!motion || props.current.full || motion.dropdown === visible) return;
+    motion.dropdown = visible;
+    motion.slideHeight = null;
     const spec = visible ? props.current.expandSpec : props.current.collapseSpec;
     const to = visible ? 1 : 0;
     if (!spec) {
-      st.slideSpring?.stop();
-      st.slideSpring = null;
-      st.slide = to;
+      motion.slideSpring?.stop();
+      motion.slideSpring = null;
+      motion.slide = to;
       apply();
       return;
     }
-    if (st.slideSpring) st.slideSpring.retarget(to, spec);
+    if (motion.slideSpring) motion.slideSpring.retarget(to, spec);
     else
-      st.slideSpring = animateSpring({
+      motion.slideSpring = animateSpring({
         spring: spec,
-        from: st.slide,
+        from: motion.slide,
         to,
         onUpdate: (v) => {
-          st.slide = v;
+          motion.slide = v;
           apply();
         },
         onComplete: () => {
-          st.slideSpring = null;
+          motion.slideSpring = null;
           apply();
           settled();
         },
@@ -307,8 +307,8 @@ export function SearchView({
   // Each change of `open` (and the mount) starts the motion towards it, from wherever it is.
   const startMotion = useEffectEvent((open: boolean) => {
     // Without a bar to expand from (static layouts), the view starts expanded.
-    const animateIn = m.current == null && open && expandedFrom?.current != null;
-    const st = (m.current ??= {
+    const animateIn = motionRef.current == null && open && expandedFrom?.current != null;
+    const motion = (motionRef.current ??= {
       open,
       p: animateIn ? 0 : 1,
       c: animateIn ? 0 : 1,
@@ -321,62 +321,62 @@ export function SearchView({
       from: null,
       to: null,
     });
-    st.open = open;
+    motion.open = open;
     const target = open ? 1 : 0;
 
     // The bar's rest box and the collapsed bar's box.
     if (full && bar.current) {
-      const b = bar.current;
-      const { width, transform } = b.style;
-      b.style.width = '';
-      b.style.transform = '';
-      st.to = b.getBoundingClientRect();
-      b.style.width = width;
-      b.style.transform = transform;
-      st.from = expandedFrom?.current?.getBoundingClientRect() ?? null;
+      const barEl = bar.current;
+      const { width, transform } = barEl.style;
+      barEl.style.width = '';
+      barEl.style.transform = '';
+      motion.to = barEl.getBoundingClientRect();
+      barEl.style.width = width;
+      barEl.style.transform = transform;
+      motion.from = expandedFrom?.current?.getBoundingClientRect() ?? null;
     }
     if (!open) setDropdown(false);
 
     // The progress spring (retargeting keeps its velocity, as Compose's Animatable).
     const spec: SpringParams | null = open ? expandSpec : collapseSpec;
-    if (!spec || st.p === target) {
-      st.spring?.stop();
-      st.spring = null;
-      st.p = target;
+    if (!spec || motion.p === target) {
+      motion.spring?.stop();
+      motion.spring = null;
+      motion.p = target;
       if (open) setDropdown(true);
-    } else if (st.spring) st.spring.retarget(target, spec);
+    } else if (motion.spring) motion.spring.retarget(target, spec);
     else
-      st.spring = animateSpring({
+      motion.spring = animateSpring({
         spring: spec,
-        from: st.p,
+        from: motion.p,
         to: target,
         onUpdate: (v) => {
-          st.p = v;
-          if (st.open && v > 0.1) setDropdown(true);
+          motion.p = v;
+          if (motion.open && v > 0.1) setDropdown(true);
           apply();
         },
         onComplete: () => {
-          st.spring = null;
+          motion.spring = null;
           settled();
         },
       });
 
     // contentProgress: tweens, restarted from where they are.
-    st.fade?.();
-    st.fade = null;
-    if (st.c !== target)
-      st.fade = tween({
-        from: st.c,
+    motion.fade?.();
+    motion.fade = null;
+    if (motion.c !== target)
+      motion.fade = tween({
+        from: motion.c,
         to: target,
         duration: FADE_DURATION,
         delay: open ? FADE_IN_DELAY : 0,
         easing: open ? FADE_IN : FADE_OUT,
         onUpdate: (v) => {
-          st.c = v;
+          motion.c = v;
           apply();
         },
         onComplete: () => {
-          st.fade = null;
+          motion.fade = null;
           settled();
         },
       });
@@ -389,9 +389,9 @@ export function SearchView({
 
   useLayoutEffect(
     () => () => {
-      m.current?.spring?.stop();
-      m.current?.slideSpring?.stop();
-      m.current?.fade?.();
+      motionRef.current?.spring?.stop();
+      motionRef.current?.slideSpring?.stop();
+      motionRef.current?.fade?.();
     },
     [],
   );
