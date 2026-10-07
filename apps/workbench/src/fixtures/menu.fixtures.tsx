@@ -1,23 +1,8 @@
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { color } from '@m3x/react/tokens/color.stylex';
 import { typescale } from '@m3x/react';
-import {
-  Badge,
-  Button,
-  IconButton,
-  Menu,
-  MenuDivider,
-  MenuGroup,
-  MenuCheckboxItem,
-  MenuItem,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuScope,
-  MenuSectionLabel,
-  MenuSurface,
-  Submenu,
-} from '@m3x/react';
+import { Badge, MenuDivider, MenuGroup, MenuItem, MenuScope, MenuSectionLabel, MenuSurface } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
 import manifest from '../../../../figma/menu/manifest.json';
 import assets from '../../../../figma/menu/assets.json';
@@ -26,6 +11,7 @@ import slotLead from '../../../../figma/menu/assets/slot-lead.png';
 import slotContent from '../../../../figma/menu/assets/slot-content.png';
 import slotTrail from '../../../../figma/menu/assets/slot-trail.png';
 import type { FixtureModule, FixtureVariant } from './types.ts';
+import { Icon, LiveMenu, LiveMotionMenu, LiveSelectMenu, LiveWrapped } from './menu.parts.tsx';
 
 const fx = stylex.create({
   // Kit slip: the vibrant 3-group menu's middle group spaces its items 2px apart (all others: 0).
@@ -37,22 +23,6 @@ const fx = stylex.create({
   onSecondaryContainer: { color: color.onSecondaryContainer },
 });
 
-type IconName = keyof typeof assets.icons;
-const Icon = ({ name }: { name: IconName }) => {
-  const size = Number(name.split('-').pop());
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      fill="currentColor"
-      aria-hidden
-      style={{ display: 'block' }}
-    >
-      <path d={assets.icons[name]} />
-    </svg>
-  );
-};
 /** The kit's outlined "⌘C" (Roboto has no ⌘): label-large (expressive) and body-large (baseline). */
 const Shortcut = () => (
   <svg
@@ -291,155 +261,6 @@ function render(name: string): ReactNode {
     'btrail-sel-slot': <div style={{ width: 24, height: 24 }} />,
   };
   return blocks[name];
-}
-
-/** Live: the kit's 2-group standard menu (menu-std-2), opened from a tonal button. */
-function LiveMenu() {
-  const [log, setLog] = useState('—');
-  return (
-    <div style={{ width: 208 }}>
-      <Menu trigger={<Button variant="tonal">Options</Button>} width={208}>
-        {[0, 1].map((g) => (
-          <MenuGroup key={g}>
-            {[0, 1, 2, 3].map((i) => (
-              <MenuItem
-                key={i}
-                leading={<Icon name="stars-20" />}
-                trailing={<Icon name="arrow_right-20" />}
-                onClick={() => setLog(String(g * 4 + i + 1))}
-              >
-                Label
-              </MenuItem>
-            ))}
-          </MenuGroup>
-        ))}
-      </Menu>
-      <output data-log style={{ position: 'absolute', left: -9999 }}>
-        {log}
-      </output>
-    </div>
-  );
-}
-
-/** Live: single-choice options and a toggle; choosing keeps the menu open. */
-function LiveSelectMenu() {
-  const [view, setView] = useState<unknown>('list');
-  const [wrap, setWrap] = useState(false);
-  return (
-    <div style={{ width: 208 }}>
-      <Menu trigger={<Button variant="tonal">View</Button>} variant="vibrant" width={208}>
-        <MenuRadioGroup label="Layout" value={view} onValueChange={setView}>
-          <MenuRadioItem value="list" leading={<Icon name="stars-20" />}>
-            List
-          </MenuRadioItem>
-          <MenuRadioItem value="grid" leading={<Icon name="stars-20" />}>
-            Grid
-          </MenuRadioItem>
-        </MenuRadioGroup>
-        <MenuGroup>
-          <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap} leading={<Icon name="stars-20" />}>
-            Wrap text
-          </MenuCheckboxItem>
-        </MenuGroup>
-      </Menu>
-      <output data-state style={{ position: 'absolute', left: -9999 }}>
-        {String(view)}|{String(wrap)}
-      </output>
-    </div>
-  );
-}
-
-const Check = () => (
-  <svg width={20} height={20} viewBox="0 0 20 20" fill="currentColor" aria-hidden style={{ display: 'block' }}>
-    <path d={listAssets.icons['check-20']} />
-  </svg>
-);
-
-/** Live (motion): checkable items with only a selected icon, and a submenu; opened from an icon button. */
-function LiveMotionMenu() {
-  const [wrap, setWrap] = useState(false);
-  return (
-    <div style={{ width: 208, display: 'flex', justifyContent: 'flex-end' }}>
-      <Menu
-        trigger={
-          <IconButton aria-label="More">
-            <Icon name="stars-20" />
-          </IconButton>
-        }
-        align="end"
-      >
-        <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap} selectedLeading={<Check />}>
-          Word wrap
-        </MenuCheckboxItem>
-        <Submenu
-          items={['Email', 'Link'].map((t) => (
-            <MenuItem key={t}>{t}</MenuItem>
-          ))}
-          trailing={<Icon name="arrow_right-20" />}
-        >
-          Share
-        </Submenu>
-      </Menu>
-    </div>
-  );
-}
-
-/** Two groups rendered by a wrapper component (not direct children of the menu). */
-function WrappedGroups() {
-  return (
-    <>
-      <MenuGroup>
-        <MenuItem>Cut</MenuItem>
-        <MenuItem>Copy</MenuItem>
-      </MenuGroup>
-      <MenuGroup>
-        <MenuItem>Paste</MenuItem>
-      </MenuGroup>
-    </>
-  );
-}
-
-/** Live (a11y): group detection — direct children, a wrapper component, a fragment, loose items. */
-function LiveWrapped() {
-  return (
-    <div style={{ display: 'flex', columnGap: 16, alignItems: 'flex-start' }}>
-      <div data-case="direct">
-        <MenuSurface>
-          <MenuGroup>
-            <MenuItem>Cut</MenuItem>
-            <MenuItem>Copy</MenuItem>
-          </MenuGroup>
-          <MenuGroup>
-            <MenuItem>Paste</MenuItem>
-          </MenuGroup>
-        </MenuSurface>
-      </div>
-      <div data-case="wrapped">
-        <MenuSurface>
-          <WrappedGroups />
-        </MenuSurface>
-      </div>
-      <div data-case="fragment">
-        <MenuSurface>
-          <>
-            <MenuGroup>
-              <MenuItem>Cut</MenuItem>
-              <MenuItem>Copy</MenuItem>
-            </MenuGroup>
-            <MenuGroup>
-              <MenuItem>Paste</MenuItem>
-            </MenuGroup>
-          </>
-        </MenuSurface>
-      </div>
-      <div data-case="loose">
-        <MenuSurface>
-          <MenuItem>Cut</MenuItem>
-          <MenuItem>Copy</MenuItem>
-        </MenuSurface>
-      </div>
-    </div>
-  );
 }
 
 const fixture: FixtureModule = {
