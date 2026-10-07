@@ -1,21 +1,23 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
-  useState,
+  type ComponentPropsWithRef,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactElement,
   type ReactNode,
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import { Popover as BasePopover } from '@base-ui/react/popover';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { textBox } from '../../primitives/textBox.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { usePortalContainer } from '../../theme/portal.tsx';
 
 /*
@@ -87,32 +89,31 @@ const s = stylex.create({
   },
 });
 
-export interface PlainTooltipSurfaceProps {
+export interface PlainTooltipSurfaceProps extends SxProps<ComponentPropsWithRef<'span'>> {
   children: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /** The plain tooltip container on its own (static rendering, custom positioning). */
-export function PlainTooltipSurface({ children, sx }: PlainTooltipSurfaceProps) {
+export function PlainTooltipSurface({ children, sx, ...rest }: PlainTooltipSurfaceProps) {
   return (
-    <span {...stylex.props(typescale.bodySmall, s.plain, sx)}>
+    <span {...rest} {...stylex.props(typescale.bodySmall, s.plain, sx)}>
       <span {...stylex.props(textBox.hug, s.plainText)}>{children}</span>
     </span>
   );
 }
 
-export interface RichTooltipSurfaceProps {
+export interface RichTooltipSurfaceProps extends SxProps<ComponentPropsWithRef<'div'>> {
   subhead?: ReactNode;
+  /** The supporting text. */
   children: ReactNode;
   /** Text buttons (size small). */
   actions?: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /** The rich tooltip container on its own (static rendering, custom positioning). */
-export function RichTooltipSurface({ subhead, children, actions, sx }: RichTooltipSurfaceProps) {
+export function RichTooltipSurface({ subhead, children, actions, sx, ...rest }: RichTooltipSurfaceProps) {
   return (
-    <div {...stylex.props(s.rich, sx)}>
+    <div {...rest} {...stylex.props(s.rich, sx)}>
       <div {...stylex.props(s.richContent)}>
         {subhead != null && <p {...stylex.props(typescale.titleSmall, s.text)}>{subhead}</p>}
         <p {...stylex.props(typescale.bodyMedium, s.text)}>{children}</p>
@@ -129,14 +130,33 @@ interface ChangeDetails {
   reason: string;
 }
 
+interface OpenState<Details> {
+  open?: boolean;
+  defaultOpen?: boolean;
+  /**
+   * `details` are Base UI's when it changes the state; none for a long press, its timeout or
+   * another tooltip showing.
+   */
+  onOpenChange?: (open: boolean, details?: Details) => void;
+}
+
 /** Open state + Compose's long-press / persistence rules, shared by plain and rich tooltips. */
-function useTooltipBehaviour(persistent: boolean) {
-  const [open, setOpen] = useState(false);
+function useTooltipBehaviour<Details extends ChangeDetails>(
+  persistent: boolean,
+  { open: openProp, defaultOpen = false, onOpenChange: onChange }: OpenState<Details>,
+) {
+  const [open, setOpenState] = useControllableState<boolean, [Details?]>(openProp, defaultOpen, onChange);
+  // Timers and the one-tooltip rule outlive renders: they call the latest setter.
+  const setOpenRef = useRef(setOpenState);
+  useLayoutEffect(() => {
+    setOpenRef.current = setOpenState;
+  });
+  const setOpen = (next: boolean, details?: Details) => setOpenRef.current(next, details);
   const press = useRef({ timer: 0, dismiss: 0, held: false, due: false, suppressClick: false, pointerType: '' });
 
   useEffect(() => {
     if (!open) return undefined;
-    const close = () => setOpen(false);
+    const close = () => setOpenRef.current(false);
     closeVisibleTooltip?.();
     closeVisibleTooltip = close;
     return () => {
@@ -152,10 +172,10 @@ function useTooltipBehaviour(persistent: boolean) {
     [],
   );
 
-  const hide = () => {
+  const hide = (details?: Details) => {
     window.clearTimeout(press.current.dismiss);
     press.current.due = false;
-    setOpen(false);
+    setOpen(false, details);
   };
 
   const release = () => {
@@ -166,7 +186,7 @@ function useTooltipBehaviour(persistent: boolean) {
     if (state.due) hide();
   };
 
-  const onOpenChange = (next: boolean, details: ChangeDetails) => {
+  const onOpenChange = (next: boolean, details: Details) => {
     // Compose's hover Enter / Exit react to mouse pointers only: the compatibility mouse events
     // that follow a touch (or a long press whose click was swallowed) neither show nor hide it.
     if (
@@ -175,14 +195,14 @@ function useTooltipBehaviour(persistent: boolean) {
     )
       return;
     if (next) {
-      setOpen(true);
+      setOpen(true, details);
       return;
     }
     // A long press owns the tooltip until the finger lifts (Compose consumes that gesture).
     if (press.current.held) return;
     // Compose: pointer Exit dismisses only a non-persistent tooltip.
     if (persistent && details.reason === 'trigger-hover') return;
-    hide();
+    hide(details);
   };
 
   const triggerProps = {
@@ -225,10 +245,17 @@ function useTooltipBehaviour(persistent: boolean) {
   return { open, onOpenChange, triggerProps };
 }
 
-export interface TooltipProps {
+/**
+ * `ref`, native props and `sx` go to the popup (the element that scales and fades in); `children`
+ * is the trigger and `content` the text (the native `content` attribute is omitted).
+ */
+export interface TooltipProps
+  extends
+    SxProps<Omit<ComponentPropsWithRef<'div'>, 'content' | 'children'>>,
+    OpenState<BaseTooltip.Root.ChangeEventDetails> {
   /** Tooltip text. */
   content: ReactNode;
-  /** The trigger (must forward its ref, e.g. an IconButton). */
+  /** The trigger: an element that accepts `ref` and spreads its props (e.g. an IconButton). */
   children: ReactElement;
   side?: 'top' | 'bottom' | 'left' | 'right';
   /** Hover delay in ms. Compose shows on pointer enter: 0. */
@@ -236,15 +263,29 @@ export interface TooltipProps {
 }
 
 /** Plain tooltip: shows on hover (immediately), keyboard focus or a touch long press. */
-export function Tooltip({ content, children, side = 'top', delay = 0 }: TooltipProps) {
+export function Tooltip({
+  content,
+  children,
+  side = 'top',
+  delay = 0,
+  open: openProp,
+  defaultOpen,
+  onOpenChange: onOpenChangeProp,
+  sx,
+  ...rest
+}: TooltipProps) {
   const portalContainer = usePortalContainer();
-  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(false);
+  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(false, {
+    open: openProp,
+    defaultOpen,
+    onOpenChange: onOpenChangeProp,
+  });
   return (
     <BaseTooltip.Root open={open} onOpenChange={onOpenChange}>
       <BaseTooltip.Trigger delay={delay} render={children} {...triggerProps} />
       <BaseTooltip.Portal container={portalContainer}>
         <BaseTooltip.Positioner side={side} sideOffset={4}>
-          <BaseTooltip.Popup {...stylex.props(s.popup)}>
+          <BaseTooltip.Popup {...rest} {...stylex.props(s.popup, sx)}>
             <PlainTooltipSurface>{content}</PlainTooltipSurface>
           </BaseTooltip.Popup>
         </BaseTooltip.Positioner>
@@ -253,9 +294,19 @@ export function Tooltip({ content, children, side = 'top', delay = 0 }: TooltipP
   );
 }
 
-export interface RichTooltipProps extends Omit<RichTooltipSurfaceProps, 'sx'> {
-  /** The trigger (must forward its ref). */
+/**
+ * `ref`, native props and `sx` go to the popup (the element that scales and fades in), which holds
+ * the rich tooltip surface: `subhead`, `children` (the supporting text) and `actions`.
+ */
+export interface RichTooltipProps
+  extends SxProps<Omit<ComponentPropsWithRef<'div'>, 'children'>>, OpenState<BasePopover.Root.ChangeEventDetails> {
+  /** The trigger: an element that accepts `ref` and spreads its props. */
   trigger: ReactElement;
+  subhead?: ReactNode;
+  /** The supporting text. */
+  children: ReactNode;
+  /** Text buttons (size small). */
+  actions?: ReactNode;
   side?: 'top' | 'bottom' | 'left' | 'right';
   /**
    * Stay open when the pointer leaves, until an outside press or Escape (Compose
@@ -267,16 +318,34 @@ export interface RichTooltipProps extends Omit<RichTooltipSurfaceProps, 'sx'> {
 }
 
 /** Rich tooltip: opens on hover (immediately), click or a touch long press. */
-export function RichTooltip({ trigger, side = 'bottom', persistent = false, ...surface }: RichTooltipProps) {
+export function RichTooltip({
+  trigger,
+  side = 'bottom',
+  persistent = false,
+  subhead,
+  children,
+  actions,
+  open: openProp,
+  defaultOpen,
+  onOpenChange: onOpenChangeProp,
+  sx,
+  ...rest
+}: RichTooltipProps) {
   const portalContainer = usePortalContainer();
-  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(persistent);
+  const { open, onOpenChange, triggerProps } = useTooltipBehaviour(persistent, {
+    open: openProp,
+    defaultOpen,
+    onOpenChange: onOpenChangeProp,
+  });
   return (
     <BasePopover.Root open={open} onOpenChange={onOpenChange}>
       <BasePopover.Trigger openOnHover delay={0} render={trigger} {...triggerProps} />
       <BasePopover.Portal container={portalContainer}>
         <BasePopover.Positioner side={side} sideOffset={4}>
-          <BasePopover.Popup {...stylex.props(s.popup)}>
-            <RichTooltipSurface {...surface} />
+          <BasePopover.Popup {...rest} {...stylex.props(s.popup, sx)}>
+            <RichTooltipSurface subhead={subhead} actions={actions}>
+              {children}
+            </RichTooltipSurface>
           </BasePopover.Popup>
         </BasePopover.Positioner>
       </BasePopover.Portal>
