@@ -192,6 +192,106 @@ test.describe('list motion', () => {
   });
 });
 
+/** Sample `read(el)` every animation frame for `ms`, in-page (values with their time in ms). */
+async function sampleFrames<T>(el: Locator, read: string, ms: number): Promise<{ t: number; v: T }[]> {
+  const frames = await el.evaluate(
+    (node, o) =>
+      new Promise<{ t: number; v: unknown }[]>((resolve) => {
+        const fn = new Function('el', `return (${o.read})(el)`) as (e: Element) => unknown;
+        const out: { t: number; v: unknown }[] = [];
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          out.push({ t: now - t0, v: fn(node) });
+          if (now - t0 < o.ms) requestAnimationFrame(tick);
+          else resolve(out);
+        };
+        requestAnimationFrame(tick);
+      }),
+    { read, ms },
+  );
+  return frames as { t: number; v: T }[];
+}
+
+// ── Menu ──────────────────────────────────────────────────────────────────────────────────────
+test.describe('menu motion', () => {
+  /** Compose calculateTransformOrigin from live rects (px from the menu's top-left). */
+  const composeOrigin = (anchor: Locator, menu: Locator) =>
+    Promise.all([anchor.boundingBox(), menu.evaluate((el) => {
+      const r = el.parentElement!.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    })]).then(([a, m]) => {
+      const axis = (a0: number, a1: number, m0: number, m1: number) =>
+        m0 >= a1 ? 0 : m1 <= a0 ? m1 - m0 : (Math.max(a0, m0) + Math.min(a1, m1)) / 2 - m0;
+      return [axis(a!.x, a!.x + a!.width, m.x, m.x + m.width), axis(a!.y, a!.y + a!.height, m.y, m.y + m.height)];
+    });
+  const originOf = (menu: Locator) => menu.evaluate((el) => getComputedStyle(el).transformOrigin.split(' ').map(parseFloat));
+
+  test('popup scales from the centre of its overlap with the anchor (Menu.kt calculateTransformOrigin)', async ({ page }) => {
+    await open(page, '/fixture/menu/live');
+    const trigger = page.getByRole('button', { name: 'Options' });
+    await trigger.click();
+    const menu = page.getByRole('menu');
+    await expect(menu).toBeVisible();
+    // Already right while the open transition runs.
+    const early = await originOf(menu);
+    const expected = await composeOrigin(trigger, menu);
+    expect(expected[1]).toBe(0);
+    expect(early[0]).toBeCloseTo(expected[0]!, 1);
+    expect(early[1]).toBeCloseTo(0, 1);
+    expect(await transitionOf(menu, 'scale')).toMatchObject({ duration: FAST_SPATIAL });
+    expect(await transitionOf(menu, 'opacity')).toMatchObject({ duration: FAST_EFFECTS });
+    // Base UI's own origin is the aligned edge offset by the side gap — not what Compose uses.
+    const baseUi = await menu.evaluate((el) => getComputedStyle(el.parentElement!).getPropertyValue('--transform-origin').trim());
+    expect(baseUi).not.toBe(`${expected[0]}px 0px`);
+  });
+
+  test('submenu scales from (0, the middle of its overlap with the trigger item)', async ({ page }) => {
+    await open(page, '/fixture/menu/live-motion');
+    await page.getByRole('button', { name: 'More' }).click();
+    const share = page.getByRole('menuitem', { name: 'Share' });
+    await share.hover();
+    const sub = page.getByRole('menu').filter({ has: page.getByRole('menuitem', { name: 'Email' }) });
+    await expect(sub).toBeVisible();
+    await page.waitForTimeout(SETTLE);
+    const expected = await composeOrigin(share, sub);
+    expect(expected[0]).toBe(0);
+    const got = await originOf(sub);
+    expect(got[0]).toBeCloseTo(0, 1);
+    expect(got[1]).toBeCloseTo(expected[1]!, 1);
+    expect(got[1]).toBeGreaterThan(0);
+  });
+
+  test('selectedLeading expands in on fast spatial and fades on fast effects (Menu.kt AnimatedVisibility)', async ({ page }) => {
+    await open(page, '/fixture/menu/live-motion');
+    await page.getByRole('button', { name: 'More' }).click();
+    const item = page.getByRole('menuitemcheckbox', { name: 'Word wrap' });
+    await expect(item).toBeVisible();
+    await page.waitForTimeout(SETTLE);
+    // check svg → its 20px icon box → the animated slot
+    const slot = item.locator('svg').first().locator('xpath=../..');
+    const box = () => slot.evaluate((el) => ({ w: el.getBoundingClientRect().width, o: Number(getComputedStyle(el).opacity) }));
+    expect(await box()).toEqual({ w: 0, o: 0 });
+    expect(await transitionOf(slot, 'width')).toMatchObject({ duration: FAST_SPATIAL });
+    expect(await transitionOf(slot, 'opacity')).toMatchObject({ duration: FAST_EFFECTS });
+    const label = item.getByText('Word wrap');
+    const labelX = async () => (await label.boundingBox())!.x - (await item.boundingBox())!.x;
+    const x0 = await labelX();
+    await item.click();
+    await expect(item).toHaveAttribute('aria-checked', 'true');
+    const frames = await sampleFrames<number>(slot, '(el) => el.getBoundingClientRect().width', 500);
+    const widths = frames.map((f) => f.v);
+    expect(Math.max(...widths), 'fast spatial overshoots (Compose spring)').toBeGreaterThan(20.5);
+    expect(widths.at(-1)).toBeCloseTo(20, 1);
+    expect((await box()).o).toBe(1);
+    // The label moves over by the icon (the 8px gap was already there).
+    expect((await labelX()) - x0).toBeCloseTo(20, 0);
+    await item.click();
+    await expect(item).toHaveAttribute('aria-checked', 'false');
+    await page.waitForTimeout(SETTLE);
+    expect(await box()).toEqual({ w: 0, o: 0 });
+  });
+});
+
 void stepSpring;
 void motionSchemes;
 void DEFAULT_SPATIAL;

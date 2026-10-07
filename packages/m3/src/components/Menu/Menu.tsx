@@ -1,4 +1,4 @@
-import { Children, createContext, isValidElement, useContext, useState, type ReactElement, type ReactNode } from 'react';
+import { Children, createContext, isValidElement, useContext, useLayoutEffect, useRef, useState, type ReactElement, type ReactNode, type RefObject } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
@@ -39,7 +39,11 @@ const GroupCountContext = createContext(1);
  *   level 2; rows 56 / 48 / 40px (density 0 / -2 / -4), 12px padding and gaps, 24px icons,
  *   body-large label; selected = Secondary Container.
  * Popup motion (Compose DropdownMenuContent): scale 0.8 → 1 on the fast spatial spring and
- * alpha on fast effects, from the anchor-derived transform origin.
+ * alpha on fast effects, from Compose's transform origin (Menu.kt calculateTransformOrigin): the
+ * centre of the anchor / menu overlap on each axis, or the anchor-facing edge when they don't
+ * overlap — e.g. (overlap centre, 0) below the anchor, (0, overlap centre) for a submenu.
+ * A `selectedLeading` icon without a `leading` one expands in (width on fast spatial, from the
+ * end) and fades in on fast effects when the item is selected (Menu.kt AnimatedVisibility).
  */
 const s = stylex.create({
   // ── containers ─────────────────────────────────────────────────────────────────────────────
@@ -62,7 +66,7 @@ const s = stylex.create({
   },
   width: (w: number) => ({ width: w, minWidth: 0, maxWidth: 'none' }),
   popupMotion: {
-    transformOrigin: 'var(--transform-origin)',
+    transformOrigin: 'var(--m3x-menu-origin, var(--transform-origin))',
     opacity: { default: 1, ':is([data-starting-style], [data-ending-style])': 0 },
     scale: { default: '1', ':is([data-starting-style], [data-ending-style])': '0.8' },
     transitionProperty: 'opacity, scale',
@@ -165,6 +169,21 @@ const s = stylex.create({
   contentVibrantSelected: { borderRadius: 12, backgroundColor: color.tertiary },
   icon: { display: 'flex', flexShrink: 0, width: 20, height: 20, color: color.onSurfaceVariant },
   iconInherit: { color: 'inherit' },
+  // expandHorizontally / shrinkHorizontally (fast spatial, expandFrom End: the icon's end edge
+  // leads) + fadeIn / fadeOut (fast effects). The 8px gap stays (Compose MenuArrangement).
+  selectedSlot: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    flexShrink: 0,
+    overflow: 'hidden',
+    width: 0,
+    opacity: 0,
+    transitionProperty: 'width, opacity',
+    transitionDuration: `${motion.fastSpatialDuration}, ${motion.fastEffectsDuration}`,
+    transitionTimingFunction: `${motion.fastSpatialEasing}, ${motion.fastEffectsEasing}`,
+  },
+  selectedSlotOn: (w: number) => ({ width: w, opacity: 1 }),
+  slotIcon: { flexShrink: 0 },
   text: { display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 },
   label: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
   supporting: { color: color.onSurfaceVariant },
@@ -345,6 +364,11 @@ export interface MenuItemProps {
   children: ReactNode;
   /** Leading icon (20px expressive, 24px baseline). */
   leading?: ReactNode;
+  /**
+   * Icon shown while selected (e.g. a check). Without `leading` it expands in on selection and
+   * collapses on deselection; with `leading` it replaces it while selected.
+   */
+  selectedLeading?: ReactNode;
   /** Trailing icon, badge or control. */
   trailing?: ReactNode;
   /** Trailing supporting text, e.g. a shortcut. */
@@ -366,7 +390,18 @@ interface ItemVisualProps extends Omit<MenuItemProps, 'onClick' | 'closeOnClick'
   density: MenuDensity;
 }
 
-function useItemVisual({ children, leading, trailing, trailingText, supportingText, selected = false, disabled = false, active = false, sx, variant, density }: ItemVisualProps) {
+/** The leading slot: `leading`, swapped for / expanded into `selectedLeading` while selected. */
+function leadingSlot(leading: ReactNode, selectedLeading: ReactNode, selected: boolean, iconStyles: StyleXStyles, size: number) {
+  if (selectedLeading == null) return leading != null ? <span {...stylex.props(iconStyles)}>{leading}</span> : null;
+  if (leading != null) return <span {...stylex.props(iconStyles)}>{selected ? selectedLeading : leading}</span>;
+  return (
+    <span aria-hidden={!selected || undefined} {...stylex.props(s.selectedSlot, selected && s.selectedSlotOn(size))}>
+      <span {...stylex.props(iconStyles, s.slotIcon)}>{selectedLeading}</span>
+    </span>
+  );
+}
+
+function useItemVisual({ children, leading, selectedLeading, trailing, trailingText, supportingText, selected = false, disabled = false, active = false, sx, variant, density }: ItemVisualProps) {
   const forced = useForcedState();
   const interactive = !disabled;
   const forcedStyles = [
@@ -390,7 +425,7 @@ function useItemVisual({ children, leading, trailing, trailingText, supportingTe
         {interactive && <StateLayer />}
         {interactive && <Ripple />}
         <span {...stylex.props(s.bContent, disabled && s.dim)}>
-          {leading != null && <span {...stylex.props(s.bIcon)}>{leading}</span>}
+          {leadingSlot(leading, selectedLeading, selected, s.bIcon, 24)}
           <span {...stylex.props(typescale.bodyLarge, s.text, s.label)}>{children}</span>
           {(trailing != null || trailingText != null) && (
             <span {...stylex.props(s.bTrailing, selected && s.bTrailingSelected)}>
@@ -421,7 +456,7 @@ function useItemVisual({ children, leading, trailing, trailingText, supportingTe
       {interactive && <StateLayer />}
       {/* Kit: the ripple paints over the item's content (the trailing icon darkens under it). */}
       {interactive && <Ripple above />}
-      {leading != null && <span {...stylex.props(s.icon, onContainer && s.iconInherit, disabled && s.dim)}>{leading}</span>}
+      {leadingSlot(leading, selectedLeading, selected, [s.icon, onContainer && s.iconInherit, disabled && s.dim], 20)}
       <span {...stylex.props(s.text, disabled && s.dim)}>
         <span {...stylex.props(typescale.labelLarge, s.label)}>{children}</span>
         {supportingText != null && <span {...stylex.props(typescale.bodySmall, s.supporting, onContainer && s.iconInherit)}>{supportingText}</span>}
@@ -541,6 +576,41 @@ export function MenuDivider({ sx }: { sx?: StyleXStyles }) {
 
 // ── Menu (popup) ──────────────────────────────────────────────────────────────────────────────
 
+/** One axis of Compose `calculateTransformOrigin` (Menu.kt), in px from the menu's start edge. */
+function pivot(anchorStart: number, anchorEnd: number, menuStart: number, menuEnd: number) {
+  if (menuStart >= anchorEnd) return 0;
+  if (menuEnd <= anchorStart) return menuEnd - menuStart;
+  if (menuEnd === menuStart) return 0;
+  return (Math.max(anchorStart, menuStart) + Math.min(anchorEnd, menuEnd)) / 2 - menuStart;
+}
+
+/**
+ * Compose's popup transform origin, recomputed whenever Base UI (re)positions the menu — it
+ * writes the positioner's inline style, so a MutationObserver sees every placement before paint.
+ * Written to the popup as `--m3x-menu-origin` (Base UI's own `--transform-origin` is the aligned
+ * edge offset by the side gap).
+ */
+function useComposeOrigin(): { anchor: RefObject<HTMLElement | null>; positionerRef: (el: HTMLDivElement | null) => void } {
+  const anchor = useRef<HTMLElement | null>(null);
+  const [positioner, setPositioner] = useState<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    if (!positioner) return;
+    const update = () => {
+      const popup = positioner.querySelector<HTMLElement>(':scope > [role="menu"]');
+      if (!anchor.current || !popup) return;
+      const a = anchor.current.getBoundingClientRect();
+      // The positioner isn't scaled: its box is the menu's laid-out bounds.
+      const m = positioner.getBoundingClientRect();
+      popup.style.setProperty('--m3x-menu-origin', `${pivot(a.left, a.right, m.left, m.right)}px ${pivot(a.top, a.bottom, m.top, m.bottom)}px`);
+    };
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(positioner, { attributes: true, attributeFilter: ['style'] });
+    return () => observer.disconnect();
+  }, [positioner]);
+  return { anchor, positionerRef: setPositioner };
+}
+
 export interface MenuProps extends Omit<MenuSurfaceProps, 'sx'> {
   /** The element that opens the menu (must forward its ref, e.g. a Button). */
   trigger: ReactElement;
@@ -574,11 +644,12 @@ export function Menu({
   sx,
 }: MenuProps) {
   const portalContainer = usePortalContainer();
+  const origin = useComposeOrigin();
   return (
     <BaseMenu.Root open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange ? (o) => onOpenChange(o) : undefined} modal={modal}>
-      <BaseMenu.Trigger render={trigger} />
+      <BaseMenu.Trigger ref={origin.anchor as React.Ref<HTMLButtonElement>} render={trigger} />
       <BaseMenu.Portal container={portalContainer}>
-        <BaseMenu.Positioner side={side} align={align} sideOffset={sideOffset} alignOffset={alignOffset}>
+        <BaseMenu.Positioner ref={origin.positionerRef} side={side} align={align} sideOffset={sideOffset} alignOffset={alignOffset}>
           <BaseMenu.Popup {...stylex.props(surfaceStyles(variant, width), s.popupMotion, sx)}>
             <MenuContext value={{ variant, density, live: true }}>{grouped(variant, children)}</MenuContext>
           </BaseMenu.Popup>
@@ -598,6 +669,7 @@ export interface SubmenuProps extends Omit<MenuItemProps, 'onClick' | 'closeOnCl
 export function Submenu({ items, width, ...item }: SubmenuProps) {
   const ctx = useContext(MenuContext);
   const portalContainer = usePortalContainer();
+  const origin = useComposeOrigin();
   const { rootProps, body } = useItemVisual({ ...item, variant: ctx.variant, density: ctx.density });
   if (!ctx.live) {
     return (
@@ -608,11 +680,11 @@ export function Submenu({ items, width, ...item }: SubmenuProps) {
   }
   return (
     <BaseMenu.SubmenuRoot>
-      <BaseMenu.SubmenuTrigger disabled={item.disabled} {...rootProps} data-ripple-host={item.disabled ? undefined : ''}>
+      <BaseMenu.SubmenuTrigger ref={origin.anchor as React.Ref<HTMLDivElement>} disabled={item.disabled} {...rootProps} data-ripple-host={item.disabled ? undefined : ''}>
         {body}
       </BaseMenu.SubmenuTrigger>
       <BaseMenu.Portal container={portalContainer}>
-        <BaseMenu.Positioner side="inline-end" align="start" sideOffset={4} alignOffset={-4}>
+        <BaseMenu.Positioner ref={origin.positionerRef} side="inline-end" align="start" sideOffset={4} alignOffset={-4}>
           <BaseMenu.Popup {...stylex.props(surfaceStyles(ctx.variant, width), s.popupMotion)}>
             <MenuContext value={ctx}>{grouped(ctx.variant, items)}</MenuContext>
           </BaseMenu.Popup>

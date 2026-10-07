@@ -5,6 +5,7 @@ import { typescale } from '@m3x/react';
 import {
   Badge,
   Button,
+  IconButton,
   Menu,
   MenuDivider,
   MenuGroup,
@@ -15,6 +16,7 @@ import {
   MenuScope,
   MenuSectionLabel,
   MenuSurface,
+  Submenu,
   type MenuDensity,
 } from '@m3x/react';
 import { ForceState, type ForcedState } from '@m3x/react/testing';
@@ -234,11 +236,42 @@ function LiveSelectMenu() {
   );
 }
 
+const Check = () => (
+  <svg width={20} height={20} viewBox="0 0 20 20" fill="currentColor" aria-hidden style={{ display: 'block' }}>
+    <path d={listAssets.icons['check-20']} />
+  </svg>
+);
+
+/** Live (motion): checkable items with only a selected icon, and a submenu; opened from an icon button. */
+function LiveMotionMenu() {
+  const [wrap, setWrap] = useState(false);
+  return (
+    <div style={{ width: 208, display: 'flex', justifyContent: 'flex-end' }}>
+      <Menu
+        trigger={
+          <IconButton aria-label="More">
+            <Icon name="stars-20" />
+          </IconButton>
+        }
+        align="end"
+      >
+        <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap} selectedLeading={<Check />}>
+          Word wrap
+        </MenuCheckboxItem>
+        <Submenu items={['Email', 'Link'].map((t) => <MenuItem key={t}>{t}</MenuItem>)} trailing={<Icon name="arrow_right-20" />}>
+          Share
+        </Submenu>
+      </Menu>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'menu',
   variants: Object.fromEntries([
     ['live', { width: 208, height: 40, render: () => <LiveMenu /> } satisfies FixtureVariant],
     ['live-select', { width: 208, height: 40, render: () => <LiveSelectMenu /> } satisfies FixtureVariant],
+    ['live-motion', { width: 208, height: 48, render: () => <LiveMotionMenu /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       const node = render(name);
