@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { STAR_CREST, circularFrame, linearDeterminate, linearShapes, waveArc } from './geometry.ts';
+import {
+  CIRCULAR,
+  STAR_CREST,
+  blendedStarPath,
+  circularFrame,
+  determinateTrackSpace,
+  gapOpening,
+  linearDeterminate,
+  linearShapes,
+  waveArc,
+} from './geometry.ts';
 
 describe('progress geometry (kit-derived)', () => {
   it('wave segment: 40px wavelength → r 19.437, sagitta 2.770 (Figma-clamped corner radius)', () => {
@@ -26,5 +36,49 @@ describe('progress geometry (kit-derived)', () => {
       const f = circularFrame('wave', 8, v)!;
       expect(f.trackStart).toBeGreaterThan(f.end);
     }
+  });
+
+  it('determinate active ↔ track space grows from 0 (flat: p + min(p, gap + stroke); wavy: min(head − cap, 4))', () => {
+    expect(determinateTrackSpace('flat', 4, 2)).toBe(-2); // overlaps the dot until the head passes a stroke
+    expect(determinateTrackSpace('flat', 4, 6)).toBe(2);
+    expect(determinateTrackSpace('flat', 4, 41.6)).toBe(4);
+    expect(determinateTrackSpace('flat', 8, 12)).toBe(4);
+    expect(determinateTrackSpace('wave', 4, 2)).toBe(0);
+    expect(determinateTrackSpace('wave', 4, 4.5)).toBe(2.5);
+    expect(determinateTrackSpace('wave', 8, 30)).toBe(4);
+  });
+
+  it('stop dot: flat stays put whatever the progress; wavy shrinks from its start as the active reaches it', () => {
+    const at = (type: 'flat' | 'wave', head: number) =>
+      linearShapes({ width: 404, thickness: 4, type, actives: [[2, head]], stop: true, stopShrink: type === 'wave', wavelength: 40, waveOrigin: 2, amp: 0, snap: false, gap: 4 }).stop;
+    expect(at('flat', 399)).toEqual({ x: 400, size: 4 });
+    expect(at('flat', 402)).toBeNull(); // a full active covers it
+    expect(at('wave', 396)).toEqual({ x: 400, size: 4 });
+    expect(at('wave', 399)).toEqual({ x: 401, size: 3 });
+    expect(at('wave', 402)).toBeNull();
+  });
+
+  it('circular gaps open from 0 and are fully open at the kit samples (≥ 10%)', () => {
+    for (const type of ['flat', 'wave'] as const) {
+      for (const t of [4, 8] as const) {
+        const k = CIRCULAR[type][t];
+        expect(gapOpening(type, t, 0)).toBe(0);
+        expect(gapOpening(type, t, k.ends[1] - k.start)).toBe(1);
+        // At 0.1% both gaps are under 2° (the kit's open gaps are 22.5–40°).
+        const f = circularFrame(type, t, 0.001)!;
+        expect(f.trackStart - f.end).toBeGreaterThan(0);
+        expect(f.trackStart - f.end).toBeLessThan(2);
+        expect(f.start + 360 - f.trackEnd).toBeLessThan(2);
+        const ten = circularFrame(type, t, 0.1)!;
+        expect([ten.end, ten.trackStart, ten.trackEnd]).toEqual([k.ends[1], k.tracks[1], k.trackEnd]);
+      }
+    }
+  });
+
+  it('wave amplitude 0 lies on the crest circle (the track ring)', () => {
+    const d = blendedStarPath(10, 100, 0, 24, 0);
+    const pts = [...d.matchAll(/[ML]([\d.-]+) ([\d.-]+)/g)].map((m) => Math.hypot(+m[1]! - 24, +m[2]! - 24));
+    expect(pts.length).toBe(91);
+    for (const r of pts) expect(r).toBeCloseTo(STAR_CREST, 2);
   });
 });

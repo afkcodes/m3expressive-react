@@ -6,7 +6,16 @@ import { color } from '../../tokens/color.stylex';
 import { useReducedMotion } from '../../motion/context.tsx';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { CIRCULAR, circularFrame, circularShapes, type CircularFrame, type ProgressThickness, type ProgressType } from './geometry.ts';
-import { PROGRESS_SPRING, circularIndeterminate, useFrameLoop, useSpringNumber } from './motion.ts';
+import {
+  PROGRESS_SPRING,
+  WAVY_PROGRESS_TWEEN,
+  circularIndeterminate,
+  circularWaveAmplitude,
+  useFrameLoop,
+  useSpringNumber,
+  useTweenNumber,
+  useWaveAmplitude,
+} from './motion.ts';
 
 const s = stylex.create({
   root: { display: 'inline-block', flexShrink: 0, verticalAlign: 'middle' },
@@ -37,9 +46,11 @@ export interface CircularProgressProps {
  * Circular progress indicator (kit sets "Circular-determinate / -indeterminate progress
  * indicator"): 40 / 44px flat, 48 / 52px wavy. The active arc starts just right of 12 o'clock and
  * the track continues after a gap. Arc lengths follow the kit's samples (0 / 10 / 30 / 50 / 80 /
- * 100%), interpolated in between. Indeterminate: Compose's M3 Expressive motion (6s cycle: spin,
- * 90° steps, 10% ↔ 87% sweep); the kit's Step frames (its 10% / 50% arcs, rotated) are
- * reproduced as still frames.
+ * 100%), interpolated in between; the gaps grow from 0 as the value leaves 0. Value changes spring
+ * (flat) or tween linearly over 500ms (wave), as in Compose. The wave is flat below 10% (the kit
+ * draws 10% and 100% wavy) and ramps its amplitude over 500ms; it travels while it has one.
+ * Indeterminate: Compose's M3 Expressive motion (6s cycle: spin, 90° steps, 10% ↔ 87% sweep); the
+ * kit's Step frames (its 10% / 50% arcs, rotated) are reproduced as still frames.
  */
 export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps>(function CircularProgress(
   { value = null, max = 100, type = 'flat', thickness = 4, sx, ...aria },
@@ -53,8 +64,15 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
   // A forced `time` renders the live animation at that instant; any other forced frame is still.
   const frozen = forced !== undefined && forced.time === undefined;
   const clock = forced?.time ?? ms;
-  const shown = useSpringNumber(p, forced || reduced ? null : PROGRESS_SPRING);
-  useFrameLoop(!forced && (indeterminate || (type === 'wave' && !reduced && p > 0)), setMs);
+  const still = !!forced || reduced;
+  const wave = type === 'wave';
+  const sprung = useSpringNumber(p, still || wave ? null : PROGRESS_SPRING);
+  const tweened = useTweenNumber(p, still || !wave ? null : WAVY_PROGRESS_TWEEN);
+  const shown = wave ? tweened : sprung;
+  // Compose evaluates the amplitude on the drawn (animated) progress; indeterminate stays at 1.
+  const amp = useWaveAmplitude(!wave ? 0 : indeterminate ? 1 : circularWaveAmplitude(shown), !still);
+  // The wave travels while it has an amplitude (Compose stops the offset animation at 0).
+  useFrameLoop(!forced && (indeterminate || (wave && !reduced && amp > 0 && shown > 0)), setMs);
 
   const t = thickness;
   const k = CIRCULAR[type][t];
@@ -79,7 +97,7 @@ export const CircularProgress = forwardRef<HTMLDivElement, CircularProgressProps
   // −offset).
   const travel = frozen || reduced ? 0 : (clock / 1000) * WAVE_SPEED;
   const phase = (forced?.phase ?? WAVE_PHASE) + spin - travel;
-  const g = circularShapes(type, t, frame, spin, phase);
+  const g = circularShapes(type, t, frame, spin, phase, amp);
 
   return (
     <Progress.Root ref={ref} value={indeterminate ? null : p * 100} {...aria} {...stylex.props(s.root, s.size(size), sx)}>
