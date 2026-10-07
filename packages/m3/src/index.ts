@@ -199,7 +199,7 @@ export type {
   LinearProgressProps,
   CircularProgressProps,
   LoadingIndicatorProps,
-  ProgressType,
+  ProgressShape,
   ProgressThickness,
 } from './components/Progress/index.ts';
 export type {

@@ -9,7 +9,7 @@ import {
   typescale,
   type ColorSchemeMode,
   type ProgressThickness,
-  type ProgressType,
+  type ProgressShape,
 } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 
@@ -47,7 +47,7 @@ const s = stylex.create({
 /** Linear / circular progress and the loading indicator, determinate and indeterminate. */
 export function ProgressPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
-  const [type, setType] = useState<ProgressType>('wave');
+  const [shape, setShape] = useState<ProgressShape>('wavy');
   const [thickness, setThickness] = useState<ProgressThickness>(4);
   const [value, setValue] = useState(50);
   const [running, setRunning] = useState(false);
@@ -84,10 +84,10 @@ export function ProgressPlayground() {
             </select>,
           )}
           {label(
-            'type',
-            <select value={type} onChange={(e) => setType(e.target.value as ProgressType)} style={field}>
+            'shape',
+            <select value={shape} onChange={(e) => setShape(e.target.value as ProgressShape)} style={field}>
               <option>flat</option>
-              <option>wave</option>
+              <option>wavy</option>
             </select>,
           )}
           {label(
@@ -120,20 +120,20 @@ export function ProgressPlayground() {
           Determinate
         </h2>
         <section {...stylex.props(s.stage)}>
-          <LinearProgress value={value} type={type} thickness={thickness} aria-label="Upload" />
+          <LinearProgress value={value} shape={shape} thickness={thickness} aria-label="Upload" />
           <div {...stylex.props(s.row)}>
-            <CircularProgress value={value} type={type} thickness={thickness} aria-label="Upload" />
+            <CircularProgress value={value} shape={shape} thickness={thickness} aria-label="Upload" />
           </div>
         </section>
         <h2 {...stylex.props(typescale.titleLarge)} style={{ margin: 0 }}>
           Indeterminate
         </h2>
         <section {...stylex.props(s.stage)}>
-          <LinearProgress type={type} thickness={thickness} aria-label="Loading" />
+          <LinearProgress shape={shape} thickness={thickness} aria-label="Loading" />
           <div {...stylex.props(s.row)}>
-            <CircularProgress type={type} thickness={thickness} aria-label="Loading" />
+            <CircularProgress shape={shape} thickness={thickness} aria-label="Loading" />
             <LoadingIndicator aria-label="Loading" />
-            <LoadingIndicator container aria-label="Loading" />
+            <LoadingIndicator contained aria-label="Loading" />
           </div>
         </section>
       </main>

@@ -4,13 +4,16 @@ import {
   LinearProgress,
   LoadingIndicator,
   type ProgressThickness,
-  type ProgressType,
+  type ProgressShape,
 } from '@m3x/react';
 import { ForceState, type ForcedProgressFrame } from '@m3x/react/testing';
 import manifest from '../../../../figma/progress/manifest.json';
 import type { FixtureModule, FixtureVariant } from './types.ts';
 
-/** The kit's indeterminate still frames: active centre-line frames (px) per Step. */
+/** The kit names the shapes Flat / Wave. */
+const kitShape = (name: string): ProgressShape => (name === 'wave' ? 'wavy' : 'flat');
+
+/** The kit's indeterminate still frames: active centre-line frames (px) per Step (keys: kit names). */
 const LINEAR_STEPS: Record<string, [number, number][][]> = {
   'flat-4': [[], [[46.229, 166.826]], [[86.428, 327.622]]],
   'flat-8': [[], [[48, 168]], [[88, 328]]],
@@ -54,12 +57,12 @@ function LiveMotion() {
   return (
     <div style={{ display: 'grid', gap: 16, width: '100%' }}>
       <LinearProgress value={value} aria-label="Linear flat" />
-      <LinearProgress value={value} type="wave" aria-label="Linear wave" />
+      <LinearProgress value={value} shape="wavy" aria-label="Linear wave" />
       <div style={{ display: 'flex', gap: 16 }}>
         <CircularProgress value={value} aria-label="Circular flat" />
-        <CircularProgress value={value} type="wave" aria-label="Circular wave" />
+        <CircularProgress value={value} shape="wavy" aria-label="Circular wave" />
         <CircularProgress value={value} thickness={8} aria-label="Circular flat 8" />
-        <CircularProgress value={value} type="wave" thickness={8} aria-label="Circular wave 8" />
+        <CircularProgress value={value} shape="wavy" thickness={8} aria-label="Circular wave 8" />
       </div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {[0, 1, 5, 9, 30, 50, 80, 97, 99.5, 100].map((n) => (
@@ -79,12 +82,12 @@ const live: Record<string, FixtureVariant> = {
   'live-wave-linear': {
     width: 404,
     height: 12,
-    render: () => <LinearProgress value={50} type="wave" aria-label="Upload" />,
+    render: () => <LinearProgress value={50} shape="wavy" aria-label="Upload" />,
   },
   'live-wave-circular': {
     width: 48,
     height: 48,
-    render: () => <CircularProgress value={50} type="wave" aria-label="Upload" />,
+    render: () => <CircularProgress value={50} shape="wavy" aria-label="Upload" />,
   },
   'live-indeterminate': {
     width: 404,
@@ -102,13 +105,13 @@ const live: Record<string, FixtureVariant> = {
 };
 
 /** Review aid: the live indeterminate motion at fixed times (ForceState `time`), 50ms apart. */
-const strip = (type: ProgressType) => () => (
+const strip = (shape: ProgressShape) => () => (
   <div style={{ display: 'grid', gap: 6 }}>
     {Array.from({ length: 30 }, (_, i) => (
       <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'center', width: 520 }}>
         <span style={{ font: '10px monospace', width: 40 }}>{i * 50}</span>
-        <div style={{ width: 404 }}>{frozen({ time: i * 50 }, <LinearProgress type={type} aria-label="l" />)}</div>
-        {frozen({ time: i * 50 }, <CircularProgress type={type} aria-label="c" />)}
+        <div style={{ width: 404 }}>{frozen({ time: i * 50 }, <LinearProgress shape={shape} aria-label="l" />)}</div>
+        {frozen({ time: i * 50 }, <CircularProgress shape={shape} aria-label="c" />)}
       </div>
     ))}
   </div>
@@ -118,13 +121,13 @@ live['strip-circular-8'] = {
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 60px)', gap: 8 }}>
       {Array.from({ length: 30 }, (_, i) => (
-        <div key={i}>{frozen({ time: i * 200 }, <CircularProgress type="wave" thickness={8} aria-label="c" />)}</div>
+        <div key={i}>{frozen({ time: i * 200 }, <CircularProgress shape="wavy" thickness={8} aria-label="c" />)}</div>
       ))}
     </div>
   ),
 };
 live['strip-flat'] = { render: strip('flat') };
-live['strip-wave'] = { render: strip('wave') };
+live['strip-wave'] = { render: strip('wavy') };
 /** Circular: one full 6s cycle, every 200ms (flat and wave, 4 / 8dp). */
 live['strip-circular'] = {
   render: () => (
@@ -133,7 +136,7 @@ live['strip-circular'] = {
         <div key={i} style={{ display: 'grid', justifyItems: 'center', gap: 2 }}>
           <span style={{ font: '9px monospace' }}>{i * 200}</span>
           {frozen({ time: i * 200 }, <CircularProgress aria-label="c" />)}
-          {frozen({ time: i * 200 }, <CircularProgress type="wave" aria-label="c" />)}
+          {frozen({ time: i * 200 }, <CircularProgress shape="wavy" aria-label="c" />)}
         </div>
       ))}
     </div>
@@ -152,37 +155,44 @@ const fixture: FixtureModule = {
         render = () =>
           frozen(
             { step: Number(p[1]) - 1 },
-            <LoadingIndicator container={p[2] === 'container'} aria-label="Loading" />,
+            <LoadingIndicator contained={p[2] === 'container'} aria-label="Loading" />,
           );
       } else if (p[1] === 'indet') {
-        const [kind, , type, th, step] = p as [string, string, ProgressType, string, string];
+        const [kind, , kit, th, step] = p as [string, string, string, string, string];
+        const shape = kitShape(kit);
         const t = Number(th) as ProgressThickness;
         if (kind === 'linear') {
           // Step 2's wave was drawn with the determinate 40px segments (Step 1 uses 20px).
           const el = (
-            <LinearProgress type={type} thickness={t} wavelength={step === '2' ? 40 : undefined} aria-label="Loading" />
+            <LinearProgress
+              shape={shape}
+              thickness={t}
+              wavelength={step === '2' ? 40 : undefined}
+              aria-label="Loading"
+            />
           );
-          const node = frozen({ actives: LINEAR_STEPS[`${type}-${th}`]![Number(step)]!, phase: 0 }, el);
-          render = () => (type === 'wave' && t === 8 && h === 12 ? shift(node) : node);
+          const node = frozen({ actives: LINEAR_STEPS[`${kit}-${th}`]![Number(step)]!, phase: 0 }, el);
+          render = () => (shape === 'wavy' && t === 8 && h === 12 ? shift(node) : node);
         } else {
           render = () =>
-            frozen(CIRCULAR_STEPS[step]!, <CircularProgress type={type} thickness={t} aria-label="Loading" />);
+            frozen(CIRCULAR_STEPS[step]!, <CircularProgress shape={shape} thickness={t} aria-label="Loading" />);
         }
       } else {
-        const [kind, type, th, pct] = p as [string, ProgressType, string, string];
+        const [kind, kit, th, pct] = p as [string, string, string, string];
+        const shape = kitShape(kit);
         const t = Number(th) as ProgressThickness;
         const value = Number(pct);
         if (kind === 'linear') {
           const node = frozen(
             { phase: 0 },
-            <LinearProgress value={value} type={type} thickness={t} aria-label="Progress" />,
+            <LinearProgress value={value} shape={shape} thickness={t} aria-label="Progress" />,
           );
-          render = () => (type === 'wave' && t === 8 && h === 12 ? shift(node) : node);
+          render = () => (shape === 'wavy' && t === 8 && h === 12 ? shift(node) : node);
         } else {
           render = () =>
             frozen(
               { phase: value === 100 ? 0 : -5 },
-              <CircularProgress value={value} type={type} thickness={t} aria-label="Progress" />,
+              <CircularProgress value={value} shape={shape} thickness={t} aria-label="Progress" />,
             );
         }
       }

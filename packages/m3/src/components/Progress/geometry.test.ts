@@ -26,7 +26,7 @@ describe('progress geometry (kit-derived)', () => {
     const g = linearShapes({
       width: 404,
       thickness: 4,
-      type: 'flat',
+      shape: 'flat',
       actives: linearDeterminate(404, 4, 0.1, 0),
       stop: true,
       wavelength: 40,
@@ -43,7 +43,7 @@ describe('progress geometry (kit-derived)', () => {
     expect(circularFrame('flat', 4, 0.5)).toEqual({ start: 5, end: 175, trackStart: 200, trackEnd: 340 });
     expect(circularFrame('flat', 4, 0)).toBeNull();
     for (let v = 0.01; v < 1; v += 0.01) {
-      const f = circularFrame('wave', 8, v)!;
+      const f = circularFrame('wavy', 8, v)!;
       expect(f.trackStart).toBeGreaterThan(f.end);
     }
   });
@@ -53,20 +53,20 @@ describe('progress geometry (kit-derived)', () => {
     expect(determinateTrackSpace('flat', 4, 6)).toBe(2);
     expect(determinateTrackSpace('flat', 4, 41.6)).toBe(4);
     expect(determinateTrackSpace('flat', 8, 12)).toBe(4);
-    expect(determinateTrackSpace('wave', 4, 2)).toBe(0);
-    expect(determinateTrackSpace('wave', 4, 4.5)).toBe(2.5);
-    expect(determinateTrackSpace('wave', 8, 30)).toBe(4);
+    expect(determinateTrackSpace('wavy', 4, 2)).toBe(0);
+    expect(determinateTrackSpace('wavy', 4, 4.5)).toBe(2.5);
+    expect(determinateTrackSpace('wavy', 8, 30)).toBe(4);
   });
 
   it('stop dot: flat stays put whatever the progress; wavy shrinks from its start as the active reaches it', () => {
-    const at = (type: 'flat' | 'wave', head: number) =>
+    const at = (shape: 'flat' | 'wavy', head: number) =>
       linearShapes({
         width: 404,
         thickness: 4,
-        type,
+        shape,
         actives: [[2, head]],
         stop: true,
-        stopShrink: type === 'wave',
+        stopShrink: shape === 'wavy',
         wavelength: 40,
         waveOrigin: 2,
         amp: 0,
@@ -75,23 +75,23 @@ describe('progress geometry (kit-derived)', () => {
       }).stop;
     expect(at('flat', 399)).toEqual({ x: 400, size: 4 });
     expect(at('flat', 402)).toBeNull(); // a full active covers it
-    expect(at('wave', 396)).toEqual({ x: 400, size: 4 });
-    expect(at('wave', 399)).toEqual({ x: 401, size: 3 });
-    expect(at('wave', 402)).toBeNull();
+    expect(at('wavy', 396)).toEqual({ x: 400, size: 4 });
+    expect(at('wavy', 399)).toEqual({ x: 401, size: 3 });
+    expect(at('wavy', 402)).toBeNull();
   });
 
   it('circular gaps open from 0 and are fully open at the kit samples (≥ 10%)', () => {
-    for (const type of ['flat', 'wave'] as const) {
+    for (const shape of ['flat', 'wavy'] as const) {
       for (const t of [4, 8] as const) {
-        const k = CIRCULAR[type][t];
-        expect(gapOpening(type, t, 0)).toBe(0);
-        expect(gapOpening(type, t, k.ends[1] - k.start)).toBe(1);
+        const k = CIRCULAR[shape][t];
+        expect(gapOpening(shape, t, 0)).toBe(0);
+        expect(gapOpening(shape, t, k.ends[1] - k.start)).toBe(1);
         // At 0.1% both gaps are under 2° (the kit's open gaps are 22.5–40°).
-        const f = circularFrame(type, t, 0.001)!;
+        const f = circularFrame(shape, t, 0.001)!;
         expect(f.trackStart - f.end).toBeGreaterThan(0);
         expect(f.trackStart - f.end).toBeLessThan(2);
         expect(f.start + 360 - f.trackEnd).toBeLessThan(2);
-        const ten = circularFrame(type, t, 0.1)!;
+        const ten = circularFrame(shape, t, 0.1)!;
         expect([ten.end, ten.trackStart, ten.trackEnd]).toEqual([k.ends[1], k.tracks[1], k.trackEnd]);
       }
     }

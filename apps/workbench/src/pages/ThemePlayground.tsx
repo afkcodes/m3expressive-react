@@ -238,9 +238,9 @@ function Preview() {
       <div {...stylex.props(s.stage)}>
         <div style={{ width: 280, display: 'grid', gap: 16 }}>
           <Slider defaultValue={60} aria-label="Volume" />
-          <LinearProgress value={65} type="wave" aria-label="Upload" />
+          <LinearProgress value={65} shape="wavy" aria-label="Upload" />
         </div>
-        <CircularProgress value={70} type="wave" aria-label="Sync" />
+        <CircularProgress value={70} shape="wavy" aria-label="Sync" />
         <CircularProgress aria-label="Loading" />
         <TextField label="Account name" defaultValue="Everyday account" supportingText="Shown on your statements" />
       </div>
