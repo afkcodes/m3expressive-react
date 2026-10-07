@@ -160,7 +160,9 @@ navigation drawer (out of scope).
   - use **longhands** for resets (`backgroundColor`, `fontFamily`…) — shorthands lost to UA button
     styles (#EFEFEF ButtonFace behind every button);
   - a property defined in two style objects is replaced wholesale (conditions don't merge);
-  - dynamic styles (`create({ box: (w, h) => (…) })`) are fine.
+  - dynamic styles (`create({ box: (w, h) => (…) })`) are fine;
+  - `stylex.create` can't evaluate a constant imported from a plain `.ts` module ("Could not resolve the path to
+    the imported file") — use a literal, a same-file const, or `defineConsts` in a `.stylex.ts` file.
 - Parent-state styling: `stylex.defaultMarker()` on the interactive root +
   `stylex.when.ancestor(':active' | ':focus-visible')` on inner parts.
 - Labels that hug: `typescale.<role>` + `textBox.hug`. Every `<button>` root must reset
