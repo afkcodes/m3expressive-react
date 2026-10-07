@@ -8,10 +8,8 @@ import {
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { Dialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
-import { usePortalContainer } from '../../theme/portal.tsx';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import {
@@ -23,7 +21,7 @@ import {
   suppressNextClick,
   TOUCH_SLOP,
 } from '../../motion/gesture.ts';
-import { scrim } from '../../primitives/scrim.ts';
+import { ModalShell } from '../../primitives/ModalShell.tsx';
 import { BottomSheet } from './BottomSheet.tsx';
 import { isNoDragTarget } from './dragGuard.ts';
 
@@ -102,7 +100,6 @@ export function ModalBottomSheet({
   children,
   sx,
 }: ModalBottomSheetProps) {
-  const portal = usePortalContainer();
   const popup = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement | null>(null);
@@ -368,7 +365,7 @@ export function ModalBottomSheet({
   );
 
   return (
-    <Dialog.Root
+    <ModalShell
       open={open}
       onOpenChange={(next) => {
         // Escape / scrim / handle: hand the sheet back to the CSS hide (fast effects) from wherever
@@ -376,22 +373,21 @@ export function ModalBottomSheet({
         if (!next) interrupt();
         onOpenChange(next);
       }}
+      ref={popup}
+      backdropRef={backdrop}
+      aria-label={ariaLabel}
+      sx={s.popup}
     >
-      <Dialog.Portal container={portal}>
-        <Dialog.Backdrop ref={backdrop} {...stylex.props(scrim.backdrop)} />
-        <Dialog.Popup ref={popup} aria-label={ariaLabel} {...stylex.props(s.popup)}>
-          <BottomSheet
-            modal
-            dragHandle={dragHandle}
-            onHandleActivate={() => onOpenChange(false)}
-            onSurfacePointerDown={onSurfacePointerDown}
-            contentRef={contentRef}
-            sx={[s.popupSheet, sx]}
-          >
-            {children}
-          </BottomSheet>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+      <BottomSheet
+        modal
+        dragHandle={dragHandle}
+        onHandleActivate={() => onOpenChange(false)}
+        onSurfacePointerDown={onSurfacePointerDown}
+        contentRef={contentRef}
+        sx={[s.popupSheet, sx]}
+      >
+        {children}
+      </BottomSheet>
+    </ModalShell>
   );
 }

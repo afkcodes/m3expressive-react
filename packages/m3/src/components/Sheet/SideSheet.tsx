@@ -9,13 +9,11 @@ import {
 } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
-import { Dialog } from '@base-ui/react/dialog';
 import { color } from '../../tokens/color.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
-import { usePortalContainer } from '../../theme/portal.tsx';
 import { Divider } from '../Divider/Divider.tsx';
 import { isNoDragTarget } from './dragGuard.ts';
-import { scrim } from '../../primitives/scrim.ts';
+import { ModalShell } from '../../primitives/ModalShell.tsx';
 import { prefersReducedMotion } from '../../motion/context.tsx';
 import {
   MAX_FLING_VELOCITY,
@@ -160,7 +158,6 @@ export interface ModalSideSheetProps extends Omit<SideSheetProps, 'modal' | 'hea
 
 /** A modal side sheet: scrim, focus trap, Escape / scrim / drag to dismiss. */
 export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: ModalSideSheetProps) {
-  const portal = usePortalContainer();
   const id = useId();
   const popup = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
@@ -311,25 +308,20 @@ export function ModalSideSheet({ open, onOpenChange, side = 'end', ...sheet }: M
   );
 
   return (
-    <Dialog.Root
+    <ModalShell
       open={open}
       onOpenChange={(next) => {
         // Escape / scrim: the window animation takes over from wherever a drag left the sheet.
         if (!next) interrupt();
         onOpenChange(next);
       }}
+      ref={popup}
+      backdropRef={backdrop}
+      aria-labelledby={sheet.headline != null ? id : undefined}
+      onPointerDown={onPointerDown}
+      sx={[s.popup, side === 'start' && s.popupStart]}
     >
-      <Dialog.Portal container={portal}>
-        <Dialog.Backdrop ref={backdrop} {...stylex.props(scrim.backdrop)} />
-        <Dialog.Popup
-          ref={popup}
-          aria-labelledby={sheet.headline != null ? id : undefined}
-          onPointerDown={onPointerDown}
-          {...stylex.props(s.popup, side === 'start' && s.popupStart)}
-        >
-          <SideSheet modal headlineId={id} {...sheet} />
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+      <SideSheet modal headlineId={id} {...sheet} />
+    </ModalShell>
   );
 }
