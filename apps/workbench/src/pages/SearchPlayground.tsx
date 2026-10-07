@@ -70,7 +70,7 @@ const ITEMS = [
 /** A search bar that expands into the docked or full-screen view (Compose SearchBarState motion; Escape / back collapse). */
 export function SearchPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
-  const [mode, setMode] = useState<'docked' | 'full-screen'>('docked');
+  const [layout, setLayout] = useState<'docked' | 'fullScreen'>('docked');
   const [avatar, setAvatar] = useState(true);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
@@ -103,9 +103,9 @@ export function SearchPlayground() {
           </label>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span {...stylex.props(s.muted)}>expanded view</span>
-            <select value={mode} onChange={(e) => setMode(e.target.value as typeof mode)} style={field}>
+            <select value={layout} onChange={(e) => setLayout(e.target.value as typeof layout)} style={field}>
               <option value="docked">docked</option>
-              <option value="full-screen">full screen</option>
+              <option value="fullScreen">full screen</option>
             </select>
           </label>
           <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14 }}>
@@ -143,15 +143,15 @@ export function SearchPlayground() {
             </div>
           ))}
           <SearchView
-            mode={mode}
+            layout={layout}
             open={open}
             expandedFrom={bar}
             value={q}
             onValueChange={setQ}
-            onDismiss={close}
+            onOpenChange={close}
             placeholder="Search accounts and payments"
             autoFocus
-            sx={mode === 'docked' ? s.docked : s.full}
+            sx={layout === 'docked' ? s.docked : s.full}
             leading={
               <IconButton aria-label="Back" onClick={close}>
                 <Icon name="arrow_back-24" />
