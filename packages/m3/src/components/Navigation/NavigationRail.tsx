@@ -1,7 +1,18 @@
-import { useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, useContext, type ReactNode } from 'react';
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useContext,
+  type ComponentPropsWithRef,
+  type ReactNode,
+} from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
+import { useControllableState } from '../../hooks/useControllableState.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
+import type { SxProps } from '../../primitives/types.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { useSpringToken } from '../../motion/context.tsx';
@@ -70,21 +81,25 @@ const s = stylex.create({
   },
 });
 
-export interface NavigationRailProps {
+/** `ref`, native props and `sx` go to the `<nav>`. */
+export interface NavigationRailProps extends SxProps<Omit<ComponentPropsWithRef<'nav'>, 'defaultValue'>> {
+  /** The selected destination (the `value` of a `NavigationItem`). */
   value?: unknown;
+  defaultValue?: unknown;
   onValueChange?: (value: unknown) => void;
-  /** Expanded rail (220px, items in rows). */
+  /**
+   * Expanded rail (220px, items in rows). Controlled only: layout state the rail never changes
+   * itself (your menu button toggles it), so there is no `defaultExpanded` / `onExpandedChange`.
+   */
   expanded?: boolean;
   /** Expanded rails: docked (no container) or floating (Surface Container, 16px corners). */
-  type?: 'docked' | 'floating';
+  layout?: 'docked' | 'floating';
   alignment?: 'top' | 'middle';
   /** Collapsed rails: labels under the icons (default true). */
   showLabels?: boolean;
   /** Menu button and FAB above the destinations. */
   header?: ReactNode;
   children: ReactNode;
-  'aria-label'?: string;
-  sx?: StyleXStyles;
 }
 
 const lerp = (from: number, to: number, fraction: number) => from + (to - from) * fraction;
@@ -93,18 +108,22 @@ const px = (value: number) => `${value}px`;
 /** Navigation rail (Compose NavigationRail / WideNavigationRail); width springs when expanding. */
 export function NavigationRail({
   value,
+  defaultValue,
   onValueChange,
   expanded = false,
-  type = 'docked',
+  layout = 'docked',
   alignment = 'top',
   showLabels = true,
   header,
   children,
-  'aria-label': ariaLabel,
   sx,
+  ref,
+  ...rest
 }: NavigationRailProps) {
   const middle = alignment === 'middle';
+  const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange);
   const rail = useRef<HTMLElement>(null);
+  const railRef = useMergedRefs(rail, ref);
   const items = useRef<HTMLDivElement>(null);
   const [headerEl, setHeaderEl] = useState<HTMLDivElement | null>(null);
   const { morph, progress } = useRailMorph(expanded, showLabels);
@@ -159,24 +178,24 @@ export function NavigationRail({
 
   const ctx = useMemo(
     () => ({
-      layout: expanded ? ('rail-horizontal' as const) : ('vertical' as const),
-      value,
-      onSelect: onValueChange,
+      layout: expanded ? ('railHorizontal' as const) : ('vertical' as const),
+      value: selected,
+      onSelect: setSelected,
       showLabels,
       fill: false,
       morph,
       progress,
     }),
-    [expanded, value, onValueChange, showLabels, morph, progress],
+    [expanded, selected, setSelected, showLabels, morph, progress],
   );
   return (
     <nav
-      ref={rail}
-      aria-label={ariaLabel}
+      {...rest}
+      ref={railRef}
       {...stylex.props(
         s.rail,
         expanded && s.railExpanded,
-        expanded && type === 'floating' && s.railFloating,
+        expanded && layout === 'floating' && s.railFloating,
         morph && s.railMorph,
         sx,
       )}
@@ -235,7 +254,8 @@ function useRailMorph(expanded: boolean, showLabels: boolean): { morph: RailMorp
   return { morph, progress };
 }
 
-export interface NavigationRailSectionProps {
+/** `ref`, native props and `sx` go to the `<div role="group">`. */
+export interface NavigationRailSectionProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** Section header (label-large, 36px). */
   label?: ReactNode;
   /** The section's `NavigationItem`s. */
@@ -243,10 +263,10 @@ export interface NavigationRailSectionProps {
 }
 
 /** A labelled group of destinations in an expanded rail (sections sit 12px apart). */
-export function NavigationRailSection({ label, children }: NavigationRailSectionProps) {
+export function NavigationRailSection({ label, children, sx, ...rest }: NavigationRailSectionProps) {
   const { morph } = useContext(NavContext);
   return (
-    <div role="group" {...stylex.props(s.section)}>
+    <div role="group" {...rest} {...stylex.props(s.section, sx)}>
       {label != null && (
         <p {...stylex.props(typescale.labelLarge, s.sectionHeader, morph && s.sectionHeaderMorph)}>{label}</p>
       )}

@@ -135,13 +135,7 @@ export type {
 } from './components/Menu/index.ts';
 export { Tab, TabPanel, Tabs, TabScope } from './components/Tabs/index.ts';
 export type { TabProps, TabsProps, TabsVariant } from './components/Tabs/index.ts';
-export {
-  NavigationBar,
-  NavigationItem,
-  NavigationRail,
-  NavigationRailSection,
-  NavigationScope,
-} from './components/Navigation/index.ts';
+export { NavigationBar, NavigationItem, NavigationRail, NavigationRailSection } from './components/Navigation/index.ts';
 export type {
   NavigationBarProps,
   NavigationItemLayout,

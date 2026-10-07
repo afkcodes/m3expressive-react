@@ -1,10 +1,4 @@
-export {
-  NavigationBar,
-  NavigationItem,
-  NavigationRail,
-  NavigationRailSection,
-  NavigationScope,
-} from './Navigation.tsx';
+export { NavigationBar, NavigationItem, NavigationRail, NavigationRailSection } from './Navigation.tsx';
 export type {
   NavigationBarProps,
   NavigationItemLayout,

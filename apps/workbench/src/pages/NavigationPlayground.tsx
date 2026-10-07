@@ -118,7 +118,7 @@ export function NavigationPlayground() {
             value={railValue}
             onValueChange={setRailValue}
             expanded={expanded}
-            type={floating ? 'floating' : 'docked'}
+            layout={floating ? 'floating' : 'docked'}
             aria-label="Main"
             header={
               <>
@@ -158,7 +158,7 @@ export function NavigationPlayground() {
           <NavigationBar
             value={barValue}
             onValueChange={setBarValue}
-            itemLayout={horizontal ? 'horizontal' : 'vertical'}
+            layout={horizontal ? 'horizontal' : 'vertical'}
             aria-label="Bottom"
           >
             {DESTINATIONS.slice(0, horizontal ? 3 : 4).map((t, i) => item(i, t))}
