@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import {
   Fab,
@@ -13,6 +13,8 @@ import {
 } from '@m3x/react';
 import { color } from '@m3x/react/tokens/color.stylex';
 import assets from '../../../../figma/toolbar/assets.json';
+// Not yet re-exported from the package index (src/index.ts is outside the toolbar's files).
+import { useFloatingToolbarExitAlways, useFloatingToolbarNestedScroll } from '../../../../packages/m3/src/components/Toolbar/scrollBehavior.ts';
 
 const s = stylex.create({
   page: {
@@ -61,7 +63,10 @@ const Icon = ({ name, size = 24 }: { name: string; size?: 20 | 24 }) => (
   </svg>
 );
 
-/** Floating (scroll collapses it, FastSpatial) and docked toolbars with toggles and a FAB. */
+/**
+ * Floating (scrolling collapses it — Compose floatingToolbarVerticalNestedScroll, 40px each way —
+ * or moves it off screen — exitAlwaysScrollBehavior) and docked toolbars with toggles and a FAB.
+ */
 export function ToolbarPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
   const [tone, setTone] = useState<ToolbarColor>('standard');
@@ -69,13 +74,10 @@ export function ToolbarPlayground() {
   const [withFab, setWithFab] = useState(true);
   const [expanded, setExpanded] = useState(true);
   const [view, setView] = useState('photos');
-  const last = useRef(0);
-  const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const y = e.currentTarget.scrollTop;
-    // Exit-always: collapse while scrolling down, expand on the way back up.
-    if (Math.abs(y - last.current) > 4) setExpanded(y < last.current || y < 8);
-    last.current = y;
-  };
+  const [behavior, setBehavior] = useState<'collapse' | 'exit'>('collapse');
+  const nestedScroll = useFloatingToolbarNestedScroll({ expanded, onExpand: () => setExpanded(true), onCollapse: () => setExpanded(false) });
+  const exitAlways = useFloatingToolbarExitAlways(type === 'floating-v' ? 'end' : 'bottom');
+  const scrollRef = behavior === 'collapse' ? nestedScroll : exitAlways.scrollRef;
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
   const floating = type !== 'docked';
   const fab = (
@@ -118,6 +120,13 @@ export function ToolbarPlayground() {
               <option value="vibrant">vibrant</option>
             </select>
           </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span {...stylex.props(s.muted)}>on scroll</span>
+            <select value={behavior} onChange={(e) => setBehavior(e.target.value as typeof behavior)} style={field}>
+              <option value="collapse">collapse (40px)</option>
+              <option value="exit">exit always</option>
+            </select>
+          </label>
           <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 14 }}>
             <input type="checkbox" checked={withFab} onChange={(e) => setWithFab(e.target.checked)} /> FAB
           </label>
@@ -126,15 +135,15 @@ export function ToolbarPlayground() {
           </label>
         </section>
         <div {...stylex.props(s.phone)}>
-          <div {...stylex.props(s.scroll)} onScroll={floating ? onScroll : undefined}>
+          <div ref={floating ? scrollRef : undefined} {...stylex.props(s.scroll)}>
             {Array.from({ length: 30 }, (_, i) => (
               <div key={i} {...stylex.props(typescale.bodyLarge, s.row)}>
-                Row {i + 1} — scroll down to collapse the floating toolbar, up to bring it back.
+                Row {i + 1} — scroll down to collapse the floating toolbar (or move it away), up to bring it back.
               </div>
             ))}
           </div>
           {floating ? (
-            <div {...stylex.props(type === 'floating-v' ? s.floatV : s.floatH)}>
+            <div key={behavior} ref={behavior === 'exit' ? exitAlways.ref : undefined} {...stylex.props(type === 'floating-v' ? s.floatV : s.floatH)}>
               <div {...stylex.props(s.hit)}>
                 <Toolbar
                   key={type}
