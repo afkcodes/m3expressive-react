@@ -1,15 +1,16 @@
-import { forwardRef, useState, type ReactNode } from 'react';
+import { forwardRef, memo, useMemo, useState, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Slider as BaseSlider } from '@base-ui/react/slider';
-import { color } from '../../tokens/color.stylex.ts';
-import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { textBox } from '../../primitives/textBox.ts';
-import { interaction } from '../../primitives/state.stylex.ts';
-import { StateLayer } from '../../primitives/StateLayer.tsx';
+import { focusRing } from '../../primitives/focusRing.ts';
+import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { useControllableState } from '../../hooks/useControllableState.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
-import { sliderVars, thumb0, thumb1 } from './slider.stylex.ts';
+import { thumb0, thumb1 } from './slider.stylex.ts';
+import { s } from './Slider.styles.ts';
+import { activeRange, along, trackSpans, type SliderMode } from './track.ts';
 import { sortRange, thumbValueText, tickSteps } from './values.ts';
 
 export type SliderSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
@@ -20,144 +21,16 @@ export type SliderOrientation = 'horizontal' | 'vertical';
  * 96 (XS–XL), component 44 / 44 / 52 / 68 / 108 thick; outer track corners 8 / 8 / 12 / 16 / 28
  * (the kit's 16px XS corner, clamped by Figma to half the track), inner corners 2. The handle is a
  * full-height 4px bar (2px while pressed) whose centre travels from 6px to length − 6px; tracks
- * stop 6px short of it. Inactive tracks end in a 4px stop dot 4px from the end. Pressed shows a
- * 48×44 value indicator 4px beyond the handle.
+ * stop 6px short of it (track.ts). Inactive tracks end in a 4px stop dot 4px from the end. Pressed
+ * shows a 48×44 value indicator 4px beyond the handle.
  */
-const SIZE: Record<SliderSize, { track: number; h: number; r: number }> = {
-  xsmall: { track: 16, h: 44, r: 8 },
-  small: { track: 24, h: 44, r: 8 },
-  medium: { track: 40, h: 52, r: 12 },
-  large: { track: 56, h: 68, r: 16 },
-  xlarge: { track: 96, h: 108, r: 28 },
+const SIZE: Record<SliderSize, { track: number; height: number; radius: number }> = {
+  xsmall: { track: 16, height: 44, radius: 8 },
+  small: { track: 24, height: 44, radius: 8 },
+  medium: { track: 40, height: 52, radius: 12 },
+  large: { track: 56, height: 68, radius: 16 },
+  xlarge: { track: 96, height: 108, radius: 28 },
 };
-const INNER_R = 2;
-
-const s = stylex.create({
-  root: {
-    position: 'relative',
-    flexShrink: 0,
-    boxSizing: 'border-box',
-    touchAction: 'none',
-    [sliderVars.hw0]: { default: '4px', [stylex.when.descendant(':is([data-dragging])', thumb0)]: '2px' },
-    [sliderVars.hw1]: { default: '4px', [stylex.when.descendant(':is([data-dragging])', thumb1)]: '2px' },
-  },
-  forcePressed0: { [sliderVars.hw0]: '2px' },
-  forcePressed1: { [sliderVars.hw1]: '2px' },
-  horizontal: (h: number) => ({ width: '100%', height: h }),
-  vertical: (h: number) => ({ width: h, height: '100%' }),
-  control: { position: 'absolute', touchAction: 'none' },
-  controlH: { top: 0, bottom: 0, insetInlineStart: 6, insetInlineEnd: 6 },
-  controlV: { left: 0, right: 0, top: 6, bottom: 6 },
-  track: { position: 'absolute', overflow: 'hidden', pointerEvents: 'none' },
-  trackH: (offset: number, thickness: number) => ({ top: offset, height: thickness }),
-  trackV: (offset: number, thickness: number) => ({ left: offset, width: thickness }),
-  spanH: (start: string | null, end: string | null, size: string) => ({
-    insetInlineStart: start ?? 'auto',
-    insetInlineEnd: end ?? 'auto',
-    width: `max(0px, ${size})`,
-  }),
-  spanV: (start: string | null, end: string | null, size: string) => ({
-    bottom: start ?? 'auto',
-    top: end ?? 'auto',
-    height: `max(0px, ${size})`,
-  }),
-  // [start-start, start-end, end-end, end-start] in logical corners (horizontal) — mapped per axis.
-  radiusH: (startSide: number, endSide: number) => ({
-    borderStartStartRadius: startSide,
-    borderEndStartRadius: startSide,
-    borderStartEndRadius: endSide,
-    borderEndEndRadius: endSide,
-  }),
-  radiusV: (bottom: number, top: number) => ({
-    borderBottomLeftRadius: bottom,
-    borderBottomRightRadius: bottom,
-    borderTopLeftRadius: top,
-    borderTopRightRadius: top,
-  }),
-  active: { backgroundColor: color.primary },
-  activeDisabled: { backgroundColor: color.onSurface, opacity: 0.38 },
-  inactive: { backgroundColor: color.secondaryContainer },
-  inactiveDisabled: { backgroundColor: `color-mix(in srgb, ${color.onSurface} 10%, transparent)` },
-  dot: { position: 'absolute', width: 4, height: 4, borderRadius: '50%', backgroundColor: color.onSecondaryContainer },
-  dotDisabled: { backgroundColor: color.onSurface, opacity: 0.38 },
-  dotH: { top: '50%', marginTop: -2 },
-  dotV: { left: '50%', marginLeft: -2 },
-  dotStartH: { insetInlineStart: 4 },
-  dotEndH: { insetInlineEnd: 4 },
-  dotStartV: { bottom: 4 },
-  dotEndV: { top: 4 },
-  tick: {
-    position: 'absolute',
-    width: 4,
-    height: 4,
-    borderRadius: '50%',
-    pointerEvents: 'none',
-    transform: 'translate(-50%, -50%)',
-  },
-  tickAt: (main: string, cross: string) => ({ insetInlineStart: main, top: cross }),
-  tickAtV: (main: string, cross: string) => ({ bottom: main, left: cross, transform: 'translate(-50%, 50%)' }),
-  tickOnActive: { backgroundColor: color.secondaryContainer },
-  tickOnInactive: { backgroundColor: color.onSecondaryContainer },
-  thumb: {
-    boxSizing: 'border-box',
-    backgroundColor: color.primary,
-    borderRadius: 2,
-    isolation: 'isolate',
-    outlineStyle: { default: 'none', ':has(:focus-visible)': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
-    [interaction.layerColor]: color.onPrimary,
-    [interaction.layerOpacity]: {
-      default: '0',
-      ':hover': { default: '0', '@media (hover: hover)': state.hoverOpacity },
-      ':is([data-dragging])': { default: state.pressedOpacity, '@media (hover: hover)': state.pressedOpacity },
-    },
-    // Compose StateLayer: a drag fades in over 45 ms (linear).
-    [interaction.layerDuration]: {
-      default: '15ms',
-      ':is([data-dragging])': { default: '45ms', '@media (hover: hover)': '45ms' },
-    },
-    // 48px touch / hover target around the 4px bar.
-    '::after': { content: '""', position: 'absolute', inset: '-4px -22px' },
-  },
-  thumbV: { '::after': { inset: '-22px -4px' } },
-  thumbH0: { width: sliderVars.hw0, height: '100%' },
-  thumbH1: { width: sliderVars.hw1, height: '100%' },
-  thumbV0: { height: sliderVars.hw0, width: '100%' },
-  thumbV1: { height: sliderVars.hw1, width: '100%' },
-  thumbDisabled: { backgroundColor: color.onSurface, opacity: 0.38, [interaction.layerOpacity]: '0' },
-  forceHover: { [interaction.layerOpacity]: state.hoverOpacity },
-  forcePressed: { [interaction.layerOpacity]: state.pressedOpacity },
-  indicator: {
-    position: 'absolute',
-    boxSizing: 'border-box',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 48,
-    height: 44,
-    paddingInline: 11.5,
-    borderRadius: 9999,
-    backgroundColor: color.inverseSurface,
-    color: color.inverseOnSurface,
-    pointerEvents: 'none',
-    // Compose's slider value indicator is a `Label` (internal Label.kt): a BasicTooltipBox popup
-    // that appears and disappears with no transition. It shows while pressed / dragged (the kit's
-    // Pressed variants) and, as our accessibility choice, while keyboard-focused. Compose's Label
-    // also shows on hover; the kit's Hovered variants draw no indicator, so the kit wins there.
-    opacity: {
-      default: 0,
-      [stylex.when.ancestor(':is([data-dragging])')]: 1,
-      [stylex.when.ancestor(':has(:focus-visible)')]: 1,
-    },
-  },
-  indicatorH: { bottom: 'calc(100% + 4px)', left: '50%', translate: '-50% 0' },
-  indicatorV: { right: 'calc(100% + 4px)', top: '50%', translate: '0 -50%' },
-  indicatorShown: { opacity: 1 },
-});
-
-type Mode = 'standard' | 'centered' | 'range';
 
 interface CommonProps {
   size?: SliderSize;
@@ -210,7 +83,64 @@ export interface RangeSliderProps extends CommonProps {
   onValueCommitted?: (value: [number, number]) => void;
 }
 
-const T = (p: number) => `${p} * (100% - 12px)`; // handle centre − 6px, as a CSS length
+/** One discrete stop indicator. Memoised: a value change re-renders only the ticks that change colour. */
+const SliderTick = memo(function SliderTick({
+  fraction,
+  horizontal,
+  onActive,
+  disabled,
+}: {
+  fraction: number;
+  horizontal: boolean;
+  onActive: boolean;
+  disabled: boolean;
+}) {
+  const main = `calc(6px + ${along(fraction)})`;
+  return (
+    <span
+      {...stylex.props(
+        s.tick,
+        horizontal ? s.tickAt(main, '50%') : s.tickAtV(main, '50%'),
+        onActive ? s.tickOnActive : s.tickOnInactive,
+        disabled && s.dotDisabled,
+      )}
+    />
+  );
+});
+
+/**
+ * Discrete stop indicators (hidden in the kit's variants; M3: on-active / on-inactive colours) at
+ * every step but under the handles. Rebuilt only when the steps, handles or appearance change.
+ */
+function useTicks(
+  steps: number | null,
+  mode: SliderMode,
+  fractions: readonly number[],
+  horizontal: boolean,
+  disabled: boolean,
+) {
+  const [first, second] = fractions;
+  return useMemo(() => {
+    if (steps == null) return null;
+    const handles = second === undefined ? [first!] : [first!, second];
+    const [low, high] = activeRange(mode, handles);
+    const ticks: ReactNode[] = [];
+    for (let k = 0; k <= steps; k++) {
+      const fraction = k / steps;
+      if (handles.some((handle) => Math.abs(handle - fraction) < 1e-9)) continue;
+      ticks.push(
+        <SliderTick
+          key={k}
+          fraction={fraction}
+          horizontal={horizontal}
+          onActive={fraction > low && fraction < high}
+          disabled={disabled}
+        />,
+      );
+    }
+    return ticks;
+  }, [steps, mode, first, second, horizontal, disabled]);
+}
 
 function SliderImpl({
   mode,
@@ -235,146 +165,24 @@ function SliderImpl({
   forwardedRef,
   ...aria
 }: CommonProps & {
-  mode: Mode;
+  mode: SliderMode;
   values: number[];
-  setValues: (v: number[]) => void;
-  onCommit?: (v: number[]) => void;
+  setValues: (values: number[]) => void;
+  onCommit?: (values: number[]) => void;
   forwardedRef: React.Ref<HTMLDivElement>;
 }) {
   const forced = useForcedState();
   // Compose halves the handle while it is pressed, dragged *or focused*; keyboard focus is tracked
   // here (a nested :has() can't express "thumb contains a focus-visible input").
   const [kbFocus, setKbFocus] = useState<number | null>(null);
-  const { track: th, h, r } = SIZE[size];
-  const H = orientation === 'horizontal';
-  const off = (h - th) / 2;
-  const p = values.map((v) => (max === min ? 0 : (Math.min(max, Math.max(min, v)) - min) / (max - min)));
+  const { track: trackThickness, height, radius } = SIZE[size];
+  const horizontal = orientation === 'horizontal';
+  const trackOffset = (height - trackThickness) / 2;
+  const fractions = values.map((v) => (max === min ? 0 : (Math.min(max, Math.max(min, v)) - min) / (max - min)));
   // The forced thumb for visual tests (range sliders: the kit hovers the end thumb).
   const forcedThumb = forced.thumb ?? (mode === 'range' ? 1 : 0);
-  const hwVar = (i: number) => (i === 0 ? sliderVars.hw0 : sliderVars.hw1);
-
-  // Track spans as [start, end, size] CSS lengths along the main axis.
-  type Span = {
-    start: string | null;
-    end: string | null;
-    size: string;
-    role: 'active' | 'inactive';
-    startR: number;
-    endR: number;
-    dotStart?: boolean;
-    dotEnd?: boolean;
-  };
-  const hw = (i: number) => `${hwVar(i)} / 2`;
-  const spans: Span[] = [];
-  if (mode === 'standard') {
-    spans.push({
-      start: '0px',
-      end: null,
-      size: `calc(${T(p[0]!)} - ${hw(0)})`,
-      role: 'active',
-      startR: r,
-      endR: INNER_R,
-    });
-    spans.push({
-      start: null,
-      end: '0px',
-      size: `calc(${T(1 - p[0]!)} - ${hw(0)})`,
-      role: 'inactive',
-      startR: INNER_R,
-      endR: r,
-      dotEnd: true,
-    });
-  } else if (mode === 'centered') {
-    const q = p[0]!;
-    spans.push({
-      start: '0px',
-      end: null,
-      size: `min(calc(${T(q)} - ${hw(0)}), calc(50% - 2px))`,
-      role: 'inactive',
-      startR: r,
-      endR: INNER_R,
-      dotStart: true,
-    });
-    if (q < 0.5)
-      spans.push({
-        start: `calc(12px + ${T(q)} + ${hw(0)})`,
-        end: null,
-        size: `calc(50% - 14px - ${T(q)} - ${hw(0)})`,
-        role: 'active',
-        startR: INNER_R,
-        endR: INNER_R,
-      });
-    if (q > 0.5)
-      spans.push({
-        start: 'calc(50% + 2px)',
-        end: null,
-        size: `calc(${T(q)} - ${hw(0)} - 50% - 2px)`,
-        role: 'active',
-        startR: INNER_R,
-        endR: INNER_R,
-      });
-    spans.push({
-      start: null,
-      end: '0px',
-      size: `min(calc(${T(1 - q)} - ${hw(0)}), calc(50% - 2px))`,
-      role: 'inactive',
-      startR: INNER_R,
-      endR: r,
-      dotEnd: true,
-    });
-  } else {
-    const [a, b] = [p[0]!, p[1]!];
-    spans.push({
-      start: '0px',
-      end: null,
-      size: `calc(${T(a)} - ${hw(0)})`,
-      role: 'inactive',
-      startR: r,
-      endR: INNER_R,
-      dotStart: true,
-    });
-    spans.push({
-      start: `calc(12px + ${T(a)} + ${hw(0)})`,
-      end: null,
-      size: `calc(${T(b - a)} - ${hw(0)} - ${hw(1)} - 12px)`,
-      role: 'active',
-      startR: INNER_R,
-      endR: INNER_R,
-    });
-    spans.push({
-      start: null,
-      end: '0px',
-      size: `calc(${T(1 - b)} - ${hw(1)})`,
-      role: 'inactive',
-      startR: INNER_R,
-      endR: r,
-      dotEnd: true,
-    });
-  }
-
-  // Discrete stop indicators (hidden in the kit's variants; M3: on-active / on-inactive colours).
-  const tickEls: ReactNode[] = [];
-  const n = ticks ? tickSteps(min, max, step) : null;
-  if (n != null) {
-    const lo = mode === 'range' ? p[0]! : mode === 'centered' ? Math.min(0.5, p[0]!) : 0;
-    const hi = mode === 'range' ? p[1]! : mode === 'centered' ? Math.max(0.5, p[0]!) : p[0]!;
-    for (let k = 0; k <= n; k++) {
-      const t = k / n;
-      if (p.some((q) => Math.abs(q - t) < 1e-9)) continue;
-      const main = `calc(6px + ${T(t)})`;
-      tickEls.push(
-        <span
-          key={k}
-          {...stylex.props(
-            s.tick,
-            H ? s.tickAt(main, '50%') : s.tickAtV(main, '50%'),
-            t > lo && t < hi ? s.tickOnActive : s.tickOnInactive,
-            disabled && s.dotDisabled,
-          )}
-        />,
-      );
-    }
-  }
+  const spans = trackSpans(mode, fractions, radius);
+  const tickMarks = useTicks(ticks ? tickSteps(min, max, step) : null, mode, fractions, horizontal, disabled);
 
   const label = (v: number, i: number) => valueLabel?.(v, i) ?? new Intl.NumberFormat(locale, format).format(v);
   // A text value label is what sighted users read: announce the same (Base UI's default otherwise).
@@ -400,22 +208,22 @@ function SliderImpl({
       locale={locale}
       {...stylex.props(
         s.root,
-        H ? s.horizontal(h) : s.vertical(h),
+        horizontal ? s.horizontal(height) : s.vertical(height),
         forced.state === 'pressed' && (forcedThumb === 0 ? s.forcePressed0 : s.forcePressed1),
         kbFocus === 0 && s.forcePressed0,
         kbFocus === 1 && s.forcePressed1,
         sx,
       )}
     >
-      {spans.map((sp, i) => (
+      {spans.map((span, i) => (
         <span
           key={i}
           {...stylex.props(
             s.track,
-            H ? s.trackH(off, th) : s.trackV(off, th),
-            H ? s.spanH(sp.start, sp.end, sp.size) : s.spanV(sp.start, sp.end, sp.size),
-            H ? s.radiusH(sp.startR, sp.endR) : s.radiusV(sp.startR, sp.endR),
-            sp.role === 'active'
+            horizontal ? s.trackH(trackOffset, trackThickness) : s.trackV(trackOffset, trackThickness),
+            horizontal ? s.spanH(span.start, span.end, span.size) : s.spanV(span.start, span.end, span.size),
+            horizontal ? s.radiusH(span.startRadius, span.endRadius) : s.radiusV(span.startRadius, span.endRadius),
+            span.role === 'active'
               ? disabled
                 ? s.activeDisabled
                 : s.active
@@ -424,18 +232,30 @@ function SliderImpl({
                 : s.inactive,
           )}
         >
-          {sp.dotStart && (
+          {span.dotStart && (
             <span
-              {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotStartH : s.dotStartV, disabled && s.dotDisabled)}
+              {...stylex.props(
+                s.dot,
+                horizontal ? s.dotH : s.dotV,
+                horizontal ? s.dotStartH : s.dotStartV,
+                disabled && s.dotDisabled,
+              )}
             />
           )}
-          {sp.dotEnd && (
-            <span {...stylex.props(s.dot, H ? s.dotH : s.dotV, H ? s.dotEndH : s.dotEndV, disabled && s.dotDisabled)} />
+          {span.dotEnd && (
+            <span
+              {...stylex.props(
+                s.dot,
+                horizontal ? s.dotH : s.dotV,
+                horizontal ? s.dotEndH : s.dotEndV,
+                disabled && s.dotDisabled,
+              )}
+            />
           )}
         </span>
       ))}
-      {tickEls}
-      <BaseSlider.Control {...stylex.props(s.control, H ? s.controlH : s.controlV)}>
+      {tickMarks}
+      <BaseSlider.Control {...stylex.props(s.control, horizontal ? s.controlH : s.controlV)}>
         {values.map((v, i) => {
           const on = forced.state && forcedThumb === i;
           return (
@@ -450,13 +270,15 @@ function SliderImpl({
               onBlur={() => setKbFocus(null)}
               {...stylex.props(
                 s.thumb,
+                focusRing.within,
                 i === 0 ? thumb0 : thumb1,
                 stylex.defaultMarker(),
-                !H && s.thumbV,
-                H ? (i === 0 ? s.thumbH0 : s.thumbH1) : i === 0 ? s.thumbV0 : s.thumbV1,
+                !horizontal && s.thumbV,
+                horizontal ? (i === 0 ? s.thumbH0 : s.thumbH1) : i === 0 ? s.thumbV0 : s.thumbV1,
                 disabled && s.thumbDisabled,
-                on && forced.state === 'hovered' && s.forceHover,
-                on && forced.state === 'pressed' && s.forcePressed,
+                // The kit's thumb has hover and pressed layers only (no focus layer: focus halves it).
+                on && forced.state === 'hovered' && stateLayerHost.forceHover,
+                on && forced.state === 'pressed' && stateLayerHost.forcePressed,
               )}
             >
               <StateLayer />
@@ -465,7 +287,7 @@ function SliderImpl({
                   aria-hidden
                   {...stylex.props(
                     s.indicator,
-                    H ? s.indicatorH : s.indicatorV,
+                    horizontal ? s.indicatorH : s.indicatorV,
                     on && forced.state === 'pressed' && s.indicatorShown,
                   )}
                 >
@@ -480,33 +302,25 @@ function SliderImpl({
   );
 }
 
-function useControllable<V>(value: V | undefined, defaultValue: V, onChange?: (v: V) => void) {
-  const [inner, setInner] = useState(defaultValue);
-  const current = value ?? inner;
-  return [
-    current,
-    (v: V) => {
-      if (value === undefined) setInner(v);
-      onChange?.(v);
-    },
-  ] as const;
-}
-
 /** Standard or centered slider (Base UI Slider underneath: keyboard, pointer, form, RTL). */
 export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
   { value, defaultValue, onValueChange, onValueCommitted, centered = false, min = 0, max = 100, ...rest },
   ref,
 ) {
-  const [v, setV] = useControllable(value, defaultValue ?? (centered ? (min + max) / 2 : min), onValueChange);
+  const [current, setCurrent] = useControllableState(
+    value,
+    defaultValue ?? (centered ? (min + max) / 2 : min),
+    onValueChange,
+  );
   return (
     <SliderImpl
       {...rest}
       min={min}
       max={max}
       mode={centered ? 'centered' : 'standard'}
-      values={[v]}
-      setValues={(n) => setV(n[0]!)}
-      onCommit={onValueCommitted && ((n) => onValueCommitted(n[0]!))}
+      values={[current]}
+      setValues={(next) => setCurrent(next[0]!)}
+      onCommit={onValueCommitted && ((next) => onValueCommitted(next[0]!))}
       forwardedRef={ref}
     />
   );
@@ -517,16 +331,16 @@ export const RangeSlider = forwardRef<HTMLDivElement, RangeSliderProps>(function
   { value, defaultValue, onValueChange, onValueCommitted, min = 0, max = 100, ...rest },
   ref,
 ) {
-  const [v, setV] = useControllable(value, defaultValue ?? [min, max], onValueChange);
+  const [current, setCurrent] = useControllableState(value, defaultValue ?? [min, max], onValueChange);
   return (
     <SliderImpl
       {...rest}
       min={min}
       max={max}
       mode="range"
-      values={v[0] <= v[1] ? v : sortRange(v)}
-      setValues={(n) => setV([n[0]!, n[1]!])}
-      onCommit={onValueCommitted && ((n) => onValueCommitted([n[0]!, n[1]!]))}
+      values={current[0] <= current[1] ? current : sortRange(current)}
+      setValues={(next) => setCurrent([next[0]!, next[1]!])}
+      onCommit={onValueCommitted && ((next) => onValueCommitted([next[0]!, next[1]!]))}
       forwardedRef={ref}
     />
   );
