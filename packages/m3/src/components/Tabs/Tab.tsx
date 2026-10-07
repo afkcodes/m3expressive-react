@@ -2,6 +2,7 @@ import { useContext, useMemo, type ReactNode, type Ref } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { color } from '../../tokens/color.stylex.ts';
+import { state } from '../../tokens/state.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
 import { interaction } from '../../primitives/state.stylex.ts';
@@ -13,6 +14,8 @@ import { TabsContext, type TabsVariant } from './context.ts';
 
 /* The tab itself — kit geometry and motion in ./Tabs.tsx. */
 const s = stylex.create({
+  // M3 disabled content: on-surface at 38% (the kit draws no disabled tab; chips and buttons do).
+  disabled: { color: color.onSurface, opacity: state.disabledContentOpacity, cursor: 'default' },
   tab: {
     position: 'relative',
     display: 'flex',
@@ -161,6 +164,8 @@ export function Tab({ value, label, icon, badge, disabled = false, sx, ...rest }
       forced.state != null && s.forcedOnSurface,
       active && (variant === 'primary' ? s.tabPrimaryActive : s.tabSecondaryActive),
       forcedStateLayer(forced.state, 'hover'),
+      disabled && stateLayerHost.disabled,
+      disabled && s.disabled,
       sx,
     );
   if (!live) {
