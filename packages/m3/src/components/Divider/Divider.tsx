@@ -41,29 +41,30 @@ export interface DividerProps {
 }
 
 export function Divider({ orientation = 'horizontal', inset = 'none', subheader, sx }: DividerProps) {
-  const h = orientation === 'horizontal';
+  const horizontal = orientation === 'horizontal';
+  const withSubheader = subheader != null && horizontal;
   return (
     <div
       role="separator"
       aria-orientation={orientation}
       {...stylex.props(
-        h ? s.horizontal : s.vertical,
-        subheader != null && h
+        horizontal ? s.horizontal : s.vertical,
+        withSubheader
           ? s.withSub
           : inset === 'start'
-            ? h
+            ? horizontal
               ? s.insetStartH
               : s.insetStartV
             : inset === 'middle'
-              ? h
+              ? horizontal
                 ? s.insetMiddleH
                 : s.insetMiddleV
               : null,
         sx,
       )}
     >
-      <span {...stylex.props(s.line, h ? s.lineH : s.lineV)} />
-      {subheader != null && h && <p {...stylex.props(typescale.titleSmall, s.sub)}>{subheader}</p>}
+      <span {...stylex.props(s.line, horizontal ? s.lineH : s.lineV)} />
+      {withSubheader && <p {...stylex.props(typescale.titleSmall, s.sub)}>{subheader}</p>}
     </div>
   );
 }
