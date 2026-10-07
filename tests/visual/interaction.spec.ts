@@ -1578,7 +1578,7 @@ test('date pickers (live): modal pick / keys / year / input, docked panel, full-
   await dialog.getByRole('button', { name: 'Next month' }).click();
   await expect(dialog.getByRole('grid', { name: 'August 2025' })).toBeVisible();
   await dialog.getByRole('button', { name: /August 2025, select year/ }).click();
-  await dialog.getByRole('button', { name: '2027' }).click();
+  await dialog.getByRole('option', { name: '2027' }).click();
   await expect(dialog.getByRole('grid', { name: 'August 2027' })).toBeVisible();
   await dialog.getByRole('button', { name: 'OK' }).click();
   await expect(dialog).toHaveCount(0);

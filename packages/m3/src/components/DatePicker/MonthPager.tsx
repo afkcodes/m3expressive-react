@@ -44,9 +44,11 @@ export interface MonthPagerProps {
   onSwipe?: (month: Date) => void;
   /** Show the next month change without the slide (a jump). */
   instant?: boolean;
+  /** Out of the tab order and the accessibility tree (a calendar leaving under the year list). */
+  inert?: boolean;
 }
 
-export function MonthPager({ month, children, onSwipe, instant = false }: MonthPagerProps) {
+export function MonthPager({ month, children, onSwipe, instant = false, inert = false }: MonthPagerProps) {
   const pager = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const snapSpec = useSpringToken('default-effects');
@@ -226,7 +228,7 @@ export function MonthPager({ month, children, onSwipe, instant = false }: MonthP
   };
 
   return (
-    <div ref={pager} onPointerDown={onPointerDown} {...stylex.props(s.pager)}>
+    <div ref={pager} inert={inert || undefined} onPointerDown={onPointerDown} {...stylex.props(s.pager)}>
       {children(month, false)}
       {other && (
         <div data-month-copy="" aria-hidden inert {...stylex.props(s.outgoing)}>

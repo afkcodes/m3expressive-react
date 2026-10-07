@@ -1,7 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   Button,
   CalendarDay,
+  CalendarMonth,
+  defaultFormatter,
   DateInputPanel,
   DatePicker,
   DateRangePicker,
@@ -180,7 +182,6 @@ function LivePickers() {
   const [docked, setDocked] = useState<Date | null>(null);
   const [rangeOpen, setRangeOpen] = useState(false);
   const [range, setRange] = useState<DateRange>({ start: null, end: null });
-  const iso = (d: Date | null) => (d ? `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` : 'none');
   return (
     <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
       <div style={{ display: 'flex', gap: 8 }}>
@@ -212,10 +213,89 @@ function LivePickers() {
   );
 }
 
+const iso = (d: Date | null) => (d ? `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` : 'none');
+
+/**
+ * Live, under a parent that rebuilds its props on every render (fresh Date objects with the same
+ * values, inline formatters); `window.__m3xChurn()` re-renders it from a test.
+ */
+function ChurnPickers() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    (window as unknown as { __m3xChurn?: () => void }).__m3xChurn = () => setTick((t) => t + 1);
+  }, []);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | null>(new Date(2025, 6, 17));
+  const [docked, setDocked] = useState<Date | null>(new Date(2025, 6, 17));
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const [range, setRange] = useState<DateRange>({ start: new Date(2025, 6, 10), end: new Date(2025, 6, 12) });
+  const fresh = (d: Date | null) => (d ? new Date(d.getTime()) : null);
+  return (
+    <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <Button onClick={() => setOpen(true)}>Pick date</Button>
+        <Button variant="tonal" onClick={() => setRangeOpen(true)}>
+          Pick range
+        </Button>
+      </div>
+      <output data-tick>{tick}</output>
+      <output data-date>{iso(date)}</output>
+      <output data-range>{`${iso(range.start)}..${iso(range.end)}`}</output>
+      <output data-docked>{iso(docked)}</output>
+      <DockedDatePicker
+        value={fresh(docked)}
+        onChange={setDocked}
+        today={new Date(2025, 6, 5)}
+        formatter={{ monthShort: (d) => d.toLocaleString('en-US', { month: 'short' }) }}
+      />
+      <ModalDatePicker
+        open={open}
+        onOpenChange={setOpen}
+        value={fresh(date)}
+        onChange={setDate}
+        today={new Date(2025, 6, 5)}
+        formatter={{}}
+      />
+      <ModalDateRangePicker
+        open={rangeOpen}
+        onOpenChange={setRangeOpen}
+        value={{ start: fresh(range.start), end: fresh(range.end) }}
+        onChange={setRange}
+        firstMonth={new Date(2025, 6, 1)}
+        today={new Date(2025, 6, 5)}
+        formatter={{}}
+      />
+    </div>
+  );
+}
+
+/** A month with disabled days (weekends and 1–10 July): the tab stop and arrows skip them. */
+function DisabledDays() {
+  const [value, setValue] = useState<Date | null>(new Date(2025, 6, 5));
+  const [month, setMonth] = useState(new Date(2025, 6, 1));
+  const disabled = (d: Date) => d.getDay() === 0 || d.getDay() === 6 || (d.getMonth() === 6 && d.getDate() <= 10);
+  return (
+    <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+      <CalendarMonth
+        month={month}
+        value={value}
+        today={new Date(2025, 6, 5)}
+        formatter={defaultFormatter('en-US')}
+        onPick={setValue}
+        onNavigate={setMonth}
+        isDisabled={disabled}
+      />
+      <output data-picked>{iso(value)}</output>
+    </div>
+  );
+}
+
 const fixture: FixtureModule = {
   component: 'date-picker',
   variants: Object.fromEntries([
     ['live', { width: 400, height: 300, render: () => <LivePickers /> } satisfies FixtureVariant],
+    ['live-churn', { width: 400, height: 300, render: () => <ChurnPickers /> } satisfies FixtureVariant],
+    ['live-disabled', { width: 400, height: 400, render: () => <DisabledDays /> } satisfies FixtureVariant],
     ...Object.entries(manifest.variants).map(([name, v]): [string, FixtureVariant] => {
       const [w, h] = v.size as [number, number];
       return [

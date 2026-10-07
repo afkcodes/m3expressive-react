@@ -1,6 +1,6 @@
 export { CalendarDay, PickerMenuButton, YearChip } from './cells.tsx';
 export type { CalendarDayKind, CalendarDayProps, PickerMenuButtonProps, YearChipProps } from './cells.tsx';
-export { defaultFormatter, monthWeeks, parseInputDate, sameDay } from './calendar.ts';
+export { defaultFormatter, inputFormatHint, monthWeeks, parseInputDate, sameDay } from './calendar.ts';
 export type { DatePickerFormatter } from './calendar.ts';
 export { DatePicker, ModalDatePicker } from './DatePicker.tsx';
 export { DATE_PICKER_ICONS } from './icons.ts';
