@@ -1,30 +1,22 @@
-import {
-  forwardRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import { forwardRef, useContext, useRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import type { StyleXStyles } from '@stylexjs/stylex';
 import { Button as BaseButton } from '@base-ui/react/button';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
-import { state } from '../../tokens/state.stylex.ts';
 import { typescale } from '../../tokens/typescale.ts';
+import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { elevationMotion } from '../../primitives/elevationMotion.ts';
+import { focusRing } from '../../primitives/focusRing.ts';
 import { tween } from '../../primitives/tweens.stylex.ts';
-import { StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
+import { forcedStateLayer, StateLayer, stateLayerHost } from '../../primitives/StateLayer.tsx';
 import { Ripple } from '../../primitives/Ripple.tsx';
 import { textBox } from '../../primitives/textBox.ts';
-import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
-import { useSpringToken } from '../../motion/context.tsx';
+import { visuallyHidden } from '../../primitives/visuallyHidden.ts';
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ToolbarFabContext } from '../Toolbar/context.ts';
+import { useExpandMotion } from './useExpandMotion.ts';
 
 export type FabColor =
   'primary' | 'secondary' | 'tertiary' | 'primary-container' | 'secondary-container' | 'tertiary-container';
@@ -42,18 +34,18 @@ export type ExtendedFabSize = 'small' | 'medium' | 'large';
  * spread on non-clipping frames). The pressed ripple is drawn above the icon (kit layer order).
  * No disabled state in the kit.
  */
-const FAB: Record<FabSize, { box: number; r: number; icon: number }> = {
-  default: { box: 56, r: 16, icon: 24 },
-  medium: { box: 80, r: 20, icon: 28 },
-  large: { box: 96, r: 28, icon: 36 },
+const FAB: Record<FabSize, { box: number; radius: number; icon: number }> = {
+  default: { box: 56, radius: 16, icon: 24 },
+  medium: { box: 80, radius: 20, icon: 28 },
+  large: { box: 96, radius: 28, icon: 36 },
 };
-const EXT: Record<
+const EXTENDED: Record<
   ExtendedFabSize,
-  { h: number; r: number; icon: number; padBlock: number; padInline: number; gap: number }
+  { height: number; radius: number; icon: number; padBlock: number; padInline: number; gap: number }
 > = {
-  small: { h: 56, r: 16, icon: 24, padBlock: 16, padInline: 16, gap: 8 },
-  medium: { h: 80, r: 20, icon: 28, padBlock: 26, padInline: 26, gap: 12 },
-  large: { h: 96, r: 28, icon: 36, padBlock: 30, padInline: 28, gap: 16 },
+  small: { height: 56, radius: 16, icon: 24, padBlock: 16, padInline: 16, gap: 8 },
+  medium: { height: 80, radius: 20, icon: 28, padBlock: 26, padInline: 26, gap: 12 },
+  large: { height: 96, radius: 28, icon: 36, padBlock: 30, padInline: 28, gap: 16 },
 };
 const LABEL = { small: typescale.titleMedium, medium: typescale.titleLarge, large: typescale.headlineSmall } as const;
 
@@ -80,10 +72,7 @@ const s = stylex.create({
     cursor: 'pointer',
     userSelect: 'none',
     WebkitTapHighlightColor: 'transparent',
-    outlineStyle: { default: 'none', ':focus-visible': 'solid' },
-    outlineColor: color.secondary,
-    outlineWidth: state.focusIndicatorThickness,
-    outlineOffset: state.focusIndicatorOuterOffset,
+    // Focus indicator: focusRing.host, listed right after this style.
     boxShadow: {
       default: elevation.level3,
       ':hover': { default: null, '@media (hover: hover)': elevation.level4 },
@@ -94,7 +83,6 @@ const s = stylex.create({
   },
   hovered: { boxShadow: elevation.level4 },
   focused: { boxShadow: elevation.level3NoSpread },
-  ringForced: { outlineStyle: 'solid' },
   // Flat FAB (Compose bottomAppBarFabElevation: 0 in every state) — e.g. in a navigation rail.
   flat: { boxShadow: 'none' },
   // Next to a floating toolbar: the size follows the toolbar's collapse (FastSpatial); the shadow
@@ -135,19 +123,14 @@ const s = stylex.create({
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   // flexShrink 0: the label keeps its width (clipped) while the extended FAB collapses.
   label: { position: 'relative', color: 'inherit', flexShrink: 0 },
-  // Collapsed extended FAB: the label stays the accessible name (Compose takes it from the icon).
-  srOnly: {
-    position: 'absolute',
-    width: 1,
-    height: 1,
-    overflow: 'hidden',
-    clipPath: 'inset(50%)',
-    whiteSpace: 'nowrap',
-  },
 });
 
 const dyn = stylex.create({
-  box: (w: number | null, h: number, r: number) => ({ width: w, height: h, borderRadius: r }),
+  box: (boxWidth: number | null, boxHeight: number, radius: number) => ({
+    width: boxWidth,
+    height: boxHeight,
+    borderRadius: radius,
+  }),
   pad: (block: number, inline: number, gap: number) => ({ paddingBlock: block, paddingInline: inline, columnGap: gap }),
   icon: (px: number) => ({ width: px, height: px }),
 });
@@ -167,15 +150,15 @@ function useFabRoot(fabColor: FabColor, elevated: boolean, sx?: StyleXStyles) {
   const forced = useForcedState();
   return [
     s.root,
+    focusRing.host,
     elevated && elevationMotion.host,
     colors[fabColor],
     stateLayerHost.host,
-    forced.state === 'hovered' && stateLayerHost.forceHover,
+    // The kit's Pressed variants keep the hover layer under the ripple.
+    forcedStateLayer(forced.state, 'hover'),
     forced.state === 'hovered' && s.hovered,
-    forced.state === 'focused' && stateLayerHost.forceFocus,
     forced.state === 'focused' && s.focused,
-    forced.state === 'pressed' && stateLayerHost.forceHover,
-    forced.focusRing && s.ringForced,
+    forced.focusRing && focusRing.forced,
     !elevated && s.flat,
     sx,
   ];
@@ -197,16 +180,16 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
   { size = 'default', color: fabColor = 'primary-container', elevated = true, children, sx, ...rest },
   ref,
 ) {
-  const { box: rest56, r, icon } = FAB[size];
+  const { box: restBox, radius, icon } = FAB[size];
   const toolbar = useContext(ToolbarFabContext);
   // Compose FabSizeRange: the default FAB grows to the medium FAB's 80px while its toolbar is collapsed.
-  const box = toolbar?.collapsed && size === 'default' ? FAB.medium.box : rest56;
+  const box = toolbar?.collapsed && size === 'default' ? FAB.medium.box : restBox;
   return (
     <BaseButton
       ref={ref}
       data-ripple-host=""
       {...rest}
-      {...stylex.props(...useFabRoot(fabColor, elevated, sx), toolbar && s.inToolbar, dyn.box(box, box, r))}
+      {...stylex.props(...useFabRoot(fabColor, elevated, sx), toolbar && s.inToolbar, dyn.box(box, box, radius))}
     >
       <StateLayer />
       <span {...stylex.props(s.icon, dyn.icon(icon))}>{children}</span>
@@ -245,18 +228,11 @@ export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(funct
   },
   ref,
 ) {
-  const e = EXT[size];
+  const metrics = EXTENDED[size];
   const root = useRef<HTMLButtonElement | null>(null);
   const label = useRef<HTMLSpanElement | null>(null);
-  const setRoot = useCallback(
-    (node: HTMLButtonElement | null) => {
-      root.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) ref.current = node;
-    },
-    [ref],
-  );
-  const labelShown = useExpandMotion(root, label, expanded, e.h);
+  const setRoot = useMergedRefs(root, ref);
+  const labelShown = useExpandMotion(root, label, expanded, metrics.height);
   return (
     <BaseButton
       ref={setRoot}
@@ -264,128 +240,21 @@ export const ExtendedFab = forwardRef<HTMLButtonElement, ExtendedFabProps>(funct
       {...rest}
       {...stylex.props(
         ...useFabRoot(fabColor, elevated, sx),
-        dyn.box(null, e.h, e.r),
-        dyn.pad(e.padBlock, e.padInline, e.gap),
+        dyn.box(null, metrics.height, metrics.radius),
+        dyn.pad(metrics.padBlock, metrics.padInline, metrics.gap),
       )}
     >
       <StateLayer />
-      {icon != null && <span {...stylex.props(s.icon, dyn.icon(e.icon))}>{icon}</span>}
+      {icon != null && <span {...stylex.props(s.icon, dyn.icon(metrics.icon))}>{icon}</span>}
       {labelShown ? (
         <span ref={label} {...stylex.props(LABEL[size], textBox.hug, s.label)}>
           {children}
         </span>
       ) : (
-        <span {...stylex.props(s.srOnly)}>{children}</span>
+        // Collapsed: the label stays the accessible name (Compose takes it from the icon).
+        <span {...stylex.props(visuallyHidden.root)}>{children}</span>
       )}
       <Ripple above />
     </BaseButton>
   );
 });
-
-/*
- * Expand / collapse — Compose expressive ExtendedFloatingActionButton (FloatingActionButton.kt):
- * one transition drives width progress p on FastSpatial and label alpha on FastEffects;
- * width = lerp(minWidth (= height), expanded width, p) with the padded content laid out at the
- * start and clipped (padding never changes); the label is removed only once fully collapsed
- * (target 0 and nothing running). At rest expanded nothing is overridden (the kit's frames).
- */
-function useExpandMotion(
-  root: { current: HTMLElement | null },
-  label: { current: HTMLElement | null },
-  expanded: boolean,
-  minWidth: number,
-) {
-  const widthSpring = useSpringToken('fast-spatial');
-  const alphaSpring = useSpringToken('fast-effects')!;
-  const [labelShown, setLabelShown] = useState(expanded);
-  const st = useRef({
-    p: expanded ? 1 : 0,
-    a: expanded ? 1 : 0,
-    pAnim: null as SpringAnimation | null,
-    aAnim: null as SpringAnimation | null,
-    full: 0,
-  });
-  const first = useRef(true);
-
-  const apply = () => {
-    const node = root.current;
-    const S = st.current;
-    if (!node) return;
-    const resting = !S.pAnim && !S.aAnim;
-    if (resting && S.p === 1) {
-      for (const p of ['width', 'overflow', 'justify-content']) node.style.removeProperty(p);
-      label.current?.style.removeProperty('opacity');
-      return;
-    }
-    node.style.width = `${minWidth + Math.round((S.full - minWidth) * S.p)}px`;
-    node.style.overflow = 'hidden';
-    node.style.justifyContent = 'flex-start';
-    if (label.current) label.current.style.opacity = String(S.a);
-  };
-
-  useLayoutEffect(() => {
-    const S = st.current;
-    if (first.current) {
-      first.current = false;
-      apply();
-      return;
-    }
-    // Expanding: mount the label (transparent) first, then measure.
-    if (expanded && !labelShown) {
-      setLabelShown(true);
-      return;
-    }
-    const node = root.current;
-    if (node && labelShown && !S.pAnim) {
-      const w = node.style.width;
-      node.style.removeProperty('width');
-      S.full = node.getBoundingClientRect().width;
-      node.style.width = w;
-    }
-    const target = expanded ? 1 : 0;
-    const done = () => {
-      if (S.pAnim || S.aAnim) return;
-      apply();
-      if (S.p === 0 && S.a === 0) setLabelShown(false);
-    };
-    const run = (key: 'p' | 'a', animKey: 'pAnim' | 'aAnim', spring: typeof widthSpring) => {
-      const running = S[animKey];
-      if (!spring) {
-        running?.stop();
-        S[animKey] = null;
-        S[key] = target;
-        return;
-      }
-      if (running) return running.retarget(target);
-      if (S[key] === target) return;
-      S[animKey] = animateSpring({
-        spring,
-        from: S[key],
-        to: target,
-        onUpdate: (v) => {
-          S[key] = v;
-          apply();
-        },
-        onComplete: () => {
-          S[animKey] = null;
-          done();
-        },
-      });
-    };
-    run('p', 'pAnim', widthSpring);
-    run('a', 'aAnim', alphaSpring);
-    apply();
-    done();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expanded, labelShown]);
-
-  useEffect(
-    () => () => {
-      st.current.pAnim?.stop();
-      st.current.aAnim?.stop();
-    },
-    [],
-  );
-
-  return labelShown;
-}
