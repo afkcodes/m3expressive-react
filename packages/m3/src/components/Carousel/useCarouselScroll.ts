@@ -174,7 +174,7 @@ export function useCarouselScroll({
     stop();
     if (Math.abs(to - from) < MIN_SNAP_DISTANCE) return;
     // From where the scroll is now (the channel last moved it; a drag or the wheel may have since).
-    snap.jump(from);
+    snap.set(from);
     snap.to(to, prefersReducedMotion() ? null : SNAP_SPRING, velocity);
   };
 

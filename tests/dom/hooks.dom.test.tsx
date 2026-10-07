@@ -115,6 +115,31 @@ describe('useSpringChannel', () => {
     await wait(200);
     expect(seen.length - count).toBeLessThanOrEqual(1); // stopped on unmount
   });
+
+  it('a to() already at its target rests at once; set() re-syncs without painting', async () => {
+    const seen: number[] = [];
+    const rested: number[] = [];
+    let channel!: SpringChannel;
+    function Probe() {
+      channel = useSpringChannel((v) => seen.push(v), { initial: 4, onRest: (v) => rested.push(v) });
+      return null;
+    }
+    const { unmount } = await mount(<Probe />);
+    await act(async () => channel.to(4, SPRING));
+    expect(rested).toEqual([4]); // Compose animateTo completes even when nothing moves
+    expect(seen).toEqual([]);
+    expect(channel.animating).toBe(false);
+
+    await act(async () => channel.to(20, SPRING));
+    await act(async () => channel.set(7)); // e.g. the user scrolled: stops, adopts 7, paints nothing
+    const painted = seen.length;
+    expect(channel.value).toBe(7);
+    expect(channel.animating).toBe(false);
+    await act(async () => wait(100));
+    expect(seen.length).toBe(painted);
+    expect(rested).toEqual([4]); // a stopped spring never rests
+    await unmount();
+  });
 });
 
 describe('labels', () => {

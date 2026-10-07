@@ -93,7 +93,9 @@ export function TabList({
     shown.current = { ...shown.current, [key]: value };
     paintIndicator(indicator.current, shown.current);
   };
-  // Once both springs have landed the resting geometry takes over again.
+  // Once both springs have landed the resting geometry takes over again — not between the two `to()`
+  // calls of one placement (a spring already at its target rests at once).
+  const placing = useRef(false);
   const indicatorX = useSpringChannel((v) => paintShown('x', v), {
     precision: INDICATOR_PRECISION,
     onRest: () => settleIndicator(),
@@ -103,7 +105,7 @@ export function TabList({
     onRest: () => settleIndicator(),
   });
   const settleIndicator = () => {
-    if (!indicatorX.animating && !indicatorW.animating) paintIndicator(indicator.current, null);
+    if (!placing.current && !indicatorX.animating && !indicatorW.animating) paintIndicator(indicator.current, null);
   };
   const scroll = useSpringChannel(
     (v) => {
@@ -144,9 +146,11 @@ export function TabList({
       // The resting geometry moves to the target now; the frames cover it until both springs land.
       paintIndicator(indicator.current, from);
       setGeo(target);
+      placing.current = true;
       indicatorX.to(target.x, spring);
       indicatorW.to(target.w, spring);
-      // Neither moves (already there): nothing will land, so rest now.
+      placing.current = false;
+      // Neither moves (already there): rest now.
       if (!indicatorX.animating && !indicatorW.animating) paintIndicator(indicator.current, null);
     },
     [variant, spring, reduced, indicatorX, indicatorW],
@@ -167,7 +171,7 @@ export function TabList({
       const centred = tab.offsetLeft - (Math.trunc(visible / 2) - Math.trunc(tab.offsetWidth / 2));
       const to = Math.min(available, Math.max(0, centred));
       if (to === el.scrollLeft) return;
-      scroll.jump(el.scrollLeft);
+      scroll.set(el.scrollLeft);
       scroll.to(to, spring);
     };
     place(true);
