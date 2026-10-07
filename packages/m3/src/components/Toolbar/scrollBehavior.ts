@@ -41,8 +41,8 @@ function useScrollDeltas(onDelta: (delta: number) => void, onEnd?: () => void) {
 export interface FloatingToolbarNestedScrollOptions {
   /** The toolbar's current expanded state. */
   expanded: boolean;
-  onExpand: () => void;
-  onCollapse: () => void;
+  /** The scroll asks to expand (true) or collapse (false) the toolbar. */
+  onExpandedChange: (expanded: boolean) => void;
   /** Scroll distance (px) back up that expands the toolbar (default 40). */
   expandScrollDistanceThreshold?: number;
   /** Scroll distance (px) down that collapses it (default 40). */
@@ -59,14 +59,13 @@ export interface FloatingToolbarNestedScrollOptions {
  */
 export function useFloatingToolbarNestedScroll({
   expanded,
-  onExpand,
-  onCollapse,
+  onExpandedChange,
   expandScrollDistanceThreshold = SCROLL_DISTANCE_THRESHOLD,
   collapseScrollDistanceThreshold = SCROLL_DISTANCE_THRESHOLD,
   reverseLayout = false,
 }: FloatingToolbarNestedScrollOptions): (el: HTMLElement | null) => void {
   const st = useRef({ contentOffset: 0, threshold: 0 });
-  const opts = { onExpand, onCollapse, expandScrollDistanceThreshold, collapseScrollDistanceThreshold, reverseLayout };
+  const opts = { onExpandedChange, expandScrollDistanceThreshold, collapseScrollDistanceThreshold, reverseLayout };
 
   // updateThreshold: whenever the state or the thresholds change.
   useEffect(() => {
@@ -82,10 +81,10 @@ export function useFloatingToolbarNestedScroll({
     scroll.contentOffset += scrollDelta;
     if (scrollDelta < 0 && scroll.contentOffset <= scroll.threshold) {
       scroll.threshold = scroll.contentOffset + opts.expandScrollDistanceThreshold;
-      opts.onCollapse();
+      opts.onExpandedChange(false);
     } else if (scrollDelta > 0 && scroll.contentOffset >= scroll.threshold) {
       scroll.threshold = scroll.contentOffset - opts.collapseScrollDistanceThreshold;
-      opts.onExpand();
+      opts.onExpandedChange(true);
     }
   });
 }

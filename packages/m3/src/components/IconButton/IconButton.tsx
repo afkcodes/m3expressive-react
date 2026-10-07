@@ -7,7 +7,7 @@ import { forcedStateLayer, stateLayerHost } from '../../primitives/StateLayer.ts
 import { useForcedState } from '../../testing/ForceState.tsx';
 import { ButtonGroupContext } from '../ButtonGroup/context.ts';
 import { StandardIconTintContext } from './context.ts';
-import { ToolbarColorContext } from '../Toolbar/context.ts';
+import { ToolbarVariantContext } from '../Toolbar/context.ts';
 import { needsTouchTarget, type ButtonShape, type ButtonSize } from '../Button/buttonStyles.ts';
 import { IconButtonFrame } from './IconButtonFrame.tsx';
 import { iconButtonBase, iconButtonDisabled, iconStrokeWidth, type IconButtonWidth } from './iconButtonStyles.ts';
@@ -47,7 +47,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(function Icon
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
   const tint = useContext(StandardIconTintContext);
-  const toolbar = useContext(ToolbarColorContext);
+  const toolbar = useContext(ToolbarVariantContext);
   const clear = variant === 'standard' || variant === 'outlined';
 
   return (

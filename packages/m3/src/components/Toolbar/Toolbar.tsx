@@ -1,12 +1,12 @@
-import { forwardRef, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ComponentPropsWithRef, type ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
-import type { StyleXStyles } from '@stylexjs/stylex';
 import { color } from '../../tokens/color.stylex.ts';
 import { elevation } from '../../tokens/elevation.stylex.ts';
 import { motion } from '../../tokens/motion.stylex.ts';
-import { ToolbarColorContext, ToolbarFabContext, type ToolbarColor } from './context.ts';
+import { ToolbarVariantContext, ToolbarFabContext, type ToolbarVariant } from './context.ts';
 import { useMergedRefs } from '../../hooks/useMergedRefs.ts';
 import { useRovingTabStop } from '../../hooks/useRovingTabStop.ts';
+import type { SxProps } from '../../primitives/types.ts';
 
 /*
  * Figma kit, "Toolbars" page (Toolbar set 58467:8206; Compose HorizontalFloatingToolbar /
@@ -119,13 +119,21 @@ const s = stylex.create({
   fabSlot: { display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
 });
 
-export interface ToolbarProps {
+/**
+ * `ref`, native props and `sx` go to the root: the `role="toolbar"` bar, or — with a `fab` — the
+ * wrapper holding the bar and the FAB. `aria-label` / `aria-labelledby` always name the bar.
+ */
+export interface ToolbarProps extends SxProps<ComponentPropsWithRef<'div'>> {
   /** Floating (a rounded, elevated bar) or docked (full width, flat). */
-  type?: 'floating' | 'docked';
+  layout?: 'floating' | 'docked';
   /** Floating toolbars can be vertical. */
   orientation?: 'horizontal' | 'vertical';
-  color?: ToolbarColor;
-  /** Floating: collapse to the main content (scroll away); with a FAB, to the FAB alone. */
+  variant?: ToolbarVariant;
+  /**
+   * Floating: collapse to the main content (scroll away); with a FAB, to the FAB alone. Controlled
+   * only: layout state the toolbar never changes itself (drive it from the app, or with
+   * `useFloatingToolbarNestedScroll`).
+   */
   expanded?: boolean;
   /** Floating: content shown only while expanded, before / after the main content. */
   leading?: ReactNode;
@@ -133,40 +141,39 @@ export interface ToolbarProps {
   /** Floating: a FAB 8px after (or before) the toolbar. */
   fab?: ReactNode;
   fabPosition?: 'end' | 'start';
-  'aria-label'?: string;
   children?: ReactNode;
-  sx?: StyleXStyles;
 }
 
 /**
  * A row (or column) of actions. Arrow keys move between items (mirrored in RTL; a text field keeps
  * them while its caret can move); Tab enters and leaves it once.
  */
-export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
-  {
-    type = 'floating',
-    orientation: orientationProp = 'horizontal',
-    color: tone = 'standard',
-    expanded = true,
-    leading,
-    trailing,
-    fab,
-    fabPosition = 'end',
-    'aria-label': ariaLabel,
-    children,
-    sx,
-  },
-  forwardedRef,
-) {
-  const floating = type === 'floating';
+export function Toolbar({
+  layout = 'floating',
+  orientation: orientationProp = 'horizontal',
+  variant = 'standard',
+  expanded = true,
+  leading,
+  trailing,
+  fab,
+  fabPosition = 'end',
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  children,
+  sx,
+  ref: refProp,
+  ...rest
+}: ToolbarProps) {
+  const floating = layout === 'floating';
   const vertical = floating && orientationProp === 'vertical';
   const orientation = vertical ? 'vertical' : 'horizontal';
+  const hasFab = floating && fab != null;
   const ref = useRef<HTMLDivElement | null>(null);
-  const setRef = useMergedRefs(ref, forwardedRef);
+  // Without a FAB the bar is the root.
+  const setRef = useMergedRefs(ref, hasFab ? null : refProp);
 
   // The bar's natural size, for the constant-size FAB layout.
   const [natural, setNatural] = useState<[number, number] | null>(null);
-  const hasFab = floating && fab != null;
   useLayoutEffect(() => {
     const el = ref.current;
     if (!hasFab || !el) return undefined;
@@ -209,17 +216,26 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   };
 
   const bar = (
-    <ToolbarColorContext value={tone}>
+    <ToolbarVariantContext value={variant}>
       <div
         ref={setRef}
         role="toolbar"
         aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-orientation={orientation}
-        onFocus={onFocus}
-        onKeyDown={onKeyDown}
+        {...(hasFab ? null : rest)}
+        // The roving tab stop runs after the app's own handlers (on the bar when it is the root).
+        onFocus={(e) => {
+          if (!hasFab) rest.onFocus?.(e);
+          onFocus(e);
+        }}
+        onKeyDown={(e) => {
+          if (!hasFab) rest.onKeyDown?.(e);
+          onKeyDown(e);
+        }}
         {...stylex.props(
           s.root,
-          tone === 'vibrant' && s.vibrant,
+          variant === 'vibrant' && s.vibrant,
           floating ? [s.floating, vertical && s.floatingVertical] : s.docked,
           hasFab ? s.barNatural : sx,
         )}
@@ -228,12 +244,14 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         {floating ? <div {...stylex.props(s.group, vertical && s.groupVertical)}>{children}</div> : children}
         {floating && trailing != null && collapsible(trailing, 'trail')}
       </div>
-    </ToolbarColorContext>
+    </ToolbarVariantContext>
   );
 
   if (!hasFab) return bar;
   return (
     <div
+      ref={refProp}
+      {...rest}
       {...stylex.props(
         s.withFab,
         vertical && s.withFabVertical,
@@ -258,9 +276,9 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       </div>
     </div>
   );
-});
+}
 
-/** Building-block rendering: toolbar item colours without the bar (visual tests, custom layouts). */
-export function ToolbarScope({ color: tone = 'standard', children }: { color?: ToolbarColor; children: ReactNode }) {
-  return <ToolbarColorContext value={tone}>{children}</ToolbarColorContext>;
+/** Testing: toolbar item colours without the bar (the kit's toolbar building blocks). */
+export function ToolbarScope({ variant = 'standard', children }: { variant?: ToolbarVariant; children: ReactNode }) {
+  return <ToolbarVariantContext value={variant}>{children}</ToolbarVariantContext>;
 }

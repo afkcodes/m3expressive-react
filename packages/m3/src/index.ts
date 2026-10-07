@@ -144,14 +144,9 @@ export { AppBarTitle, BottomAppBar, TopAppBar, useAppBarScroll } from './compone
 export type { AppBarTitleProps, BottomAppBarProps, TopAppBarProps, TopAppBarSize } from './components/AppBar/index.ts';
 export { SearchBar, SearchView } from './components/Search/index.ts';
 export type { SearchBarProps, SearchViewProps } from './components/Search/index.ts';
-export {
-  Toolbar,
-  ToolbarScope,
-  useFloatingToolbarExitAlways,
-  useFloatingToolbarNestedScroll,
-} from './components/Toolbar/index.ts';
+export { Toolbar, useFloatingToolbarExitAlways, useFloatingToolbarNestedScroll } from './components/Toolbar/index.ts';
 export type {
-  ToolbarColor,
+  ToolbarVariant,
   ToolbarProps,
   FloatingToolbarExitDirection,
   FloatingToolbarNestedScrollOptions,

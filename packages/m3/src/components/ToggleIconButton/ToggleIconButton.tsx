@@ -16,7 +16,7 @@ import {
   type IconButtonWidth,
 } from '../IconButton/iconButtonStyles.ts';
 import type { IconButtonVariant } from '../IconButton/IconButton.tsx';
-import { ToolbarColorContext } from '../Toolbar/context.ts';
+import { ToolbarVariantContext } from '../Toolbar/context.ts';
 
 /*
  * Figma kit, Buttons page, sets "Icon button togglable" / "- tonal" / "- outline" / "- standard".
@@ -97,7 +97,7 @@ export const ToggleIconButton = forwardRef<HTMLButtonElement, ToggleIconButtonPr
   const [selected, setSelected] = useControllableState(pressed, defaultPressed, onPressedChange);
   const forced = useForcedState();
   const { inGroup } = useContext(ButtonGroupContext);
-  const toolbar = useContext(ToolbarColorContext);
+  const toolbar = useContext(ToolbarVariantContext);
   const tool = toolbar != null && variant === 'standard' ? toolbar : null;
   const effectiveShape: ButtonShape = selected && !tool ? (shape === 'round' ? 'square' : 'round') : shape;
   const stroked = variant === 'outlined' && !selected;
