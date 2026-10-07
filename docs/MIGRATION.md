@@ -79,3 +79,35 @@ _Filled in as phase 5 lands: one line per change — old → new, with a find/re
 - `ModalBottomSheet` / `ModalSideSheet`: `open` optional with `defaultOpen`, `onOpenChange(open, details?)` (a drag or
   the handle pass no details); `sx` styles the popup (the bottom sheet's full-width strip; the side sheet's surface);
   the handle's name is `labels={{ closeSheet }}`.
+
+#### Actions, bars, communication
+- Every component: `forwardRef` → React 19 `ref` prop; `Button` / `IconButton` refs are `HTMLButtonElement` (were
+  `HTMLElement`) — retype `useRef<HTMLElement>` used on them.
+- `Fab` / `ExtendedFab` `color`: `'primary-container'` / `'secondary-container'` / `'tertiary-container'` →
+  `'primaryContainer'` / `'secondaryContainer'` / `'tertiaryContainer'` (grep `-container'`). `Fab` `size="default"` →
+  `"small"` (type `FabSize`).
+- `FabMenu` `closeLabel` removed: the toggle keeps its `aria-label` while open (state in `aria-expanded`) — queries for
+  "Close menu" use the menu's name. `FabMenuItem` `keepOpen` → `closeOnClick={false}`.
+- `SplitButtonTrailing` `expanded` / `defaultExpanded` / `onExpandedChange` → `open` / `defaultOpen` / `onOpenChange`.
+- `ConnectedButtonGroupItem` standalone `size` / `selected` and `SegmentedButtonItem` standalone `position` /
+  `selected` / `density` removed: standalone items use `pressed` / `defaultPressed` / `onPressedChange`; static
+  renderings use `ConnectedButtonGroupScope size` + `<ForceState selected position>` from `@m3x/react/testing`.
+  `ConnectedButtonGroup` / `SegmentedButton` / `Tabs` / chips' `on…Change` get Base UI details second (not breaking).
+- `FilterChip` `trailingIcon` → `dropdown`. `InputChip` `removeLabel` → `labels={{ remove: '…' }}` (the verb);
+  `onRemove` is a `MouseEventHandler<HTMLButtonElement>`. `ChipAvatarPlaceholder` → `@m3x/react/testing`.
+- `Toolbar` `type` → `layout`; `Toolbar` / `ToolbarScope` `color` → `variant` (type `ToolbarColor` → `ToolbarVariant`);
+  `ToolbarScope` → `@m3x/react/testing`; `useFloatingToolbarNestedScroll({ onExpand, onCollapse })` →
+  `{ onExpandedChange }`; with `fab`, `ref` is the wrapper root (was the bar).
+- `TopAppBar` `title` → `headline`. `Tab` static `selected` → `<ForceState selected>`; `TabScope` → `@m3x/react/testing`.
+- `SearchBar`: input mode is explicit — `mode="input"` (it was inferred from `onValueChange`); `onActivate` is a
+  `MouseEventHandler`. `SearchView` `mode` → `layout` (`'full-screen'` → `'fullScreen'`), `onDismiss` →
+  `onOpenChange(false)`, `onCollapsed` → `onOpenChangeComplete(open)`; `value` / `onValueChange` optional with
+  `defaultValue`, plus `defaultOpen` and `labels`.
+- `LinearProgress` / `CircularProgress` `type` → `shape`, `'wave'` → `'wavy'` (type `ProgressType` → `ProgressShape`);
+  `LoadingIndicator` `container` → `contained`.
+- `Tooltip` / `RichTooltip`: new `open` / `defaultOpen` / `onOpenChange(open, details?)`; `ref`, native props and `sx`
+  reach the popup (RichTooltip's `sx` used to be ignored).
+- `ShowSnackbarOptions.action.onClick` → `onAction`; `Snackbar` `onClose` is a `MouseEventHandler`; `useSnackbar()`
+  returns `SnackbarApi`; `SnackbarClose`'s default name is `labels.dismiss`.
+- `M3Labels`: `closeMenu` and `startDate` removed (nothing reads them: the FAB menu's name is constant, and the kit's
+  range input labels its first field "Date").

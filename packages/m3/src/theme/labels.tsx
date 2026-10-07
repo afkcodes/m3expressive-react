@@ -20,9 +20,8 @@ export interface M3Labels {
   remove: string;
   /** Verb for an expandable list item's button (as `remove`; the state is in `aria-expanded`). */
   expand: string;
-  // Sheets and menus
+  // Sheets
   closeSheet: string;
-  closeMenu: string;
   // Search
   searchResults: string;
   // Carousel
@@ -40,7 +39,6 @@ export interface M3Labels {
   openCalendar: string;
   /** Input-mode field labels. */
   date: string;
-  startDate: string;
   endDate: string;
   /** Range picker headline while nothing is selected. */
   dateRangePlaceholder: string;
@@ -81,7 +79,6 @@ export const defaultLabels: M3Labels = {
   remove: 'Remove',
   expand: 'Expand',
   closeSheet: 'Close sheet',
-  closeMenu: 'Close menu',
   searchResults: 'Results',
   carousel: 'carousel',
   slide: 'slide',
@@ -93,7 +90,6 @@ export const defaultLabels: M3Labels = {
   chooseDate: 'Choose date',
   openCalendar: 'Open calendar',
   date: 'Date',
-  startDate: 'Start date',
   endDate: 'End date',
   dateRangePlaceholder: 'Start date – End date',
   previousMonth: 'Previous month',

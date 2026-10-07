@@ -101,8 +101,8 @@ controlled value ("no date"). Use `hooks/useControllableState`.
 ## 7. Testing hooks
 - Static visual states come only from `@m3x/react/testing`: `ForceState` (`state`, `focusRing`, `ripplePath`,
   `thumb`, `caret`, `progress`, `selected`, `position`) and the static building blocks the kit's state sheets draw
-  outside their containers (the `*Scope` providers, `ChipAvatarPlaceholder`, `SwipeActions`, picker cells and dial
-  parts). No public prop exists only for tests.
+  outside their containers (the `*Scope` providers incl. `ConnectedButtonGroupScope`, `ChipAvatarPlaceholder`,
+  `SwipeActions`, `BottomSheetSurface` / `SideSheetSurface`, picker cells and dial parts). No public prop exists only for tests.
 - Documented static **surfaces** stay public with conforming APIs: `MenuSurface`, `PlainTooltipSurface`,
   `RichTooltipSurface`, `DialogSurface`, `Snackbar`, standard `BottomSheet` / `SideSheet`.
 - `today` on the date pickers is public: "the day treated as today (default: the device date at mount)" — apps
