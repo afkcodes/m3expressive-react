@@ -2,10 +2,11 @@ import { useEffectEvent, useLayoutEffect, useRef, type RefObject } from 'react';
 import { useSpringToken } from '../../motion/context.tsx';
 import { animateSpring, type SpringAnimation } from '../../motion/animate.ts';
 import type { SpringParams } from '../../motion/spring.ts';
-import { cubicBezier, tween } from '../../motion/gesture.ts';
+import { tween } from '../../motion/gesture.ts';
+import { standardAccelerate, standardDecelerate } from '../../motion/easing.ts';
 
-const FADE_IN = cubicBezier(0.3, 0, 1, 1); // MotionTokens.EasingStandardAccelerateCubicBezier
-const FADE_OUT = cubicBezier(0, 0, 0, 1); // MotionTokens.EasingStandardDecelerateCubicBezier
+const FADE_IN = standardAccelerate; // MotionTokens.EasingStandardAccelerateCubicBezier
+const FADE_OUT = standardDecelerate; // MotionTokens.EasingStandardDecelerateCubicBezier
 const FADE_DURATION = 100; // DurationShort2
 const FADE_IN_DELAY = 50; // DurationShort1
 
