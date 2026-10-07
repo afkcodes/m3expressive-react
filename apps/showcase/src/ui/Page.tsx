@@ -34,7 +34,8 @@ const s = stylex.create({
     flexGrow: 1,
     minHeight: 120,
   },
-  stageColumn: { flexDirection: 'column', alignItems: 'stretch' },
+  // No wrapping in a column: Chrome sizes a wrapping column's children too tall.
+  stageColumn: { flexDirection: 'column', flexWrap: 'nowrap', alignItems: 'stretch' },
   stageStart: { justifyContent: 'flex-start' },
   footer: {
     display: 'flex',
