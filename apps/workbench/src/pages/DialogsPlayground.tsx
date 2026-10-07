@@ -40,6 +40,13 @@ type Which = 'basic' | 'icon' | 'list' | 'scroll' | 'alert' | null;
 export function DialogsPlayground() {
   const [scheme, setScheme] = useState<ColorSchemeMode>('light');
   const [open, setOpen] = useState<Which>(null);
+  // Which variant was last opened: kept through the exit fade, so a dialog doesn't lose its icon
+  // or rows while it animates out (one Dialog serves basic / icon and list / scroll).
+  const [shown, setShown] = useState<Which>(null);
+  const show = (w: Exclude<Which, null>) => {
+    setShown(w);
+    setOpen(w);
+  };
   const [picked, setPicked] = useState<string[]>(['Ava']);
   const [last, setLast] = useState('—');
   const field = { font: 'inherit', fontSize: 14, padding: '6px 8px', borderRadius: 8 } as const;
@@ -98,11 +105,11 @@ export function DialogsPlayground() {
               <option>system</option>
             </select>
           </label>
-          <Button onClick={() => setOpen('basic')}>Basic</Button>
-          <Button onClick={() => setOpen('icon')}>With icon</Button>
-          <Button onClick={() => setOpen('list')}>List</Button>
-          <Button onClick={() => setOpen('scroll')}>Scrollable list</Button>
-          <Button variant="tonal" onClick={() => setOpen('alert')}>
+          <Button onClick={() => show('basic')}>Basic</Button>
+          <Button onClick={() => show('icon')}>With icon</Button>
+          <Button onClick={() => show('list')}>List</Button>
+          <Button onClick={() => show('scroll')}>Scrollable list</Button>
+          <Button variant="tonal" onClick={() => show('alert')}>
             Alert
           </Button>
           <span {...stylex.props(typescale.bodyMedium, s.muted)}>
@@ -112,7 +119,7 @@ export function DialogsPlayground() {
         <Dialog
           open={open === 'basic' || open === 'icon'}
           onOpenChange={(o) => !o && close('dismissed')}
-          icon={open === 'icon' ? <Icon /> : undefined}
+          icon={shown === 'icon' ? <Icon /> : undefined}
           headline="Reset settings?"
           supportingText="This will reset your app preferences back to their default settings. Your saved accounts are not affected."
           actions={actions('Reset')}
@@ -123,10 +130,10 @@ export function DialogsPlayground() {
           headline="Share with"
           supportingText="Choose who can see this statement."
           actions={actions('Share')}
-          divider={open === 'scroll'}
-          sx={open === 'scroll' ? s.scrollable : undefined}
+          divider={shown === 'scroll'}
+          sx={shown === 'scroll' ? s.scrollable : undefined}
         >
-          {people(open === 'scroll' ? PEOPLE : PEOPLE.slice(0, 3))}
+          {people(shown === 'scroll' ? PEOPLE : PEOPLE.slice(0, 3))}
         </Dialog>
         <Dialog
           role="alertdialog"
