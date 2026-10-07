@@ -40,7 +40,8 @@ controlled value ("no date"). Use `hooks/useControllableState`.
 | Layout state (not disclosure) | `expanded` (controlled-only, see below) | Toolbar, ExtendedFab, NavigationRail |
 
 - The new value is the first callback argument; Base UI's event `details` (reason, event, cancel) are
-  forwarded as the second where Base UI provides them.
+  forwarded as the second where Base UI provides them. `details` is optional in the type: it is absent when the
+  component changes the state itself (a modal picker's own OK / Cancel). Modals type it `ModalOpenChangeDetails`.
 - **Controlled-only, with a doc-comment reason**, when the component never changes the state itself:
   layout state (`expanded` on Toolbar / ExtendedFab / NavigationRail — add `defaultExpanded` / `onExpandedChange`
   only when a built-in toggle appears; hooks that drive it, like `useFloatingToolbarNestedScroll`, report

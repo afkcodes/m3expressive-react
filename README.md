@@ -233,7 +233,7 @@ line to flip if you'd rather follow the M3 guidelines:
 ### Behaviour and accessibility additions (beyond the kit, which draws static frames)
 | Component | Behaviour |
 |---|---|
-| Date fields | Only full 4-digit years are accepted (typing "1/5/2" no longer becomes 1902); the format hint comes from the locale (`inputFormatHint`) — identical for en-US, which the fixtures use |
+| Date fields | Only full 4-digit years are accepted (typing "1/5/2" no longer becomes 1902); the format hint comes from the locale (the date formatter's pattern) — identical for en-US, which the fixtures use |
 | Modal / docked pickers | A pick survives parent re-renders (drafts reset only when the picker opens) |
 | Calendars, year grids, month / year lists | One tab stop with arrow keys (± rows, Home / End, Page Up / Down); the range picker is one tab stop across months; disabled days never take focus |
 | Time picker | Period selector is a radio group with arrow keys; the dial announces "7 o'clock" / "30 minutes" (Compose strings); out-of-range times are clamped |

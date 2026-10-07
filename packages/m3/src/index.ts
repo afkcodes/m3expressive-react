@@ -5,6 +5,8 @@ export type { M3Labels } from './theme/labels.tsx';
 // Dynamic colour scheme generation lives in '@m3x/react/dynamic-color'; the core only knows the roles.
 export { COLOR_ROLES } from './theme/colorRoles.ts';
 export type { ColorRole, DynamicColorScheme, RoleColors } from './theme/colorRoles.ts';
+// `onOpenChange(open, details)` of every modal (Dialog, modal sheets, modal pickers).
+export type { ModalOpenChangeDetails } from './primitives/ModalShell.tsx';
 // Interaction primitives: '@m3x/react/primitives'; the shape engine: '@m3x/react/shapes'.
 export { typescale } from './tokens/typescale.ts';
 export type { TypescaleRole } from './tokens/typescale.ts';
