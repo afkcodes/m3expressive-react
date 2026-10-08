@@ -68,8 +68,10 @@ export const fabMenuStyles = stylex.create({
   closeFocused: { boxShadow: elevation.level3NoSpread },
   icon: { position: 'relative', display: 'inline-flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
   icon24: { width: 24, height: 24 },
-  // While the toggle morphs, the icon box follows --m3-fab-icon (set per frame).
-  iconMorph: { width: 'var(--m3-fab-icon)', height: 'var(--m3-fab-icon)' },
+  // While the toggle morphs, the icon box follows --m3-fab-icon (set per frame). Each glyph falls back
+  // to its own rest size: without the variable an SVG's box is its default (the whole button).
+  iconMorphClose: { width: 'var(--m3-fab-icon, 20px)', height: 'var(--m3-fab-icon, 20px)' },
+  iconMorphOpen: { width: 'var(--m3-fab-icon, 24px)', height: 'var(--m3-fab-icon, 24px)' },
   label: { position: 'relative', color: 'inherit' },
 });
 

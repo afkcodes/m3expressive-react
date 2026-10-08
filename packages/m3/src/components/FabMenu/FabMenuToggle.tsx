@@ -63,7 +63,7 @@ export function FabMenuToggle({ open, color: menuColor, icon, ref, ...rest }: Fa
   const checked = useSpringChannel(applyMorph, {
     initial: open ? 1 : 0,
     // At rest the inline morph styles go in the same commit as the rest render (layout effect
-    // below): cleared earlier, a painted frame could keep `iconMorph` (width: var(--m3-fab-icon))
+    // below): cleared earlier, a painted frame could keep `iconMorph*` (width: var(--m3-fab-icon))
     // with the variable gone — the close icon at the SVG's default size.
     onRest: () => setMorphing(false),
   });
@@ -138,9 +138,9 @@ export function FabMenuToggle({ open, color: menuColor, icon, ref, ...rest }: Fa
       {/* The FAB draws its pressed ripple over the icon, the close button under it (kit layer order). */}
       <Ripple above={!open} />
       {showClose ? (
-        <SvgIcon d={ICON_PATHS.close} size={TOGGLE_ICON.open} sx={[s.icon, morphing && s.iconMorph]} />
+        <SvgIcon d={ICON_PATHS.close} size={TOGGLE_ICON.open} sx={[s.icon, morphing && s.iconMorphClose]} />
       ) : (
-        <span {...stylex.props(s.icon, s.icon24, morphing && s.iconMorph)}>{icon}</span>
+        <span {...stylex.props(s.icon, s.icon24, morphing && s.iconMorphOpen)}>{icon}</span>
       )}
     </BaseButton>
   );
