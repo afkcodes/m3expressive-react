@@ -347,7 +347,7 @@ function FilterSheetDemo() {
           </>
         }
       >
-        <List aria-label="Categories">
+        <List aria-label="Categories" sx={s.sheetList}>
           {CATEGORIES.map((c) => (
             <ListItem
               key={c}
