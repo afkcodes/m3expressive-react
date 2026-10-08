@@ -62,11 +62,15 @@ export function FabMenuToggle({ open, color: menuColor, icon, ref, ...rest }: Fa
   const first = useRef(true);
   const checked = useSpringChannel(applyMorph, {
     initial: open ? 1 : 0,
-    onRest: () => {
-      clearMorph();
-      setMorphing(false);
-    },
+    // At rest the inline morph styles go in the same commit as the rest render (layout effect
+    // below): cleared earlier, a painted frame could keep `iconMorph` (width: var(--m3-fab-icon))
+    // with the variable gone — the close icon at the SVG's default size.
+    onRest: () => setMorphing(false),
   });
+  useLayoutEffect(() => {
+    if (!morphing) clearMorph();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- clearMorph only touches the element
+  }, [morphing]);
 
   function applyMorph(progress: number) {
     const node = el.current;
