@@ -21,6 +21,9 @@ import { Demo, Page, Section } from '../ui/Page.tsx';
 import { Icon } from '../ui/Icon.tsx';
 
 const s = stylex.create({
+  // A list in a sheet sits 12px in from its edges (like a navigation drawer), so a selected row's
+  // indicator doesn't run into the sheet's edge.
+  sheetList: { paddingInline: 12 },
   result: { margin: 0, color: color.onSurfaceVariant, flexBasis: '100%', textAlign: 'center' },
   // A desktop-like window for the standard side sheet.
   window: {
@@ -396,7 +399,7 @@ function AccountSheetDemo() {
           </IconButton>
         }
       >
-        <List aria-label="Accounts">
+        <List aria-label="Accounts" sx={s.sheetList}>
           {[
             ['Harbour Studio Ltd', 'Business current · •• 4821'],
             ['Harbour Studio Ltd', 'Instant access savings · •• 1170'],
